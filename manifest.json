@@ -1,7 +1,7 @@
 {
-  "name": "Resume Griller",
-  "short_name": "Griller",
-  "description": "Elite interview prep drills built from my resume",
+  "name": "Resume → STAR",
+  "short_name": "STARify",
+  "description": "Turn resume bullets into STAR-format interview answers",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",

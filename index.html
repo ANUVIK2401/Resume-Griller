@@ -6,68 +6,32 @@
   <meta name="theme-color" content="#121212">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Griller">
-  <title>Resume Griller</title>
+  <meta name="apple-mobile-web-app-title" content="STARify">
+  <title>Resume → STAR</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
 </head>
 <body>
-  <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+  <main class="page">
+    <header class="page-head">
+      <h1>Resume → STAR</h1>
+      <p class="sub">Paste your resume bullet points. Get each one back as a short Situation / Task / Action / Result answer you can edit.</p>
+    </header>
 
-  <div class="layout">
-    <aside id="sidebar" class="sidebar" aria-label="Navigation and filters">
-      <div class="brand">
-        <span class="brand-mark">⬢</span>
-        <span class="brand-name">Resume Griller</span>
-      </div>
+    <section class="input-section">
+      <textarea id="resume-input" placeholder="Paste your resume bullets here, one per line. Example:
 
-      <nav class="nav" aria-label="Main navigation">
-        <button class="nav-item active" data-view="browse">🗂 Browse</button>
-        <button class="nav-item" data-view="drill">🔁 Drill Mode</button>
-        <button class="nav-item" data-view="interview">⏱ Interview Mode</button>
-        <button class="nav-item" data-view="matrix">🧭 Story Matrix</button>
-        <button class="nav-item" data-view="dashboard">📊 Dashboard</button>
-      </nav>
+Led migration of legacy billing system to microservices, reducing downtime by 40%
+Built a React dashboard used by 200+ internal sales reps
+Automated weekly reporting, saving the team 5 hours per week"></textarea>
+      <button id="generate-btn" class="primary-btn">Generate STAR answers</button>
+    </section>
 
-      <div class="filters">
-        <label class="filter-label" for="search-box">Search</label>
-        <input type="search" id="search-box" class="search-box" placeholder="Search questions…" autocomplete="off">
+    <section id="results" class="results"></section>
+  </main>
 
-        <div class="filter-label">Track</div>
-        <div id="track-filter" class="chip-group"></div>
-
-        <div class="filter-label">Difficulty</div>
-        <div id="diff-filter" class="chip-group">
-          <button class="chip active" data-diff="all">All</button>
-          <button class="chip" data-diff="1">● Easy</button>
-          <button class="chip" data-diff="2">●● Med</button>
-          <button class="chip" data-diff="3">●●● Hard</button>
-        </div>
-
-        <div class="filter-label">Tags</div>
-        <div id="tag-filter" class="chip-group chip-group-scroll"></div>
-      </div>
-
-      <div class="sidebar-footer">
-        <button id="export-btn" class="ghost-btn">⬇ Export progress</button>
-        <button id="import-btn" class="ghost-btn">⬆ Import progress</button>
-        <input type="file" id="import-file" accept="application/json" hidden>
-      </div>
-    </aside>
-
-    <main id="main" class="main" tabindex="-1"></main>
-  </div>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script src="questions.js"></script>
-  <script src="app.js" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-    }
-  </script>
+  <script src="star-data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
