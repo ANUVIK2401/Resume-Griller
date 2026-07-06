@@ -1,13 +1,13 @@
 {
-  "name": "Resume → STAR",
-  "short_name": "STARify",
-  "description": "Turn resume bullets into STAR-format interview answers",
+  "name": "Interview OS",
+  "short_name": "Interview OS",
+  "description": "Resume STAR stories, technical Q&A, and behavioral prep in one dashboard",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#121212",
-  "theme_color": "#121212",
+  "background_color": "#0b0d0f",
+  "theme_color": "#0b0d0f",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
