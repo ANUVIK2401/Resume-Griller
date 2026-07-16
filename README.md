@@ -22,6 +22,9 @@ Deploys automatically via GitHub Actions on every push to `main`.
 | `data/star-bank.js` | Resume bullets → STAR answers, tagged by role/competency |
 | `data/technical-bank.js` | Technical Q&A grouped by category (agents, SQL, DevOps, ML, system design, etc.) |
 | `data/behavioral-bank.js` | Common behavioral questions mapped to competencies, linked to matching STAR stories |
+| `google-prep.html` | Standalone Google prep page (Round 1 format card + Googleyness competencies) |
+| `google-prep.js` | Rendering for the Google prep page |
+| `data/google-prep-bank.js` | Googleyness competencies with Google definitions, sample questions, and tags linking to STAR stories |
 
 ## Adding content
 
@@ -56,6 +59,16 @@ from the data).
   question: "...",
   guidance: "What a strong answer should hit.",
   linkedTags: ["ownership"]     // matches tags in star-bank.js to suggest stories
+}
+```
+
+**`google-prep-bank.js`** — one entry per Googleyness competency:
+```js
+{
+  competency: "Ownership / Bias for Action",
+  googleDefinition: "What Google evaluates for this competency.",
+  sampleQuestions: ["...", "..."],
+  linkedTags: ["ownership"]     // matches tags in star-bank.js to pull stories inline
 }
 ```
 
