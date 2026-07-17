@@ -70,7 +70,7 @@ from the data).
   questions: [
     {
       question: "...",
-      answer: "Answer sketch grounded in a real story.",
+      star: { s: "Situation", t: "Task", a: "Action", r: "Result" },
       followUps: ["Likely interviewer probe", "..."]
     }
   ],

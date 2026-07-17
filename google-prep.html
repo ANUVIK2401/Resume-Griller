@@ -15,6 +15,39 @@
        contrast on dark surfaces). */
     .page-link { text-decoration: none; }
 
+    /* 5 sections on this page — plain flow instead of the 4-row grid */
+    .shell { display: block; }
+
+    /* Rehearsal toggle: answers hidden until revealed */
+    .qa-content { display: none; flex-direction: column; gap: 0.65rem; }
+    .qa-block.open .qa-content { display: flex; }
+    .reveal-btn {
+      align-self: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 999px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .reveal-btn:hover, .reveal-btn:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
+    .qa-block.open .reveal-btn { color: var(--accent); border-color: var(--accent-dim); }
+
+    /* Intro card */
+    .intro-para {
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1.7;
+      outline: none;
+      border-radius: 5px;
+      padding: 0.1rem 0.3rem;
+      margin: 0 -0.3rem 0.75rem;
+    }
+    .intro-para:focus { background: var(--surface-hover); color: var(--text); }
+
     /* Single reading column */
     .board, .filter-row { max-width: 940px; margin-left: auto; margin-right: auto; width: 100%; }
     .card-grid { grid-template-columns: 1fr; gap: 1rem; }
@@ -40,7 +73,7 @@
       flex-direction: column;
       gap: 0.65rem;
     }
-    .qa-block .star-line { font-size: 1rem; line-height: 1.7; }
+    .qa-block .star-line { font-size: 1rem; line-height: 1.7; grid-template-columns: 30px 1fr; }
     .qa-block .star-line .letter { font-size: 0.9rem; padding-top: 0.1rem; }
     .qa-question .text { color: var(--text); font-weight: 600; }
     .qa-block .star-line .text { color: var(--text-dim); }
@@ -114,6 +147,8 @@
         </ul>
       </div>
     </section>
+
+    <div id="intro-slot"></div>
 
     <div class="filter-row" id="filter-row"></div>
 

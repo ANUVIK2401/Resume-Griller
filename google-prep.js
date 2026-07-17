@@ -26,7 +26,10 @@ function linkedStories(item) {
 
 function searchableText(item) {
   const storyText = linkedStories(item).map(s => `${s.role} ${s.bullet}`).join(' ');
-  const qaText = (item.questions || []).map(q => `${q.question} ${q.answer} ${(q.followUps || []).join(' ')}`).join(' ');
+  const qaText = (item.questions || []).map(q => {
+    const star = q.star ? Object.values(q.star).join(' ') : '';
+    return `${q.question} ${star} ${(q.followUps || []).join(' ')}`;
+  }).join(' ');
   return [item.competency, item.googleDefinition, qaText, ...(item.linkedTags || []), storyText].join(' ');
 }
 
@@ -93,29 +96,44 @@ function buildCardBody(item) {
   const body = el('div', 'card-body');
   body.appendChild(el('div', 'guidance-line', item.googleDefinition));
 
-  (item.questions || []).forEach(qa => {
+  (item.questions || []).forEach((qa, i) => {
     const block = el('div', 'qa-block');
 
     const qRow = el('div', 'star-line qa-question');
-    qRow.appendChild(el('div', 'letter', 'Q'));
+    qRow.appendChild(el('div', 'letter', `Q${i + 1}`));
     qRow.appendChild(el('div', 'text', qa.question));
     block.appendChild(qRow);
 
-    if (qa.answer) {
-      const aRow = el('div', 'star-line');
-      aRow.appendChild(el('div', 'letter', 'A'));
-      const answer = el('div', 'text', qa.answer);
-      answer.contentEditable = 'true';
-      aRow.appendChild(answer);
-      block.appendChild(aRow);
+    // Answer hidden behind a toggle so you can rehearse before peeking
+    const content = el('div', 'qa-content');
+
+    if (qa.star) {
+      [['S', qa.star.s], ['T', qa.star.t], ['A', qa.star.a], ['R', qa.star.r]].forEach(([letter, text]) => {
+        if (!text) return;
+        const row = el('div', 'star-line');
+        row.appendChild(el('div', 'letter', letter));
+        const answer = el('div', 'text', text);
+        answer.contentEditable = 'true';
+        row.appendChild(answer);
+        content.appendChild(row);
+      });
     }
 
     if (qa.followUps && qa.followUps.length) {
-      block.appendChild(el('div', 'followup-label', 'Likely follow-ups'));
+      content.appendChild(el('div', 'followup-label', 'Likely follow-ups'));
       const list = el('ul', 'followups');
       qa.followUps.forEach(f => list.appendChild(el('li', null, f)));
-      block.appendChild(list);
+      content.appendChild(list);
     }
+
+    const toggle = el('button', 'reveal-btn', 'Show answer ▾');
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = block.classList.toggle('open');
+      toggle.textContent = isOpen ? 'Hide answer ▴' : 'Show answer ▾';
+    });
+    block.appendChild(toggle);
+    block.appendChild(content);
 
     body.appendChild(block);
   });
@@ -156,6 +174,34 @@ function renderCard(item) {
   return card;
 }
 
+function renderIntro() {
+  const slot = document.getElementById('intro-slot');
+  if (!slot || typeof GOOGLE_INTRO === 'undefined') return;
+
+  const card = el('section', 'card format-card intro-card');
+  const eyebrow = el('div', 'card-eyebrow');
+  eyebrow.appendChild(el('div', 'card-role', 'Intro · Have this ready'));
+  card.appendChild(eyebrow);
+  card.appendChild(el('div', 'card-title', GOOGLE_INTRO.title));
+
+  const body = el('div', 'card-body');
+  (GOOGLE_INTRO.pitch || []).forEach(p => {
+    const para = el('p', 'intro-para', p);
+    para.contentEditable = 'true';
+    body.appendChild(para);
+  });
+
+  if (GOOGLE_INTRO.tips && GOOGLE_INTRO.tips.length) {
+    body.appendChild(el('div', 'followup-label', 'Delivery notes'));
+    const list = el('ul', 'followups');
+    GOOGLE_INTRO.tips.forEach(t => list.appendChild(el('li', null, t)));
+    body.appendChild(list);
+  }
+
+  card.appendChild(body);
+  slot.appendChild(card);
+}
+
 function render() {
   renderFilterRow();
   board.innerHTML = '';
@@ -183,4 +229,5 @@ searchBox.addEventListener('input', () => {
   render();
 });
 
+renderIntro();
 render();
