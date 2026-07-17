@@ -94,10 +94,12 @@ function buildCardBody(item) {
   body.appendChild(el('div', 'guidance-line', item.googleDefinition));
 
   (item.questions || []).forEach(qa => {
-    const qRow = el('div', 'star-line');
+    const block = el('div', 'qa-block');
+
+    const qRow = el('div', 'star-line qa-question');
     qRow.appendChild(el('div', 'letter', 'Q'));
     qRow.appendChild(el('div', 'text', qa.question));
-    body.appendChild(qRow);
+    block.appendChild(qRow);
 
     if (qa.answer) {
       const aRow = el('div', 'star-line');
@@ -105,12 +107,17 @@ function buildCardBody(item) {
       const answer = el('div', 'text', qa.answer);
       answer.contentEditable = 'true';
       aRow.appendChild(answer);
-      body.appendChild(aRow);
+      block.appendChild(aRow);
     }
 
-    (qa.followUps || []).forEach(f => {
-      body.appendChild(el('div', 'guidance-line', '↳ follow-up: ' + f));
-    });
+    if (qa.followUps && qa.followUps.length) {
+      block.appendChild(el('div', 'followup-label', 'Likely follow-ups'));
+      const list = el('ul', 'followups');
+      qa.followUps.forEach(f => list.appendChild(el('li', null, f)));
+      block.appendChild(list);
+    }
+
+    body.appendChild(block);
   });
 
   linkedStories(item).forEach(story => body.appendChild(buildStoryBlock(story)));

@@ -9,15 +9,77 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Page-scoped structural tweaks only — all colors come from styles.css vars */
+    /* Page-scoped readability overrides — colors come from styles.css vars.
+       This page is long-form reading, not a dashboard: single centered
+       column, larger type, and no --text-faint for body content (fails
+       contrast on dark surfaces). */
     .page-link { text-decoration: none; }
-    .format-card { cursor: default; margin: 1.5rem 1.5rem 0; }
+
+    /* Single reading column */
+    .board, .filter-row { max-width: 940px; margin-left: auto; margin-right: auto; width: 100%; }
+    .card-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+    /* Bigger, higher-contrast type */
+    .card-title { font-size: 1.1rem; line-height: 1.5; font-weight: 600; }
+    .card-role { font-size: 0.78rem; }
+    .guidance-line {
+      font-style: normal;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-dim);
+    }
+    .card.expanded .card-body { gap: 0.9rem; }
+
+    /* Each Q/A grouped into its own readable block */
+    .qa-block {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .qa-block .star-line { font-size: 1rem; line-height: 1.7; }
+    .qa-block .star-line .letter { font-size: 0.9rem; padding-top: 0.1rem; }
+    .qa-question .text { color: var(--text); font-weight: 600; }
+    .qa-block .star-line .text { color: var(--text-dim); }
+    .followup-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      margin-top: 0.15rem;
+    }
+    .followups { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+    .followups li {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      padding-left: 1.1rem;
+      position: relative;
+    }
+    .followups li::before { content: "↳"; position: absolute; left: 0; color: var(--accent); }
+
+    /* Format card */
+    .format-card { cursor: default; margin: 1.5rem auto 0; max-width: 940px; width: calc(100% - 3rem); }
     .format-card .card-body { display: block; }
-    .checklist { list-style: none; margin-top: 0.75rem; }
-    .checklist li { display: flex; align-items: baseline; gap: 0.5rem; padding: 0.25rem 0; color: var(--text-dim); font-size: 0.88rem; }
-    .checklist input { accent-color: var(--accent); }
-    .story-detail { margin-top: 0.5rem; }
-    @media (max-width: 640px) { .format-card { margin: 1rem 1rem 0; } }
+    .checklist { list-style: none; margin-top: 0.85rem; }
+    .checklist li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.3rem 0; color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; }
+    .checklist input { accent-color: var(--accent); width: 1rem; height: 1rem; flex-shrink: 0; }
+    .format-card .guidance-line + .guidance-line { margin-top: 0.5rem; }
+
+    /* Linked stories */
+    .story-detail { margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .story-detail .star-line { font-size: 0.95rem; line-height: 1.65; }
+    .linked-stories { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+    .linked-story-pill { font-size: 0.78rem; padding: 0.2rem 0.55rem; cursor: pointer; }
+
+    @media (max-width: 640px) {
+      .format-card { width: calc(100% - 2rem); margin-top: 1rem; }
+      .qa-block { padding: 0.75rem 0.8rem; }
+    }
   </style>
 </head>
 <body>
