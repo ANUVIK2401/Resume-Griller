@@ -26,7 +26,8 @@ function linkedStories(item) {
 
 function searchableText(item) {
   const storyText = linkedStories(item).map(s => `${s.role} ${s.bullet}`).join(' ');
-  return [item.competency, item.googleDefinition, ...(item.sampleQuestions || []), ...(item.linkedTags || []), storyText].join(' ');
+  const qaText = (item.questions || []).map(q => `${q.question} ${q.answer} ${(q.followUps || []).join(' ')}`).join(' ');
+  return [item.competency, item.googleDefinition, qaText, ...(item.linkedTags || []), storyText].join(' ');
 }
 
 function renderFilterRow() {
@@ -92,11 +93,24 @@ function buildCardBody(item) {
   const body = el('div', 'card-body');
   body.appendChild(el('div', 'guidance-line', item.googleDefinition));
 
-  (item.sampleQuestions || []).forEach(q => {
-    const row = el('div', 'star-line');
-    row.appendChild(el('div', 'letter', 'Q'));
-    row.appendChild(el('div', 'text', q));
-    body.appendChild(row);
+  (item.questions || []).forEach(qa => {
+    const qRow = el('div', 'star-line');
+    qRow.appendChild(el('div', 'letter', 'Q'));
+    qRow.appendChild(el('div', 'text', qa.question));
+    body.appendChild(qRow);
+
+    if (qa.answer) {
+      const aRow = el('div', 'star-line');
+      aRow.appendChild(el('div', 'letter', 'A'));
+      const answer = el('div', 'text', qa.answer);
+      answer.contentEditable = 'true';
+      aRow.appendChild(answer);
+      body.appendChild(aRow);
+    }
+
+    (qa.followUps || []).forEach(f => {
+      body.appendChild(el('div', 'guidance-line', '↳ follow-up: ' + f));
+    });
   });
 
   linkedStories(item).forEach(story => body.appendChild(buildStoryBlock(story)));

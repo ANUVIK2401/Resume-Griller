@@ -67,7 +67,13 @@ from the data).
 {
   competency: "Ownership / Bias for Action",
   googleDefinition: "What Google evaluates for this competency.",
-  sampleQuestions: ["...", "..."],
+  questions: [
+    {
+      question: "...",
+      answer: "Answer sketch grounded in a real story.",
+      followUps: ["Likely interviewer probe", "..."]
+    }
+  ],
   linkedTags: ["ownership"]     // matches tags in star-bank.js to pull stories inline
 }
 ```
