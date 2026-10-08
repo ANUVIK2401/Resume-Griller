@@ -17,7 +17,7 @@ Deploys automatically via GitHub Actions on every push to `main`.
 | File | Purpose |
 |------|---------|
 | `index.html` | Page shell |
-| `styles.css` | Command-center dark theme |
+| `styles.css` | White, cobalt and gold theme (Bodoni Moda + Manrope), shared by every page |
 | `app.js` | Rendering, search, filtering, module switching |
 | `data/star-bank.js` | Resume bullets → STAR answers, tagged by role/competency |
 | `data/technical-bank.js` | Technical Q&A grouped by category (agents, SQL, DevOps, ML, system design, etc.) |
