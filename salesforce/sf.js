@@ -49,7 +49,19 @@
       total++;
       if (isDone(storeKey(si, item))) done++;
     }));
-    progressEl.textContent = `${done} / ${total} done`;
+    progressEl.textContent = `${done} of ${total} done`;
+    const bar = document.querySelector('.topbar');
+    if (bar) bar.style.setProperty('--progress', total ? done / total : 0);
+    // Per-section gold rule
+    document.querySelectorAll('.sf-section').forEach(sec => {
+      const si = Number(sec.dataset.si);
+      const items = SF_PAGE.sections[si].items;
+      const n = items.filter(item => isDone(storeKey(si, item))).length;
+      const fill = sec.querySelector('.sf-rule span');
+      if (fill) fill.style.width = `${(n / items.length) * 100}%`;
+      const count = sec.querySelector('.section-count');
+      if (count) count.textContent = `${n} of ${items.length}`;
+    });
   }
 
   function renderFilters() {
@@ -131,10 +143,14 @@
       if (!items.length) return;
       shown += items.length;
       const wrap = el('section', 'card sf-section');
+      wrap.dataset.si = String(si);
       const head = el('div', 'section-head');
       head.appendChild(el('h2', null, section.title));
       head.appendChild(el('span', 'section-count', String(items.length)));
       wrap.appendChild(head);
+      const rule = el('div', 'sf-rule');
+      rule.appendChild(el('span'));
+      wrap.appendChild(rule);
       if (section.intro) wrap.appendChild(el('div', 'sf-intro', section.intro));
       const list = el('ul', 'sf-list');
       items.forEach(item => list.appendChild(renderItem(si, item)));

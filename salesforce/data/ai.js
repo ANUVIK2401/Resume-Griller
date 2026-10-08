@@ -19,6 +19,12 @@ const SF_PAGE = {
         { title: 'Structured output and function calling', tags: ['llm', 'agents', 'strong'],
           notes: 'Q: How do you guarantee valid JSON for downstream tools?',
           anchor: 'MSRcosmos MCP tool calling over Sage REST APIs.' },
+        { title: 'Building and deploying ML models', tags: ['llm', 'strong'],
+          notes: 'JD: "Experience building and deploying ML or deep learning models." Q: Walk through a model from data to production and how you monitored it.',
+          anchor: 'GNN fraud detection (0.923 ROC-AUC, +0.03 over XGBoost); DQN agent over 420K NFL plays.' },
+        { title: 'Data pipelines feeding AI systems', tags: ['llm', 'strong'],
+          notes: 'JD: "Collecting and analyzing large amounts of data." Q: How do you keep agent inputs fresh and correct at scale?',
+          anchor: 'MSRcosmos Databricks feed: 17 tables, 4.2M rows into Delta Lake, 22 min full refresh.' },
         { title: 'Gemini on Vertex AI basics', tags: ['llm', 'gcp', 'gap'],
           notes: 'Q: Why might a team pick Gemini for multimodal incident data such as screenshots or dashboards?',
           links: [{ label: 'Vertex AI docs', url: 'https://cloud.google.com/vertex-ai/docs' }] }
@@ -34,7 +40,7 @@ const SF_PAGE = {
         { title: 'Graph orchestration (LangGraph): state, nodes, checkpoints', tags: ['agents', 'strong'],
           notes: 'Q: Why a graph over a free-running agent loop?',
           anchor: 'MSRcosmos multi-agent ERP migration on LangGraph.',
-          links: [{ label: 'LangGraph docs', url: 'https://langchain-ai.github.io/langgraph/' }] },
+          links: [{ label: 'LangGraph docs', url: 'https://docs.langchain.com/oss/python/langgraph/overview' }] },
         { title: 'Multi-agent patterns: supervisor, planner-executor, specialist agents', tags: ['agents'],
           notes: 'Q: When does multi-agent add value, and when is it just more failure points?',
           anchor: 'PacSun retail intelligence app.' },
@@ -66,9 +72,10 @@ const SF_PAGE = {
         { title: 'RAG evaluation: retrieval recall, faithfulness, answer relevance', tags: ['rag', 'evals', 'gap'],
           notes: 'Q: How do you know retrieval, not generation, is the problem?' },
         { title: 'Vector DB options: Vertex AI Search, Pinecone, Milvus, pgvector', tags: ['rag', 'gcp', 'gap'],
+          notes: 'Google renamed Vertex AI Search to Agent Search on Gemini Enterprise Agent Platform. Know both names; the JD uses the old one.',
           links: [
             { label: 'RAG paper', url: 'https://arxiv.org/abs/2005.11401' },
-            { label: 'Vertex AI Search', url: 'https://cloud.google.com/enterprise-search' }
+            { label: 'Agent Search (formerly Vertex AI Search)', url: 'https://cloud.google.com/enterprise-search' }
           ] }
       ]
     },

@@ -69,6 +69,7 @@ const SF_PAGE = {
         { title: 'STAR: influence without authority', anchor: 'CLI validation toolchain adopted by 4 NSX teams.', tags: ['behavioral'] },
         { title: 'STAR: customer trust and data correctness', anchor: 'MSRcosmos human-in-the-loop review over financial records.', tags: ['behavioral'] },
         { title: 'STAR: presenting to executives', anchor: 'PacSun CEO briefs.', tags: ['behavioral'] },
+        { title: 'STAR: working in agile, iterating under change', notes: 'JD asks for scrum/agile and a mindset to iterate and take risks. Use a sprint where scope moved and how you re-planned.', anchor: 'MSRcosmos: 12 client entities, each on its own cloud.', tags: ['behavioral'] },
         { title: 'STAR: a risky call or a failure', notes: 'Pick one with a clear lesson and what you changed afterward.', tags: ['behavioral'] },
         { title: 'Use the existing STAR bank', url: '../index.html', notes: 'Your Resume · STAR module already has these stories in full.', tags: ['behavioral'] }
       ]
