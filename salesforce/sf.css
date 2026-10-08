@@ -1,0 +1,59 @@
+/* Salesforce prep pages: layout on top of ../styles.css (colors come from its vars). */
+.shell { display: block; }
+.board, .filter-row, .sf-nav, .sf-hero { max-width: 980px; margin-left: auto; margin-right: auto; width: calc(100% - 3rem); }
+.board { display: flex; flex-direction: column; gap: 1.1rem; padding: 1rem 0 3rem; }
+
+.sf-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.1rem; }
+.sf-nav a {
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  border: 1px solid var(--border-bright);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+}
+.sf-nav a:hover, .sf-nav a.active { color: var(--accent); border-color: var(--accent); }
+
+.sf-hero { margin-top: 1.1rem; }
+.sf-hero h1 { font-size: 1.35rem; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+.sf-hero p { color: var(--text-dim); line-height: 1.65; font-size: 0.95rem; }
+
+#progress { font-family: var(--mono); font-size: 0.8rem; color: var(--ok); white-space: nowrap; }
+
+.sf-section { cursor: default; padding: 1.1rem 1.2rem; }
+.sf-section .section-head { margin-bottom: 0.4rem; }
+.sf-intro { color: var(--text-dim); font-size: 0.92rem; line-height: 1.6; margin-bottom: 0.6rem; }
+
+.sf-list { list-style: none; display: flex; flex-direction: column; }
+.sf-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--border);
+}
+.sf-item:first-child { border-top: none; }
+.sf-item input { accent-color: var(--accent); width: 1rem; height: 1rem; margin-top: 0.25rem; flex-shrink: 0; }
+.sf-main { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; flex: 1; }
+.sf-head { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
+.sf-title { color: var(--text); font-weight: 600; font-size: 0.98rem; line-height: 1.45; text-decoration: none; }
+a.sf-title:hover { color: var(--accent); }
+.sf-meta { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem; }
+.sf-notes { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; }
+.sf-anchor { font-size: 0.88rem; line-height: 1.55; color: var(--text-dim); }
+.sf-anchor-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; color: var(--accent); margin-right: 0.5rem; }
+.sf-links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.sf-links a { text-decoration: none; }
+.sf-links a:hover { color: var(--accent); border-color: var(--accent); }
+.sf-item.done .sf-title { color: var(--text-dim); text-decoration: line-through; }
+
+@media (max-width: 640px) {
+  .board, .filter-row, .sf-nav, .sf-hero { width: calc(100% - 2rem); }
+  .sf-section { padding: 0.9rem; }
+}
+
+/* Base .topbar background is hard-coded dark; follow the theme instead. */
+@media (prefers-color-scheme: light) {
+  .topbar { background: rgba(244, 242, 239, 0.9); }
+}

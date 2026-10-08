@@ -25,6 +25,7 @@ Deploys automatically via GitHub Actions on every push to `main`.
 | `google-prep.html` | Standalone Google prep page (Round 1 format card + Googleyness competencies) |
 | `google-prep.js` | Rendering for the Google prep page |
 | `data/google-prep-bank.js` | Googleyness competencies with Google definitions, sample questions, and tags linking to STAR stories |
+| `salesforce/` | Salesforce MTS prep: `index.html` (plan), `dsa.html`, `design.html` (LLD + system design), `ai.html`. One renderer (`sf.js`), one data file per page in `salesforce/data/`. Checkbox progress is saved per browser. |
 
 ## Adding content
 
