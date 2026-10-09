@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "loop.schema.json",
+  "title": "Interview loop. Statuses and dates here are defaults; edits in the UI are saved to localStorage and override them.",
+  "type": "object",
+  "required": ["req", "contacts", "team", "status", "status_options", "stages"],
+  "properties": {
+    "req": {
+      "type": "object", "required": ["id", "title", "company", "applied"],
+      "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "company": { "type": "string" }, "applied": { "type": "string", "format": "date" }, "source": { "type": "string" } }
+    },
+    "contacts": { "type": "array", "items": { "type": "object", "required": ["role"], "properties": { "role": { "type": "string" }, "name": { "type": "string" }, "title": { "type": "string" } } } },
+    "team": {
+      "type": "object", "required": ["name", "mission", "work"],
+      "properties": { "name": { "type": "string" }, "mission": { "$ref": "common.schema.json#/$defs/text" }, "work": { "$ref": "common.schema.json#/$defs/textList" }, "urgency": { "type": "string" } }
+    },
+    "visa": { "type": "object", "properties": { "provider": { "type": "string" }, "case": { "type": "string" }, "step": { "type": "string" }, "date": { "type": "string", "format": "date" } } },
+    "status": { "type": "object", "required": ["as_of", "summary"], "properties": { "as_of": { "type": "string", "format": "date" }, "summary": { "type": "string" } } },
+    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"], "properties": { "id": { "$ref": "#/$defs/status" }, "label": { "type": "string" } } } },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "title", "format", "default_status", "checklist"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "order": { "type": "integer", "minimum": 1 },
+          "title": { "$ref": "common.schema.json#/$defs/text" },
+          "format": { "$ref": "common.schema.json#/$defs/text" },
+          "duration_min": { "type": ["integer", "null"] },
+          "location": { "type": "string" },
+          "interviewer": { "type": "string" },
+          "default_status": { "$ref": "#/$defs/status" },
+          "default_date": { "type": ["string", "null"], "description": "ISO local datetime, e.g. 2026-10-15T10:00" },
+          "note": { "type": "string" },
+          "prep_pages": { "type": "array", "items": { "enum": ["behavioral", "ai", "hld", "dsa", "lld"] } },
+          "checklist": { "type": "array", "items": { "type": "object", "required": ["id", "text"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "text": { "$ref": "common.schema.json#/$defs/text" } } } }
+        }
+      }
+    }
+  },
+  "$defs": { "status": { "enum": ["not_started", "scheduled", "done", "passed"] } }
+}

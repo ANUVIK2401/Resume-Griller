@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hld.schema.json",
+  "title": "System design segment: framework, problems, GCP mapping.",
+  "type": "object",
+  "required": [
+    "framework",
+    "problems",
+    "gcp_map",
+    "whiteboard_minutes"
+  ],
+  "properties": {
+    "whiteboard_minutes": {
+      "type": "integer"
+    },
+    "framework": {
+      "type": "array",
+      "description": "Ordered steps. Doubles as the whiteboard-mode checklist.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "step",
+          "minutes",
+          "prompts"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "step": {
+            "type": "string"
+          },
+          "minutes": {
+            "type": "integer"
+          },
+          "differentiator": {
+            "type": "boolean"
+          },
+          "prompts": {
+            "$ref": "common.schema.json#/$defs/textList"
+          }
+        }
+      }
+    },
+    "gcp_map": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "generic",
+          "gcp"
+        ],
+        "properties": {
+          "generic": {
+            "type": "string"
+          },
+          "gcp": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "prompt",
+          "clarifying",
+          "estimates",
+          "components",
+          "diagram",
+          "deep_dives",
+          "failure_modes",
+          "followups",
+          "tie"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "reported": {
+            "type": "boolean",
+            "description": "Reported in a 2026 Salesforce loop."
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "difficulty": {
+            "$ref": "common.schema.json#/$defs/difficulty"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "prompt": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "clarifying": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "estimates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "math": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "role"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "gcp": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "diagram": {
+            "$ref": "common.schema.json#/$defs/mermaid"
+          },
+          "deep_dives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "points"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "points": {
+                  "$ref": "common.schema.json#/$defs/textList"
+                }
+              }
+            }
+          },
+          "failure_modes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "failure",
+                "mitigation"
+              ],
+              "properties": {
+                "failure": {
+                  "type": "string"
+                },
+                "mitigation": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          },
+          "followups": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "tie": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "status_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "numbers": {
+      "type": "object",
+      "properties": {
+        "latency": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "op",
+              "value"
+            ]
+          }
+        },
+        "capacity": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "rule",
+              "value"
+            ]
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "use",
+          "watch",
+          "gcp"
+        ]
+      }
+    },
+    "reliability": {
+      "type": "object",
+      "properties": {
+        "terms": {
+          "type": "array"
+        },
+        "burn_rates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "severity",
+              "budget",
+              "burn_rate",
+              "windows"
+            ]
+          }
+        },
+        "burn_note": {
+          "type": "string"
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "what"
+            ]
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lld.schema.json",
+  "title": "LLD segment: problems, catch-the-AI exercises, AI workflow card, pattern reference cards.",
+  "type": "object",
+  "required": [
+    "problems",
+    "workflow",
+    "pattern_cards"
+  ],
+  "properties": {
+    "workflow": {
+      "$ref": "common.schema.json#/$defs/textList",
+      "description": "AI-assisted OOD workflow, in order."
+    },
+    "pattern_cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "when",
+          "sketch"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "when": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "sketch": {
+            "$ref": "common.schema.json#/$defs/code"
+          },
+          "pitfalls": {
+            "$ref": "common.schema.json#/$defs/textList"
+          }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "requirements",
+          "entities",
+          "diagram",
+          "interfaces",
+          "patterns",
+          "concurrency",
+          "extensions",
+          "ai_exercise",
+          "solution_file"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "reported": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "difficulty": {
+            "$ref": "common.schema.json#/$defs/difficulty"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "requirements": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "role"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          },
+          "diagram": {
+            "$ref": "common.schema.json#/$defs/mermaid"
+          },
+          "interfaces": {
+            "$ref": "common.schema.json#/$defs/textList",
+            "description": "Public methods and what each does."
+          },
+          "patterns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "pattern_cards[].id"
+          },
+          "concurrency": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "extensions": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "ai_exercise": {
+            "type": "object",
+            "required": [
+              "flawed_file",
+              "bugs"
+            ],
+            "properties": {
+              "bugs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "category",
+                    "where",
+                    "bug",
+                    "fix"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "common.schema.json#/$defs/id"
+                    },
+                    "category": {
+                      "enum": [
+                        "thread safety",
+                        "SRP violation",
+                        "missing state",
+                        "unhandled edge case",
+                        "leaky abstraction",
+                        "other"
+                      ]
+                    },
+                    "where": {
+                      "type": "string"
+                    },
+                    "bug": {
+                      "$ref": "common.schema.json#/$defs/text"
+                    },
+                    "fix": {
+                      "$ref": "common.schema.json#/$defs/text"
+                    }
+                  }
+                }
+              },
+              "flawed_file": {
+                "type": "string",
+                "description": "Plausible AI-generated version with planted bugs. Must compile."
+              }
+            }
+          },
+          "solution_file": {
+            "type": "string",
+            "pattern": "^data/lld/[a-z0-9-]+\\.py$",
+            "description": "Reference solution with an if __name__ test block; tests are shown separately."
+          },
+          "prompt": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,658 @@
+{
+  "$schema": "./schema/profile.schema.json",
+  "name": "Anuvik Thota",
+  "location": "Los Angeles, CA",
+  "identity": "Production infrastructure engineer (observability, incident response, Kubernetes at Oracle scale) who now builds agentic LLM systems in production.",
+  "availability": "Full time from January 2027",
+  "links": {
+    "github": "https://github.com/ANUVIK2401",
+    "linkedin": "https://linkedin.com/in/anuvik-thota",
+    "portfolio": "https://anuvik-portfolio.netlify.app",
+    "dsa_patterns": "https://anuvik2401.github.io/DSA_Patterns/"
+  },
+  "education": [
+    {
+      "id": "usc-ms",
+      "school": "University of Southern California",
+      "degree": "M.S. Computer Science",
+      "gpa": "3.85",
+      "dates_display": "Jan 2025 to Dec 2026",
+      "coursework": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Natural Language Processing",
+        "Information Retrieval",
+        "Database Systems"
+      ]
+    },
+    {
+      "id": "vasavi-btech",
+      "school": "Vasavi College of Engineering, Osmania University",
+      "degree": "B.Tech Computer Science",
+      "gpa": "3.58",
+      "dates_display": "Jul 2018 to Jun 2022",
+      "coursework": [
+        "Data Structures and Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Distributed Systems"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": "annenberg",
+      "org": "USC Annenberg",
+      "role": "AI Engineer",
+      "kind": "current",
+      "dates_display": "Aug 2026 to present",
+      "summary": "PacSun multi-agent app on Claude Enterprise, MCP, CEO briefs.",
+      "highlights": [
+        "Multi-agent retail intelligence app on Claude Enterprise for PacSun executives, with MCP connectors into internal systems so agents pull live context, rank operational issues into one owner-tagged view, and draft CEO briefs.",
+        "Agentic scheduling workflow that ranks open issues by urgency and owner and proposes CEO meeting slots with agendas."
+      ]
+    },
+    {
+      "id": "trust-lab",
+      "org": "USC AI Trust Lab",
+      "role": "AI Researcher",
+      "kind": "current",
+      "dates_display": "Aug 2026 to present",
+      "summary": "6-LLM Veracity benchmark across 8 trust pillars, Llama 3.3 70B human-in-the-loop annotation.",
+      "highlights": [
+        "Benchmarked 6 frontier LLMs (GPT, Claude, Gemini, Llama, Grok, DeepSeek) on Veracity (factual accuracy), with test suites and automated scoring in the lab evaluation platform across 8 trust pillars.",
+        "Rubric-based annotation pipeline on Llama 3.3 70B that labels caseworker notes, scores confidence, and routes low-confidence cases to domain experts for human-in-the-loop review."
+      ]
+    },
+    {
+      "id": "marshall",
+      "org": "USC Marshall Behavioral Lab",
+      "role": "Research Assistant",
+      "kind": "current",
+      "dates_display": "Aug 2026 to present",
+      "summary": "Python ETL joining eye-tracking and Qualtrics data.",
+      "highlights": [
+        "Python ETL pipelines turning raw eye-tracking and Qualtrics exports into analysis-ready datasets.",
+        "Survey instruments with automated response validation that flags incomplete or inattentive submissions."
+      ]
+    },
+    {
+      "id": "msrcosmos",
+      "org": "MSRcosmos",
+      "role": "AI Forward Deployed SWE Intern",
+      "kind": "internship",
+      "dates_display": "Jun 2026 to Aug 2026",
+      "legal_dates": {
+        "start": "2026-06",
+        "end": "2026-08"
+      },
+      "summary": "Multi-agent ERP migration with human-in-the-loop confidence routing and a Databricks feed.",
+      "highlights": [
+        "Multi-agent ERP migration on the Claude API and LangGraph, containerized with Docker for AWS, Azure, and GCP: manual reconciliation down 68% over 10,000+ GL/AP/AR records from Sage X3 to Sage Intacct.",
+        "Nightly Databricks feed across AWS, Azure, and GCP workspaces: 17 financial tables and 4.2M rows into Delta Lake with PySpark, partition pruning and incremental merges held full refresh at 22 minutes.",
+        "Human-in-the-loop review layer over Sage REST APIs and MCP tool calling: 83% of records auto-approved above a confidence threshold, turnaround from 3 days to 5.5 hours for 12 client entities, each on its own cloud."
+      ]
+    },
+    {
+      "id": "sports",
+      "org": "USC Sports Analytics",
+      "role": "Volunteer research",
+      "kind": "volunteer research",
+      "dates_display": "Jun 2025 to Sep 2025",
+      "legal_dates": {
+        "start": "2025-06",
+        "end": "2025-09"
+      },
+      "summary": "Volunteer research: DQN reinforcement learning agent for NFL fourth-down calls over 420K plays.",
+      "highlights": [
+        "DQN agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
+        "Agreement with EPA-optimal calls up from 68% to 74% on held-out 2024 drives; per-run training time down 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."
+      ]
+    },
+    {
+      "id": "oracle",
+      "org": "Oracle",
+      "role": "Software Engineer II",
+      "kind": "full time",
+      "dates_display": "nearly 3 years",
+      "legal_dates": {
+        "start": "2022-07",
+        "end": "2025-01"
+      },
+      "summary": "Observability, incident response, and Kubernetes for NSX at Oracle scale.",
+      "location": "Hyderabad, India",
+      "highlights": [
+        "Prometheus and Grafana observability for NSX across 37,000+ enterprise tenants, moving alerting from static thresholds to SLOs on CPU, memory, and p99 latency: 47 dashboards and alert rules, 41% fewer false-positive pages.",
+        "P1 MTTR from 94 to 26 minutes (72%) with real-time API diagnostics across 1M+ endpoints on high-throughput event streams, auto-tagging root causes on 400 and 500 series failures so on-call starts with runbook context.",
+        "NetSuite search P50 page load down 30% (840 to 588 ms) by profiling query plans, restructuring indexes on hot predicates, and rewriting SQL that drove full scans.",
+        "CLI toolchain on Jenkins CI/CD with scripted pre-deployment validation, adopted by 4 teams across NSX: release cycles 34% shorter, failed deploys from 11% to 4%.",
+        "Containerized NSX services on OCI with Docker and Kubernetes, autoscaling on custom Prometheus metrics instead of CPU alone, holding p99 SLOs at 2x peak load through release surges."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "modelscope",
+      "name": "ModelScope",
+      "summary": "LLM inference optimization and eval suite: Llama-3.2-3B and Gemma-2-2B across 8 quantization configs (FP16, INT8, INT4, NF4) on a T4 GPU.",
+      "highlights": [
+        "INT4 at 2299 MB, 62% below FP16, 13.7 tok/s, MMLU within a point of baseline.",
+        "Pareto sweep showed INT8 strictly dominated: 53% more memory and 2.1x lower throughput."
+      ]
+    },
+    {
+      "id": "gnn",
+      "name": "GNN fraud detection",
+      "summary": "Heterogeneous IEEE-CIS fraud graph (726K nodes, 19.5M edges) with a HeteroRGCN.",
+      "highlights": [
+        "Neighbor sampling and focal loss on a 3.5% fraud rate.",
+        "0.923 ROC-AUC, +0.03 over tuned XGBoost."
+      ]
+    }
+  ],
+  "numbers": [
+    {
+      "id": "oracle-mttr-before",
+      "group": "oracle",
+      "fact": "P1 MTTR went from 94 to 26 min (72%)",
+      "q": "Oracle: P1 MTTR starting value, in minutes?",
+      "a": "94",
+      "unit": "min",
+      "accept": []
+    },
+    {
+      "id": "oracle-mttr-after",
+      "group": "oracle",
+      "fact": "P1 MTTR went from 94 to 26 min (72%)",
+      "q": "Oracle: P1 MTTR after, in minutes?",
+      "a": "26",
+      "unit": "min",
+      "accept": []
+    },
+    {
+      "id": "oracle-mttr-pct",
+      "group": "oracle",
+      "fact": "P1 MTTR went from 94 to 26 min (72%)",
+      "q": "Oracle: percent reduction in P1 MTTR?",
+      "a": "72",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "oracle-tenants",
+      "group": "oracle",
+      "fact": "37,000+ tenants",
+      "q": "Oracle: how many tenants?",
+      "a": "37000",
+      "unit": "+",
+      "accept": [
+        "37k",
+        "37,000+"
+      ]
+    },
+    {
+      "id": "oracle-endpoints",
+      "group": "oracle",
+      "fact": "1M+ endpoints",
+      "q": "Oracle: how many endpoints?",
+      "a": "1000000",
+      "unit": "+",
+      "accept": [
+        "1m",
+        "1 million",
+        "1m+"
+      ]
+    },
+    {
+      "id": "oracle-dashboards",
+      "group": "oracle",
+      "fact": "47 dashboards",
+      "q": "Oracle: how many dashboards?",
+      "a": "47",
+      "unit": "",
+      "accept": []
+    },
+    {
+      "id": "oracle-false-pages",
+      "group": "oracle",
+      "fact": "41% fewer false pages",
+      "q": "Oracle: percent fewer false pages?",
+      "a": "41",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "oracle-p50-before",
+      "group": "oracle",
+      "fact": "NetSuite P50 went from 840 to 588 ms (30%)",
+      "q": "Oracle: NetSuite P50 starting latency, in ms?",
+      "a": "840",
+      "unit": "ms",
+      "accept": []
+    },
+    {
+      "id": "oracle-p50-after",
+      "group": "oracle",
+      "fact": "NetSuite P50 went from 840 to 588 ms (30%)",
+      "q": "Oracle: NetSuite P50 after, in ms?",
+      "a": "588",
+      "unit": "ms",
+      "accept": []
+    },
+    {
+      "id": "oracle-p50-pct",
+      "group": "oracle",
+      "fact": "NetSuite P50 went from 840 to 588 ms (30%)",
+      "q": "Oracle: percent drop in NetSuite P50?",
+      "a": "30",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "oracle-cli-teams",
+      "group": "oracle",
+      "fact": "CLI toolchain adopted by 4 teams",
+      "q": "Oracle: how many teams adopted the CLI toolchain?",
+      "a": "4",
+      "unit": "teams",
+      "accept": [
+        "four"
+      ]
+    },
+    {
+      "id": "oracle-release",
+      "group": "oracle",
+      "fact": "Release cycles 34% shorter",
+      "q": "Oracle: percent shorter release cycles?",
+      "a": "34",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "oracle-deploy-before",
+      "group": "oracle",
+      "fact": "Failed deploys went from 11% to 4%",
+      "q": "Oracle: failed deploy rate before, in percent?",
+      "a": "11",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "oracle-deploy-after",
+      "group": "oracle",
+      "fact": "Failed deploys went from 11% to 4%",
+      "q": "Oracle: failed deploy rate after, in percent?",
+      "a": "4",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "oracle-slo-peak",
+      "group": "oracle",
+      "fact": "p99 SLOs held at 2x peak",
+      "q": "Oracle: p99 SLOs held at what multiple of peak?",
+      "a": "2",
+      "unit": "x",
+      "accept": [
+        "2x",
+        "2x peak",
+        "double"
+      ]
+    },
+    {
+      "id": "msr-records",
+      "group": "msrcosmos",
+      "fact": "10,000+ records",
+      "q": "MSRcosmos: how many records?",
+      "a": "10000",
+      "unit": "+",
+      "accept": [
+        "10k",
+        "10,000+"
+      ]
+    },
+    {
+      "id": "msr-reconciliation",
+      "group": "msrcosmos",
+      "fact": "68% less manual reconciliation",
+      "q": "MSRcosmos: percent less manual reconciliation?",
+      "a": "68",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "msr-auto-approved",
+      "group": "msrcosmos",
+      "fact": "83% auto-approved",
+      "q": "MSRcosmos: percent of records auto-approved?",
+      "a": "83",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "msr-cycle-before",
+      "group": "msrcosmos",
+      "fact": "Cycle time went from 3 days to 5.5 hours",
+      "q": "MSRcosmos: cycle time before, in days?",
+      "a": "3",
+      "unit": "days",
+      "accept": [
+        "three"
+      ]
+    },
+    {
+      "id": "msr-cycle-after",
+      "group": "msrcosmos",
+      "fact": "Cycle time went from 3 days to 5.5 hours",
+      "q": "MSRcosmos: cycle time after, in hours?",
+      "a": "5.5",
+      "unit": "hours",
+      "accept": []
+    },
+    {
+      "id": "msr-entities",
+      "group": "msrcosmos",
+      "fact": "12 entities",
+      "q": "MSRcosmos: how many entities?",
+      "a": "12",
+      "unit": "",
+      "accept": []
+    },
+    {
+      "id": "msr-tables",
+      "group": "msrcosmos",
+      "fact": "17 tables",
+      "q": "MSRcosmos: how many tables?",
+      "a": "17",
+      "unit": "",
+      "accept": []
+    },
+    {
+      "id": "msr-rows",
+      "group": "msrcosmos",
+      "fact": "4.2M rows",
+      "q": "MSRcosmos: how many rows in the Databricks feed?",
+      "a": "4200000",
+      "unit": "",
+      "accept": [
+        "4.2m",
+        "4.2 million"
+      ]
+    },
+    {
+      "id": "msr-refresh",
+      "group": "msrcosmos",
+      "fact": "22 min refresh",
+      "q": "MSRcosmos: refresh time, in minutes?",
+      "a": "22",
+      "unit": "min",
+      "accept": []
+    },
+    {
+      "id": "sports-plays",
+      "group": "sports",
+      "fact": "420K plays",
+      "q": "Sports analytics: how many plays?",
+      "a": "420000",
+      "unit": "",
+      "accept": [
+        "420k"
+      ]
+    },
+    {
+      "id": "sports-agree-before",
+      "group": "sports",
+      "fact": "Agreement went from 68% to 74%",
+      "q": "Sports analytics: agreement before, in percent?",
+      "a": "68",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "sports-agree-after",
+      "group": "sports",
+      "fact": "Agreement went from 68% to 74%",
+      "q": "Sports analytics: agreement after, in percent?",
+      "a": "74",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "sports-train-before",
+      "group": "sports",
+      "fact": "Training time went from 52 to 31 min (40%)",
+      "q": "Sports analytics: training time before, in minutes?",
+      "a": "52",
+      "unit": "min",
+      "accept": []
+    },
+    {
+      "id": "sports-train-after",
+      "group": "sports",
+      "fact": "Training time went from 52 to 31 min (40%)",
+      "q": "Sports analytics: training time after, in minutes?",
+      "a": "31",
+      "unit": "min",
+      "accept": []
+    },
+    {
+      "id": "sports-train-pct",
+      "group": "sports",
+      "fact": "Training time went from 52 to 31 min (40%)",
+      "q": "Sports analytics: percent faster training?",
+      "a": "40",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "ms-configs",
+      "group": "modelscope",
+      "fact": "8 configs benchmarked",
+      "q": "ModelScope: how many configs?",
+      "a": "8",
+      "unit": "",
+      "accept": [
+        "eight"
+      ]
+    },
+    {
+      "id": "ms-int4-mb",
+      "group": "modelscope",
+      "fact": "INT4 used 2299 MB",
+      "q": "ModelScope: INT4 memory, in MB?",
+      "a": "2299",
+      "unit": "MB",
+      "accept": []
+    },
+    {
+      "id": "ms-int4-pct",
+      "group": "modelscope",
+      "fact": "INT4 memory 62% below FP16",
+      "q": "ModelScope: INT4 memory is what percent below FP16?",
+      "a": "62",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "ms-tps",
+      "group": "modelscope",
+      "fact": "13.7 tok/s",
+      "q": "ModelScope: INT4 throughput, in tok/s?",
+      "a": "13.7",
+      "unit": "tok/s",
+      "accept": []
+    },
+    {
+      "id": "ms-mmlu",
+      "group": "modelscope",
+      "fact": "MMLU within a point of FP16",
+      "q": "ModelScope: INT4 MMLU stayed within how many points of FP16?",
+      "a": "1",
+      "unit": "point",
+      "accept": [
+        "one",
+        "a point",
+        "within a point"
+      ]
+    },
+    {
+      "id": "ms-int8-mem",
+      "group": "modelscope",
+      "fact": "INT8 was dominated: 53% more memory, 2.1x lower throughput",
+      "q": "ModelScope: INT8 used what percent more memory?",
+      "a": "53",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "ms-int8-tps",
+      "group": "modelscope",
+      "fact": "INT8 was dominated: 53% more memory, 2.1x lower throughput",
+      "q": "ModelScope: INT8 throughput was how many times lower?",
+      "a": "2.1",
+      "unit": "x",
+      "accept": [
+        "2.1x"
+      ]
+    },
+    {
+      "id": "gnn-nodes",
+      "group": "gnn",
+      "fact": "726K nodes",
+      "q": "GNN: how many nodes?",
+      "a": "726000",
+      "unit": "",
+      "accept": [
+        "726k"
+      ]
+    },
+    {
+      "id": "gnn-edges",
+      "group": "gnn",
+      "fact": "19.5M edges",
+      "q": "GNN: how many edges?",
+      "a": "19500000",
+      "unit": "",
+      "accept": [
+        "19.5m",
+        "19.5 million"
+      ]
+    },
+    {
+      "id": "gnn-fraud-rate",
+      "group": "gnn",
+      "fact": "3.5% fraud rate",
+      "q": "GNN: fraud rate, in percent?",
+      "a": "3.5",
+      "unit": "%",
+      "accept": []
+    },
+    {
+      "id": "gnn-auc",
+      "group": "gnn",
+      "fact": "0.923 ROC-AUC",
+      "q": "GNN: ROC-AUC?",
+      "a": "0.923",
+      "unit": "",
+      "accept": [
+        ".923"
+      ]
+    },
+    {
+      "id": "gnn-lift",
+      "group": "gnn",
+      "fact": "+0.03 ROC-AUC over XGBoost",
+      "q": "GNN: ROC-AUC gain over XGBoost?",
+      "a": "0.03",
+      "unit": "",
+      "accept": [
+        "+0.03",
+        ".03"
+      ]
+    }
+  ],
+  "number_groups": [
+    {
+      "id": "oracle",
+      "label": "Oracle"
+    },
+    {
+      "id": "msrcosmos",
+      "label": "MSRcosmos"
+    },
+    {
+      "id": "sports",
+      "label": "Sports analytics"
+    },
+    {
+      "id": "modelscope",
+      "label": "ModelScope"
+    },
+    {
+      "id": "gnn",
+      "label": "GNN"
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Python",
+      "Java",
+      "SQL",
+      "Go",
+      "C++",
+      "Bash"
+    ],
+    "backend": [
+      "FastAPI",
+      "Flask",
+      "REST",
+      "gRPC",
+      "Node.js",
+      "Microservices"
+    ],
+    "distributed": [
+      "Event-driven architecture",
+      "Kafka",
+      "Redis",
+      "Caching",
+      "Load balancing"
+    ],
+    "llm": [
+      "Claude API",
+      "OpenAI API",
+      "Tool use",
+      "MCP",
+      "LangGraph",
+      "LangChain",
+      "RAG",
+      "Vector DBs"
+    ],
+    "ml": [
+      "PyTorch",
+      "CUDA",
+      "Quantization (INT8, INT4, NF4)",
+      "Inference optimization",
+      "Benchmarking"
+    ],
+    "cloud": [
+      "AWS",
+      "Azure",
+      "GCP",
+      "OCI",
+      "Docker",
+      "Kubernetes",
+      "Prometheus",
+      "Grafana",
+      "GitHub Actions",
+      "Jenkins"
+    ],
+    "data": [
+      "PostgreSQL",
+      "MySQL",
+      "Elasticsearch",
+      "Databricks",
+      "PySpark",
+      "Delta Lake"
+    ]
+  }
+}
