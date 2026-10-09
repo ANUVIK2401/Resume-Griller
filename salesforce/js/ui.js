@@ -123,7 +123,7 @@
   }
 
   // Full-screen flashcard dialog. items: [{ kicker, front: () => Node, back: () => Node }]
-  // space reveals, j and k move, esc closes (native <dialog>).
+  // Keyboard: space reveals, j and k move, esc closes. Touch: tap the card to reveal, swipe to move.
   function rehearse(items, title = 'Rehearse') {
     if (!items.length) return;
     let i = 0;
@@ -146,11 +146,27 @@
       body.replaceChildren(
         item.kicker ? el('p', { class: 'eyebrow' }, item.kicker) : null,
         el('div', { class: 'rh-front' }, item.front()),
-        revealed ? el('div', { class: 'rh-back' }, item.back()) : null);
+        revealed ? el('div', { class: 'rh-back' }, item.back()) : el('p', { class: 'rh-hint' }, 'Say your answer out loud, then tap the card or Reveal. Swipe to move.'));
       revealBtn.replaceChildren(revealed ? 'Hide ' : 'Reveal ', el('kbd', {}, 'space'));
     };
     const go = (d) => { i = (i + d + items.length) % items.length; revealed = false; paint(); };
     revealBtn.addEventListener('click', () => { revealed = !revealed; paint(); });
+    // Tap anywhere on the card (not on a control) to reveal; horizontal swipe moves.
+    const SWIPE_PX = 60;
+    let startX = null;
+    let startY = null;
+    body.addEventListener('pointerdown', (e) => { startX = e.clientX; startY = e.clientY; });
+    body.addEventListener('pointerup', (e) => {
+      if (startX === null) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      startX = null;
+      if (Math.abs(dx) > SWIPE_PX && Math.abs(dx) > Math.abs(dy) * 1.5) { go(dx < 0 ? 1 : -1); return; }
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && !e.target.closest('a, button, input, textarea, select, summary')) {
+        revealed = !revealed;
+        paint();
+      }
+    });
     dialog.addEventListener('keydown', (e) => {
       if (e.target.closest('input, textarea, select')) return;
       const actions = { ' ': () => { revealed = !revealed; paint(); }, j: () => go(1), k: () => go(-1) };

@@ -101,6 +101,20 @@
     ];
   }
 
+  // A- / A+ : scales every rem-based size, saved per device (applied early by theme.js).
+  const SCALE = { min: 90, max: 140, step: 10 };
+  function textSizeButtons() {
+    const read = () => Number(document.documentElement.style.fontSize.replace('%', '')) || 100;
+    const apply = (next) => {
+      const v = Math.min(SCALE.max, Math.max(SCALE.min, next));
+      document.documentElement.style.fontSize = `${v}%`;
+      try { localStorage.setItem('sfprep:scale', String(v)); } catch { /* size resets next visit */ }
+    };
+    return el('span', { class: 'text-size', role: 'group', 'aria-label': 'Text size' },
+      el('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Smaller text', title: 'Smaller text', onclick: () => apply(read() - SCALE.step) }, 'A−'),
+      el('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Larger text', title: 'Larger text', onclick: () => apply(read() + SCALE.step) }, 'A+'));
+  }
+
   const wordmark = () => el('a', { class: 'wordmark', href: 'index.html' }, 'SF ', el('b', {}, 'MTS'), el('i', {}, '.'), ' prep');
 
   function setNavOpen(open) {
@@ -114,6 +128,7 @@
     document.getElementById('topbar').replaceChildren(
       el('button', { class: 'icon-btn', id: 'menu-btn', type: 'button', 'aria-label': 'Open navigation', 'aria-controls': 'sidebar', 'aria-expanded': 'false', onclick: () => setNavOpen(true) }, icon('menu')),
       wordmark(),
+      textSizeButtons(),
       themeButton(),
     );
     document.getElementById('scrim').addEventListener('click', () => setNavOpen(false));
@@ -134,7 +149,7 @@
             el('span', { class: 'side-dot', 'aria-hidden': 'true' }), p.label))))),
       el('nav', { class: 'side-toc', id: 'toc', 'aria-label': 'On this page', hidden: true }),
       el('div', { class: 'sidebar-foot' },
-        el('div', { class: 'sidebar-tools' }, themeButton(), progressButtons()),
+        el('div', { class: 'sidebar-tools' }, textSizeButtons(), themeButton(), progressButtons()),
         el('p', {}, Prep.store.persistent ? 'Progress saves in this browser. Export to back it up.' : 'Storage is blocked here, so progress resets on reload. Export before leaving.')),
     );
   }

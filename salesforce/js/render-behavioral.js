@@ -53,18 +53,21 @@
           el('span', { class: 'chip' }, exp.org || exp.name),
           ui.statusSelect(`story-${story.id}`, data.status_options, onStatus))),
       el('div', { class: 'item-body' },
-        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Resume line'),
-          story.resume_lines.map((line) => el('blockquote', { class: 'resume-line' }, line))),
-        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Salesforce values'),
-          el('div', { class: 'row' }, story.values.map((id) => el('span', { class: 'chip chip-gold' }, data.values.find((v) => v.id === id).name)))),
+        // Spoken material first: the question, the answer, the numbers, the plain version, the follow-ups.
         el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Questions this answers'), ui.list(story.prompts)),
-        explainBlock(story),
         el('p', { class: 'label' }, 'STAR answer'),
         starBlock(story),
-        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Numbers to say'), el('div', { class: 'row' }, [...new Set(facts)].map((f) => el('span', { class: 'chip chip-gold' }, f)))),
-        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Shows'), el('div', { class: 'row' }, comps.map((c) => el('span', { class: 'chip' }, c)))),
-        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Expected probes'),
+        facts.length ? el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Numbers to say'), el('div', { class: 'row' }, [...new Set(facts)].map((f) => el('span', { class: 'chip chip-gold' }, f)))) : null,
+        explainBlock(story),
+        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Expected follow-ups'),
           el('div', { class: 'item-list' }, story.probes.map((p) => el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, p.q), el('p', {}, ui.fill(p.a)))))),
+        // Reference: where it came from and what it shows.
+        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Resume line'),
+          story.resume_lines.map((line) => el('blockquote', { class: 'resume-line' }, line))),
+        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Salesforce values and competencies'),
+          el('div', { class: 'row' },
+            story.values.map((id) => el('span', { class: 'chip chip-gold' }, data.values.find((v) => v.id === id).name)),
+            comps.map((c) => el('span', { class: 'chip' }, c)))),
         el('div', { class: 'row' }, ui.confidence(`story-${story.id}`)),
         ui.notesBox(`story-${story.id}`, 'Your version, in your words')));
   }
@@ -93,10 +96,11 @@
       onChange: apply,
     });
     apply({ q: '' });
+    // Front is what the interviewer asks; recall the story, say it, then check.
     const rehearse = () => ui.rehearse(ui.shuffle(data.stories).map((s) => ({
-      kicker: ui.shuffle(s.prompts)[0],
-      front: () => el('span', {}, s.title),
-      back: () => starBlock(s),
+      kicker: 'Interviewer asks',
+      front: () => el('span', {}, ui.shuffle(s.prompts)[0]),
+      back: () => el('div', { class: 'stack' }, el('p', { class: 'h3' }, `Story: ${s.title}`), starBlock(s)),
     })), 'Rehearse stories');
     return ui.section('stories', 'STAR bank', `${data.stories.length} stories`, el('span', {}, 'The ', el('em', {}, 'STAR'), ' bank'),
       el('p', { class: 'section-intro' }, `${data.intro} Gold "fill" marks are specifics only you know; replace them in your notes before the interview.`),
