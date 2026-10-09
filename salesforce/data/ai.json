@@ -1,0 +1,660 @@
+{
+  "$schema": "./schema/ai.schema.json",
+  "status_options": [
+    {
+      "id": "learning",
+      "label": "Learning"
+    },
+    {
+      "id": "review",
+      "label": "Needs review"
+    },
+    {
+      "id": "known",
+      "label": "Know it"
+    }
+  ],
+  "topics": [
+    {
+      "id": "ai-sre",
+      "name": "AI SRE",
+      "pinned": true
+    },
+    {
+      "id": "llm-basics",
+      "name": "LLM basics"
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Model trade-offs"
+    },
+    {
+      "id": "rag",
+      "name": "RAG"
+    },
+    {
+      "id": "agents",
+      "name": "Agents"
+    },
+    {
+      "id": "evals",
+      "name": "Evals"
+    },
+    {
+      "id": "observability",
+      "name": "Observability"
+    }
+  ],
+  "cards": [
+    {
+      "id": "ai-sre-anchor",
+      "topic": "ai-sre",
+      "pinned": true,
+      "question": "How would you use AI to cut MTTD and MTTR?",
+      "short": "Use AI where engineers lose time: getting context and forming hypotheses. When an alert fires, an agent gathers metrics, logs, traces, and recent changes, searches past incidents and runbooks, and ranks likely causes with cited evidence, abstaining when evidence is weak. It runs read-only diagnostics freely, proposes reversible mitigations for a human to approve, and drafts the RCA. I measure MTTD, MTTR, top-3 root-cause accuracy, and wrong-action rate by replaying a golden set of past incidents.",
+      "terms": [
+        "MTTD (mean time to detect): how long until someone knows something is wrong.",
+        "MTTR (mean time to resolve): how long until it is fixed.",
+        "Golden set: past incidents with known root causes, used as a test.",
+        "Abstain: the agent says it is not sure instead of guessing.",
+        "Reversible mitigation: a fix you can undo, like a rollback or scaling up."
+      ],
+      "long": [
+        "Detect: group related alerts into one incident and alert on SLO burn, so the page comes sooner and only once.",
+        "Gather context: pull metrics, logs, traces, deploys, and config changes for the affected service and time window.",
+        "Retrieve: hybrid search, keyword plus vector, over past incidents and runbooks, filtered by service and error signature.",
+        "Rank hypotheses: the LLM proposes the top causes, each citing evidence from tool output; below a confidence bar it abstains.",
+        "Act safely: read-only diagnostics run automatically; mitigations are proposals a human approves, and only reversible ones.",
+        "Close the loop: draft the RCA, add the resolved incident to the index, and replay the golden set before any prompt or model change ships."
+      ],
+      "followups": [
+        {
+          "q": "What are the main risks?",
+          "a": "Hallucinated causes (require citations, abstain when weak), stale runbooks (freshness dates, downrank old ones), alert storms (group first, cap concurrent investigations), and runaway cost (step and token budgets per incident)."
+        },
+        {
+          "q": "How do you prove it works before trusting it?",
+          "a": "Shadow mode first: it runs on live incidents but only logs. Compare its top 3 causes with the human RCA and track wrong-action rate, then move to suggestions, then approvals, then narrow auto-actions for proven runbooks."
+        },
+        {
+          "q": "Where does most MTTR go?",
+          "a": "Usually diagnosis: finding what changed and where. That is where retrieval and ranked hypotheses pay off. Ask the HM which phase dominates for them."
+        }
+      ],
+      "tie": "This is my Oracle tool, which cut P1 MTTR from 94 to 26 minutes with auto-tagged root causes and runbooks, rebuilt with retrieval and LLM ranking, plus my MSRcosmos confidence routing for anything that acts."
+    },
+    {
+      "id": "ai-sre-eval",
+      "topic": "ai-sre",
+      "pinned": true,
+      "question": "How do you evaluate an AI SRE agent?",
+      "short": "Replay past incidents with known root causes. Give the agent only the data that existed at the time, then score whether the true cause is in its top 3, how fast it got there, how often it proposed a wrong action, and how often it abstained. Every prompt or model change has to pass that replay.",
+      "terms": [
+        "Replay: rerun the agent on a past incident as if it were happening now.",
+        "Time travel: tools only return data from before the incident was resolved.",
+        "Top-3 accuracy: the real root cause is among the agent's top 3 guesses.",
+        "Wrong-action rate: how often it proposes a harmful or useless fix.",
+        "Regression gate: a check that blocks a release if scores drop."
+      ],
+      "long": [
+        "Build the golden set from postmortems: symptoms, timeline, root cause, fix.",
+        "Snapshot tool outputs or query historical windows so replays are repeatable.",
+        "Score top-3 accuracy, time to first useful hypothesis, wrong-action rate, and abstain rate.",
+        "Grade RCA drafts with a rubric and an LLM judge, checked against human ratings first.",
+        "Run shadow mode in production and gate every change on the replay score."
+      ],
+      "followups": [
+        {
+          "q": "What if you only have a few documented incidents?",
+          "a": "Start with 30 to 50 well-documented ones, add every new postmortem, and report results with that sample size in mind."
+        },
+        {
+          "q": "How do you score the RCA draft?",
+          "a": "A rubric: correct timeline, correct root cause, concrete action items. An LLM judge applies it, validated against human scores."
+        }
+      ],
+      "tie": "At the AI Trust Lab I built automated scoring to compare 6 frontier models side by side; this is the same discipline applied to an agent."
+    },
+    {
+      "id": "llm-transformer",
+      "topic": "llm-basics",
+      "pinned": false,
+      "question": "Explain transformers and attention simply.",
+      "short": "A transformer reads all the tokens in a prompt together. Attention lets each token look at every other token and decide which ones matter for its meaning. Stacking many attention and feed-forward layers builds up understanding. A decoder-only LLM like GPT, Claude, or Gemini is trained to predict the next token, and generates text one token at a time.",
+      "terms": [
+        "Token: a chunk of text, roughly a word piece.",
+        "Attention: each token weighs how relevant every other token is.",
+        "Query, key, value: three learned vectors per token; query matches keys, and values carry the information.",
+        "Decoder-only model: predicts the next token from the ones before it."
+      ],
+      "long": [
+        "Tokens become vectors (embeddings) plus position information.",
+        "Each layer runs self-attention, then a small feed-forward network.",
+        "Multi-head attention runs several attention patterns in parallel to capture different relationships.",
+        "A causal mask lets each token see only earlier tokens during generation.",
+        "Attention compares every token with every other, so cost grows with the square of the length: why long context is expensive."
+      ],
+      "followups": [
+        {
+          "q": "Why is long context expensive?",
+          "a": "Attention is quadratic in sequence length for compute, and the KV cache grows with every token for memory."
+        },
+        {
+          "q": "What does multi-head attention add?",
+          "a": "Different heads learn different relationships, like syntax in one and references in another."
+        }
+      ],
+      "tie": "In ModelScope, most of what I profiled (latency, peak memory) comes down to attention and the KV cache."
+    },
+    {
+      "id": "llm-tokens",
+      "topic": "llm-basics",
+      "pinned": false,
+      "question": "What are tokens and context windows, and why do they matter in production?",
+      "short": "Tokens are the chunks a model reads, about 3 to 4 characters of English each. The context window is how many tokens fit in one request, prompt plus answer. In production they set cost, latency, and what the model can see, so I budget them like memory.",
+      "terms": [
+        "Token: the unit models read and bill by.",
+        "Context window: the maximum tokens per request, input plus output.",
+        "Time to first token: delay before output starts; grows with input length.",
+        "Prompt caching: reusing a shared prompt prefix to save cost and time."
+      ],
+      "long": [
+        "You pay for input and output tokens; output is slower because it is generated one at a time.",
+        "Long inputs raise time to first token and cost every call.",
+        "Models attend less reliably to the middle of very long inputs, so more context is not always better.",
+        "Retrieve and rerank the right few chunks instead of pasting everything.",
+        "Cap tool output and summarize long histories in agents."
+      ],
+      "followups": [
+        {
+          "q": "How do you keep an agent within budget?",
+          "a": "Per-run token and step caps, trimmed tool outputs, summarized history, and cached shared prefixes."
+        }
+      ],
+      "tie": "The triage agent design caps tokens per incident for exactly this reason."
+    },
+    {
+      "id": "llm-sampling",
+      "topic": "llm-basics",
+      "pinned": false,
+      "question": "What do temperature and top-p do?",
+      "short": "They control randomness when picking the next token. Temperature reshapes the probabilities: low is focused and repeatable, high is varied. Top-p samples only from the smallest set of tokens whose probabilities add up to p. For extraction, classification, and tool calls I keep randomness low and validate outputs against a schema.",
+      "terms": [
+        "Logits: the model's raw scores for each possible next token.",
+        "Temperature: divides the logits; near 0 means pick the top token.",
+        "Top-p (nucleus sampling): keep the most likely tokens up to probability p.",
+        "Greedy decoding: always take the single most likely token."
+      ],
+      "long": [
+        "Temperature near 0 is close to greedy decoding.",
+        "Top-p cuts off the long tail of unlikely tokens.",
+        "Creative tasks: raise temperature. Structured output: lower it and validate.",
+        "Even at temperature 0, outputs can vary slightly between runs because of batching and floating point, so evals should sample more than once."
+      ],
+      "followups": [
+        {
+          "q": "Why not always use temperature 0?",
+          "a": "Outputs can get repetitive or stuck. Sampling several candidates and voting (self-consistency) can beat a single greedy answer on reasoning tasks."
+        }
+      ],
+      "tie": "For the Trust Lab annotation pipeline, consistent labels matter more than variety. [fill: the sampling settings you used]"
+    },
+    {
+      "id": "llm-kv-cache",
+      "topic": "llm-basics",
+      "pinned": false,
+      "question": "What is the KV cache and why does it matter?",
+      "short": "While generating, the model keeps the key and value vectors of every token it has already processed, so each new token only computes attention for itself instead of redoing the whole prompt. That makes generation fast, but the cache uses GPU memory that grows with sequence length and batch size, which limits how many requests one GPU can serve.",
+      "terms": [
+        "KV cache: stored keys and values for tokens already processed.",
+        "Prefill: processing the whole prompt at once; compute-heavy.",
+        "Decode: generating tokens one by one; memory-bandwidth-heavy.",
+        "Batch size: how many requests run together on one GPU."
+      ],
+      "long": [
+        "Cache size grows with layers, heads, sequence length, and batch size.",
+        "Paged attention (as in vLLM) stores the cache in pages to fit more requests.",
+        "Grouped-query attention and KV cache quantization shrink it.",
+        "Prefix caching reuses the cache for shared system prompts.",
+        "Continuous batching keeps the GPU busy as requests finish at different times."
+      ],
+      "followups": [
+        {
+          "q": "How would you serve more users per GPU?",
+          "a": "Continuous batching, paged KV cache, quantized weights and cache, models with grouped-query attention, and shorter prompts."
+        }
+      ],
+      "tie": "ModelScope's peak memory numbers include KV cache growth during generation."
+    },
+    {
+      "id": "tradeoff-size",
+      "topic": "tradeoffs",
+      "pinned": false,
+      "question": "How do you choose between a small and a large model?",
+      "short": "Start from the task and the budget: use the smallest model that passes your eval set at the latency and cost you can afford. Large models for open-ended reasoning and messy inputs; small or fine-tuned models for narrow, high-volume steps like routing, classification, or extraction. Often it is both: a small model handles most traffic and escalates hard cases.",
+      "terms": [
+        "Latency: time per request, usually tracked at p50 and p95.",
+        "Cost per request: tokens times price, or GPU time if self-hosted.",
+        "Cascade: small model first, escalate to a large one when unsure.",
+        "Eval set: the test that decides whether a model is good enough."
+      ],
+      "long": [
+        "Define the quality bar with an eval set before comparing models.",
+        "Measure latency and cost per request, not just per token.",
+        "Cascade on confidence, validation failure, or task type, and track the escalation rate.",
+        "Fine-tune or distill a small model for stable, repeated tasks.",
+        "API versus self-hosting is also about data residency and control."
+      ],
+      "followups": [
+        {
+          "q": "How do you decide when to escalate?",
+          "a": "Confidence scores, failed schema validation, or known-hard task types. Watch the escalation rate; if it climbs, the small model is drifting."
+        }
+      ],
+      "tie": "My MSRcosmos confidence routing is the same cascade idea, with a human as the final tier."
+    },
+    {
+      "id": "tradeoff-quant",
+      "topic": "tradeoffs",
+      "pinned": false,
+      "question": "What is quantization and when would you use it?",
+      "short": "Quantization stores model weights in fewer bits, like 4-bit instead of 16-bit, so the model needs less memory and fits cheaper GPUs. In ModelScope on a T4, INT4 cut memory 62% versus FP16 at 13.7 tok/s with MMLU within a point, while INT8 was worse than INT4 on both memory and speed. Always confirm quality on your own task.",
+      "terms": [
+        "FP16: 16-bit floating point, the usual baseline.",
+        "INT8 and INT4: 8-bit and 4-bit integer weights.",
+        "NF4: a 4-bit format designed for the way model weights are distributed.",
+        "Weight-only quantization: shrink the weights, keep activations in higher precision."
+      ],
+      "long": [
+        "Memory is usually the binding constraint when serving models.",
+        "Common methods: GPTQ, AWQ, and bitsandbytes NF4.",
+        "Speed depends on kernels and hardware; INT8 can be slower if the GPU lacks fast paths.",
+        "Check task-level evals, not just a general benchmark like MMLU.",
+        "KV cache quantization is a separate lever for long contexts."
+      ],
+      "followups": [
+        {
+          "q": "Why was INT8 slower in your test?",
+          "a": "[fill: your profiling explanation]. A common cause is INT8 paths that dequantize at runtime without fast kernels on that GPU."
+        }
+      ],
+      "tie": "ModelScope: 8 configs, INT4 at 2299 MB and 62% below FP16, INT8 strictly dominated."
+    },
+    {
+      "id": "rag-pipeline",
+      "topic": "rag",
+      "pinned": false,
+      "question": "Walk me through a RAG system.",
+      "short": "Index documents by splitting them into chunks, embedding each chunk, and storing it with metadata. At query time, filter by metadata, retrieve candidates with hybrid search, keyword plus vector, rerank them, and give the top few to the LLM with instructions to answer only from them and cite sources. Evaluate retrieval and generation separately.",
+      "terms": [
+        "Chunk: a piece of a document small enough to retrieve precisely.",
+        "Embedding: a vector that captures meaning, so similar text lands close together.",
+        "Hybrid search: keyword search plus vector search, merged.",
+        "Reranker: a model that reorders the top candidates more accurately.",
+        "Grounding: answering only from retrieved sources, with citations."
+      ],
+      "long": [
+        "Chunk by structure (headings, sections) with a little overlap.",
+        "Filter by metadata first: service, date, tenant, access level.",
+        "Keywords catch exact strings like error codes; vectors catch paraphrases. Merge with reciprocal rank fusion.",
+        "Rerank the top 50 or so down to the best 5.",
+        "Prompt the model to cite sources and say when the answer is not there.",
+        "Re-index on change and keep a last-updated date for freshness."
+      ],
+      "followups": [
+        {
+          "q": "Why hybrid instead of vectors only?",
+          "a": "Exact strings such as error codes, IDs, and function names are where embeddings are weakest."
+        },
+        {
+          "q": "How would you build it on GCP?",
+          "a": "Vertex AI Search if managed is fine; otherwise AlloyDB pgvector or Vertex AI Vector Search plus a reranker, with Gemini on Vertex AI for generation."
+        }
+      ],
+      "tie": "Retrieval over past incidents and runbooks is the core of the triage agent design."
+    },
+    {
+      "id": "rag-vectordb",
+      "topic": "rag",
+      "pinned": false,
+      "question": "How do you choose a vector database?",
+      "short": "Pick by scale, filtering needs, operations burden, and where the data already lives. If the data is in Postgres, pgvector (AlloyDB on GCP) is simplest. For managed scale on GCP, Vertex AI Vector Search. Pinecone is managed and easy; Milvus is open source for self-hosted scale. Metadata filtering and hybrid search usually matter more than raw speed.",
+      "terms": [
+        "ANN (approximate nearest neighbor): fast search that trades a little accuracy for speed.",
+        "HNSW: a common graph-based ANN index.",
+        "Recall: share of the true nearest neighbors the index returns.",
+        "Metadata filter: restrict search by fields like tenant or date."
+      ],
+      "long": [
+        "Measure recall at k against latency on your own data.",
+        "Filtering before or after the ANN search changes recall; test it.",
+        "Multi-tenancy: a tenant filter or namespace on every query.",
+        "Indexes are memory-heavy; plan cost and re-index time."
+      ],
+      "followups": [
+        {
+          "q": "What breaks at scale?",
+          "a": "Index memory, re-index time, recall dropping under heavy filters, and tenant isolation."
+        }
+      ],
+      "tie": "Salesforce is multi-tenant, so I would put the tenant ID filter on every retrieval call."
+    },
+    {
+      "id": "rag-eval",
+      "topic": "rag",
+      "pinned": false,
+      "question": "How do you evaluate retrieval separately from generation?",
+      "short": "For retrieval, use questions with known relevant documents and measure whether they come back: recall at k and MRR. For generation, give the model the right context and check the answer is faithful to it and actually answers the question. Splitting them tells you which half to fix.",
+      "terms": [
+        "Recall at k: did the right document appear in the top k results.",
+        "MRR (mean reciprocal rank): how high the first right document ranks.",
+        "Faithfulness: every claim in the answer is supported by the context.",
+        "Answer relevance: the answer addresses the question asked."
+      ],
+      "long": [
+        "Build a labeled set of questions and their relevant documents.",
+        "Retrieval metrics first; then test generation with gold context.",
+        "RAGAS automates these scores with LLM judges.",
+        "Validate any LLM judge against human labels before trusting it.",
+        "Track an end-to-end score too, and watch all of them over time."
+      ],
+      "followups": [
+        {
+          "q": "Retrieval looks good but answers are wrong. What now?",
+          "a": "Test with gold context. If answers are still wrong, it is the prompt, context ordering, too much context, or the model, not retrieval."
+        }
+      ],
+      "tie": "At the Trust Lab I scored factual accuracy automatically across 6 models; faithfulness scoring is the same idea."
+    },
+    {
+      "id": "agents-react",
+      "topic": "agents",
+      "pinned": false,
+      "question": "What is ReAct, and how does tool use work?",
+      "short": "ReAct interleaves reasoning and acting: the model decides what to do, calls a tool, reads the result, and repeats until it can answer. Tool use means the model emits a structured call; my code validates and runs it and returns the result. The model never executes anything itself.",
+      "terms": [
+        "Tool: a function the model can request, described by a name and a JSON schema.",
+        "Tool call: the model's structured request to run a tool.",
+        "Observation: the tool result fed back to the model.",
+        "Stop condition: when the loop ends, like an answer, a step cap, or a budget."
+      ],
+      "long": [
+        "Write clear tool names, descriptions, and schemas.",
+        "Validate arguments before running anything.",
+        "Return short, structured results; long outputs waste context.",
+        "Return errors as observations so the model can recover.",
+        "Log every step for debugging and audit."
+      ],
+      "followups": [
+        {
+          "q": "How do you stop infinite loops?",
+          "a": "Step caps, token budgets, timeouts, and detecting repeated identical calls."
+        }
+      ],
+      "tie": "My MSRcosmos agents reached Sage through MCP tool calling."
+    },
+    {
+      "id": "agents-mcp",
+      "topic": "agents",
+      "pinned": false,
+      "question": "What is MCP and why does it matter?",
+      "short": "MCP, the Model Context Protocol, is an open standard for connecting LLM apps to tools and data. A server exposes tools, resources, and prompts, and any MCP-capable client can use them. It turns N apps times M integrations into N plus M, and puts permissions at the server boundary.",
+      "terms": [
+        "MCP server: wraps one system, like a database or ticketing tool, and exposes it.",
+        "MCP client or host: the LLM app that connects to servers, like Claude.",
+        "Tool: an action the model can call through the server.",
+        "Resource: data the model can read through the server."
+      ],
+      "long": [
+        "Each server wraps one system and can be reused across clients.",
+        "Scope credentials per server: least privilege, read-only by default.",
+        "Treat tool output as data, never as instructions, to resist prompt injection.",
+        "Put irreversible actions behind a separate server with human approval."
+      ],
+      "followups": [
+        {
+          "q": "How would you use MCP for SRE?",
+          "a": "Read-only servers for metrics, logs, traces, and deploy history; a separate approval-gated server for mitigations."
+        }
+      ],
+      "tie": "I wired MCP connectors into PacSun's internal systems at Annenberg, and used MCP tool calling over Sage APIs at MSRcosmos."
+    },
+    {
+      "id": "agents-langgraph",
+      "topic": "agents",
+      "pinned": false,
+      "question": "LangGraph or a free agent loop?",
+      "short": "A free loop lets the model choose every next step: flexible, but hard to bound, test, and audit. LangGraph makes the steps an explicit graph with typed state, checkpoints, and pauses for human approval. For workflows that touch money or production, I want the graph.",
+      "terms": [
+        "State: the shared data each step reads and updates.",
+        "Node: one step, like gather, rank, or write.",
+        "Checkpoint: a saved snapshot of state, so a run can resume or be replayed.",
+        "Interrupt: a pause that waits for a human decision."
+      ],
+      "long": [
+        "The graph fixes the possible paths; the model decides within each node.",
+        "Checkpoints allow resuming after failures and replaying for debugging.",
+        "Interrupts put human approval exactly where it is needed.",
+        "Each node can be tested on its own.",
+        "Free loops are fine for open-ended research where paths are unknown."
+      ],
+      "followups": [
+        {
+          "q": "What is the downside of a graph?",
+          "a": "Less flexibility: new paths need code, and you can overfit the graph to today's process."
+        }
+      ],
+      "tie": "I chose LangGraph at MSRcosmos for auditability on financial records."
+    },
+    {
+      "id": "agents-multi",
+      "topic": "agents",
+      "pinned": false,
+      "question": "When do you use multiple agents, and how do you keep them safe?",
+      "short": "Split into agents when jobs need different tools, prompts, or permissions, like gather, analyze, and write. Common patterns: a supervisor routing to specialists, a pipeline, or parallel workers with a merge step. Guardrails: least-privilege tools per agent, validated outputs between steps, step and cost caps, and human approval for irreversible actions.",
+      "terms": [
+        "Supervisor: an agent that routes work to specialists.",
+        "Specialist: an agent with one job and its own tools.",
+        "Guardrail: a check on inputs or outputs that blocks bad behavior.",
+        "Budget cap: a hard limit on steps, tokens, or time per run."
+      ],
+      "long": [
+        "More agents add cost, latency, and failure points; start with one agent and tools.",
+        "Pass structured state between agents, not raw chat history.",
+        "Validate outputs between steps so one agent's error does not spread.",
+        "Trace every call, for example with OpenTelemetry spans."
+      ],
+      "followups": [
+        {
+          "q": "What is the biggest failure mode?",
+          "a": "Agents amplifying each other's mistakes. Validate between steps and keep a human on irreversible actions."
+        }
+      ],
+      "tie": "The PacSun app splits gather, rank, and write; MSRcosmos split mapping, checking, and review."
+    },
+    {
+      "id": "evals-basics",
+      "topic": "evals",
+      "pinned": false,
+      "question": "How do you evaluate an LLM system?",
+      "short": "Build a golden set of real inputs with expected outputs or grading rubrics, score every change against it, and block releases that regress. Use exact checks where possible and rubric scoring with an LLM judge where not, and validate the judge against human labels before trusting it.",
+      "terms": [
+        "Golden set: real examples with known good answers.",
+        "Rubric: written grading criteria.",
+        "LLM-as-judge: an LLM grades outputs using the rubric.",
+        "Regression gate: a release check that fails if scores drop."
+      ],
+      "long": [
+        "Source examples from production logs, edge cases, and past failures.",
+        "Choose metrics per task: exact match, schema validity, rubric score.",
+        "Give the judge the rubric and graded examples.",
+        "Check judge agreement with humans before relying on it.",
+        "Track cost and latency alongside quality."
+      ],
+      "followups": [
+        {
+          "q": "How big should the golden set be?",
+          "a": "Start with about 50 to 100 representative examples and add every new failure."
+        }
+      ],
+      "tie": "At the Trust Lab I built test suites and automated scoring for 6 models, and a rubric-based labeling pipeline."
+    },
+    {
+      "id": "evals-tools",
+      "topic": "evals",
+      "pinned": false,
+      "question": "What are DSPy and RAGAS?",
+      "short": "RAGAS is a library for scoring RAG systems, such as faithfulness, answer relevance, and context precision and recall, mostly using LLM judges. DSPy treats prompts as programs: you declare inputs, outputs, and a metric, and it optimizes prompts and few-shot examples against your eval set instead of hand-tuning.",
+      "terms": [
+        "Signature (DSPy): the declared inputs and outputs of a step.",
+        "Optimizer (DSPy): searches for better prompts and examples using your metric.",
+        "Faithfulness (RAGAS): claims in the answer are supported by the context.",
+        "Context precision (RAGAS): how much of the retrieved context is relevant."
+      ],
+      "long": [
+        "RAGAS fits the retrieval-versus-generation split.",
+        "DSPy needs a good metric; it optimizes whatever you measure.",
+        "Both still need human-validated judges.",
+        "Hands-on depth here is a gap I name honestly."
+      ],
+      "followups": [
+        {
+          "q": "Have you used them?",
+          "a": "[fill: your actual exposure]. I have built the same ideas by hand: automated scoring at the Trust Lab and rubric-based labeling with confidence routing."
+        }
+      ],
+      "tie": "See the honest gaps card for how to frame this."
+    },
+    {
+      "id": "obs-stack",
+      "topic": "observability",
+      "pinned": false,
+      "question": "Explain the observability stack: Prometheus, Grafana, OpenTelemetry, Zipkin, Splunk.",
+      "short": "Metrics, logs, and traces answer different questions. Prometheus collects metrics and runs alert rules; Grafana shows them. OpenTelemetry is the vendor-neutral standard for emitting metrics, logs, and traces. Zipkin stores and displays distributed traces. Splunk indexes and searches logs. On GCP: Managed Service for Prometheus, Cloud Monitoring, Cloud Logging, and Cloud Trace.",
+      "terms": [
+        "Metric: a number over time, like request rate; cheap and good for alerts.",
+        "Log: a detailed record of one event.",
+        "Trace and span: the path of one request across services, with timing per hop.",
+        "Cardinality: how many unique label combinations a metric has; too many breaks storage."
+      ],
+      "long": [
+        "Alert on metrics, investigate with traces, confirm with logs.",
+        "An OpenTelemetry collector routes data to whichever backends you use.",
+        "Control label cardinality, such as never labeling by user ID.",
+        "Exemplars link a metric spike to example traces."
+      ],
+      "followups": [
+        {
+          "q": "What do you alert on?",
+          "a": "SLO burn on user-facing SLIs, not on every cause."
+        }
+      ],
+      "tie": "I built the Prometheus and Grafana stack for NSX at Oracle: 47 dashboards across 37,000+ tenants."
+    },
+    {
+      "id": "obs-slo",
+      "topic": "observability",
+      "pinned": false,
+      "question": "What are SLOs and error budgets, and how do you alert on them?",
+      "short": "An SLI measures good events over total events, like requests under 300 ms. The SLO is the target, like 99.9% over 30 days. The error budget is the 0.1% you are allowed to miss. Alert on burn rate: page when the budget burns fast over both a long and a short window, and open a ticket when it burns slowly.",
+      "terms": [
+        "SLI (service level indicator): the measured ratio of good events.",
+        "SLO (service level objective): the target for that ratio.",
+        "Error budget: the allowed failure, like about 43 minutes per 30 days at 99.9%.",
+        "Burn rate: how fast the budget is being spent."
+      ],
+      "long": [
+        "Page at 14.4x burn over 1 hour and 5 minutes, or 6x over 6 hours and 30 minutes.",
+        "Ticket at 1x burn over 3 days and 6 hours.",
+        "Both windows must fire, so alerts are significant and still happening.",
+        "An error budget policy slows risky releases when the budget is spent.",
+        "Prefer user-facing SLIs like latency and errors; resource signals work as early warnings."
+      ],
+      "followups": [
+        {
+          "q": "Your resume says SLOs on CPU and memory. Isn't that unusual?",
+          "a": "Fair question. p99 latency was the user-facing SLO; CPU and memory targets acted as saturation objectives that caught trouble before latency moved. Today I would lead with latency and error-rate SLIs."
+        }
+      ],
+      "tie": "Moving NSX alerting to SLOs cut false-positive pages 41% at Oracle."
+    }
+  ],
+  "decision_table": {
+    "columns": [
+      "",
+      "Prompting",
+      "RAG",
+      "Fine-tuning"
+    ],
+    "rows": [
+      [
+        "Best for",
+        "Behavior the model can already do with good instructions",
+        "Answers that depend on private or changing knowledge",
+        "Consistent format, style, or a narrow skill at high volume"
+      ],
+      [
+        "Data needed",
+        "A few examples",
+        "A document collection",
+        "Hundreds to thousands of labeled examples"
+      ],
+      [
+        "Keeping it current",
+        "Edit the prompt",
+        "Update the index, no retraining",
+        "Retrain"
+      ],
+      [
+        "Cost",
+        "Lowest to start; long prompts cost on every call",
+        "Indexing plus retrieval on every call",
+        "Training up front; can be cheaper per call with a smaller model"
+      ],
+      [
+        "Cites sources",
+        "No",
+        "Yes",
+        "No"
+      ],
+      [
+        "Reach for it when",
+        "Always first",
+        "The model lacks the facts",
+        "Prompting plateaus and the task is stable"
+      ]
+    ]
+  },
+  "gaps": [
+    {
+      "id": "gap-gcp",
+      "gap": "GCP depth",
+      "framing": "My production depth is OCI, plus AWS, Azure, and GCP Databricks workspaces at MSRcosmos. The concepts map one to one: GKE is Kubernetes, Cloud Monitoring speaks PromQL, Pub/Sub plays Kafka's role.",
+      "plan": "Use the GCP mapping table in every design. [fill: one hands-on GCP step before the onsite, for example a GKE plus Managed Prometheus lab]"
+    },
+    {
+      "id": "gap-rag",
+      "gap": "Production RAG at scale",
+      "framing": "I have built retrieval-backed agents and evaluation tooling, not a large-scale RAG service. I know where it breaks: chunking, freshness, access control, and recall under filters.",
+      "plan": "[fill: a small hybrid-search build over a public doc set with recall at k measured]"
+    },
+    {
+      "id": "gap-dspy",
+      "gap": "DSPy and RAGAS hands-on",
+      "framing": "I built the same ideas by hand: automated scoring across 6 models and rubric-based labeling with confidence routing.",
+      "plan": "[fill: run RAGAS on a small RAG demo so you can speak from use]"
+    },
+    {
+      "id": "gap-mesh",
+      "gap": "Service mesh",
+      "framing": "I ran Kubernetes services with custom-metric autoscaling at Oracle but did not operate a mesh. I know what it adds: mTLS between services, retries, traffic splitting for canaries, and per-hop telemetry.",
+      "plan": "[fill: read the Istio traffic management docs, or name what you already know]"
+    },
+    {
+      "id": "gap-reports",
+      "gap": "No direct reports",
+      "framing": "I led through influence: the CLI toolchain was adopted by 4 teams I did not manage.",
+      "plan": "Draft the mentoring story in the behavioral gap template."
+    }
+  ]
+}

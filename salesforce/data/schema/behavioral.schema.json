@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "behavioral.schema.json",
+  "title": "Behavioral segment: pitch, STAR bank, competency map, values, V2MOM, questions for the HM. The numbers quiz reads profile.json.",
+  "type": "object",
+  "required": [
+    "pitch",
+    "stories",
+    "competencies",
+    "values",
+    "v2mom",
+    "questions_for_hm"
+  ],
+  "properties": {
+    "pitch": {
+      "type": "object",
+      "required": [
+        "target_sec",
+        "beats",
+        "closing_line"
+      ],
+      "properties": {
+        "target_sec": {
+          "type": "integer"
+        },
+        "beats": {
+          "type": "array",
+          "description": "Pitch in spoken order.",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "text"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "text": {
+                "$ref": "common.schema.json#/$defs/text"
+              }
+            }
+          }
+        },
+        "closing_line": {
+          "$ref": "common.schema.json#/$defs/text"
+        }
+      }
+    },
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "experience_id",
+          "competencies",
+          "s",
+          "t",
+          "a",
+          "r",
+          "probes",
+          "values",
+          "resume_lines",
+          "terms",
+          "stack",
+          "simple"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "experience_id": {
+            "type": "string",
+            "description": "profile.experience[].id or profile.projects[].id"
+          },
+          "lead": {
+            "type": "boolean",
+            "description": "Open with this story when the prompt is open ended."
+          },
+          "competencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "competencies[].id"
+          },
+          "number_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "profile.numbers[].id cited in the result."
+          },
+          "s": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "t": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "a": {
+            "$ref": "common.schema.json#/$defs/textList",
+            "description": "Actions in order. [fill: ...] marks a specific only you can supply; it renders highlighted."
+          },
+          "r": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "probes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "q",
+                "a"
+              ],
+              "properties": {
+                "q": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "a": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          },
+          "prompts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Interview questions this story answers."
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "values[].id this story shows."
+          },
+          "resume_lines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact resume bullets this story covers."
+          },
+          "terms": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "description": "Key terms explained simply."
+          },
+          "stack": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "description": "Tech stack and what each piece does."
+          },
+          "simple": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "description": "What I did, in plain words."
+          }
+        }
+      }
+    },
+    "competencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "gap"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "gap": {
+            "type": "boolean",
+            "description": "True renders red and shows the empty STAR template."
+          },
+          "template": {
+            "type": "object",
+            "description": "Prompts for an unwritten story.",
+            "properties": {
+              "s": {
+                "type": "string"
+              },
+              "t": {
+                "type": "string"
+              },
+              "a": {
+                "type": "string"
+              },
+              "r": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "angle"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "angle": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "v2mom": {
+      "type": "object",
+      "required": [
+        "project",
+        "vision",
+        "values",
+        "methods",
+        "obstacles",
+        "measures"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "vision": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "values": {
+          "$ref": "common.schema.json#/$defs/textList"
+        },
+        "methods": {
+          "$ref": "common.schema.json#/$defs/textList"
+        },
+        "obstacles": {
+          "$ref": "common.schema.json#/$defs/textList"
+        },
+        "measures": {
+          "$ref": "common.schema.json#/$defs/textList"
+        }
+      }
+    },
+    "questions_for_hm": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "q",
+          "why"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "q": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "why": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "primary": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "status_options": {
+      "type": "array",
+      "description": "Story statuses. First is the default.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "intro": {
+      "type": "string"
+    }
+  }
+}

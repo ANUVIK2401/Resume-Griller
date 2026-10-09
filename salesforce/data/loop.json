@@ -1,0 +1,158 @@
+{
+  "$schema": "./schema/loop.schema.json",
+  "req": {
+    "id": "JR359223",
+    "title": "Software Engineering MTS",
+    "company": "Salesforce",
+    "applied": "2026-09-01",
+    "source": "Referral"
+  },
+  "contacts": [
+    { "role": "Recruiter" },
+    { "role": "Hiring manager", "title": "Sr. Manager" }
+  ],
+  "team": {
+    "name": "Public Cloud Engineering",
+    "mission": "Moving Salesforce apps onto GCP, with Gemini in Agentforce.",
+    "work": [
+      "AI SRE tooling to cut MTTD and MTTR",
+      "AI developer-velocity tools",
+      "GCP platform for agentic solutions",
+      "Root cause analyses (RCAs)"
+    ],
+    "urgency": "Hiring urgently"
+  },
+  "visa": {
+    "provider": "BAL",
+    "step": "Pre-check assessment: questionnaire and 6 documents submitted",
+    "date": "2026-10-09"
+  },
+  "status": {
+    "as_of": "2026-10-09",
+    "summary": "HM interview being scheduled"
+  },
+  "status_options": [
+    { "id": "not_started", "label": "Not started" },
+    { "id": "scheduled", "label": "Scheduled" },
+    { "id": "done", "label": "Done" },
+    { "id": "passed", "label": "Passed" }
+  ],
+  "stages": [
+    {
+      "id": "hm",
+      "order": 1,
+      "title": "Hiring manager",
+      "format": "Video",
+      "duration_min": 45,
+      "location": "Remote",
+      "interviewer": "Hiring manager",
+      "default_status": "scheduled",
+      "default_date": null,
+      "note": "Being scheduled. Not done yet.",
+      "prep_pages": ["behavioral", "ai"],
+      "checklist": [
+        { "id": "hm-pitch", "text": "Say the 90-second pitch out loud three times, timed" },
+        { "id": "hm-ai-sre", "text": "Rehearse the AI SRE anchor answer (cut MTTD and MTTR)" },
+        { "id": "hm-stories", "text": "Run the lead stories: P1 MTTR, CLI toolchain, ERP multi-agent" },
+        { "id": "hm-gaps", "text": "Fill the gap stories: failure, conflict, mentoring" },
+        { "id": "hm-questions", "text": "Pick two questions for the hiring manager" },
+        { "id": "hm-numbers", "text": "Score 90% or better on the numbers quiz" }
+      ]
+    },
+    {
+      "id": "oa",
+      "order": 2,
+      "title": "HackerRank OA",
+      "format": "Timed, 2 to 3 problems",
+      "duration_min": null,
+      "location": "Remote",
+      "interviewer": "",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "",
+      "prep_pages": ["dsa"],
+      "checklist": [
+        { "id": "oa-pinned-sched", "text": "Solve the pinned task scheduling problem (memory limit, max 2 same-type)" },
+        { "id": "oa-pinned-bfs", "text": "Solve the pinned grid BFS with 1 to K jumps" },
+        { "id": "oa-timed-1", "text": "Finish one 45-minute timed run" },
+        { "id": "oa-timed-2", "text": "Finish a second timed run with both problems passing" },
+        { "id": "oa-stdlib", "text": "Recall heapq, deque, bisect, Counter, defaultdict without docs" }
+      ]
+    },
+    {
+      "id": "coding",
+      "order": 3,
+      "title": "Virtual coding",
+      "format": "Video, shared editor",
+      "duration_min": 45,
+      "location": "Remote",
+      "interviewer": "",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "",
+      "prep_pages": ["dsa"],
+      "checklist": [
+        { "id": "coding-script", "text": "Run the live interview script out loud on two problems" },
+        { "id": "coding-top3", "text": "Clear the top three patterns: heaps, BFS, sliding window" },
+        { "id": "coding-edge", "text": "Write edge cases before running code, every time" }
+      ]
+    },
+    {
+      "id": "sd",
+      "order": 4,
+      "title": "Virtual system design",
+      "format": "Video, shared whiteboard",
+      "duration_min": 60,
+      "location": "Remote",
+      "interviewer": "",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "45 to 60 min",
+      "prep_pages": ["hld", "ai"],
+      "checklist": [
+        { "id": "sd-framework", "text": "Write the framework from memory" },
+        { "id": "sd-triage", "text": "Whiteboard the AI incident triage agent in 45 minutes" },
+        { "id": "sd-notify", "text": "Whiteboard the real-time notification system in 45 minutes" },
+        { "id": "sd-gcp", "text": "Map every component to its GCP service" },
+        { "id": "sd-slo", "text": "Explain SLOs, error budgets, and burn-rate alerts in two minutes" }
+      ]
+    },
+    {
+      "id": "ood",
+      "order": 5,
+      "title": "Onsite: AI-assisted OOD",
+      "format": "In person, AI tools allowed",
+      "duration_min": 60,
+      "location": "San Francisco",
+      "interviewer": "",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "About 60 min",
+      "prep_pages": ["lld"],
+      "checklist": [
+        { "id": "ood-logger", "text": "Design the workflow step state-transition logger end to end" },
+        { "id": "ood-catch", "text": "Find every bug in three catch-the-AI-mistake exercises" },
+        { "id": "ood-workflow", "text": "Say the AI workflow card out loud before starting" },
+        { "id": "ood-travel", "text": "Confirm travel and arrival time in SF" }
+      ]
+    },
+    {
+      "id": "wb",
+      "order": 6,
+      "title": "Onsite: whiteboard system design",
+      "format": "In person, whiteboard",
+      "duration_min": 60,
+      "location": "San Francisco",
+      "interviewer": "",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "About 60 min",
+      "prep_pages": ["hld"],
+      "checklist": [
+        { "id": "wb-mode", "text": "Two whiteboard-mode runs with the solution hidden" },
+        { "id": "wb-diagram", "text": "Draw the triage agent diagram from memory in under 5 minutes" },
+        { "id": "wb-tradeoffs", "text": "Name three trade-offs per design without prompting" }
+      ]
+    }
+  ]
+}

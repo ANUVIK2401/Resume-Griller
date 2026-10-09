@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dsa.schema.json",
+  "title": "DSA segment: patterns in priority order, problems, interview script, timed mode settings.",
+  "type": "object",
+  "required": [
+    "patterns",
+    "problems",
+    "script",
+    "timed"
+  ],
+  "properties": {
+    "timed": {
+      "type": "object",
+      "required": [
+        "minutes",
+        "count"
+      ],
+      "properties": {
+        "minutes": {
+          "type": "integer"
+        },
+        "count": {
+          "type": "integer"
+        }
+      }
+    },
+    "script": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "step",
+          "say"
+        ],
+        "properties": {
+          "step": {
+            "type": "string"
+          },
+          "say": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "minutes": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Array order is study priority.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "signals",
+          "template",
+          "pitfalls"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "signals": {
+            "$ref": "common.schema.json#/$defs/textList",
+            "description": "Phrases in a prompt that point to this pattern."
+          },
+          "template": {
+            "$ref": "common.schema.json#/$defs/code"
+          },
+          "pitfalls": {
+            "$ref": "common.schema.json#/$defs/textList"
+          }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "pattern",
+          "difficulty"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "patterns[].id"
+          },
+          "difficulty": {
+            "$ref": "common.schema.json#/$defs/difficulty"
+          },
+          "reported": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "leetcode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "prompt": {
+            "$ref": "common.schema.json#/$defs/text",
+            "description": "Required when there is no LeetCode link."
+          },
+          "insight": {
+            "$ref": "common.schema.json#/$defs/text",
+            "description": "One line."
+          },
+          "approach": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "time": {
+            "type": "string"
+          },
+          "space": {
+            "type": "string"
+          },
+          "edge_cases": {
+            "$ref": "common.schema.json#/$defs/textList"
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "solution_file": {
+            "type": "string",
+            "pattern": "^data/dsa/[a-z0-9-]+\\.py$",
+            "description": "Python file with the solution above an if __name__ == \"__main__\" test block. The site shows only the part above the tests; scripts/test_dsa.py runs the tests."
+          },
+          "salesforce": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "From the Salesforce company tag. null = untagged classic.",
+            "properties": {
+              "freq": {
+                "type": "number"
+              },
+              "recent": {
+                "enum": [
+                  "30 days",
+                  "6 months",
+                  null
+                ]
+              }
+            }
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "LeetCode topic tags."
+          }
+        },
+        "description": "Sheet row. Rows with solution_file also carry insight, approach, time, space, edge_cases and get a Solution panel."
+      }
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "dsa_patterns_site": {
+      "type": "string"
+    },
+    "status_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

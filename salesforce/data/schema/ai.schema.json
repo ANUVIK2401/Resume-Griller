@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai.schema.json",
+  "title": "AI fundamentals segment: flashcards with short and long answers, a decision table, and honest gaps.",
+  "type": "object",
+  "required": [
+    "topics",
+    "cards",
+    "decision_table",
+    "gaps"
+  ],
+  "properties": {
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "pinned": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "topic",
+          "question",
+          "short",
+          "long",
+          "followups",
+          "tie",
+          "terms"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "topic": {
+            "type": "string",
+            "description": "topics[].id"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "question": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "short": {
+            "$ref": "common.schema.json#/$defs/text",
+            "description": "30-second answer."
+          },
+          "long": {
+            "$ref": "common.schema.json#/$defs/textList",
+            "description": "2-minute answer, one paragraph or step per item."
+          },
+          "followups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "q",
+                "a"
+              ],
+              "properties": {
+                "q": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "a": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          },
+          "tie": {
+            "$ref": "common.schema.json#/$defs/text",
+            "description": "One line linking to shipped work."
+          },
+          "tags": {
+            "$ref": "common.schema.json#/$defs/tags"
+          },
+          "terms": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "description": "Key terms explained simply."
+          }
+        }
+      }
+    },
+    "decision_table": {
+      "type": "object",
+      "required": [
+        "columns",
+        "rows"
+      ],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "gap",
+          "framing",
+          "plan"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "gap": {
+            "type": "string"
+          },
+          "framing": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "plan": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "status_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

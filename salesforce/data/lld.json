@@ -1,0 +1,761 @@
+{
+  "$schema": "./schema/lld.schema.json",
+  "status_options": [
+    {
+      "id": "todo",
+      "label": "Not started"
+    },
+    {
+      "id": "practiced",
+      "label": "Practiced"
+    },
+    {
+      "id": "ready",
+      "label": "Ready"
+    }
+  ],
+  "workflow": [
+    "Restate the requirements and list states, entities, and invariants yourself before touching the AI.",
+    "Sketch the classes and interfaces by hand: who owns which state, and which methods change it.",
+    "Ask the AI for boilerplate only: enums, dataclasses, test scaffolding.",
+    "Review every generated block out loud: thread safety, single responsibility, missing states, edge cases, leaked internals.",
+    "Run the tests, then add a concurrency test and an edge-case test the AI did not write.",
+    "Close with trade-offs and what you would change at scale."
+  ],
+  "pattern_cards": [
+    {
+      "id": "strategy",
+      "name": "Strategy",
+      "when": "Several interchangeable algorithms behind one interface, chosen at runtime.",
+      "sketch": "class RateLimiter(Protocol):\n    def allow(self, cost: float = 1.0) -> bool: ...\n\nlimiter: RateLimiter = TokenBucket(10, 5)  # or SlidingWindowLog(...)",
+      "pitfalls": [
+        "Do not add a Strategy for a single implementation.",
+        "Keep the interface small."
+      ]
+    },
+    {
+      "id": "observer",
+      "name": "Observer",
+      "when": "Other parts of the system react to events without the publisher knowing them.",
+      "sketch": "class Listener(Protocol):\n    def on_event(self, e) -> None: ...\n\nfor l in list(listeners):\n    try:\n        l.on_event(e)\n    except Exception:\n        log_failure(l, e)",
+      "pitfalls": [
+        "Iterate over a copy.",
+        "Isolate listener failures.",
+        "Do not call listeners while holding a lock."
+      ]
+    },
+    {
+      "id": "state",
+      "name": "State",
+      "when": "Behavior depends on a status with strict allowed moves.",
+      "sketch": "TABLE = {\n    (Status.OPEN, Event.ACK): Status.ACKNOWLEDGED,\n    (Status.ACKNOWLEDGED, Event.RESOLVE): Status.RESOLVED,\n}\nnext_status = TABLE[(current, event)]  # KeyError means illegal",
+      "pitfalls": [
+        "Make terminal states explicit.",
+        "Validate before recording.",
+        "A class per state only pays off when states carry lots of behavior."
+      ]
+    },
+    {
+      "id": "factory",
+      "name": "Factory",
+      "when": "Callers need an object but should not know which class or how it is built.",
+      "sketch": "class Registry:\n    def __init__(self, make):\n        self._make, self._items = make, {}\n    def get(self, key):\n        if key not in self._items:\n            self._items[key] = self._make()\n        return self._items[key]",
+      "pitfalls": [
+        "Creation on first use must be thread-safe.",
+        "Skip it when a constructor is enough."
+      ]
+    },
+    {
+      "id": "builder",
+      "name": "Builder",
+      "when": "An object has many optional parts and must be valid when finished.",
+      "sketch": "job = (JobBuilder('nightly-feed')\n       .every('1d')\n       .retries(3)\n       .timeout(1800)\n       .build())  # validates here",
+      "pitfalls": [
+        "In Python, keyword arguments and dataclasses often replace it.",
+        "Validate in build(), not in every setter."
+      ]
+    },
+    {
+      "id": "locks",
+      "name": "Locks and concurrent maps",
+      "when": "Shared mutable state touched by several threads.",
+      "sketch": "with self._lock:  # check and act together\n    current = self._state.get(key)\n    if allowed(current, target):\n        self._state[key] = target\n# do slow work (I/O, callbacks) outside the lock",
+      "pitfalls": [
+        "Check-then-act races are the classic bug.",
+        "Never call out to unknown code while holding a lock.",
+        "Start with one lock; shard by key when contention shows up.",
+        "In Python, the GIL does not make compound operations atomic."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "workflow-step-logger",
+      "title": "Workflow step state-transition logger",
+      "reported": true,
+      "pinned": true,
+      "difficulty": "medium",
+      "prompt": "Design a component that logs state transitions for steps in a workflow engine. Reported in 2026 Salesforce onsite AI-assisted OOD rounds.",
+      "requirements": [
+        "Record every state change of a workflow step: who, when, from, to, and why.",
+        "Reject illegal transitions, such as moving a finished step back to running.",
+        "Query the full history and the current state of any step.",
+        "Notify listeners (alerts, metrics) without slowing down logging.",
+        "Safe when many workers update steps at once."
+      ],
+      "entities": [
+        {
+          "name": "StepState",
+          "role": "Enum of states: pending, running, retrying, succeeded, failed, cancelled."
+        },
+        {
+          "name": "Transition",
+          "role": "Immutable record of one change."
+        },
+        {
+          "name": "TransitionPolicy",
+          "role": "Which moves are legal; swappable."
+        },
+        {
+          "name": "InMemoryTransitionStore",
+          "role": "Append-only history per workflow and step; swappable for a database."
+        },
+        {
+          "name": "TransitionListener",
+          "role": "Anything that wants to react to a change."
+        },
+        {
+          "name": "WorkflowStepLogger",
+          "role": "Facade that validates, stores, and notifies."
+        }
+      ],
+      "diagram": "classDiagram\n  class WorkflowStepLogger {\n    +record(workflow_id, step_id, to_state, actor) Transition\n    +history(workflow_id, step_id) list\n    +current_state(workflow_id, step_id) StepState\n    +subscribe(listener)\n  }\n  class TransitionPolicy {\n    +check(current, target)\n  }\n  class InMemoryTransitionStore {\n    +append(t)\n    +history(workflow_id, step_id) list\n    +current(workflow_id, step_id) StepState\n  }\n  class Transition {\n    workflow_id\n    step_id\n    from_state\n    to_state\n    at\n    actor\n  }\n  class TransitionListener {\n    +on_transition(t)\n  }\n  WorkflowStepLogger --> TransitionPolicy\n  WorkflowStepLogger --> InMemoryTransitionStore\n  WorkflowStepLogger --> TransitionListener : notifies\n  InMemoryTransitionStore o-- Transition",
+      "interfaces": [
+        "record(workflow_id, step_id, to_state, actor, reason): validate and append; returns the Transition.",
+        "history(workflow_id, step_id): a copy of every transition, oldest first.",
+        "current_state(workflow_id, step_id): latest state, or None if never seen.",
+        "subscribe(listener): listener.on_transition(t) is called after each record."
+      ],
+      "patterns": [
+        "strategy",
+        "observer",
+        "state",
+        "locks"
+      ],
+      "concurrency": [
+        "Reading the current state and appending must happen under one lock, or two workers can both start the same step.",
+        "Listeners run outside the lock so a slow one cannot block writers.",
+        "One global lock is the simple start; per-key locks or a database row lock scale further.",
+        "Transitions are immutable, so they are safe to share across threads."
+      ],
+      "solution_file": "data/lld/workflow-step-logger.py",
+      "extensions": [
+        "Persist to a database with a unique constraint on (workflow, step, sequence).",
+        "Add idempotency keys so a retried worker call does not double-log.",
+        "Emit transitions as OpenTelemetry events for tracing.",
+        "Support per-workflow custom policies."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/workflow-step-logger.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "thread safety",
+            "where": "record()",
+            "bug": "Reads the current state, then appends, with no lock. Two workers can both move PENDING to RUNNING.",
+            "fix": "Do the read, check, and append under one lock."
+          },
+          {
+            "id": "b2",
+            "category": "missing state",
+            "where": "VALID",
+            "bug": "No RETRYING or CANCELLED, and FAILED can go back to RUNNING silently. SUCCEEDED has no entry, so any move from it raises KeyError instead of a clear error.",
+            "fix": "Model every state, make terminal states explicit, and add RETRYING."
+          },
+          {
+            "id": "b3",
+            "category": "SRP violation",
+            "where": "record()",
+            "bug": "The logger sends email over SMTP inside record(). Logging now blocks on the network, and an SMTP failure raises after the event was already stored.",
+            "fix": "Move notifications to a listener (Observer) called after the write, isolated from failures."
+          },
+          {
+            "id": "b4",
+            "category": "leaky abstraction",
+            "where": "get_history()",
+            "bug": "Returns the internal list, and history is a public dict, so callers can change the log.",
+            "fix": "Return a copy and keep storage private."
+          },
+          {
+            "id": "b5",
+            "category": "unhandled edge case",
+            "where": "current_state(), get_history()",
+            "bug": "Unknown workflow or step raises KeyError.",
+            "fix": "Return None and an empty list for unknown keys."
+          },
+          {
+            "id": "b6",
+            "category": "other",
+            "where": "record()",
+            "bug": "datetime.now() is naive local time, so timestamps are ambiguous across hosts.",
+            "fix": "Use timezone-aware UTC from an injectable clock."
+          }
+        ]
+      }
+    },
+    {
+      "id": "incident-state-machine",
+      "title": "Incident ticket state machine",
+      "reported": false,
+      "pinned": false,
+      "difficulty": "medium",
+      "prompt": "",
+      "requirements": [
+        "Incidents move open, acknowledged, mitigated, resolved, closed.",
+        "Guards: acknowledge needs an owner; closing a SEV1 or SEV2 needs an RCA link.",
+        "Resolved incidents can be reopened; closed is final.",
+        "Keep a timeline of every change; failed attempts leave no trace."
+      ],
+      "entities": [
+        {
+          "name": "Status",
+          "role": "Enum of incident states."
+        },
+        {
+          "name": "Event",
+          "role": "Enum of actions: ack, mitigate, resolve, reopen, close."
+        },
+        {
+          "name": "Incident",
+          "role": "The ticket: severity, owner, RCA link, timeline."
+        },
+        {
+          "name": "IncidentStateMachine",
+          "role": "Transition table plus guards; the only thing that changes status."
+        }
+      ],
+      "diagram": "classDiagram\n  class Incident {\n    id\n    severity\n    status\n    assignee\n    rca_link\n    timeline\n  }\n  class IncidentStateMachine {\n    +fire(incident, event, actor) Status\n    +allowed_events(incident) list\n  }\n  class Status {\n    OPEN\n    ACKNOWLEDGED\n    MITIGATED\n    RESOLVED\n    CLOSED\n  }\n  IncidentStateMachine --> Incident : changes\n  Incident --> Status",
+      "interfaces": [
+        "fire(incident, event, actor): apply an event if the table and guards allow; returns the new status.",
+        "allowed_events(incident): events valid from the current status, for building UI buttons."
+      ],
+      "patterns": [
+        "state",
+        "strategy",
+        "locks"
+      ],
+      "concurrency": [
+        "Validate and apply under one lock so two responders cannot both acknowledge.",
+        "In a real system use optimistic concurrency: a version number checked on update."
+      ],
+      "solution_file": "data/lld/incident-state-machine.py",
+      "extensions": [
+        "Escalation timers: auto-page the next level if not acknowledged in N minutes.",
+        "Severity changes as their own events with audit.",
+        "Persist the timeline and emit events to a bus."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/incident-state-machine.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "other",
+            "where": "transition()",
+            "bug": "Appends to the timeline before validating, so rejected transitions still appear in the history.",
+            "fix": "Validate first, then apply and record."
+          },
+          {
+            "id": "b2",
+            "category": "unhandled edge case",
+            "where": "transition()",
+            "bug": "No guards: acknowledge without an owner and close a SEV1 without an RCA are allowed.",
+            "fix": "Add guard functions per transition."
+          },
+          {
+            "id": "b3",
+            "category": "missing state",
+            "where": "allowed",
+            "bug": "CLOSED can go back to OPEN, so closed is not final, and OPEN can jump straight to RESOLVED with no acknowledgement.",
+            "fix": "Make CLOSED terminal and reopen only from RESOLVED."
+          },
+          {
+            "id": "b4",
+            "category": "leaky abstraction",
+            "where": "Incident.status",
+            "bug": "Status is a public attribute, so any code can set it and skip every rule.",
+            "fix": "Only the state machine changes status."
+          },
+          {
+            "id": "b5",
+            "category": "thread safety",
+            "where": "transition()",
+            "bug": "No lock: concurrent transitions can interleave.",
+            "fix": "Lock, or use a version check on update."
+          },
+          {
+            "id": "b6",
+            "category": "other",
+            "where": "statuses",
+            "bug": "Plain strings: a typo like Resolved becomes a KeyError at runtime.",
+            "fix": "Use Enums."
+          }
+        ]
+      }
+    },
+    {
+      "id": "rate-limiter",
+      "title": "Rate limiter: token bucket and sliding window",
+      "reported": false,
+      "pinned": false,
+      "difficulty": "medium",
+      "prompt": "",
+      "requirements": [
+        "Limit requests per key: tenant, user, or API key.",
+        "Token bucket allows bursts up to capacity; sliding window enforces an exact count per window.",
+        "Same interface for both so the algorithm can change.",
+        "Thread-safe, testable with a fake clock, bounded memory."
+      ],
+      "entities": [
+        {
+          "name": "RateLimiter",
+          "role": "Interface: allow(cost) returns True or False."
+        },
+        {
+          "name": "TokenBucket",
+          "role": "Refills continuously; caps at capacity."
+        },
+        {
+          "name": "SlidingWindowLog",
+          "role": "Keeps recent timestamps; evicts old ones."
+        },
+        {
+          "name": "RateLimiterRegistry",
+          "role": "One limiter per key, created on first use."
+        }
+      ],
+      "diagram": "classDiagram\n  class RateLimiter {\n    +allow(cost) bool\n  }\n  class TokenBucket {\n    capacity\n    rate\n    +allow(cost) bool\n  }\n  class SlidingWindowLog {\n    limit\n    window_s\n    +allow(cost) bool\n  }\n  class RateLimiterRegistry {\n    +allow(key, cost) bool\n  }\n  RateLimiter <|.. TokenBucket\n  RateLimiter <|.. SlidingWindowLog\n  RateLimiterRegistry --> RateLimiter : creates per key",
+      "interfaces": [
+        "allow(cost=1): True if the request may proceed; cost lets you limit by tokens, not just requests.",
+        "RateLimiterRegistry.allow(key, cost): looks up or creates the limiter for a key."
+      ],
+      "patterns": [
+        "strategy",
+        "factory",
+        "locks"
+      ],
+      "concurrency": [
+        "Refill and take must be one atomic step per bucket.",
+        "Creating a limiter for a new key must be atomic, or two threads build two buckets.",
+        "Use a monotonic clock; wall clocks can jump backwards.",
+        "Across many servers, move the state to Redis with a Lua script (see the system design page)."
+      ],
+      "solution_file": "data/lld/rate-limiter.py",
+      "extensions": [
+        "Distributed version on Redis.",
+        "Per-endpoint limits and plans.",
+        "Return Retry-After from the bucket's refill time.",
+        "Evict idle keys from the registry."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/rate-limiter.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "unhandled edge case",
+            "where": "TokenBucket.allow",
+            "bug": "int(now - last) drops fractions of a second, and last still moves to now, so a client calling every 0.9 seconds never refills.",
+            "fix": "Refill with the exact elapsed time as a float."
+          },
+          {
+            "id": "b2",
+            "category": "unhandled edge case",
+            "where": "TokenBucket.allow",
+            "bug": "Tokens are never capped at capacity, so after a long idle period a client gets an unlimited burst.",
+            "fix": "tokens = min(capacity, tokens + elapsed * rate)."
+          },
+          {
+            "id": "b3",
+            "category": "thread safety",
+            "where": "allow(), limiters",
+            "bug": "No locks: concurrent requests can overspend tokens, and the global limiters dict can create two buckets for one key.",
+            "fix": "Lock each bucket and the registry."
+          },
+          {
+            "id": "b4",
+            "category": "unhandled edge case",
+            "where": "SlidingWindow.allow",
+            "bug": "Old timestamps are never removed, so memory grows forever and every call scans the full history.",
+            "fix": "Evict timestamps older than the window with a deque."
+          },
+          {
+            "id": "b5",
+            "category": "other",
+            "where": "time.time()",
+            "bug": "Hard-coded wall clock: untestable and wrong when the clock jumps.",
+            "fix": "Inject a monotonic clock."
+          }
+        ]
+      }
+    },
+    {
+      "id": "job-scheduler",
+      "title": "Job scheduler with retries",
+      "reported": false,
+      "pinned": false,
+      "difficulty": "medium",
+      "prompt": "",
+      "requirements": [
+        "Run jobs at or after a scheduled time.",
+        "Retry failures with exponential backoff and jitter, up to a limit.",
+        "Jobs that keep failing go to a dead-letter list for a human.",
+        "Submitting the same job twice is a no-op.",
+        "Deterministic tests with a fake clock."
+      ],
+      "entities": [
+        {
+          "name": "Job",
+          "role": "Function, run time, attempts, last error."
+        },
+        {
+          "name": "_Entry",
+          "role": "Heap entry ordered by time and sequence, never by Job."
+        },
+        {
+          "name": "JobScheduler",
+          "role": "Heap of pending jobs, retry policy, dead letters."
+        }
+      ],
+      "diagram": "classDiagram\n  class JobScheduler {\n    +submit(job_id, fn, delay, max_retries) bool\n    +run_pending() int\n    dead_letters\n  }\n  class Job {\n    id\n    run_at\n    attempts\n    max_retries\n    last_error\n  }\n  JobScheduler o-- Job",
+      "interfaces": [
+        "submit(job_id, fn, delay, max_retries): schedule once; False if the id already exists.",
+        "run_pending(): run every due job; returns the count.",
+        "dead_letters: jobs that exhausted their retries, with the last error."
+      ],
+      "patterns": [
+        "strategy",
+        "locks"
+      ],
+      "concurrency": [
+        "Pop jobs under the lock, run them outside it, so a slow job does not block submits.",
+        "With multiple workers, each popped job is owned by one worker; in a database, use a lease with a timeout.",
+        "Retries must be idempotent; the job id doubles as the idempotency key."
+      ],
+      "solution_file": "data/lld/job-scheduler.py",
+      "extensions": [
+        "Persist jobs so a restart does not lose them.",
+        "Leases and heartbeats for multiple workers.",
+        "Cron schedules.",
+        "Per-job timeouts."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/job-scheduler.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "unhandled edge case",
+            "where": "heap tuples",
+            "bug": "Entries are (run_at, Job). When two jobs share a run_at, Python compares Job objects and raises TypeError.",
+            "fix": "Add a sequence number tiebreak before the job."
+          },
+          {
+            "id": "b2",
+            "category": "missing state",
+            "where": "run_pending()",
+            "bug": "No retry limit and no dead letters: a job that always fails retries forever.",
+            "fix": "Add max_retries and a dead-letter list."
+          },
+          {
+            "id": "b3",
+            "category": "unhandled edge case",
+            "where": "run_pending()",
+            "bug": "Failed jobs are re-queued at time.time(), so they retry immediately in a hot loop, run_pending may never return, and the failing dependency gets hammered.",
+            "fix": "Exponential backoff with jitter."
+          },
+          {
+            "id": "b4",
+            "category": "thread safety",
+            "where": "submit(), run_pending()",
+            "bug": "No lock around the shared heap.",
+            "fix": "Lock heap operations; run jobs outside the lock."
+          },
+          {
+            "id": "b5",
+            "category": "other",
+            "where": "submit()",
+            "bug": "No idempotency: submitting the same job twice runs it twice.",
+            "fix": "Track known ids."
+          },
+          {
+            "id": "b6",
+            "category": "other",
+            "where": "except Exception",
+            "bug": "The error is swallowed with no record, so nobody can see why jobs fail.",
+            "fix": "Store the last error and log it."
+          }
+        ]
+      }
+    },
+    {
+      "id": "lru-ttl-cache",
+      "title": "LRU cache with TTL",
+      "reported": false,
+      "pinned": false,
+      "difficulty": "medium",
+      "prompt": "",
+      "requirements": [
+        "Bounded size; evict the least recently used entry.",
+        "Entries expire after a TTL; expired entries are never returned.",
+        "Reads count as use; overwriting a key does not grow the cache.",
+        "A stored None is different from a miss."
+      ],
+      "entities": [
+        {
+          "name": "LRUTTLCache",
+          "role": "OrderedDict of key to (value, expires_at), plus a lock and clock."
+        }
+      ],
+      "diagram": "classDiagram\n  class LRUTTLCache {\n    capacity\n    ttl\n    +get(key, default) value\n    +put(key, value, ttl)\n    -evict()\n  }",
+      "interfaces": [
+        "get(key, default=None): value if present and fresh, else default.",
+        "put(key, value, ttl=None): insert or overwrite; evicts expired first, then LRU."
+      ],
+      "patterns": [
+        "locks"
+      ],
+      "concurrency": [
+        "A read changes recency, so get needs the lock too.",
+        "One lock is fine in-process; for hot caches, shard into N caches by key hash."
+      ],
+      "solution_file": "data/lld/lru-ttl-cache.py",
+      "extensions": [
+        "Background sweeper for expired entries.",
+        "Size in bytes instead of entry count.",
+        "Write-through to a backing store.",
+        "Hit-rate metrics."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/lru-ttl-cache.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "unhandled edge case",
+            "where": "get()",
+            "bug": "TTL is stored but never checked, so expired values are returned.",
+            "fix": "Compare expiry to the clock on read."
+          },
+          {
+            "id": "b2",
+            "category": "other",
+            "where": "get()",
+            "bug": "Reads do not update recency, so this is FIFO, not LRU.",
+            "fix": "Move the key to the most-recent end on read."
+          },
+          {
+            "id": "b3",
+            "category": "unhandled edge case",
+            "where": "put()",
+            "bug": "Overwriting an existing key in a full cache evicts a different key, and the key is appended to the order list twice.",
+            "fix": "Handle existing keys before checking capacity."
+          },
+          {
+            "id": "b4",
+            "category": "other",
+            "where": "order.pop(0)",
+            "bug": "O(n) eviction on a list.",
+            "fix": "OrderedDict or a dict plus doubly linked list."
+          },
+          {
+            "id": "b5",
+            "category": "thread safety",
+            "where": "get(), put()",
+            "bug": "No lock; data and order can drift apart under concurrency.",
+            "fix": "Lock both operations."
+          },
+          {
+            "id": "b6",
+            "category": "unhandled edge case",
+            "where": "get()",
+            "bug": "Returns None for both a miss and a stored None.",
+            "fix": "Use a sentinel or a default argument."
+          }
+        ]
+      }
+    },
+    {
+      "id": "pubsub-bus",
+      "title": "In-memory pub/sub bus",
+      "reported": false,
+      "pinned": false,
+      "difficulty": "medium",
+      "prompt": "",
+      "requirements": [
+        "Subscribe handlers to topics; publish delivers to every current subscriber.",
+        "Subscribing returns a handle used to unsubscribe.",
+        "A failing handler must not stop delivery to others.",
+        "Handlers may subscribe, unsubscribe, or publish while being called."
+      ],
+      "entities": [
+        {
+          "name": "Subscription",
+          "role": "Handle with topic and id."
+        },
+        {
+          "name": "PubSubBus",
+          "role": "Topic to handlers map, lock, dead letters."
+        }
+      ],
+      "diagram": "classDiagram\n  class PubSubBus {\n    +subscribe(topic, handler) Subscription\n    +unsubscribe(sub) bool\n    +publish(topic, message) int\n    dead_letters\n  }\n  class Subscription {\n    topic\n    id\n  }\n  PubSubBus --> Subscription : returns",
+      "interfaces": [
+        "subscribe(topic, handler): returns a Subscription handle.",
+        "unsubscribe(sub): True if it was active.",
+        "publish(topic, message): delivers to a snapshot of subscribers; returns how many succeeded."
+      ],
+      "patterns": [
+        "observer",
+        "locks"
+      ],
+      "concurrency": [
+        "Copy the subscriber list under the lock, deliver outside it.",
+        "Holding a non-reentrant lock while calling handlers deadlocks if a handler publishes.",
+        "Isolate each handler's exceptions."
+      ],
+      "solution_file": "data/lld/pubsub-bus.py",
+      "extensions": [
+        "Async delivery with a queue per subscriber.",
+        "Wildcard topics.",
+        "Retries and a dead-letter topic.",
+        "Backpressure when a subscriber falls behind."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/pubsub-bus.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "unhandled edge case",
+            "where": "publish()",
+            "bug": "Publishing to a topic with no subscribers raises KeyError.",
+            "fix": "Use .get(topic, {})."
+          },
+          {
+            "id": "b2",
+            "category": "unhandled edge case",
+            "where": "publish()",
+            "bug": "One handler's exception stops delivery to every handler after it.",
+            "fix": "Catch per handler and record to dead letters."
+          },
+          {
+            "id": "b3",
+            "category": "thread safety",
+            "where": "publish()",
+            "bug": "Holds a non-reentrant lock while calling handlers, so a handler that publishes deadlocks.",
+            "fix": "Snapshot under the lock, deliver outside it."
+          },
+          {
+            "id": "b4",
+            "category": "thread safety",
+            "where": "subscribe(), unsubscribe()",
+            "bug": "Lists change without the lock while publish iterates; a handler that unsubscribes itself makes the loop skip the next handler.",
+            "fix": "Lock mutations and iterate over a copy."
+          },
+          {
+            "id": "b5",
+            "category": "leaky abstraction",
+            "where": "unsubscribe()",
+            "bug": "Needs the same function object, so lambdas cannot be unsubscribed, and subscribe returns nothing.",
+            "fix": "Return a Subscription handle."
+          }
+        ]
+      }
+    },
+    {
+      "id": "alert-deduplicator",
+      "title": "Alert deduplicator",
+      "reported": false,
+      "pinned": false,
+      "difficulty": "medium",
+      "prompt": "",
+      "requirements": [
+        "Page once per real problem; suppress repeats within a window.",
+        "Ignore labels that change every firing, like pod or timestamp.",
+        "Always page on escalation to a worse severity.",
+        "Page again after the window, or after the alert resolves and fires again.",
+        "Memory stays bounded."
+      ],
+      "entities": [
+        {
+          "name": "Alert",
+          "role": "Service, name, severity, labels."
+        },
+        {
+          "name": "_Group",
+          "role": "First seen, last paged, worst severity, count."
+        },
+        {
+          "name": "AlertDeduplicator",
+          "role": "Fingerprint to group map with a window and clock."
+        }
+      ],
+      "diagram": "classDiagram\n  class AlertDeduplicator {\n    window_s\n    +fingerprint(alert) str\n    +ingest(alert) str\n    +resolve(alert) bool\n    +count(alert) int\n  }\n  class Alert {\n    service\n    name\n    severity\n    labels\n  }\n  AlertDeduplicator --> Alert : groups",
+      "interfaces": [
+        "ingest(alert): returns the fingerprint if it should page, None if suppressed.",
+        "resolve(alert): clears the group so the next firing pages.",
+        "fingerprint(alert): stable hash of service, name, and meaningful labels."
+      ],
+      "patterns": [
+        "strategy",
+        "locks"
+      ],
+      "concurrency": [
+        "Read, decide, and update a group under one lock, or two replicas of the same alert both page.",
+        "Across several dedup instances, shard by fingerprint or use a shared store with atomic updates."
+      ],
+      "solution_file": "data/lld/alert-deduplicator.py",
+      "extensions": [
+        "Group related fingerprints into one incident.",
+        "Per-team windows.",
+        "Flapping detection.",
+        "Persist groups across restarts."
+      ],
+      "ai_exercise": {
+        "flawed_file": "data/lld/alert-deduplicator.flawed.py",
+        "bugs": [
+          {
+            "id": "b1",
+            "category": "unhandled edge case",
+            "where": "fingerprint()",
+            "bug": "Includes every label, including pod and timestamp, so repeats of the same problem never match.",
+            "fix": "Drop volatile labels and sort the rest."
+          },
+          {
+            "id": "b2",
+            "category": "missing state",
+            "where": "ingest()",
+            "bug": "No window: once seen, an alert is suppressed forever.",
+            "fix": "Re-page after the window passes."
+          },
+          {
+            "id": "b3",
+            "category": "missing state",
+            "where": "ingest()",
+            "bug": "Escalation is suppressed: a SEV1 after a SEV2 never pages.",
+            "fix": "Always page when severity gets worse."
+          },
+          {
+            "id": "b4",
+            "category": "missing state",
+            "where": "seen",
+            "bug": "No resolve and no cleanup, so memory grows forever and a resolved alert that fires again stays silent.",
+            "fix": "Add resolve() and expire stale groups."
+          },
+          {
+            "id": "b5",
+            "category": "thread safety",
+            "where": "ingest()",
+            "bug": "No lock: the check and insert race, so duplicates can both page.",
+            "fix": "Lock the read-decide-update."
+          }
+        ]
+      }
+    }
+  ]
+}

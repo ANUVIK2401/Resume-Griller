@@ -1,0 +1,4386 @@
+{
+  "$schema": "./schema/dsa.schema.json",
+  "source": {
+    "label": "LeetCode Salesforce company tag, all 193 problems",
+    "url": "https://github.com/liquidslr/leetcode-company-wise-problems/tree/main/Salesforce",
+    "note": "Salesforce-tagged problems only, grouped by pattern and sorted by how often Salesforce asks them (100 = most). Problems with a Solution button have a tested Python solution and notes; the rest link to LeetCode."
+  },
+  "dsa_patterns_site": "https://anuvik2401.github.io/DSA_Patterns/",
+  "status_options": [
+    {
+      "id": "todo",
+      "label": "Not solved"
+    },
+    {
+      "id": "attempted",
+      "label": "Attempted"
+    },
+    {
+      "id": "review",
+      "label": "Needs review"
+    },
+    {
+      "id": "solved",
+      "label": "Solved"
+    }
+  ],
+  "timed": {
+    "minutes": 45,
+    "count": 2
+  },
+  "script": [
+    {
+      "step": "Clarify",
+      "minutes": 3,
+      "say": "Before I code, let me confirm the input sizes, value ranges, edge cases like empty input, and what to return when there is no answer."
+    },
+    {
+      "step": "Brute force",
+      "minutes": 2,
+      "say": "The straightforward way is ... which is O(...). That works, but it is too slow at n = ..."
+    },
+    {
+      "step": "Optimize",
+      "minutes": 5,
+      "say": "This looks like a ... problem because ... . If I ... , I can get to O(...). Does that sound good before I write it?"
+    },
+    {
+      "step": "Code with narration",
+      "minutes": 20,
+      "say": "Narrate intent, not syntax: here I keep the window valid, here I record the answer. Name helpers for each step."
+    },
+    {
+      "step": "Test",
+      "minutes": 5,
+      "say": "Walk the example by hand, then an edge case: empty, one element, all equal, the no-answer case."
+    },
+    {
+      "step": "Final complexity",
+      "minutes": 1,
+      "say": "Time is O(...) because ... ; space is O(...) for ... . If I had more time I would ..."
+    }
+  ],
+  "patterns": [
+    {
+      "id": "heaps",
+      "name": "Heaps and scheduling",
+      "signals": [
+        "k largest or smallest",
+        "next event in time order",
+        "schedule tasks under limits",
+        "merge sorted streams",
+        "running median"
+      ],
+      "template": "import heapq\n\nheap = []\nheapq.heappush(heap, (priority, tiebreak, item))  # tiebreak avoids comparing items\nwhile heap:\n    priority, _, item = heapq.heappop(heap)\n    # process, push follow-ups\n\n# max-heap: push -value\n# top k largest: keep a min-heap of size k",
+      "pitfalls": [
+        "Python heapq is a min-heap; negate for max.",
+        "Tuples compare element by element; add a counter tiebreak before objects.",
+        "Event simulation: pop every event at the same timestamp before starting new work."
+      ]
+    },
+    {
+      "id": "bfs",
+      "name": "BFS and graphs",
+      "signals": [
+        "shortest path in steps",
+        "grid with moves",
+        "spreading over time",
+        "dependencies or ordering",
+        "weighted shortest path (Dijkstra)"
+      ],
+      "template": "from collections import deque\n\ndist = {start: 0}\nqueue = deque([start])\nwhile queue:\n    node = queue.popleft()\n    for nxt in neighbors(node):\n        if nxt not in dist:\n            dist[nxt] = dist[node] + 1\n            queue.append(nxt)",
+      "pitfalls": [
+        "Mark visited when you enqueue, not when you pop, or nodes get queued twice.",
+        "Level-by-level: loop range(len(queue)) to count minutes or layers.",
+        "Weighted edges need Dijkstra, not BFS.",
+        "Cycle detection in topological sort: processed count < n."
+      ]
+    },
+    {
+      "id": "sliding-window",
+      "name": "Sliding window and two pointers",
+      "signals": [
+        "longest or shortest subarray or substring",
+        "at most k distinct or k changes",
+        "count subarrays with a property",
+        "sorted array pair sums",
+        "in-place compaction"
+      ],
+      "template": "left = 0\nfor right, x in enumerate(items):\n    add(x)\n    while window_invalid():\n        remove(items[left])\n        left += 1\n    best = max(best, right - left + 1)",
+      "pitfalls": [
+        "Shrinking only works when validity is monotonic (adding never fixes, removing never breaks).",
+        "Counting subarrays: add right - left + 1 per step.",
+        "Negative numbers break product and sum windows; reach for prefix sums."
+      ]
+    },
+    {
+      "id": "intervals",
+      "name": "Intervals",
+      "signals": [
+        "meetings, bookings, ranges",
+        "merge or insert ranges",
+        "minimum rooms or resources",
+        "cover a line with segments"
+      ],
+      "template": "intervals.sort()  # by start\nmerged = []\nfor start, end in intervals:\n    if merged and start <= merged[-1][1]:\n        merged[-1][1] = max(merged[-1][1], end)\n    else:\n        merged.append([start, end])",
+      "pitfalls": [
+        "Ask whether touching endpoints overlap.",
+        "Sort by end for greedy keep-the-most problems, by start for merging.",
+        "Rooms: heap of end times, or sweep over sorted starts and ends."
+      ]
+    },
+    {
+      "id": "hashing",
+      "name": "Hashing and prefix sums",
+      "signals": [
+        "subarray sums to k",
+        "group by a signature",
+        "seen before or nearest equal",
+        "count pairs with a difference"
+      ],
+      "template": "from collections import defaultdict\n\nseen = defaultdict(int)\nseen[0] = 1  # empty prefix\nprefix = count = 0\nfor x in nums:\n    prefix += x\n    count += seen[prefix - k]\n    seen[prefix] += 1",
+      "pitfalls": [
+        "Seed the empty prefix (seen[0] = 1).",
+        "Count before you insert the current prefix.",
+        "Tuple keys for signatures; lists are not hashable."
+      ]
+    },
+    {
+      "id": "binary-search",
+      "name": "Binary search on the answer",
+      "signals": [
+        "minimize the maximum or maximize the minimum",
+        "smallest speed, capacity, or size that works",
+        "a feasibility check that is monotonic"
+      ],
+      "template": "lo, hi = smallest_possible, largest_possible\nwhile lo < hi:\n    mid = (lo + hi) // 2\n    if feasible(mid):\n        hi = mid      # mid works, try smaller\n    else:\n        lo = mid + 1\nreturn lo",
+      "pitfalls": [
+        "Say why feasible() is monotonic before coding.",
+        "Pick bounds that are definitely valid and invalid (max element, total sum).",
+        "lo < hi with hi = mid never loops forever; lo <= hi variants do if you forget +1."
+      ]
+    },
+    {
+      "id": "dp",
+      "name": "DP basics",
+      "signals": [
+        "count ways or minimum cost",
+        "choices at each step with overlapping subproblems",
+        "two strings compared character by character",
+        "bit tricks with greedy proofs"
+      ],
+      "template": "# 1. state: what does dp[i] mean in words\n# 2. transition: dp[i] from smaller states\n# 3. base case, then iterate in dependency order\ndp = [base] + [INF] * n\nfor i in range(1, n + 1):\n    for choice in choices(i):\n        dp[i] = min(dp[i], dp[i - cost(choice)] + 1)",
+      "pitfalls": [
+        "Say the state in one sentence before writing code.",
+        "Roll arrays to O(n) space only after it works.",
+        "Greedy needs a proof or a brute-force check; say which."
+      ]
+    },
+    {
+      "id": "union-find",
+      "name": "Union-find",
+      "signals": [
+        "connected components while edges arrive",
+        "merge groups",
+        "minimum spanning tree (Kruskal)",
+        "is the graph connected"
+      ],
+      "template": "parent = list(range(n))\ndef find(x):\n    while parent[x] != x:\n        parent[x] = parent[parent[x]]  # path halving\n        x = parent[x]\n    return x\ndef union(a, b):\n    ra, rb = find(a), find(b)\n    if ra == rb:\n        return False\n    parent[ra] = rb\n    return True",
+      "pitfalls": [
+        "Track component count as you union.",
+        "Per-component data lives at the root.",
+        "Union-find does not support deletes; process offline or rebuild."
+      ]
+    },
+    {
+      "id": "design",
+      "name": "Design data structures",
+      "signals": [
+        "implement a cache",
+        "O(1) get and put",
+        "frequency or recency ordering"
+      ],
+      "template": "from collections import OrderedDict\n\nitems = OrderedDict()\nitems.move_to_end(key)          # mark recent\nitems.popitem(last=False)       # evict oldest",
+      "pitfalls": [
+        "Interviewers may ban OrderedDict; know the hash map plus doubly linked list version.",
+        "Updating an existing key also refreshes recency.",
+        "Capacity 0 edge case."
+      ]
+    },
+    {
+      "id": "stack-greedy",
+      "name": "Stacks and greedy",
+      "signals": [
+        "collisions or cancellations",
+        "remove adjacent runs",
+        "best choice with a counting argument",
+        "settle debts or balances"
+      ],
+      "template": "stack = []\nfor x in items:\n    while stack and conflicts(stack[-1], x):\n        resolve(stack.pop(), x)\n    if still_alive(x):\n        stack.append(x)",
+      "pitfalls": [
+        "Write down which pairs interact before coding the loop.",
+        "Store counts on the stack for run-length removals.",
+        "Greedy: argue why the local choice is safe."
+      ]
+    },
+    {
+      "id": "trees",
+      "name": "Trees",
+      "signals": [
+        "binary tree or BST",
+        "paths, depths, or levels",
+        "lowest common ancestor",
+        "serialize or rebuild a tree"
+      ],
+      "template": "def dfs(node):\n    if not node:\n        return base\n    left = dfs(node.left)\n    right = dfs(node.right)\n    # combine children, update a global answer if needed\n    return combine(node, left, right)",
+      "pitfalls": [
+        "Decide what each call returns before coding.",
+        "Path problems often return one value and track another globally.",
+        "Level order needs BFS with range(len(queue))."
+      ]
+    },
+    {
+      "id": "linked-lists",
+      "name": "Linked lists",
+      "signals": [
+        "reverse part of a list",
+        "merge or split lists",
+        "cycle detection"
+      ],
+      "template": "dummy = ListNode(0, head)\nprev, cur = dummy, head\nwhile cur:\n    nxt = cur.next\n    cur.next = prev  # rewire\n    prev, cur = cur, nxt",
+      "pitfalls": [
+        "A dummy head removes edge cases at the front.",
+        "Save next before rewiring.",
+        "Fast and slow pointers for middles and cycles."
+      ]
+    },
+    {
+      "id": "backtracking",
+      "name": "Backtracking",
+      "signals": [
+        "generate all combinations or partitions",
+        "search a board for a word",
+        "choose, explore, undo"
+      ],
+      "template": "def backtrack(path, start):\n    if done(path):\n        out.append(path[:])\n        return\n    for i in range(start, n):\n        path.append(choice(i))\n        backtrack(path, i + 1)\n        path.pop()  # undo",
+      "pitfalls": [
+        "Copy the path when saving it.",
+        "Prune early; it is the whole performance story.",
+        "Undo every change on the way back."
+      ]
+    },
+    {
+      "id": "math-bits",
+      "name": "Math and bits",
+      "signals": [
+        "powers of two or binary digits",
+        "counting with formulas",
+        "clock or geometry arithmetic"
+      ],
+      "template": "x & 1        # lowest bit\nx >> 1       # divide by 2\nx & (x - 1)  # drop lowest set bit\nbin(x).count('1')",
+      "pitfalls": [
+        "Check overflow assumptions out loud even in Python.",
+        "Try small cases by hand to find the formula.",
+        "Negative numbers and bit shifts differ by language."
+      ]
+    },
+    {
+      "id": "arrays-strings",
+      "name": "Arrays, strings, simulation",
+      "signals": [
+        "do exactly what the rules say",
+        "index arithmetic",
+        "build a string step by step"
+      ],
+      "template": "out = []\nfor i, ch in enumerate(s):\n    # apply the rule for this step\n    out.append(transform(ch))\nreturn ''.join(out)",
+      "pitfalls": [
+        "Restate the rules with an example first.",
+        "Off-by-one at both ends.",
+        "Build strings with a list, then join."
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": "sf-task-scheduler-memory",
+      "title": "Task scheduling with a memory limit, at most 2 of a type in parallel",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": null,
+      "salesforce": null,
+      "reported": true,
+      "pinned": true,
+      "insight": "Simulate time with a min-heap of running tasks' end times; at each event, start every waiting task that fits.",
+      "approach": [
+        "Clarify first: are tasks taken strictly in order, or can a later task jump a blocked one? Can tasks start at the same instant others finish? Is the goal the finish time or a feasibility check?",
+        "Reject any task whose memory alone exceeds the limit.",
+        "Keep used memory and a per-type running count.",
+        "At time now, scan waiting tasks in index order and start each one that fits both limits.",
+        "Advance now to the earliest end time, free every task ending then, and repeat."
+      ],
+      "solution_file": "data/dsa/sf-task-scheduler-memory.py",
+      "time": "O(n^2 + n log n) with the simple waiting scan",
+      "space": "O(n)",
+      "edge_cases": [
+        "Task larger than the memory limit",
+        "All tasks the same type",
+        "Ties in end times",
+        "Empty input"
+      ],
+      "tags": [
+        "simulation",
+        "greedy"
+      ],
+      "prompt": "Each task has a type, a memory need, and a duration. The machine has a memory limit and may run at most 2 tasks of the same type at once. Tasks are prioritized by index; whenever capacity frees up, start every waiting task that fits, earliest index first. Return when all tasks finish, or -1 if some task can never run. (Reconstructed from 2026 reports; confirm the exact rules with your interviewer.)"
+    },
+    {
+      "id": "sf-grid-jump-bfs",
+      "title": "Grid BFS where you can jump 1 to K cells",
+      "pattern": "bfs",
+      "difficulty": "hard",
+      "leetcode": null,
+      "salesforce": null,
+      "reported": true,
+      "pinned": true,
+      "insight": "BFS still gives shortest moves; prune each slide when you hit a cell reached earlier, because that cell covers everything beyond it.",
+      "approach": [
+        "Clarify: can you jump over walls? (Assume no.) Are diagonal moves allowed? Is K the same for every cell?",
+        "BFS from start with dist grid.",
+        "From each cell, slide up to K steps in each direction.",
+        "Stop the slide at a wall, the edge, or a cell with a smaller distance; skip but continue past cells at the same distance.",
+        "Return dist at the target or -1."
+      ],
+      "solution_file": "data/dsa/sf-grid-jump-bfs.py",
+      "time": "O(rows * cols * 4) amortized with pruning, O(rows * cols * K) worst case without it",
+      "space": "O(rows * cols)",
+      "edge_cases": [
+        "Start equals end",
+        "Target walled off",
+        "K larger than the grid",
+        "Single cell grid"
+      ],
+      "tags": [
+        "grid",
+        "pruning"
+      ],
+      "prompt": "Given a grid of open cells '.' and walls '#', a start, an end, and K, each move goes 1 to K cells in one of four directions without passing through a wall. Return the minimum number of moves, or -1. (Reported in 2026 Salesforce loops; same as Codeforces 877D.)"
+    },
+    {
+      "id": "minimum-operations-to-reduce-an-integer-to-0",
+      "title": "Minimum Operations to Reduce an Integer to 0",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/",
+      "salesforce": {
+        "freq": 100.0,
+        "recent": "30 days"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Read bits from the right: a lone 1 costs one subtract, a run of 1s costs one add that carries it away.",
+      "approach": [
+        "If the low two bits are 11, add 1.",
+        "Else if the low bit is 1, subtract 1.",
+        "Else shift right for free."
+      ],
+      "solution_file": "data/dsa/minimum-operations-to-reduce-an-integer-to-0.py",
+      "time": "O(log n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "n = 3 (add or subtract both give 2)",
+        "Powers of two cost 1"
+      ],
+      "tags": [
+        "greedy",
+        "bits"
+      ],
+      "topics": [
+        "Dynamic Programming",
+        "Greedy",
+        "Bit Manipulation"
+      ]
+    },
+    {
+      "id": "string-compression",
+      "title": "String Compression",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/string-compression/",
+      "salesforce": {
+        "freq": 88.1,
+        "recent": "30 days"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Read pointer scans each run; write pointer writes char plus count in place.",
+      "approach": [
+        "read walks to the end of the current run.",
+        "Write the char, then the count digits if run length > 1.",
+        "Return write."
+      ],
+      "solution_file": "data/dsa/string-compression.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "Run length 10 or more writes multiple digits",
+        "Single char"
+      ],
+      "tags": [],
+      "topics": [
+        "Two Pointers",
+        "String"
+      ]
+    },
+    {
+      "id": "time-needed-to-rearrange-a-binary-string",
+      "title": "Time Needed to Rearrange a Binary String",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/time-needed-to-rearrange-a-binary-string/",
+      "salesforce": {
+        "freq": 79.6,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Each 1 needs as many seconds as zeros before it, but it can be stuck one second behind the 1 ahead of it.",
+      "approach": [
+        "Count zeros seen.",
+        "For each 1 after a zero: seconds = max(seconds + 1, zeros)."
+      ],
+      "solution_file": "data/dsa/time-needed-to-rearrange-a-binary-string.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "No 01 pattern returns 0",
+        "All zeros first"
+      ],
+      "tags": [
+        "simulation"
+      ],
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "lfu-cache",
+      "title": "LFU Cache",
+      "pattern": "design",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/lfu-cache/",
+      "salesforce": {
+        "freq": 78.9,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Bucket keys by frequency, each bucket in LRU order, and track the minimum frequency for O(1) eviction.",
+      "approach": [
+        "values, freq maps; buckets: freq to OrderedDict.",
+        "Touch: move key from bucket f to f + 1, bump min_freq if bucket f emptied.",
+        "Evict: pop the oldest key in the min_freq bucket.",
+        "New key resets min_freq to 1."
+      ],
+      "solution_file": "data/dsa/lfu-cache.py",
+      "time": "O(1) per operation",
+      "space": "O(capacity)",
+      "edge_cases": [
+        "Capacity 0",
+        "Put on an existing key counts as a use"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "Linked List",
+        "Design",
+        "Doubly-Linked List"
+      ]
+    },
+    {
+      "id": "closest-equal-element-queries",
+      "title": "Closest Equal Element Queries",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/closest-equal-element-queries/",
+      "salesforce": {
+        "freq": 75.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Group indices by value; the nearest equal element is a neighbor in that sorted list, wrapping around the circle.",
+      "approach": [
+        "Map value to sorted indices.",
+        "For each index, check the previous and next index in its list (wrapping).",
+        "Distance is min(gap, n - gap); -1 if the value appears once."
+      ],
+      "solution_file": "data/dsa/closest-equal-element-queries.py",
+      "time": "O(n + q)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Value appears once",
+        "Two copies: both neighbors are the same index"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Binary Search"
+      ]
+    },
+    {
+      "id": "smallest-substring-with-identical-characters-i",
+      "title": "Smallest Substring With Identical Characters I",
+      "pattern": "binary-search",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/smallest-substring-with-identical-characters-i/",
+      "salesforce": {
+        "freq": 71.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Binary search the longest allowed run L; a run of length r needs r // (L + 1) flips, except L = 1 which must alternate.",
+      "approach": [
+        "Search L from 1 to n.",
+        "L = 1: mismatches against 0101 and 1010, take the min.",
+        "L > 1: sum run // (L + 1) over runs.",
+        "Smallest L with flips <= numOps."
+      ],
+      "solution_file": "data/dsa/smallest-substring-with-identical-characters-i.py",
+      "time": "O(n log n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "L = 1 special case",
+        "numOps = 0",
+        "Already alternating"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Enumeration"
+      ]
+    },
+    {
+      "id": "smallest-substring-with-identical-characters-ii",
+      "title": "Smallest Substring With Identical Characters II",
+      "pattern": "binary-search",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/smallest-substring-with-identical-characters-ii/",
+      "salesforce": {
+        "freq": 71.5,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Binary Search"
+      ]
+    },
+    {
+      "id": "maximum-product-of-three-numbers",
+      "title": "Maximum Product of Three Numbers",
+      "pattern": "stack-greedy",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/maximum-product-of-three-numbers/",
+      "salesforce": {
+        "freq": 67.8,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "The answer is either the three largest or the largest times the two most negative.",
+      "approach": [
+        "nlargest(3) and nsmallest(2).",
+        "Return the max of the two products."
+      ],
+      "solution_file": "data/dsa/maximum-product-of-three-numbers.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "All negative",
+        "Zeros"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Math",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "remove-adjacent-almost-equal-characters",
+      "title": "Remove Adjacent Almost-Equal Characters",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/remove-adjacent-almost-equal-characters/",
+      "salesforce": {
+        "freq": 67.8,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "subarray-product-less-than-k",
+      "title": "Subarray Product Less Than K",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/subarray-product-less-than-k/",
+      "salesforce": {
+        "freq": 66.4,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Positive numbers make the product monotonic, so a shrinking window counts all valid subarrays ending at right.",
+      "approach": [
+        "Multiply in nums[right].",
+        "While product >= k, divide out nums[left].",
+        "Add right - left + 1."
+      ],
+      "solution_file": "data/dsa/subarray-product-less-than-k.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "k <= 1 returns 0",
+        "Ones everywhere"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Sliding Window",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "minimize-malware-spread",
+      "title": "Minimize Malware Spread",
+      "pattern": "union-find",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimize-malware-spread/",
+      "salesforce": {
+        "freq": 66.4,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Removing an initial node only saves its component if it is that component's only infected node.",
+      "approach": [
+        "Union-find over the adjacency matrix.",
+        "Component sizes and infected counts.",
+        "Pick the node in a single-infection component with the largest size, smallest index on ties; else the smallest initial."
+      ],
+      "solution_file": "data/dsa/minimize-malware-spread.py",
+      "time": "O(n^2)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Every component has two infections",
+        "Tie on size"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Union-Find",
+        "Graph Theory"
+      ]
+    },
+    {
+      "id": "maximum-number-of-occurrences-of-a-substring",
+      "title": "Maximum Number of Occurrences of a Substring",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximum-number-of-occurrences-of-a-substring/",
+      "salesforce": {
+        "freq": 66.4,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "maximum-palindromes-after-operations",
+      "title": "Maximum Palindromes After Operations",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximum-palindromes-after-operations/",
+      "salesforce": {
+        "freq": 66.4,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Swaps are free across words, so only total letter pairs matter; fill the shortest words first.",
+      "approach": [
+        "Count pairs across all letters.",
+        "Sort word lengths.",
+        "Each word needs length // 2 pairs; take while pairs last."
+      ],
+      "solution_file": "data/dsa/maximum-palindromes-after-operations.py",
+      "time": "O(total chars + w log w)",
+      "space": "O(alphabet)",
+      "edge_cases": [
+        "Odd lengths take any letter as center",
+        "Single-letter words are free"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "String",
+        "Greedy",
+        "Sorting",
+        "Counting"
+      ]
+    },
+    {
+      "id": "merge-intervals",
+      "title": "Merge Intervals",
+      "pattern": "intervals",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/merge-intervals/",
+      "salesforce": {
+        "freq": 64.9,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Sort by start; each interval either extends the last merged one or starts a new one.",
+      "approach": [
+        "Sort.",
+        "If start <= last end, extend last end.",
+        "Else append."
+      ],
+      "solution_file": "data/dsa/merge-intervals.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Touching intervals merge",
+        "One interval inside another"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Sorting",
+        "Quicksort"
+      ]
+    },
+    {
+      "id": "lru-cache",
+      "title": "LRU Cache",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/lru-cache/",
+      "salesforce": {
+        "freq": 64.9,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Hash map for O(1) lookup plus an order structure for O(1) recency updates and eviction.",
+      "approach": [
+        "OrderedDict: move_to_end on get and put.",
+        "Pop the oldest when over capacity.",
+        "Be ready to write the doubly linked list version."
+      ],
+      "solution_file": "data/dsa/lru-cache.py",
+      "time": "O(1) per operation",
+      "space": "O(capacity)",
+      "edge_cases": [
+        "Updating an existing key",
+        "Capacity 1"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "Linked List",
+        "Design",
+        "Doubly-Linked List"
+      ]
+    },
+    {
+      "id": "course-schedule-ii",
+      "title": "Course Schedule II",
+      "pattern": "bfs",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/course-schedule-ii/",
+      "salesforce": {
+        "freq": 64.9,
+        "recent": "30 days"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Kahn's algorithm: repeatedly take courses with no remaining prerequisites.",
+      "approach": [
+        "Build adjacency from prerequisite to course and count indegrees.",
+        "Queue all indegree-zero courses.",
+        "Pop, append to order, decrement neighbors, enqueue new zeros.",
+        "If order is shorter than n, there is a cycle."
+      ],
+      "solution_file": "data/dsa/course-schedule-ii.py",
+      "time": "O(V + E)",
+      "space": "O(V + E)",
+      "edge_cases": [
+        "Cycle",
+        "No prerequisites",
+        "Disconnected courses"
+      ],
+      "tags": [],
+      "topics": [
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph Theory",
+        "Topological Sort"
+      ]
+    },
+    {
+      "id": "power-grid-maintenance",
+      "title": "Power Grid Maintenance",
+      "pattern": "union-find",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/power-grid-maintenance/",
+      "salesforce": {
+        "freq": 64.9,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Grids never change, so union-find once and keep a min-heap per grid with lazy deletion of offline stations.",
+      "approach": [
+        "Union all connections.",
+        "Heap of station ids per root.",
+        "Query: if online return x, else pop offline tops and return the min or -1."
+      ],
+      "solution_file": "data/dsa/power-grid-maintenance.py",
+      "time": "O((c + q) log c)",
+      "space": "O(c)",
+      "edge_cases": [
+        "Station offline but grid has others",
+        "Whole grid offline"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Union-Find",
+        "Graph Theory",
+        "Heap (Priority Queue)",
+        "Ordered Set"
+      ]
+    },
+    {
+      "id": "distinct-subsequences",
+      "title": "Distinct Subsequences",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/distinct-subsequences/",
+      "salesforce": {
+        "freq": 63.3,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "longest-substring-without-repeating-characters",
+      "title": "Longest Substring Without Repeating Characters",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+      "salesforce": {
+        "freq": 61.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Track each char's last index; on a repeat inside the window, jump left past it.",
+      "approach": [
+        "Map char to last index.",
+        "If last index >= left, move left to last index + 1.",
+        "Update best each step."
+      ],
+      "solution_file": "data/dsa/longest-substring-without-repeating-characters.py",
+      "time": "O(n)",
+      "space": "O(alphabet)",
+      "edge_cases": [
+        "Empty string",
+        "All same char",
+        "abba (left must never move backward)"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "String",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "minimize-maximum-component-cost",
+      "title": "Minimize Maximum Component Cost",
+      "pattern": "union-find",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/minimize-maximum-component-cost/",
+      "salesforce": {
+        "freq": 61.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Kruskal: add the cheapest edges until there are at most k components; the last edge added is the answer.",
+      "approach": [
+        "Sort edges by weight.",
+        "Union until components <= k.",
+        "Return the weight of the last successful union (0 if n <= k)."
+      ],
+      "solution_file": "data/dsa/minimize-maximum-component-cost.py",
+      "time": "O(E log E)",
+      "space": "O(n)",
+      "edge_cases": [
+        "n <= k returns 0",
+        "Parallel edges"
+      ],
+      "tags": [],
+      "topics": [
+        "Binary Search",
+        "Union-Find",
+        "Graph Theory",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "group-anagrams",
+      "title": "Group Anagrams",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/group-anagrams/",
+      "salesforce": {
+        "freq": 59.6,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Anagrams share a letter-count signature; use it as the dict key.",
+      "approach": [
+        "Signature: tuple of 26 counts (or sorted string).",
+        "Append each word to its group."
+      ],
+      "solution_file": "data/dsa/group-anagrams.py",
+      "time": "O(n * L)",
+      "space": "O(n * L)",
+      "edge_cases": [
+        "Empty string",
+        "Single word"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "String",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "split-a-string-in-balanced-strings",
+      "title": "Split a String in Balanced Strings",
+      "pattern": "stack-greedy",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/split-a-string-in-balanced-strings/",
+      "salesforce": {
+        "freq": 59.6,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Greedy",
+        "Counting"
+      ]
+    },
+    {
+      "id": "minimum-time-to-visit-all-houses",
+      "title": "Minimum Time to Visit All Houses",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/minimum-time-to-visit-all-houses/",
+      "salesforce": {
+        "freq": 59.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "number-of-islands",
+      "title": "Number of Islands",
+      "pattern": "bfs",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/number-of-islands/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Each unvisited land cell starts a new island; flood fill marks the rest of it.",
+      "approach": [
+        "Scan cells.",
+        "On a '1', count an island and BFS to sink connected land.",
+        "Mark visited when enqueuing."
+      ],
+      "solution_file": "data/dsa/number-of-islands.py",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols) worst case queue",
+      "edge_cases": [
+        "All water",
+        "All land",
+        "Single row"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Union-Find",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "palindromic-substrings",
+      "title": "Palindromic Substrings",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/palindromic-substrings/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "topics": [
+        "Two Pointers",
+        "String",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "count-the-number-of-fair-pairs",
+      "title": "Count the Number of Fair Pairs",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/count-the-number-of-fair-pairs/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Pairs in [lower, upper] = pairs <= upper minus pairs <= lower - 1, each counted with two pointers on the sorted array.",
+      "approach": [
+        "Sort (pair counts ignore order).",
+        "Count pairs with sum <= limit using two pointers.",
+        "Subtract the two counts."
+      ],
+      "solution_file": "data/dsa/count-the-number-of-fair-pairs.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Negative numbers",
+        "lower > any pair sum"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Binary Search",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "maximum-frequency-stack",
+      "title": "Maximum Frequency Stack",
+      "pattern": "design",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/maximum-frequency-stack/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Keep a stack per frequency level; a value appears in every level up to its count, so pop from the top level.",
+      "approach": [
+        "freq counter and stacks by level.",
+        "push: increment, append to that level.",
+        "pop: from max level, drop the level when empty."
+      ],
+      "solution_file": "data/dsa/maximum-frequency-stack.py",
+      "time": "O(1) per operation",
+      "space": "O(n)",
+      "edge_cases": [
+        "Ties resolve to most recent"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "Stack",
+        "Design",
+        "Ordered Set"
+      ]
+    },
+    {
+      "id": "delete-and-earn",
+      "title": "Delete and Earn",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/delete-and-earn/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Taking value v forbids v - 1 and v + 1: house robber over sorted distinct values.",
+      "approach": [
+        "points[v] = v * count.",
+        "Track take and skip; adjacent values cannot both be taken."
+      ],
+      "solution_file": "data/dsa/delete-and-earn.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Gaps between values reset the constraint",
+        "Single value"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "special-binary-string",
+      "title": "Special Binary String",
+      "pattern": "arrays-strings",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/special-binary-string/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Divide and Conquer",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "decrypt-string-from-alphabet-to-integer-mapping",
+      "title": "Decrypt String from Alphabet to Integer Mapping",
+      "pattern": "arrays-strings",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/decrypt-string-from-alphabet-to-integer-mapping/",
+      "salesforce": {
+        "freq": 57.5,
+        "recent": null
+      },
+      "topics": [
+        "String"
+      ]
+    },
+    {
+      "id": "binary-tree-maximum-path-sum",
+      "title": "Binary Tree Maximum Path Sum",
+      "pattern": "trees",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Dynamic Programming",
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree",
+        "DP on Trees"
+      ]
+    },
+    {
+      "id": "check-whether-two-strings-are-almost-equivalent",
+      "title": "Check Whether Two Strings are Almost Equivalent",
+      "pattern": "hashing",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/check-whether-two-strings-are-almost-equivalent/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Counting"
+      ]
+    },
+    {
+      "id": "beautiful-towers-ii",
+      "title": "Beautiful Towers II",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/beautiful-towers-ii/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "beautiful-towers-i",
+      "title": "Beautiful Towers I",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/beautiful-towers-i/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "check-if-a-number-is-majority-element-in-a-sorted-array",
+      "title": "Check If a Number Is Majority Element in a Sorted Array",
+      "pattern": "binary-search",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/check-if-a-number-is-majority-element-in-a-sorted-array/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "id": "height-checker",
+      "title": "Height Checker",
+      "pattern": "arrays-strings",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/height-checker/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Sorting",
+        "Counting Sort",
+        "Bubble Sort"
+      ]
+    },
+    {
+      "id": "matrix-similarity-after-cyclic-shifts",
+      "title": "Matrix Similarity After Cyclic Shifts",
+      "pattern": "math-bits",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/matrix-similarity-after-cyclic-shifts/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Math",
+        "Matrix",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "number-of-self-divisible-permutations",
+      "title": "Number of Self-Divisible Permutations",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/number-of-self-divisible-permutations/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Math",
+        "Dynamic Programming",
+        "Backtracking",
+        "Bit Manipulation",
+        "Number Theory",
+        "Bitmask"
+      ]
+    },
+    {
+      "id": "maximum-number-that-makes-result-of-bitwise-and-zero",
+      "title": "Maximum Number That Makes Result of Bitwise AND Zero",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximum-number-that-makes-result-of-bitwise-and-zero/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Greedy",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "find-subarray-with-bitwise-or-closest-to-k",
+      "title": "Find Subarray With Bitwise OR Closest to K",
+      "pattern": "trees",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/find-subarray-with-bitwise-or-closest-to-k/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Bit Manipulation",
+        "Segment Tree"
+      ]
+    },
+    {
+      "id": "equalize-strings-by-adding-or-removing-characters-at-ends",
+      "title": "Equalize Strings by Adding or Removing Characters at Ends",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/equalize-strings-by-adding-or-removing-characters-at-ends/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Binary Search",
+        "Dynamic Programming",
+        "Sliding Window",
+        "Hash Function"
+      ]
+    },
+    {
+      "id": "count-the-number-of-inversions",
+      "title": "Count the Number of Inversions",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/count-the-number-of-inversions/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "find-the-minimum-area-to-cover-all-ones-ii",
+      "title": "Find the Minimum Area to Cover All Ones II",
+      "pattern": "arrays-strings",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/find-the-minimum-area-to-cover-all-ones-ii/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Matrix",
+        "Enumeration"
+      ]
+    },
+    {
+      "id": "find-the-minimum-area-to-cover-all-ones-i",
+      "title": "Find the Minimum Area to Cover All Ones I",
+      "pattern": "arrays-strings",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/find-the-minimum-area-to-cover-all-ones-i/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "maximum-height-of-a-triangle",
+      "title": "Maximum Height of a Triangle",
+      "pattern": "arrays-strings",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/maximum-height-of-a-triangle/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Enumeration"
+      ]
+    },
+    {
+      "id": "maximize-grid-happiness",
+      "title": "Maximize Grid Happiness",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/maximize-grid-happiness/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Dynamic Programming",
+        "Bit Manipulation",
+        "Memoization",
+        "Bitmask"
+      ]
+    },
+    {
+      "id": "average-waiting-time",
+      "title": "Average Waiting Time",
+      "pattern": "arrays-strings",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/average-waiting-time/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "find-the-last-marked-nodes-in-tree",
+      "title": "Find the Last Marked Nodes in Tree",
+      "pattern": "trees",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/find-the-last-marked-nodes-in-tree/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search"
+      ]
+    },
+    {
+      "id": "longest-common-subsequence",
+      "title": "Longest Common Subsequence",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-common-subsequence/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "dp[i][j] = LCS of prefixes; match extends the diagonal, else take the better skip.",
+      "approach": [
+        "Iterate characters of both strings.",
+        "Keep one rolling row."
+      ],
+      "solution_file": "data/dsa/longest-common-subsequence.py",
+      "time": "O(m * n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "No common chars",
+        "Identical strings"
+      ],
+      "tags": [],
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Longest Common Subsequence"
+      ]
+    },
+    {
+      "id": "minimum-removals-to-balance-array",
+      "title": "Minimum Removals to Balance Array",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/minimum-removals-to-balance-array/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "After sorting, keep the longest window where max <= k * min; remove the rest.",
+      "approach": [
+        "Sort.",
+        "Two pointers: advance left while nums[right] > k * nums[left].",
+        "Answer is n minus the longest window."
+      ],
+      "solution_file": "data/dsa/minimum-removals-to-balance-array.py",
+      "time": "O(n log n)",
+      "space": "O(n) for the sorted copy",
+      "edge_cases": [
+        "Single element",
+        "k = 1 means all equal",
+        "Large products (Python ints are fine)"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Sliding Window",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "exam-room",
+      "title": "Exam Room",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/exam-room/",
+      "salesforce": {
+        "freq": 55.1,
+        "recent": null
+      },
+      "topics": [
+        "Design",
+        "Heap (Priority Queue)",
+        "Ordered Set"
+      ]
+    },
+    {
+      "id": "asteroid-collision",
+      "title": "Asteroid Collision",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/asteroid-collision/",
+      "salesforce": {
+        "freq": 52.4,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Only a right-mover on the stack meeting a left-mover collides; resolve against the stack top until one survives.",
+      "approach": [
+        "For each asteroid, while it moves left and the top moves right, compare sizes.",
+        "Pop smaller tops, cancel equal ones, stop when the new one dies."
+      ],
+      "solution_file": "data/dsa/asteroid-collision.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Left-movers at the start never collide",
+        "Equal sizes both explode"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Stack",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "number-of-divisible-triplet-sums",
+      "title": "Number of Divisible Triplet Sums",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/number-of-divisible-triplet-sums/",
+      "salesforce": {
+        "freq": 52.4,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table"
+      ]
+    },
+    {
+      "id": "k-diff-pairs-in-an-array",
+      "title": "K-diff Pairs in an Array",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/k-diff-pairs-in-an-array/",
+      "salesforce": {
+        "freq": 52.4,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Count unique pairs by their smaller value; k = 0 needs a duplicate instead.",
+      "approach": [
+        "Counter of nums.",
+        "k = 0: values with count > 1.",
+        "Else: values v with v + k present."
+      ],
+      "solution_file": "data/dsa/k-diff-pairs-in-an-array.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "k = 0",
+        "Duplicates must not double count"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Two Pointers",
+        "Binary Search",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "reverse-nodes-in-k-group",
+      "title": "Reverse Nodes in k-Group",
+      "pattern": "linked-lists",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/reverse-nodes-in-k-group/",
+      "salesforce": {
+        "freq": 52.4,
+        "recent": null
+      },
+      "topics": [
+        "Linked List",
+        "Recursion"
+      ]
+    },
+    {
+      "id": "all-nodes-distance-k-in-binary-tree",
+      "title": "All Nodes Distance K in Binary Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/",
+      "salesforce": {
+        "freq": 52.4,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "Tree",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "count-subarrays-with-median-k",
+      "title": "Count Subarrays With Median K",
+      "pattern": "hashing",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/count-subarrays-with-median-k/",
+      "salesforce": {
+        "freq": 52.4,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Map each value to +1 or -1 relative to k; a subarray containing k has median k when its balance is 0 or 1.",
+      "approach": [
+        "Find k's index; every valid subarray includes it.",
+        "Count balances of all left extensions.",
+        "For each right extension, add matches for balance 0 and 1."
+      ],
+      "solution_file": "data/dsa/count-subarrays-with-median-k.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "k at either end",
+        "Even-length subarrays use the left middle"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "longest-palindromic-substring",
+      "title": "Longest Palindromic Substring",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-palindromic-substring/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "Two Pointers",
+        "String",
+        "Dynamic Programming",
+        "Manacher"
+      ]
+    },
+    {
+      "id": "trapping-rain-water",
+      "title": "Trapping Rain Water",
+      "pattern": "sliding-window",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/trapping-rain-water/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Dynamic Programming",
+        "Stack",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "best-time-to-buy-and-sell-stock",
+      "title": "Best Time to Buy and Sell Stock",
+      "pattern": "dp",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "min-stack",
+      "title": "Min Stack",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/min-stack/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "Stack",
+        "Design"
+      ]
+    },
+    {
+      "id": "zigzag-conversion",
+      "title": "Zigzag Conversion",
+      "pattern": "arrays-strings",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/zigzag-conversion/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "String"
+      ]
+    },
+    {
+      "id": "report-spam-message",
+      "title": "Report Spam Message",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/report-spam-message/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "String"
+      ]
+    },
+    {
+      "id": "course-schedule",
+      "title": "Course Schedule",
+      "pattern": "bfs",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/course-schedule/",
+      "salesforce": {
+        "freq": 49.3,
+        "recent": null
+      },
+      "topics": [
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph Theory",
+        "Topological Sort",
+        "Directed Acyclic Graph"
+      ]
+    },
+    {
+      "id": "container-with-most-water",
+      "title": "Container With Most Water",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/container-with-most-water/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "merge-k-sorted-lists",
+      "title": "Merge k Sorted Lists",
+      "pattern": "heaps",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "The next output node is the smallest current head across all lists.",
+      "approach": [
+        "Push each list head with an index tiebreak.",
+        "Pop the smallest, append it, push its next node.",
+        "Stop when the heap is empty."
+      ],
+      "solution_file": "data/dsa/merge-k-sorted-lists.py",
+      "time": "O(N log k)",
+      "space": "O(k)",
+      "edge_cases": [
+        "Empty list of lists",
+        "Some lists empty",
+        "All lists one element"
+      ],
+      "tags": [],
+      "topics": [
+        "Linked List",
+        "Divide and Conquer",
+        "Heap (Priority Queue)",
+        "Merge Sort",
+        "Tournament Sort"
+      ]
+    },
+    {
+      "id": "minimum-window-substring",
+      "title": "Minimum Window Substring",
+      "pattern": "sliding-window",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimum-window-substring/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Expand until every needed char is covered, then shrink while surplus chars sit at the left.",
+      "approach": [
+        "Counter of t; missing = len(t).",
+        "Expand right, decrementing need and missing.",
+        "When missing hits 0, shrink surplus, record the window, release the leftmost needed char."
+      ],
+      "solution_file": "data/dsa/minimum-window-substring.py",
+      "time": "O(len(s) + len(t))",
+      "space": "O(alphabet)",
+      "edge_cases": [
+        "t longer than s",
+        "Duplicate chars in t",
+        "No valid window"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "String",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "kth-largest-element-in-an-array",
+      "title": "Kth Largest Element in an Array",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "A min-heap of size k keeps the k largest; its top is the answer.",
+      "approach": [
+        "Push each number.",
+        "Pop when the heap grows past k.",
+        "Return the top. Mention quickselect for average O(n)."
+      ],
+      "solution_file": "data/dsa/kth-largest-element-in-an-array.py",
+      "time": "O(n log k)",
+      "space": "O(k)",
+      "edge_cases": [
+        "Duplicates count separately",
+        "k equals n"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Divide and Conquer",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Quickselect"
+      ]
+    },
+    {
+      "id": "top-k-frequent-elements",
+      "title": "Top K Frequent Elements",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Frequencies are bounded by n, so bucket by frequency instead of sorting.",
+      "approach": [
+        "Count with Counter.",
+        "Place each value in bucket[freq].",
+        "Walk buckets from high to low until k values collected."
+      ],
+      "solution_file": "data/dsa/top-k-frequent-elements.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "k equals number of distinct values",
+        "Ties at the cutoff"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Divide and Conquer",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Bucket Sort",
+        "Counting",
+        "Quickselect"
+      ]
+    },
+    {
+      "id": "minimum-number-of-taps-to-open-to-water-a-garden",
+      "title": "Minimum Number of Taps to Open to Water a Garden",
+      "pattern": "intervals",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Turn taps into intervals, then it is jump game II: from each left edge, how far right can you reach.",
+      "approach": [
+        "reach[left] = max right for taps starting there.",
+        "Greedy sweep: when x passes the covered boundary, open a tap and extend to the best reach seen.",
+        "If x passes every reachable point, return -1."
+      ],
+      "solution_file": "data/dsa/minimum-number-of-taps-to-open-to-water-a-garden.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Gap no tap covers",
+        "Range 0 taps"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "maximum-units-on-a-truck",
+      "title": "Maximum Units on a Truck",
+      "pattern": "stack-greedy",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/maximum-units-on-a-truck/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Greedy",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "word-search",
+      "title": "Word Search",
+      "pattern": "backtracking",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/word-search/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "String",
+        "Backtracking",
+        "Depth-First Search",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "minimum-absolute-difference",
+      "title": "Minimum Absolute Difference",
+      "pattern": "arrays-strings",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/minimum-absolute-difference/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "koko-eating-bananas",
+      "title": "Koko Eating Bananas",
+      "pattern": "binary-search",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/koko-eating-bananas/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Hours needed falls as speed rises, so binary search the smallest feasible speed.",
+      "approach": [
+        "lo = 1, hi = max pile.",
+        "Feasible if sum of ceil(pile / speed) <= h."
+      ],
+      "solution_file": "data/dsa/koko-eating-bananas.py",
+      "time": "O(n log max)",
+      "space": "O(1)",
+      "edge_cases": [
+        "h equals number of piles",
+        "Single pile"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "id": "optimal-account-balancing",
+      "title": "Optimal Account Balancing",
+      "pattern": "stack-greedy",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/optimal-account-balancing/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": "30 days"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Reduce to net balances, then backtrack: settle the first nonzero balance into each opposite-sign account.",
+      "approach": [
+        "Net balance per person, drop zeros.",
+        "DFS: skip settled, try each opposite sign, dedupe equal amounts.",
+        "Exact cancel short-circuits."
+      ],
+      "solution_file": "data/dsa/optimal-account-balancing.py",
+      "time": "O(n!) worst case, n <= 8 nonzero in practice",
+      "space": "O(n)",
+      "edge_cases": [
+        "Everything already settled",
+        "Cycles of debt"
+      ],
+      "tags": [
+        "backtracking"
+      ],
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Backtracking",
+        "Bit Manipulation",
+        "Bitmask"
+      ]
+    },
+    {
+      "id": "remove-all-adjacent-duplicates-in-string-ii",
+      "title": "Remove All Adjacent Duplicates in String II",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Stack of (char, run length); pop when a run hits k, which lets neighbors merge.",
+      "approach": [
+        "Increment the top run or push a new one.",
+        "Pop at k.",
+        "Rebuild the string."
+      ],
+      "solution_file": "data/dsa/remove-all-adjacent-duplicates-in-string-ii.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Cascading removals",
+        "k larger than any run"
+      ],
+      "tags": [],
+      "topics": [
+        "String",
+        "Stack"
+      ]
+    },
+    {
+      "id": "maximum-team-size-with-overlapping-intervals",
+      "title": "Maximum Team Size with Overlapping Intervals",
+      "pattern": "intervals",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximum-team-size-with-overlapping-intervals/",
+      "salesforce": {
+        "freq": 45.7,
+        "recent": "6 months"
+      },
+      "topics": []
+    },
+    {
+      "id": "sort-colors",
+      "title": "Sort Colors",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/sort-colors/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Sorting",
+        "Quicksort",
+        "Bubble Sort"
+      ]
+    },
+    {
+      "id": "validate-binary-search-tree",
+      "title": "Validate Binary Search Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/validate-binary-search-tree/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search",
+        "Binary Search Tree",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "meeting-rooms-ii",
+      "title": "Meeting Rooms II",
+      "pattern": "intervals",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/meeting-rooms-ii/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Rooms needed = max overlapping meetings; a heap of end times reuses the room that frees first.",
+      "approach": [
+        "Sort by start.",
+        "If the earliest end <= start, reuse that room.",
+        "Else open a new room. Answer is the heap size."
+      ],
+      "solution_file": "data/dsa/meeting-rooms-ii.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Back-to-back meetings share a room",
+        "Empty list"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Greedy",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "coin-change",
+      "title": "Coin Change",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/coin-change/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "dp[x] = fewest coins for amount x; try each coin as the last one.",
+      "approach": [
+        "dp[0] = 0, others infinity.",
+        "dp[x] = min(dp[x - c] + 1).",
+        "Return -1 if unreachable."
+      ],
+      "solution_file": "data/dsa/coin-change.py",
+      "time": "O(amount * coins)",
+      "space": "O(amount)",
+      "edge_cases": [
+        "amount = 0",
+        "Unreachable amount"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Breadth-First Search",
+        "Knapsack Problem",
+        "Complete Knapsack"
+      ]
+    },
+    {
+      "id": "rotting-oranges",
+      "title": "Rotting Oranges",
+      "pattern": "bfs",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/rotting-oranges/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Multi-source BFS from every rotten orange at once; levels are minutes.",
+      "approach": [
+        "Queue all rotten cells, count fresh ones.",
+        "Process one level per minute, rotting fresh neighbors.",
+        "Return minutes, or -1 if fresh remain."
+      ],
+      "solution_file": "data/dsa/rotting-oranges.py",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols)",
+      "edge_cases": [
+        "No fresh oranges returns 0",
+        "Unreachable fresh orange"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Breadth-First Search",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "word-ladder",
+      "title": "Word Ladder",
+      "pattern": "bfs",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/word-ladder/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "BFS over words; wildcard patterns like h*t find neighbors without comparing every pair.",
+      "approach": [
+        "Return 0 if endWord is missing.",
+        "Bucket words by each wildcard pattern.",
+        "BFS from beginWord, popping buckets so each is used once."
+      ],
+      "solution_file": "data/dsa/word-ladder.py",
+      "time": "O(N * L^2)",
+      "space": "O(N * L^2)",
+      "edge_cases": [
+        "endWord not in list",
+        "beginWord equals a list word"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "String",
+        "Breadth-First Search",
+        "Bidirectional Search"
+      ]
+    },
+    {
+      "id": "number-of-digit-one",
+      "title": "Number of Digit One",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/number-of-digit-one/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Math",
+        "Dynamic Programming",
+        "Recursion"
+      ]
+    },
+    {
+      "id": "largest-number-after-digit-swaps-by-parity",
+      "title": "Largest Number After Digit Swaps by Parity",
+      "pattern": "heaps",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/largest-number-after-digit-swaps-by-parity/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Sorting",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "verify-preorder-sequence-in-binary-search-tree",
+      "title": "Verify Preorder Sequence in Binary Search Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/verify-preorder-sequence-in-binary-search-tree/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Tree",
+        "Binary Search Tree",
+        "Recursion",
+        "Monotonic Stack",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "gas-station",
+      "title": "Gas Station",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/gas-station/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "longest-increasing-subsequence",
+      "title": "Longest Increasing Subsequence",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-increasing-subsequence/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Patience sorting: keep the smallest possible tail for each length and binary search where each number goes.",
+      "approach": [
+        "For each number, bisect_left in tails.",
+        "Append or replace."
+      ],
+      "solution_file": "data/dsa/longest-increasing-subsequence.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Strictly increasing means duplicates replace",
+        "All equal"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Dynamic Programming",
+        "Longest Increasing Subsequence"
+      ]
+    },
+    {
+      "id": "number-of-visible-people-in-a-queue",
+      "title": "Number of Visible People in a Queue",
+      "pattern": "stack-greedy",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/number-of-visible-people-in-a-queue/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "median-of-two-sorted-arrays",
+      "title": "Median of Two Sorted Arrays",
+      "pattern": "binary-search",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Divide and Conquer"
+      ]
+    },
+    {
+      "id": "minimum-difficulty-of-a-job-schedule",
+      "title": "Minimum Difficulty of a Job Schedule",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimum-difficulty-of-a-job-schedule/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "boundary-of-binary-tree",
+      "title": "Boundary of Binary Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/boundary-of-binary-tree/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "odd-string-difference",
+      "title": "Odd String Difference",
+      "pattern": "hashing",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/odd-string-difference/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "String"
+      ]
+    },
+    {
+      "id": "subarrays-with-k-different-integers",
+      "title": "Subarrays with K Different Integers",
+      "pattern": "sliding-window",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/subarrays-with-k-different-integers/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Sliding Window",
+        "Counting"
+      ]
+    },
+    {
+      "id": "network-delay-time",
+      "title": "Network Delay Time",
+      "pattern": "bfs",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/network-delay-time/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Weighted shortest paths from one source: Dijkstra, then take the max.",
+      "approach": [
+        "Adjacency list.",
+        "Heap of (time, node); finalize a node on first pop.",
+        "Answer is the max distance if all nodes reached, else -1."
+      ],
+      "solution_file": "data/dsa/network-delay-time.py",
+      "time": "O(E log V)",
+      "space": "O(V + E)",
+      "edge_cases": [
+        "Unreachable node",
+        "Self loops"
+      ],
+      "tags": [],
+      "topics": [
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph Theory",
+        "Heap (Priority Queue)",
+        "Shortest Path",
+        "Dijkstra's Algorithm"
+      ]
+    },
+    {
+      "id": "path-with-maximum-gold",
+      "title": "Path with Maximum Gold",
+      "pattern": "backtracking",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/path-with-maximum-gold/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Backtracking",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "design-twitter",
+      "title": "Design Twitter",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/design-twitter/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Hash Table",
+        "Linked List",
+        "Design",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "count-vowel-substrings-of-a-string",
+      "title": "Count Vowel Substrings of a String",
+      "pattern": "hashing",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/count-vowel-substrings-of-a-string/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": "30 days"
+      },
+      "topics": [
+        "Hash Table",
+        "String"
+      ]
+    },
+    {
+      "id": "collect-coins-in-a-tree",
+      "title": "Collect Coins in a Tree",
+      "pattern": "trees",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/collect-coins-in-a-tree/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Tree",
+        "Graph Theory",
+        "Topological Sort"
+      ]
+    },
+    {
+      "id": "generate-parentheses",
+      "title": "Generate Parentheses",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/generate-parentheses/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": "6 months"
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Backtracking",
+        "Bracket Sequences"
+      ]
+    },
+    {
+      "id": "minimum-replacements-to-sort-the-array",
+      "title": "Minimum Replacements to Sort the Array",
+      "pattern": "math-bits",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimum-replacements-to-sort-the-array/",
+      "salesforce": {
+        "freq": 41.2,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Array",
+        "Math",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "3sum",
+      "title": "3Sum",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/3sum/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "valid-parentheses",
+      "title": "Valid Parentheses",
+      "pattern": "stack-greedy",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/valid-parentheses/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Stack",
+        "Bracket Sequences"
+      ]
+    },
+    {
+      "id": "search-in-rotated-sorted-array",
+      "title": "Search in Rotated Sorted Array",
+      "pattern": "binary-search",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "id": "combination-sum",
+      "title": "Combination Sum",
+      "pattern": "backtracking",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/combination-sum/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Backtracking"
+      ]
+    },
+    {
+      "id": "first-missing-positive",
+      "title": "First Missing Positive",
+      "pattern": "hashing",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/first-missing-positive/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table"
+      ]
+    },
+    {
+      "id": "maximal-square",
+      "title": "Maximal Square",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximal-square/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "product-of-array-except-self",
+      "title": "Product of Array Except Self",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/product-of-array-except-self/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "find-median-from-data-stream",
+      "title": "Find Median from Data Stream",
+      "pattern": "heaps",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Two heaps split the stream into a lower and upper half; the median sits at their tops.",
+      "approach": [
+        "Max-heap for the lower half, min-heap for the upper.",
+        "Push through the lower heap into the upper to keep order.",
+        "Rebalance so lower has equal or one more element."
+      ],
+      "solution_file": "data/dsa/find-median-from-data-stream.py",
+      "time": "O(log n) add, O(1) median",
+      "space": "O(n)",
+      "edge_cases": [
+        "Even count averages the tops",
+        "Negative numbers",
+        "Duplicates"
+      ],
+      "tags": [],
+      "topics": [
+        "Two Pointers",
+        "Design",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Data Stream"
+      ]
+    },
+    {
+      "id": "decode-string",
+      "title": "Decode String",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/decode-string/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Stack",
+        "Recursion"
+      ]
+    },
+    {
+      "id": "two-sum",
+      "title": "Two Sum",
+      "pattern": "hashing",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/two-sum/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table"
+      ]
+    },
+    {
+      "id": "magnetic-force-between-two-balls",
+      "title": "Magnetic Force Between Two Balls",
+      "pattern": "binary-search",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/magnetic-force-between-two-balls/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "maximum-subarray",
+      "title": "Maximum Subarray",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximum-subarray/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Divide and Conquer",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "top-k-frequent-words",
+      "title": "Top K Frequent Words",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/top-k-frequent-words/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Sort key (-count, word) gives frequency first, then alphabetical; nsmallest takes the top k.",
+      "approach": [
+        "Counter.",
+        "heapq.nsmallest(k, words, key=(-count, word))."
+      ],
+      "solution_file": "data/dsa/top-k-frequent-words.py",
+      "time": "O(n log k)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Ties broken alphabetically"
+      ],
+      "tags": [
+        "heap"
+      ],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "String",
+        "Trie",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Bucket Sort",
+        "Counting"
+      ]
+    },
+    {
+      "id": "longest-increasing-path-in-a-matrix",
+      "title": "Longest Increasing Path in a Matrix",
+      "pattern": "bfs",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/longest-increasing-path-in-a-matrix/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph Theory",
+        "Topological Sort",
+        "Memoization",
+        "Matrix",
+        "Directed Acyclic Graph"
+      ]
+    },
+    {
+      "id": "find-leaves-of-binary-tree",
+      "title": "Find Leaves of Binary Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/find-leaves-of-binary-tree/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree",
+        "DP on Trees"
+      ]
+    },
+    {
+      "id": "k-closest-points-to-origin",
+      "title": "K Closest Points to Origin",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/k-closest-points-to-origin/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Math",
+        "Divide and Conquer",
+        "Geometry",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Quickselect",
+        "K-D Tree"
+      ]
+    },
+    {
+      "id": "sliding-window-maximum",
+      "title": "Sliding Window Maximum",
+      "pattern": "heaps",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/sliding-window-maximum/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Queue",
+        "Sliding Window",
+        "Heap (Priority Queue)",
+        "Monotonic Queue",
+        "Range Minimum/Maximum Query"
+      ]
+    },
+    {
+      "id": "reorganize-string",
+      "title": "Reorganize String",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/reorganize-string/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Greedily place the most frequent remaining char, holding the last one out for a turn.",
+      "approach": [
+        "Max-heap of (count, char).",
+        "Pop the top, append it, push back the previously held char.",
+        "If a char is still held at the end, it is impossible."
+      ],
+      "solution_file": "data/dsa/reorganize-string.py",
+      "time": "O(n log a), a = alphabet size",
+      "space": "O(a)",
+      "edge_cases": [
+        "One char more than half the length",
+        "Single character"
+      ],
+      "tags": [],
+      "topics": [
+        "Hash Table",
+        "String",
+        "Greedy",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Counting"
+      ]
+    },
+    {
+      "id": "max-consecutive-ones-iii",
+      "title": "Max Consecutive Ones III",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/max-consecutive-ones-iii/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Sliding Window",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "merge-two-sorted-lists",
+      "title": "Merge Two Sorted Lists",
+      "pattern": "linked-lists",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/merge-two-sorted-lists/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Linked List",
+        "Recursion"
+      ]
+    },
+    {
+      "id": "all-possible-full-binary-trees",
+      "title": "All Possible Full Binary Trees",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/all-possible-full-binary-trees/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Dynamic Programming",
+        "Tree",
+        "Recursion",
+        "Memoization",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "maximal-rectangle",
+      "title": "Maximal Rectangle",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/maximal-rectangle/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Stack",
+        "Matrix",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "house-robber-iii",
+      "title": "House Robber III",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/house-robber-iii/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Dynamic Programming",
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree",
+        "DP on Trees"
+      ]
+    },
+    {
+      "id": "reconstruct-itinerary",
+      "title": "Reconstruct Itinerary",
+      "pattern": "heaps",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/reconstruct-itinerary/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "String",
+        "Depth-First Search",
+        "Graph Theory",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Eulerian Circuit",
+        "Eulerian Path",
+        "Semi-Eulerian Graph"
+      ]
+    },
+    {
+      "id": "missing-number",
+      "title": "Missing Number",
+      "pattern": "binary-search",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/missing-number/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Math",
+        "Binary Search",
+        "Bit Manipulation",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "diameter-of-n-ary-tree",
+      "title": "Diameter of N-Ary Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/diameter-of-n-ary-tree/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search",
+        "DP on Trees"
+      ]
+    },
+    {
+      "id": "longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit",
+      "title": "Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Queue",
+        "Sliding Window",
+        "Heap (Priority Queue)",
+        "Ordered Set",
+        "Monotonic Queue"
+      ]
+    },
+    {
+      "id": "valid-parenthesis-string",
+      "title": "Valid Parenthesis String",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/valid-parenthesis-string/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Stack",
+        "Greedy",
+        "Bracket Sequences"
+      ]
+    },
+    {
+      "id": "tree-diameter",
+      "title": "Tree Diameter",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/tree-diameter/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph Theory",
+        "Topological Sort",
+        "DP on Trees"
+      ]
+    },
+    {
+      "id": "using-a-robot-to-print-the-lexicographically-smallest-string",
+      "title": "Using a Robot to Print the Lexicographically Smallest String",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/using-a-robot-to-print-the-lexicographically-smallest-string/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Stack",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "strange-printer",
+      "title": "Strange Printer",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/strange-printer/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": "6 months"
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "vertical-order-traversal-of-a-binary-tree",
+      "title": "Vertical Order Traversal of a Binary Tree",
+      "pattern": "trees",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Hash Table",
+        "Tree",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Sorting",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "remove-stones-to-minimize-the-total",
+      "title": "Remove Stones to Minimize the Total",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/remove-stones-to-minimize-the-total/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Always halve the current largest pile; a max-heap gives it in O(log n).",
+      "approach": [
+        "Negate piles into a min-heap.",
+        "k times: pop the largest, push it back after removing floor(x/2).",
+        "Return the sum."
+      ],
+      "solution_file": "data/dsa/remove-stones-to-minimize-the-total.py",
+      "time": "O(n + k log n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "k larger than needed",
+        "Piles of 1 never shrink"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Greedy",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "minimum-edge-reversals-so-every-node-is-reachable",
+      "title": "Minimum Edge Reversals So Every Node Is Reachable",
+      "pattern": "bfs",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimum-edge-reversals-so-every-node-is-reachable/",
+      "salesforce": {
+        "freq": 35.6,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Dynamic Programming",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph Theory"
+      ]
+    },
+    {
+      "id": "integer-to-roman",
+      "title": "Integer to Roman",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/integer-to-roman/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "Math",
+        "String"
+      ]
+    },
+    {
+      "id": "roman-to-integer",
+      "title": "Roman to Integer",
+      "pattern": "hashing",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/roman-to-integer/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "Math",
+        "String"
+      ]
+    },
+    {
+      "id": "count-binary-substrings",
+      "title": "Count Binary Substrings",
+      "pattern": "sliding-window",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/count-binary-substrings/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Two Pointers",
+        "String"
+      ]
+    },
+    {
+      "id": "maximum-number-of-ways-to-partition-an-array",
+      "title": "Maximum Number of Ways to Partition an Array",
+      "pattern": "hashing",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/maximum-number-of-ways-to-partition-an-array/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Counting",
+        "Enumeration",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "maximum-number-of-non-overlapping-palindrome-substrings",
+      "title": "Maximum Number of Non-overlapping Palindrome Substrings",
+      "pattern": "sliding-window",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/maximum-number-of-non-overlapping-palindrome-substrings/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Two Pointers",
+        "String",
+        "Dynamic Programming",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "basic-calculator",
+      "title": "Basic Calculator",
+      "pattern": "stack-greedy",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/basic-calculator/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Math",
+        "String",
+        "Stack",
+        "Recursion"
+      ]
+    },
+    {
+      "id": "exclusive-time-of-functions",
+      "title": "Exclusive Time of Functions",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/exclusive-time-of-functions/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack"
+      ]
+    },
+    {
+      "id": "shortest-distance-to-target-string-in-a-circular-array",
+      "title": "Shortest Distance to Target String in a Circular Array",
+      "pattern": "arrays-strings",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/shortest-distance-to-target-string-in-a-circular-array/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "String"
+      ]
+    },
+    {
+      "id": "game-of-life",
+      "title": "Game of Life",
+      "pattern": "arrays-strings",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/game-of-life/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Matrix",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "last-stone-weight",
+      "title": "Last Stone Weight",
+      "pattern": "heaps",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/last-stone-weight/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "path-sum-iii",
+      "title": "Path Sum III",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/path-sum-iii/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "candy",
+      "title": "Candy",
+      "pattern": "stack-greedy",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/candy/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "maximum-earnings-from-taxi",
+      "title": "Maximum Earnings From Taxi",
+      "pattern": "binary-search",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/maximum-earnings-from-taxi/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Binary Search",
+        "Dynamic Programming",
+        "Sorting"
+      ]
+    },
+    {
+      "id": "least-number-of-unique-integers-after-k-removals",
+      "title": "Least Number of Unique Integers after K Removals",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/least-number-of-unique-integers-after-k-removals/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Greedy",
+        "Sorting",
+        "Counting"
+      ]
+    },
+    {
+      "id": "backspace-string-compare",
+      "title": "Backspace String Compare",
+      "pattern": "sliding-window",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/backspace-string-compare/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Two Pointers",
+        "String",
+        "Stack",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "design-snake-game",
+      "title": "Design Snake Game",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/design-snake-game/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Design",
+        "Queue",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "find-pivot-index",
+      "title": "Find Pivot Index",
+      "pattern": "hashing",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/find-pivot-index/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "encode-and-decode-tinyurl",
+      "title": "Encode and Decode TinyURL",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/encode-and-decode-tinyurl/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Design",
+        "Hash Function"
+      ]
+    },
+    {
+      "id": "valid-palindrome",
+      "title": "Valid Palindrome",
+      "pattern": "sliding-window",
+      "difficulty": "easy",
+      "leetcode": "https://leetcode.com/problems/valid-palindrome/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Two Pointers",
+        "String"
+      ]
+    },
+    {
+      "id": "max-chunks-to-make-sorted-ii",
+      "title": "Max Chunks To Make Sorted II",
+      "pattern": "stack-greedy",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/max-chunks-to-make-sorted-ii/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Greedy",
+        "Sorting",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "bus-routes",
+      "title": "Bus Routes",
+      "pattern": "bfs",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/bus-routes/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Breadth-First Search"
+      ]
+    },
+    {
+      "id": "finding-the-number-of-visible-mountains",
+      "title": "Finding the Number of Visible Mountains",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/finding-the-number-of-visible-mountains/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Sorting",
+        "Monotonic Stack"
+      ]
+    },
+    {
+      "id": "number-of-operations-to-make-network-connected",
+      "title": "Number of Operations to Make Network Connected",
+      "pattern": "union-find",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/number-of-operations-to-make-network-connected/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "You need n - 1 cables total; with enough, the answer is components - 1.",
+      "approach": [
+        "If cables < n - 1, return -1.",
+        "Union-find to count components."
+      ],
+      "solution_file": "data/dsa/number-of-operations-to-make-network-connected.py",
+      "time": "O(E * alpha(n))",
+      "space": "O(n)",
+      "edge_cases": [
+        "Already connected",
+        "Redundant cables"
+      ],
+      "tags": [],
+      "topics": [
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Union-Find",
+        "Graph Theory"
+      ]
+    },
+    {
+      "id": "find-duplicate-subtrees",
+      "title": "Find Duplicate Subtrees",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/find-duplicate-subtrees/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "Tree",
+        "Depth-First Search",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "course-schedule-iii",
+      "title": "Course Schedule III",
+      "pattern": "heaps",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/course-schedule-iii/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Greedy",
+        "Sorting",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "house-robber-ii",
+      "title": "House Robber II",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/house-robber-ii/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "partition-equal-subset-sum",
+      "title": "Partition Equal Subset Sum",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/partition-equal-subset-sum/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Knapsack Problem",
+        "0-1 Knapsack"
+      ]
+    },
+    {
+      "id": "lexicographically-minimum-string-after-removing-stars",
+      "title": "Lexicographically Minimum String After Removing Stars",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/lexicographically-minimum-string-after-removing-stars/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Stack",
+        "Greedy",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "shortest-bridge",
+      "title": "Shortest Bridge",
+      "pattern": "bfs",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/shortest-bridge/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Mark one island fully, then BFS outward from all its cells; the first ring touching the other island is the answer.",
+      "approach": [
+        "Find any land cell, DFS to mark the first island and collect its cells.",
+        "Multi-source BFS through water, one ring per flip.",
+        "Return flips when a ring reaches unmarked land."
+      ],
+      "solution_file": "data/dsa/shortest-bridge.py",
+      "time": "O(n^2)",
+      "space": "O(n^2)",
+      "edge_cases": [
+        "Islands already diagonal neighbors",
+        "One island surrounds the other"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Matrix"
+      ]
+    },
+    {
+      "id": "spiral-matrix",
+      "title": "Spiral Matrix",
+      "pattern": "arrays-strings",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/spiral-matrix/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Matrix",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "longest-substring-of-all-vowels-in-order",
+      "title": "Longest Substring Of All Vowels in Order",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-substring-of-all-vowels-in-order/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "find-the-duplicate-number",
+      "title": "Find the Duplicate Number",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/find-the-duplicate-number/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Binary Search",
+        "Bit Manipulation",
+        "Pigeonhole Principle",
+        "Floyd's Cycle Finding Algorithm"
+      ]
+    },
+    {
+      "id": "minimum-array-sum",
+      "title": "Minimum Array Sum",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/minimum-array-sum/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "construct-binary-tree-from-preorder-and-inorder-traversal",
+      "title": "Construct Binary Tree from Preorder and Inorder Traversal",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Divide and Conquer",
+        "Tree",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "burst-balloons",
+      "title": "Burst Balloons",
+      "pattern": "dp",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/burst-balloons/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming"
+      ]
+    },
+    {
+      "id": "time-taken-to-cross-the-door",
+      "title": "Time Taken to Cross the Door",
+      "pattern": "arrays-strings",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/time-taken-to-cross-the-door/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Queue",
+        "Simulation"
+      ]
+    },
+    {
+      "id": "find-k-closest-elements",
+      "title": "Find K Closest Elements",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/find-k-closest-elements/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Binary Search",
+        "Sliding Window",
+        "Sorting",
+        "Heap (Priority Queue)"
+      ]
+    },
+    {
+      "id": "coin-change-ii",
+      "title": "Coin Change II",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/coin-change-ii/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Dynamic Programming",
+        "Knapsack Problem",
+        "Complete Knapsack"
+      ]
+    },
+    {
+      "id": "sort-characters-by-frequency",
+      "title": "Sort Characters By Frequency",
+      "pattern": "heaps",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/sort-characters-by-frequency/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Sorting",
+        "Heap (Priority Queue)",
+        "Bucket Sort",
+        "Counting"
+      ]
+    },
+    {
+      "id": "time-based-key-value-store",
+      "title": "Time Based Key-Value Store",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/time-based-key-value-store/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "String",
+        "Binary Search",
+        "Design"
+      ]
+    },
+    {
+      "id": "minimum-window-subsequence",
+      "title": "Minimum Window Subsequence",
+      "pattern": "sliding-window",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/minimum-window-subsequence/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "range-sum-query-2d-immutable",
+      "title": "Range Sum Query 2D - Immutable",
+      "pattern": "design",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/range-sum-query-2d-immutable/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Design",
+        "Matrix",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "partition-array-into-two-arrays-to-minimize-sum-difference",
+      "title": "Partition Array Into Two Arrays to Minimize Sum Difference",
+      "pattern": "sliding-window",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Array",
+        "Two Pointers",
+        "Binary Search",
+        "Dynamic Programming",
+        "Bit Manipulation",
+        "Meet in the Middle",
+        "Sorting",
+        "Ordered Set",
+        "Bitmask"
+      ]
+    },
+    {
+      "id": "subarray-sum-equals-k",
+      "title": "Subarray Sum Equals K",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/subarray-sum-equals-k/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "A subarray sums to k when two prefix sums differ by k; count earlier prefixes equal to prefix - k.",
+      "approach": [
+        "seen[0] = 1.",
+        "For each prefix, add seen[prefix - k], then record prefix."
+      ],
+      "solution_file": "data/dsa/subarray-sum-equals-k.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Negative numbers (why sliding window fails)",
+        "k = 0",
+        "Zeros create many matches"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Prefix Sum"
+      ]
+    },
+    {
+      "id": "largest-rectangle-in-histogram",
+      "title": "Largest Rectangle in Histogram",
+      "pattern": "stack-greedy",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Monotonic Stack",
+        "Range Minimum/Maximum Query"
+      ]
+    },
+    {
+      "id": "swim-in-rising-water",
+      "title": "Swim in Rising Water",
+      "pattern": "union-find",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/swim-in-rising-water/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Union-Find",
+        "Minimax",
+        "Heap (Priority Queue)",
+        "Matrix",
+        "Dijkstra's Algorithm"
+      ]
+    },
+    {
+      "id": "combination-sum-ii",
+      "title": "Combination Sum II",
+      "pattern": "backtracking",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/combination-sum-ii/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Backtracking"
+      ]
+    },
+    {
+      "id": "reaching-points",
+      "title": "Reaching Points",
+      "pattern": "math-bits",
+      "difficulty": "hard",
+      "leetcode": "https://leetcode.com/problems/reaching-points/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Math",
+        "Euclidean Algorithm",
+        "Greatest Common Divisor"
+      ]
+    },
+    {
+      "id": "angle-between-hands-of-a-clock",
+      "title": "Angle Between Hands of a Clock",
+      "pattern": "math-bits",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/angle-between-hands-of-a-clock/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Math"
+      ]
+    },
+    {
+      "id": "permutation-in-string",
+      "title": "Permutation in String",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/permutation-in-string/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Hash Table",
+        "Two Pointers",
+        "String",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "fruit-into-baskets",
+      "title": "Fruit Into Baskets",
+      "pattern": "sliding-window",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/fruit-into-baskets/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Longest window with at most 2 distinct values.",
+      "approach": [
+        "Count fruit types in the window.",
+        "Shrink while more than 2 types.",
+        "Track the max length."
+      ],
+      "solution_file": "data/dsa/fruit-into-baskets.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "edge_cases": [
+        "One type only",
+        "Alternating three types"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Sliding Window"
+      ]
+    },
+    {
+      "id": "construct-binary-search-tree-from-preorder-traversal",
+      "title": "Construct Binary Search Tree from Preorder Traversal",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Stack",
+        "Tree",
+        "Binary Search Tree",
+        "Monotonic Stack",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "amount-of-time-for-binary-tree-to-be-infected",
+      "title": "Amount of Time for Binary Tree to Be Infected",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/amount-of-time-for-binary-tree-to-be-infected/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "topics": [
+        "Hash Table",
+        "Tree",
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "find-the-smallest-divisor-given-a-threshold",
+      "title": "Find the Smallest Divisor Given a Threshold",
+      "pattern": "binary-search",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "id": "convert-sorted-list-to-binary-search-tree",
+      "title": "Convert Sorted List to Binary Search Tree",
+      "pattern": "trees",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Linked List",
+        "Divide and Conquer",
+        "Tree",
+        "Binary Search Tree",
+        "Binary Tree"
+      ]
+    },
+    {
+      "id": "longest-consecutive-sequence",
+      "title": "Longest Consecutive Sequence",
+      "pattern": "hashing",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/longest-consecutive-sequence/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "reported": false,
+      "pinned": false,
+      "insight": "Only start counting at numbers with no predecessor, so each run is walked once.",
+      "approach": [
+        "Put numbers in a set.",
+        "For v with v-1 absent, count upward.",
+        "Track the best."
+      ],
+      "solution_file": "data/dsa/longest-consecutive-sequence.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "edge_cases": [
+        "Duplicates",
+        "Empty input",
+        "Negative numbers"
+      ],
+      "tags": [],
+      "topics": [
+        "Array",
+        "Hash Table",
+        "Union-Find"
+      ]
+    },
+    {
+      "id": "minimum-equal-sum-of-two-arrays-after-replacing-zeros",
+      "title": "Minimum Equal Sum of Two Arrays After Replacing Zeros",
+      "pattern": "stack-greedy",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/minimum-equal-sum-of-two-arrays-after-replacing-zeros/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": null
+      },
+      "topics": [
+        "Array",
+        "Greedy"
+      ]
+    },
+    {
+      "id": "palindrome-partitioning",
+      "title": "Palindrome Partitioning",
+      "pattern": "dp",
+      "difficulty": "medium",
+      "leetcode": "https://leetcode.com/problems/palindrome-partitioning/",
+      "salesforce": {
+        "freq": 27.7,
+        "recent": "6 months"
+      },
+      "topics": [
+        "String",
+        "Dynamic Programming",
+        "Backtracking"
+      ]
+    }
+  ]
+}

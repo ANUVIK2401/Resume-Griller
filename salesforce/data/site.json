@@ -1,0 +1,12 @@
+{
+  "$schema": "./schema/site.schema.json",
+  "title": "Salesforce MTS prep",
+  "pages": [
+    { "id": "home", "href": "index.html", "label": "Loop", "prompt": "~/prep --status", "title": "Salesforce MTS", "accent": "loop", "lede": "Six rounds, one tracker. Status, dates, and checklists live here, everything else is one click away." },
+    { "id": "behavioral", "href": "behavioral.html", "label": "Behavioral", "prompt": "~/prep/behavioral --rehearse", "title": "Stories and", "accent": "numbers", "lede": "Pitch, STAR bank, values, and a rapid-fire quiz on every number you will be asked to repeat." },
+    { "id": "ai", "href": "ai.html", "label": "AI", "prompt": "~/prep/ai --flashcards", "title": "AI", "accent": "fundamentals", "lede": "Thirty-second answers first, two-minute answers on demand, each tied back to work you shipped." },
+    { "id": "hld", "href": "hld.html", "label": "System design", "prompt": "~/prep/hld --whiteboard", "title": "System", "accent": "design", "lede": "One framework, seven problems, and the GCP names for every box you draw." },
+    { "id": "dsa", "href": "dsa.html", "label": "DSA", "prompt": "~/prep/dsa --timed", "title": "Data structures and", "accent": "algorithms", "lede": "Patterns in priority order, the two reported problems pinned, and a 45-minute OA simulator." },
+    { "id": "lld", "href": "lld.html", "label": "LLD", "prompt": "~/prep/lld --catch-the-ai", "title": "Object-oriented", "accent": "design", "lede": "Class design, concurrency, and practice spotting what an AI assistant gets wrong." }
+  ]
+}

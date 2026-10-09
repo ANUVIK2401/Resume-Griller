@@ -1,0 +1,1267 @@
+{
+  "$schema": "./schema/behavioral.schema.json",
+  "status_options": [
+    {
+      "id": "draft",
+      "label": "Draft"
+    },
+    {
+      "id": "rehearsing",
+      "label": "Rehearsing"
+    },
+    {
+      "id": "ready",
+      "label": "Ready"
+    }
+  ],
+  "pitch": {
+    "target_sec": 90,
+    "beats": [
+      {
+        "label": "Who",
+        "text": "I'm Anuvik. I spent nearly 3 years at Oracle as a Software Engineer II on NSX, owning production infrastructure: observability, incident response, and Kubernetes for 37,000+ enterprise tenants."
+      },
+      {
+        "label": "Proof",
+        "text": "Two results I'm proudest of: I cut P1 MTTR from 94 to 26 minutes by building real-time API diagnostics that auto-tag root causes, so on-call starts with runbook context. And I moved alerting from static thresholds to SLOs, which cut false pages 41%."
+      },
+      {
+        "label": "Pivot",
+        "text": "I came to USC for my MS to go deep on AI. This summer at MSRcosmos I shipped a multi-agent ERP migration on the Claude API and LangGraph, with a human-in-the-loop layer that auto-approved 83% of records and took turnaround from 3 days to 5.5 hours."
+      },
+      {
+        "label": "Now",
+        "text": "Today I build a multi-agent app on Claude Enterprise and MCP at USC Annenberg, and I benchmark frontier LLMs for factual accuracy at the AI Trust Lab."
+      },
+      {
+        "label": "Why you",
+        "text": "Your team is moving Salesforce onto GCP and building AI SRE tooling to cut MTTD and MTTR. I've worked that problem from both sides: as the engineer getting paged, and as the one building agents."
+      }
+    ],
+    "closing_line": "The incident tooling I built by hand at Oracle is what AI SRE agents can automate, on GCP and at Salesforce scale."
+  },
+  "competencies": [
+    {
+      "id": "ownership",
+      "name": "Ownership and impact",
+      "gap": false
+    },
+    {
+      "id": "technical-depth",
+      "name": "Technical depth",
+      "gap": false
+    },
+    {
+      "id": "customer",
+      "name": "Customer focus",
+      "gap": false
+    },
+    {
+      "id": "influence",
+      "name": "Influence without authority",
+      "gap": false
+    },
+    {
+      "id": "ambiguity",
+      "name": "Ambiguity and judgment",
+      "gap": false
+    },
+    {
+      "id": "data-driven",
+      "name": "Data-driven decisions",
+      "gap": false
+    },
+    {
+      "id": "learning",
+      "name": "Learning fast",
+      "gap": false
+    },
+    {
+      "id": "failure",
+      "name": "Failure or mistake",
+      "gap": true,
+      "template": {
+        "s": "Look in your Oracle deploys before the CLI toolchain existed, or an early MSRcosmos agent run that posted wrong. What broke, and who felt it?",
+        "t": "What were you on the hook for when it broke?",
+        "a": "What did you do in the first hour, and what did you change so it could not happen the same way again?",
+        "r": "The fix, the number if there is one, and the one habit you kept. End on what you do differently now."
+      }
+    },
+    {
+      "id": "conflict",
+      "name": "Conflict or disagreement",
+      "gap": true,
+      "template": {
+        "s": "A teammate or another team disagreed with a technical call. Candidates: SLO alerting replacing thresholds, or a team resisting the CLI validation gate.",
+        "t": "What decision was at stake, and who owned it?",
+        "a": "How you understood their position first, what data you brought, and how you reached a decision. Name the compromise if there was one.",
+        "r": "What shipped, how the relationship ended up, and what you learned about disagreeing well."
+      }
+    },
+    {
+      "id": "mentoring",
+      "name": "Mentoring or growing others",
+      "gap": true,
+      "template": {
+        "s": "Someone newer than you: an engineer onboarding to the CLI toolchain, a new on-call engineer using your runbooks, or a lab teammate.",
+        "t": "What did they need to get to, and by when?",
+        "a": "How you taught it: pairing, docs, reviews. Be specific about one thing you did.",
+        "r": "What they could do on their own afterward. A number if you have one, a concrete outcome if not."
+      }
+    }
+  ],
+  "stories": [
+    {
+      "id": "annenberg-pacsun",
+      "title": "Multi-agent retail intelligence app for PacSun executives",
+      "experience_id": "annenberg",
+      "prompts": [
+        "Tell me about what you are building now.",
+        "How do you connect LLM agents to company data safely?",
+        "How do you know an AI-written brief is accurate?"
+      ],
+      "competencies": [
+        "learning",
+        "customer",
+        "ambiguity"
+      ],
+      "values": [
+        "innovation",
+        "customer-success"
+      ],
+      "number_ids": [],
+      "resume_lines": [
+        "Building a multi-agent retail intelligence app on Claude Enterprise for PacSun executives, wiring MCP connectors into internal systems so agents pull live context, rank operational issues into one owner-tagged view, and draft CEO briefs."
+      ],
+      "s": "PacSun executives had to chase many teams to see which operational issues mattered and who owned them.",
+      "t": "Build a multi-agent app on Claude Enterprise that pulls live context from internal systems and turns it into decisions.",
+      "a": [
+        "Wired MCP connectors into internal systems so agents read live data instead of stale exports.",
+        "Agents rank operational issues into one view, each tagged with its owner.",
+        "A writing step drafts CEO briefs from that ranked view.",
+        "[fill: which systems are connected and how briefs are checked before they reach the CEO]"
+      ],
+      "r": "[fill: current status and early feedback; this is ongoing work, so say what is live and what is next]",
+      "probes": [
+        {
+          "q": "How do agents get live data?",
+          "a": "Through MCP connectors: each one exposes a small set of tools into one system, with access scoped to what the agent needs."
+        },
+        {
+          "q": "How do you stop a wrong brief from reaching the CEO?",
+          "a": "Every claim in the brief should cite where it came from. [fill: your review step, for example a person approving the brief]"
+        },
+        {
+          "q": "Why several agents instead of one?",
+          "a": "Separate jobs: gather, rank, write. Each is easier to test and fix on its own."
+        }
+      ],
+      "terms": [
+        "Claude Enterprise: Claude for organizations, with admin controls and data protections.",
+        "MCP connector: a plug that lets Claude read from a company system, like a database or a ticketing tool.",
+        "Owner-tagged view: every issue shows who is responsible for it.",
+        "CEO brief: a short summary of what matters and what needs a decision."
+      ],
+      "stack": [
+        "Claude Enterprise: the LLM platform the agents run on.",
+        "MCP connectors: the bridge into internal systems.",
+        "[fill: the data sources, for example sales, inventory, or ticketing]"
+      ],
+      "simple": [
+        "Executives had to chase many teams to see what was wrong.",
+        "I connected Claude to internal systems through MCP so agents read live data.",
+        "Agents rank issues and tag each with an owner.",
+        "Another step drafts a CEO brief from that view."
+      ]
+    },
+    {
+      "id": "annenberg-scheduling",
+      "title": "Agentic scheduling workflow for CEO meetings",
+      "experience_id": "annenberg",
+      "prompts": [
+        "Tell me about an agent that takes actions, not just answers.",
+        "How do you keep an agent from doing the wrong thing?"
+      ],
+      "competencies": [
+        "ambiguity",
+        "customer"
+      ],
+      "values": [
+        "innovation",
+        "customer-success"
+      ],
+      "number_ids": [],
+      "resume_lines": [
+        "Engineered an agentic scheduling workflow that ranks open issues by urgency and owner and proposes CEO meeting slots with agendas."
+      ],
+      "s": "The CEO's time is the scarcest resource, and open issues competed for it without a clear order.",
+      "t": "Turn the ranked issue list into proposed meetings with the right people and a clear agenda.",
+      "a": [
+        "The workflow ranks open issues by urgency and owner.",
+        "It proposes CEO meeting slots for the top issues.",
+        "It drafts an agenda for each proposed meeting.",
+        "[fill: how proposals are approved before anything is booked]"
+      ],
+      "r": "[fill: outcome so far, for example how many meetings it proposes and how often they are accepted]",
+      "probes": [
+        {
+          "q": "What stops it from booking the wrong meeting?",
+          "a": "It proposes, a person decides. [fill: confirm your approval step]"
+        },
+        {
+          "q": "How do you rank urgency?",
+          "a": "[fill: the signals, for example due dates, business impact, and how long an issue has been open]"
+        }
+      ],
+      "terms": [
+        "Agentic workflow: an LLM that plans and takes steps toward a goal, not just a one-shot answer.",
+        "Urgency ranking: ordering issues by how soon they need action.",
+        "Agenda: the topics and decisions for a meeting, written down in advance."
+      ],
+      "stack": [
+        "Claude: plans and drafts the proposals.",
+        "Owner-tagged issue view: the input it ranks.",
+        "[fill: calendar system it reads availability from]"
+      ],
+      "simple": [
+        "Open issues had no clear order for the CEO's time.",
+        "The workflow ranks issues by urgency and owner.",
+        "It proposes meeting slots and drafts an agenda for each.",
+        "[fill: confirm a person approves before anything is booked]"
+      ]
+    },
+    {
+      "id": "trust-veracity",
+      "title": "Benchmarked 6 frontier LLMs on factual accuracy",
+      "experience_id": "trust-lab",
+      "prompts": [
+        "How do you evaluate an LLM?",
+        "Tell me about a time you built evaluation tooling."
+      ],
+      "competencies": [
+        "technical-depth",
+        "data-driven"
+      ],
+      "values": [
+        "trust",
+        "innovation"
+      ],
+      "number_ids": [],
+      "resume_lines": [
+        "Benchmarked 6 frontier LLMs (GPT, Claude, Gemini, Llama, Grok, DeepSeek) on Veracity (factual accuracy), building test suites and automated scoring into the lab's LLM evaluation platform for side-by-side comparison across 8 trust pillars."
+      ],
+      "s": "The AI Trust Lab needed comparable evidence of how factually accurate frontier models are.",
+      "t": "Benchmark 6 models on Veracity, one of the lab's 8 trust pillars, inside its evaluation platform.",
+      "a": [
+        "Built test suites of questions with known correct answers.",
+        "Built automated scoring so every model is graded the same way.",
+        "Put results side by side in the lab's evaluation platform.",
+        "[fill: dataset size and how scoring decides an answer is correct]"
+      ],
+      "r": "[fill: one finding you can share, for example which kinds of questions trip models up]",
+      "probes": [
+        {
+          "q": "How do you score factuality automatically?",
+          "a": "Compare against reference answers; where wording varies, use an LLM judge that you first check against human labels."
+        },
+        {
+          "q": "How do you keep the benchmark fair?",
+          "a": "Same prompts, same settings, same scorer for every model, and questions the models are unlikely to have memorized. [fill: how you handled that]"
+        }
+      ],
+      "terms": [
+        "Benchmark: the same test run on several models so results compare fairly.",
+        "Veracity: factual accuracy; whether the model says true things.",
+        "Trust pillars: the 8 dimensions the lab scores models on.",
+        "Automated scoring: code that grades answers without a person reading each one."
+      ],
+      "stack": [
+        "6 models: GPT, Claude, Gemini, Llama, Grok, DeepSeek.",
+        "The lab's LLM evaluation platform: runs tests and shows comparisons.",
+        "Test suites and scorers: [fill: language and libraries]"
+      ],
+      "simple": [
+        "I wrote test questions with known right answers.",
+        "I ran all 6 models on the same questions.",
+        "My scorer graded every answer automatically.",
+        "The platform shows the models side by side."
+      ]
+    },
+    {
+      "id": "trust-annotation",
+      "title": "LLM annotation pipeline with expert routing",
+      "experience_id": "trust-lab",
+      "prompts": [
+        "Tell me about using an LLM where mistakes matter.",
+        "How do you decide when a human should review AI output?"
+      ],
+      "competencies": [
+        "technical-depth",
+        "data-driven",
+        "customer"
+      ],
+      "values": [
+        "trust",
+        "equality"
+      ],
+      "number_ids": [],
+      "resume_lines": [
+        "Built a rubric-based LLM annotation pipeline on Llama 3.3 70B that labels caseworker notes, scores confidence, and routes low-confidence cases to domain experts for human-in-the-loop review."
+      ],
+      "s": "Caseworker notes needed consistent labels, and domain experts had limited time to read them all.",
+      "t": "Label notes automatically where the model is reliable, and send the hard cases to experts.",
+      "a": [
+        "Wrote the labeling criteria as a rubric the model follows.",
+        "Ran Llama 3.3 70B to label each note and score its confidence.",
+        "Routed low-confidence notes to domain experts for review.",
+        "[fill: how you measured agreement between the model and the experts]"
+      ],
+      "r": "[fill: share of notes auto-labeled, or agreement with experts]",
+      "probes": [
+        {
+          "q": "Why an open-weight model?",
+          "a": "[fill: your reason, for example keeping sensitive notes inside the lab's own infrastructure]"
+        },
+        {
+          "q": "How do you set the confidence cutoff?",
+          "a": "Check model labels against expert labels on a sample, then set the cutoff where auto-labels are as accurate as you need."
+        }
+      ],
+      "terms": [
+        "Annotation: adding labels to text so it can be analyzed or used for training.",
+        "Rubric: written criteria the model follows to choose a label.",
+        "Caseworker notes: free-text notes written by social service caseworkers.",
+        "Confidence routing: send the cases the model is unsure about to people."
+      ],
+      "stack": [
+        "Llama 3.3 70B: an open-weight LLM that does the labeling.",
+        "Rubric prompts: the instructions and label definitions.",
+        "Expert review queue: where uncertain cases go."
+      ],
+      "simple": [
+        "I wrote the labeling rules as a rubric.",
+        "The model labels each note and says how sure it is.",
+        "Unsure cases go to domain experts.",
+        "It is the same pattern as my MSRcosmos review layer, applied to sensitive text."
+      ]
+    },
+    {
+      "id": "marshall-etl",
+      "title": "Python ETL for eye-tracking and survey data",
+      "experience_id": "marshall",
+      "prompts": [
+        "Tell me about a data pipeline you built.",
+        "How do you make messy data usable?"
+      ],
+      "competencies": [
+        "ownership",
+        "technical-depth"
+      ],
+      "values": [
+        "trust"
+      ],
+      "number_ids": [],
+      "resume_lines": [
+        "Built Python ETL pipelines turning raw eye-tracking and Qualtrics survey exports into analysis-ready datasets for concurrent studies."
+      ],
+      "s": "Several studies ran at once, and each tool exported raw data in its own format.",
+      "t": "Give researchers clean, joined datasets without manual spreadsheet work.",
+      "a": [
+        "Wrote Python pipelines that read eye-tracking and Qualtrics exports.",
+        "Cleaned and standardized the columns across tools.",
+        "Joined them into one analysis-ready dataset per study.",
+        "[fill: how you handled schema changes or bad files]"
+      ],
+      "r": "[fill: time saved or how many studies use it]",
+      "probes": [
+        {
+          "q": "How did you check the data was right?",
+          "a": "[fill: checks, for example row counts, participant ID matches, missing value reports]"
+        }
+      ],
+      "terms": [
+        "ETL: extract raw data, transform it into a clean shape, load it where analysts use it.",
+        "Eye-tracking data: where a participant looks on screen, recorded many times per second.",
+        "Qualtrics: an online survey platform.",
+        "Analysis-ready dataset: one clean table with consistent columns."
+      ],
+      "stack": [
+        "Python: the pipeline code. [fill: libraries, for example pandas]",
+        "Eye-tracker exports: raw gaze data.",
+        "Qualtrics exports: survey responses."
+      ],
+      "simple": [
+        "Each tool exported data in a different shape.",
+        "I wrote Python pipelines to clean and join it.",
+        "Researchers get one clean table per study."
+      ]
+    },
+    {
+      "id": "marshall-validation",
+      "title": "Survey instruments with automated response validation",
+      "experience_id": "marshall",
+      "prompts": [
+        "Tell me about catching bad data early.",
+        "How do you ensure quality in data you collect?"
+      ],
+      "competencies": [
+        "ownership",
+        "data-driven"
+      ],
+      "values": [
+        "trust"
+      ],
+      "number_ids": [],
+      "resume_lines": [
+        "Programmed survey instruments and automated response validation to flag incomplete or inattentive submissions before analysis."
+      ],
+      "s": "Incomplete or careless survey responses were reaching analysis and skewing results.",
+      "t": "Catch them automatically before anyone analyzes the data.",
+      "a": [
+        "Programmed the survey instruments.",
+        "Added automatic checks for incomplete answers.",
+        "Flagged inattentive submissions [fill: how, for example attention-check items or completion time].",
+        "Kept flagged responses out of analysis until reviewed."
+      ],
+      "r": "[fill: share of responses flagged, or effect on data quality]",
+      "probes": [
+        {
+          "q": "How do you detect an inattentive respondent?",
+          "a": "Attention-check questions, implausibly fast completion, and straight-lining the same answer. [fill: which you used]"
+        }
+      ],
+      "terms": [
+        "Survey instrument: the actual questionnaire a participant takes.",
+        "Response validation: automatic checks on answers as they come in.",
+        "Inattentive response: someone clicking through without reading."
+      ],
+      "stack": [
+        "Qualtrics: survey logic and question flow.",
+        "Validation checks: [fill: built in Qualtrics, Python, or both]",
+        "Analysis datasets: where only validated responses end up."
+      ],
+      "simple": [
+        "I built the surveys.",
+        "I added automatic checks for missing or careless answers.",
+        "Bad responses got flagged before analysis."
+      ]
+    },
+    {
+      "id": "erp-multi-agent",
+      "title": "Multi-agent ERP migration: 68% less manual reconciliation",
+      "experience_id": "msrcosmos",
+      "lead": true,
+      "prompts": [
+        "Tell me about something you built with LLMs in production.",
+        "Tell me about delivering under ambiguity for a customer."
+      ],
+      "competencies": [
+        "ownership",
+        "customer",
+        "ambiguity",
+        "learning"
+      ],
+      "number_ids": [
+        "msr-records",
+        "msr-reconciliation"
+      ],
+      "s": "Clients were migrating GL, AP, and AR records from Sage X3 to Sage Intacct. Reconciling 10,000+ records by hand was slow and error prone.",
+      "t": "As a forward deployed engineer, ship a system that does the reconciliation work with agents, safely, in client environments.",
+      "a": [
+        "Built a multi-agent migration system on the Claude API and LangGraph, so each step had explicit state and could be checkpointed and audited.",
+        "Containerized it with Docker so it deployed cloud-agnostic on AWS, Azure, and GCP.",
+        "Put a confidence-routed human review layer in front of every write (see the HITL story).",
+        "[fill: how the agents split the work, for example extraction, mapping, validation]"
+      ],
+      "r": "Manual reconciliation dropped 68% across 10,000+ records.",
+      "probes": [
+        {
+          "q": "Why LangGraph instead of a free agent loop?",
+          "a": "Financial writes need auditability: explicit state, checkpoints to resume, and a fixed graph you can reason about. A free loop is harder to bound and to replay."
+        },
+        {
+          "q": "How did you stop the agents from posting wrong numbers?",
+          "a": "Nothing wrote without passing the confidence threshold or a human approving it. [fill: validation checks, for example balances tying out]"
+        },
+        {
+          "q": "How did you evaluate it?",
+          "a": "[fill: golden set of migrated records, reviewer agreement rate, or reconciliation diffs]"
+        }
+      ],
+      "values": [
+        "innovation",
+        "customer-success"
+      ],
+      "resume_lines": [
+        "Launched a multi-agent ERP migration system on the Claude API and LangGraph, containerized with Docker for cloud-agnostic deployment on AWS, Azure, and GCP, cutting manual reconciliation 68% over 10,000+ GL/AP/AR records from Sage X3 to Sage Intacct."
+      ],
+      "terms": [
+        "ERP: software that runs a company's finances and operations.",
+        "Reconciliation: checking that records match between the old and the new system.",
+        "GL, AP, AR: general ledger, accounts payable (money owed), accounts receivable (money due).",
+        "Multi-agent system: several LLM agents, each owning one step, working together.",
+        "Cloud-agnostic: runs the same way on AWS, Azure, or GCP."
+      ],
+      "stack": [
+        "Claude API: the LLM behind each agent.",
+        "LangGraph: defines agent steps as a graph with saved state and checkpoints.",
+        "Docker: packages the system so it runs in any cloud.",
+        "Sage X3 and Sage Intacct: the old and new ERP systems."
+      ],
+      "simple": [
+        "Clients were moving financial records between two ERPs by hand.",
+        "I built agents that map, check, and reconcile records step by step.",
+        "LangGraph saved each step's state, so runs could resume and be audited.",
+        "Docker let it run inside each client's own cloud.",
+        "Result: 68% less manual reconciliation over 10,000+ records."
+      ]
+    },
+    {
+      "id": "databricks-feed",
+      "title": "Nightly Databricks feed: 4.2M rows in 22 minutes",
+      "experience_id": "msrcosmos",
+      "prompts": [
+        "Tell me about a data pipeline you built.",
+        "Tell me about optimizing something under a time window."
+      ],
+      "competencies": [
+        "technical-depth",
+        "ownership"
+      ],
+      "number_ids": [
+        "msr-tables",
+        "msr-rows",
+        "msr-refresh"
+      ],
+      "s": "The agents needed fresh financial data every morning, across AWS, Azure, and GCP Databricks workspaces.",
+      "t": "Automate the nightly feed and keep the full refresh inside the window.",
+      "a": [
+        "Staged 17 financial tables and 4.2M rows into Delta Lake with PySpark.",
+        "Used partition pruning and incremental merges instead of full rewrites.",
+        "[fill: how you handled failures and reruns, for example idempotent merges]"
+      ],
+      "r": "Full refresh held at 22 minutes.",
+      "probes": [
+        {
+          "q": "Why incremental merges?",
+          "a": "Only changed rows get rewritten, so cost and time scale with change volume, not table size."
+        },
+        {
+          "q": "What happens if the job fails halfway?",
+          "a": "[fill: your rerun story]. Delta Lake transactions make each merge atomic, so a rerun is safe if merges are keyed and idempotent."
+        }
+      ],
+      "values": [
+        "sustainability",
+        "customer-success"
+      ],
+      "resume_lines": [
+        "Automated the nightly Databricks feed behind the agents across AWS, Azure, and GCP workspaces, staging 17 financial tables and 4.2M rows into Delta Lake with PySpark; partition pruning and incremental merges held full refresh at 22 minutes."
+      ],
+      "terms": [
+        "Data feed: a scheduled job that copies fresh data to where it is needed.",
+        "Delta Lake: a table format that adds database-style transactions to data lake files.",
+        "Partition pruning: skip whole folders of data a job does not need.",
+        "Incremental merge: update only the rows that changed instead of rewriting everything."
+      ],
+      "stack": [
+        "Databricks: managed Spark platform where the jobs ran, on AWS, Azure, and GCP.",
+        "PySpark: Python interface to Spark for processing big tables in parallel.",
+        "Delta Lake tables: what the agents read from each morning."
+      ],
+      "simple": [
+        "The agents needed fresh financial data every morning.",
+        "I automated a nightly job moving 17 tables and 4.2M rows.",
+        "I skipped untouched partitions and merged only changed rows.",
+        "Result: the full refresh held at 22 minutes."
+      ]
+    },
+    {
+      "id": "hitl-routing",
+      "title": "Human-in-the-loop routing: 83% auto-approved",
+      "experience_id": "msrcosmos",
+      "prompts": [
+        "Tell me about a trade-off between speed and safety.",
+        "How do you build trust in an AI system?"
+      ],
+      "competencies": [
+        "data-driven",
+        "customer",
+        "ambiguity"
+      ],
+      "number_ids": [
+        "msr-auto-approved",
+        "msr-cycle-before",
+        "msr-cycle-after",
+        "msr-entities"
+      ],
+      "s": "Reviewing every migrated record by hand took 3 days per cycle, across 12 client entities each on its own cloud.",
+      "t": "Cut turnaround without letting low-confidence records through unreviewed.",
+      "a": [
+        "Designed the review layer over Sage REST APIs and MCP tool calling.",
+        "Scored each record's confidence and auto-approved only above a threshold; everything else went to a human.",
+        "[fill: how you set and tuned the threshold, and what you watched after launch]"
+      ],
+      "r": "83% of records auto-approved, and turnaround went from 3 days to 5.5 hours for 12 client entities.",
+      "probes": [
+        {
+          "q": "How did you pick the threshold?",
+          "a": "[fill: method]. The principle: set it where the error rate of auto-approved records is below what human review catches, measured on labeled samples."
+        },
+        {
+          "q": "What if confidence scores are miscalibrated?",
+          "a": "Spot-audit a sample of auto-approved records, track overturn rate, and raise the threshold if it drifts."
+        },
+        {
+          "q": "Connect it to SRE.",
+          "a": "Same pattern as safe mitigations: the agent proposes, humans approve anything risky or uncertain, and the threshold is a dial you tune with data."
+        }
+      ],
+      "values": [
+        "trust",
+        "innovation"
+      ],
+      "resume_lines": [
+        "Designed the human-in-the-loop review layer over Sage REST APIs and MCP tool calling, auto-approving 83% of records above a confidence threshold and cutting turnaround from 3 days to 5.5 hours for 12 client entities, each on its own cloud."
+      ],
+      "terms": [
+        "Human-in-the-loop (HITL): people review the cases the AI is unsure about.",
+        "Confidence score: how sure the system is that a record is correct.",
+        "Threshold: the cutoff; above it auto-approve, below it a person checks.",
+        "MCP (Model Context Protocol): a standard way for an LLM to call tools and data sources."
+      ],
+      "stack": [
+        "Sage REST APIs: read and write records in the ERP.",
+        "MCP tool calling: how the agents reached those APIs.",
+        "Review queue: where low-confidence records wait for a person."
+      ],
+      "simple": [
+        "Reviewing every record by hand took 3 days per cycle.",
+        "I scored each record's confidence.",
+        "Confident records were approved automatically; the rest went to a person.",
+        "Result: 83% auto-approved, turnaround from 3 days to 5.5 hours for 12 entities."
+      ]
+    },
+    {
+      "id": "sports-dqn",
+      "title": "Volunteer research: DQN agent for NFL fourth-down calls",
+      "experience_id": "sports",
+      "prompts": [
+        "Tell me about a machine learning project.",
+        "Tell me about a time you made something run faster."
+      ],
+      "competencies": [
+        "technical-depth",
+        "learning",
+        "data-driven"
+      ],
+      "values": [
+        "innovation",
+        "sustainability"
+      ],
+      "number_ids": [
+        "sports-plays",
+        "sports-agree-before",
+        "sports-agree-after",
+        "sports-train-before",
+        "sports-train-after",
+        "sports-train-pct"
+      ],
+      "resume_lines": [
+        "Prototyped a DQN reinforcement learning agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
+        "Raised agreement with EPA-optimal calls from 68% to 74% on held-out 2024 drives, and cut per-run training time 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."
+      ],
+      "s": "Volunteer research with USC Sports Analytics: could a reinforcement learning agent learn good fourth-down decisions?",
+      "t": "Prototype the agent, and make training fast enough to iterate on.",
+      "a": [
+        "Built a DQN agent over 420K plays.",
+        "Shaped the reward on expected points added so it learned the right goal.",
+        "Vectorized replay-buffer sampling so batches were built at once, not one by one.",
+        "Removed a data-loader stall that left the model waiting for data."
+      ],
+      "r": "Agreement with EPA-optimal calls rose from 68% to 74% on held-out 2024 drives, and training time per run dropped 40%, from 52 to 31 minutes.",
+      "probes": [
+        {
+          "q": "Why compare to EPA-optimal calls?",
+          "a": "EPA is the standard analytics benchmark for fourth-down decisions, so it gives a fair reference on held-out games."
+        },
+        {
+          "q": "How did you find the data-loader stall?",
+          "a": "[fill: how you profiled it, for example timing each training step]"
+        }
+      ],
+      "terms": [
+        "Reinforcement learning: an agent learns by trying actions and getting rewards.",
+        "DQN (deep Q-network): a neural network that estimates how good each action is.",
+        "EPA (expected points added): how much a play changes a team's expected score.",
+        "Reward shaping: designing the reward so the agent learns the right goal faster.",
+        "Replay buffer: stored past experiences the agent samples to learn from."
+      ],
+      "stack": [
+        "Python: the agent and training loop. [fill: framework, for example PyTorch]",
+        "NFL play-by-play data: 420K plays.",
+        "Vectorized sampling: build training batches in one operation."
+      ],
+      "simple": [
+        "The agent picks go for it, punt, or kick on fourth down.",
+        "I rewarded it using expected points added.",
+        "I made training faster by sampling batches at once.",
+        "I fixed a stall where the data loader made the model wait.",
+        "Result: 74% agreement with EPA-optimal calls, training 40% faster."
+      ]
+    },
+    {
+      "id": "slo-alerting",
+      "title": "Moved NSX alerting from thresholds to SLOs",
+      "experience_id": "oracle",
+      "prompts": [
+        "Tell me about a time you reduced toil.",
+        "Tell me about a decision you made with data."
+      ],
+      "competencies": [
+        "data-driven",
+        "technical-depth",
+        "customer"
+      ],
+      "number_ids": [
+        "oracle-tenants",
+        "oracle-dashboards",
+        "oracle-false-pages"
+      ],
+      "s": "NSX alerting ran on static thresholds across 37,000+ enterprise tenants. Static thresholds page on noise, so on-call got woken up for things customers never felt.",
+      "t": "Make pages mean customer pain: fewer false positives without missing real incidents.",
+      "a": [
+        "Architected the Prometheus and Grafana stack for NSX.",
+        "Defined SLOs on CPU, memory, and p99 latency and moved alert rules onto them.",
+        "Built 47 dashboards and alert rules so the signal behind every page was one click away.",
+        "[fill: how you chose SLO targets and how you tuned during rollout]"
+      ],
+      "r": "False-positive on-call pages dropped 41%. Pages became something people trusted again, which is what makes MTTR work possible.",
+      "probes": [
+        {
+          "q": "Why SLOs instead of tuning thresholds?",
+          "a": "A threshold says a number is high. An SLO says users are hurting and how fast the budget is burning. That is the thing worth waking someone up for."
+        },
+        {
+          "q": "How did you avoid missing real incidents?",
+          "a": "[fill: what you watched, for example incidents found by customers before alerts]. Name burn-rate alerting as the follow-up: fast burn pages, slow burn tickets."
+        },
+        {
+          "q": "How did you pick SLO targets?",
+          "a": "[fill: historical p99 and error baselines, what tenants were promised, what the team could actually hold]"
+        }
+      ],
+      "values": [
+        "trust",
+        "customer-success"
+      ],
+      "resume_lines": [
+        "Architected the Prometheus/Grafana observability stack for NSX across 37,000+ enterprise tenants, moving alerting off static thresholds onto SLOs for CPU, memory, and p99 latency; 47 dashboards and alert rules cut false-positive on-call pages 41%."
+      ],
+      "terms": [
+        "SLO (service level objective): a reliability target, like 99.9% of requests under a latency limit.",
+        "Static threshold: alert when a number crosses a fixed line, like CPU over 80%. Noisy.",
+        "p99 latency: 99% of requests are faster than this; it shows the slow tail users feel.",
+        "False-positive page: an alert that wakes someone up when nothing is actually wrong.",
+        "Tenant: one customer organization sharing the platform with others."
+      ],
+      "stack": [
+        "Prometheus: collects metrics over time and evaluates alert rules.",
+        "Grafana: dashboards that visualize Prometheus data.",
+        "Alert rules: queries that fire when an SLO is at risk.",
+        "NSX: the network virtualization platform your services ran on."
+      ],
+      "simple": [
+        "Old alerts fired on fixed numbers, so people got paged for nothing.",
+        "I defined what good looks like for users: CPU, memory, and p99 latency targets.",
+        "I moved alerts to fire only when those targets were at risk.",
+        "I built 47 dashboards so the reason behind each page was one click away.",
+        "Result: 41% fewer false pages across 37,000+ tenants."
+      ]
+    },
+    {
+      "id": "p1-mttr",
+      "title": "Cut P1 MTTR from 94 to 26 minutes",
+      "experience_id": "oracle",
+      "lead": true,
+      "prompts": [
+        "Tell me about your biggest impact.",
+        "Tell me about a time you improved a process.",
+        "Tell me about a time you took ownership beyond your role."
+      ],
+      "competencies": [
+        "ownership",
+        "technical-depth",
+        "customer"
+      ],
+      "number_ids": [
+        "oracle-mttr-before",
+        "oracle-mttr-after",
+        "oracle-mttr-pct",
+        "oracle-endpoints"
+      ],
+      "s": "On NSX, P1 incidents took 94 minutes on average to resolve. On-call engineers spent the first stretch of every incident just working out which API was failing across 1M+ endpoints, with no context waiting for them.",
+      "t": "I owned making that first stretch disappear: get the engineer from page to likely cause without manual digging.",
+      "a": [
+        "Instrumented real-time API diagnostics on the high-throughput event streams, so failures were visible as they happened instead of after log searches.",
+        "Built auto-tagging of root causes on 400 and 500 series failures, so a page arrived already labeled with the likely cause.",
+        "Linked each tag to its runbook, so on-call started with the steps, not a blank terminal.",
+        "[fill: how you rolled it out, which teams or services first, and how you validated the tags were right]"
+      ],
+      "r": "P1 MTTR dropped from 94 to 26 minutes, a 72% reduction. The lesson I carry into AI SRE work: most of MTTR is the time it takes to get context, so the tooling should bring the context to the engineer.",
+      "probes": [
+        {
+          "q": "How did you measure MTTR, start and end?",
+          "a": "Say your team's definition plainly: [fill: page fired or incident opened] to [fill: mitigation confirmed or incident closed]. Same definition before and after, or the 72% is not honest."
+        },
+        {
+          "q": "How did you know the auto-tags were right?",
+          "a": "[fill: how you checked tags against postmortem root causes]. If accuracy was not measured formally, say so and say what you would measure now: precision of the top tag against the RCA."
+        },
+        {
+          "q": "What would you do differently with LLMs today?",
+          "a": "Rank hypotheses with cited evidence instead of a single tag, pull similar past incidents with retrieval, and abstain when evidence is weak. Keep mitigations human-approved."
+        },
+        {
+          "q": "What was hardest?",
+          "a": "[fill: the real hard part, for example event volume, noisy 5xx from clients, or getting runbooks current]"
+        }
+      ],
+      "values": [
+        "customer-success",
+        "trust"
+      ],
+      "resume_lines": [
+        "Cut P1 MTTR from 94 to 26 minutes (72%) by instrumenting real-time API diagnostics across 1M+ endpoints on high-throughput event streams, auto-tagging root causes on 400/500-series failures so on-call engineers start with runbook context."
+      ],
+      "terms": [
+        "P1 incident: the most severe outage level; customers are affected right now.",
+        "MTTR (mean time to resolve): average minutes from the page firing to the problem being fixed.",
+        "Root cause: the real reason something broke, not just the symptom you see.",
+        "Runbook: a step-by-step guide for fixing a known kind of problem.",
+        "400 and 500 series errors: HTTP status codes. 4xx means the request was bad; 5xx means the server failed."
+      ],
+      "stack": [
+        "Event streams: a continuous feed of API calls and errors, read as they happen.",
+        "API diagnostics: code that watches every endpoint's errors and latency live.",
+        "Auto-tagging rules: map an error pattern to a likely cause and its runbook.",
+        "[fill: the exact tools you used, for example the stream platform and metrics store]"
+      ],
+      "simple": [
+        "Engineers lost the first part of every outage just finding what broke.",
+        "I made every API failure visible live across 1M+ endpoints.",
+        "I tagged each failure with its likely cause automatically.",
+        "Each page arrived with the right runbook attached.",
+        "Result: average fix time went from 94 to 26 minutes."
+      ]
+    },
+    {
+      "id": "netsuite-latency",
+      "title": "NetSuite search P50 from 840 to 588 ms",
+      "experience_id": "oracle",
+      "prompts": [
+        "Tell me about a hard technical problem.",
+        "Tell me about a time you dug into performance."
+      ],
+      "competencies": [
+        "technical-depth",
+        "customer",
+        "data-driven"
+      ],
+      "number_ids": [
+        "oracle-p50-before",
+        "oracle-p50-after",
+        "oracle-p50-pct"
+      ],
+      "s": "NetSuite search page loads were slow at enterprise data volumes: P50 at 840 ms.",
+      "t": "Find where the time went and cut it without changing what users saw.",
+      "a": [
+        "Profiled the query plans behind search.",
+        "Found SQL driving full scans and restructured indexes on the hot predicates.",
+        "Rewrote the SQL so the planner used them.",
+        "[fill: how you verified no regression for other queries sharing those tables]"
+      ],
+      "r": "P50 page load dropped 30%, from 840 to 588 ms.",
+      "probes": [
+        {
+          "q": "Why P50 and not p99?",
+          "a": "[fill: what p99 did]. P50 is what most users feel every search. If p99 moved too, say it; if not, say what you would do next for the tail."
+        },
+        {
+          "q": "What is the cost of adding indexes?",
+          "a": "Write amplification and storage. Restructuring around hot predicates instead of adding more indexes keeps that cost down."
+        }
+      ],
+      "values": [
+        "customer-success",
+        "sustainability"
+      ],
+      "resume_lines": [
+        "Dropped P50 page-load latency 30% (840ms to 588ms) in NetSuite search by profiling query plans, restructuring indexes on hot predicates, and rewriting the SQL driving full scans at enterprise data volumes."
+      ],
+      "terms": [
+        "P50 latency: the median page load; half of users see faster, half slower.",
+        "Query plan: the database's step-by-step recipe for answering a query.",
+        "Full table scan: reading every row because no index helps; slow at scale.",
+        "Hot predicate: a column that most searches filter on, like a date or status."
+      ],
+      "stack": [
+        "SQL: the language of the search queries.",
+        "Query profiler and EXPLAIN plans: show where a query spends its time.",
+        "NetSuite: Oracle's cloud ERP; search is one of its most used screens."
+      ],
+      "simple": [
+        "Search pages were slow for large customers.",
+        "I read query plans to find queries scanning whole tables.",
+        "I reshaped indexes around the columns searches filter on most.",
+        "I rewrote the worst SQL so the database could use those indexes.",
+        "Result: median load from 840 to 588 ms, 30% faster."
+      ]
+    },
+    {
+      "id": "cli-toolchain",
+      "title": "CLI toolchain adopted by 4 teams",
+      "experience_id": "oracle",
+      "prompts": [
+        "Tell me about influencing without authority.",
+        "Tell me about a time you got other teams to adopt something."
+      ],
+      "competencies": [
+        "influence",
+        "ownership"
+      ],
+      "number_ids": [
+        "oracle-cli-teams",
+        "oracle-release",
+        "oracle-deploy-before",
+        "oracle-deploy-after"
+      ],
+      "s": "Config errors were reaching production because nothing checked them before deploy. 11% of deploys failed.",
+      "t": "Catch config errors in CI instead of production, and get teams I did not manage to use it.",
+      "a": [
+        "Shipped a CLI toolchain on Jenkins CI/CD that ran scripted pre-deployment validation.",
+        "[fill: how you got the first team on board, for example fixing a failure they had just had]",
+        "[fill: how you lowered the cost of adoption: docs, defaults, one command]",
+        "Let the results sell it to the next team instead of a mandate."
+      ],
+      "r": "4 engineering teams across NSX adopted it. Release cycles got 34% shorter and failed deploys went from 11% to 4%.",
+      "probes": [
+        {
+          "q": "Did anyone push back?",
+          "a": "[fill: real objection, for example slower pipelines or false positives] and how you answered it. This can double as your conflict story."
+        },
+        {
+          "q": "Why 34% shorter releases from validation?",
+          "a": "Fewer failed deploys means fewer rollbacks and redeploys, so less time between merge and a good release."
+        },
+        {
+          "q": "How did you keep it from becoming a blocker?",
+          "a": "[fill: escape hatch, warning versus fail modes, or fast feedback time]"
+        }
+      ],
+      "values": [
+        "equality",
+        "trust"
+      ],
+      "resume_lines": [
+        "Shipped a CLI toolchain on Jenkins CI/CD running scripted pre-deployment validation, catching config errors in CI rather than production; adopted by 4 engineering teams across NSX, shortening release cycles 34% and taking failed deploys from 11% to 4%."
+      ],
+      "terms": [
+        "CI/CD: automation that tests code on every change (CI) and ships it (CD).",
+        "Pre-deployment validation: checks that run before a release to catch mistakes early.",
+        "Config error: a wrong setting rather than wrong code; it often breaks production quietly.",
+        "Failed deploy rate: the share of releases that break and need a rollback."
+      ],
+      "stack": [
+        "Jenkins: the CI/CD server that runs the pipelines.",
+        "CLI (command-line tool): one command engineers run locally or in the pipeline.",
+        "Validation scripts: rules that check configs before they ship."
+      ],
+      "simple": [
+        "Config mistakes kept reaching production; 11% of deploys failed.",
+        "I built one command that checks configs before release.",
+        "I wired it into Jenkins so every pipeline ran it automatically.",
+        "Teams adopted it because it saved them rollbacks: 4 teams in total.",
+        "Result: failed deploys from 11% to 4%, release cycles 34% shorter."
+      ]
+    },
+    {
+      "id": "k8s-autoscaling",
+      "title": "Autoscaling on custom metrics held p99 at 2x peak",
+      "experience_id": "oracle",
+      "prompts": [
+        "Tell me about a scaling challenge.",
+        "Tell me about designing for reliability."
+      ],
+      "competencies": [
+        "technical-depth",
+        "ambiguity"
+      ],
+      "number_ids": [
+        "oracle-slo-peak"
+      ],
+      "s": "NSX services had to survive release surges, and scaling on CPU alone reacted to the wrong signal.",
+      "t": "Keep p99 latency inside SLO when load spikes.",
+      "a": [
+        "Containerized NSX services on OCI with Docker and Kubernetes.",
+        "Drove horizontal autoscaling off custom Prometheus metrics instead of CPU alone.",
+        "[fill: which metric, for example queue depth or in-flight requests, and why it led CPU]"
+      ],
+      "r": "p99 SLOs held at 2x peak load through release surges.",
+      "probes": [
+        {
+          "q": "Why was CPU the wrong signal?",
+          "a": "Latency degrades from queueing before CPU saturates for I/O-bound services. A load signal like in-flight requests scales you before users feel it."
+        },
+        {
+          "q": "How did you avoid flapping?",
+          "a": "[fill: stabilization windows, scale-down cooldowns, min replicas]"
+        }
+      ],
+      "values": [
+        "sustainability",
+        "trust"
+      ],
+      "resume_lines": [
+        "Containerized NSX services on OCI with Docker and Kubernetes, driving horizontal autoscaling off custom Prometheus metrics rather than CPU alone, holding p99 SLOs at 2x peak load through release surges."
+      ],
+      "terms": [
+        "Container: an app packaged with everything it needs, so it runs the same anywhere.",
+        "Horizontal autoscaling: adding or removing copies of a service as load changes.",
+        "Custom metric: a signal you choose, like requests in flight, instead of only CPU.",
+        "Peak load: the busiest traffic moment; 2x peak is double that."
+      ],
+      "stack": [
+        "Docker: builds the containers.",
+        "Kubernetes: runs and scales containers across many machines.",
+        "OCI (Oracle Cloud Infrastructure): where the clusters ran.",
+        "Prometheus: supplied the custom metrics the autoscaler read."
+      ],
+      "simple": [
+        "Release surges overloaded services before CPU-based scaling reacted.",
+        "I containerized NSX services and ran them on Kubernetes.",
+        "I scaled on custom Prometheus metrics that rise before users feel slowness.",
+        "Result: p99 latency stayed inside its SLO at 2x peak load."
+      ]
+    },
+    {
+      "id": "modelscope",
+      "title": "ModelScope: INT4 at 62% less memory, same accuracy",
+      "experience_id": "modelscope",
+      "prompts": [
+        "Tell me about a performance trade-off you measured.",
+        "How would you pick a model for cost and latency?"
+      ],
+      "competencies": [
+        "technical-depth",
+        "data-driven",
+        "learning"
+      ],
+      "values": [
+        "sustainability",
+        "innovation"
+      ],
+      "number_ids": [
+        "ms-configs",
+        "ms-int4-mb",
+        "ms-int4-pct",
+        "ms-tps",
+        "ms-mmlu",
+        "ms-int8-mem",
+        "ms-int8-tps"
+      ],
+      "resume_lines": [
+        "Benchmarked Llama-3.2-3B and Gemma-2-2B across 8 quantization configs (FP16, INT8, INT4, NF4) on a T4 GPU, profiling inference latency, throughput, and peak memory with PyTorch and CUDA.",
+        "Landed INT4 at 2299 MB, 62% below FP16, sustaining 13.7 tok/s with MMLU within a point of baseline; a Pareto sweep ruled INT8 strictly dominated at 53% more memory and 2.1x lower throughput."
+      ],
+      "s": "People pick quantization settings on gut feel. I wanted measured trade-offs on a cheap, common GPU.",
+      "t": "Benchmark two small models across 8 quantization configs and find which settings are worth using.",
+      "a": [
+        "Ran Llama-3.2-3B and Gemma-2-2B in FP16, INT8, INT4, and NF4 on a T4.",
+        "Profiled latency, throughput, and peak memory with PyTorch and CUDA.",
+        "Checked quality with MMLU against the FP16 baseline.",
+        "Plotted a Pareto sweep to see which configs are never the best choice."
+      ],
+      "r": "INT4 used 2299 MB, 62% below FP16, at 13.7 tok/s with MMLU within a point. INT8 was strictly dominated: 53% more memory and 2.1x lower throughput than INT4.",
+      "probes": [
+        {
+          "q": "Why was INT8 slower?",
+          "a": "[fill: your explanation from profiling]. A common cause is INT8 kernels that dequantize at runtime on GPUs without fast INT8 paths."
+        },
+        {
+          "q": "Would you ship INT4?",
+          "a": "For latency- and cost-bound serving, yes, after checking quality on the real task, not just MMLU."
+        }
+      ],
+      "terms": [
+        "Quantization: storing model weights with fewer bits to save memory and speed things up.",
+        "FP16, INT8, INT4, NF4: 16-bit floats, 8-bit integers, 4-bit integers, and a 4-bit format tuned for model weights.",
+        "Throughput (tok/s): tokens generated per second.",
+        "MMLU: a standard multiple-choice knowledge test used to check quality loss.",
+        "Pareto sweep: find the options where you cannot improve one metric without hurting another."
+      ],
+      "stack": [
+        "PyTorch and CUDA: run and profile the models on the GPU.",
+        "T4 GPU: a common, low-cost 16 GB inference card.",
+        "Llama-3.2-3B and Gemma-2-2B: the two models tested."
+      ],
+      "simple": [
+        "I ran 8 quantization settings on two small models.",
+        "I measured memory, speed, and accuracy for each.",
+        "I plotted the trade-offs to see which settings are never worth it.",
+        "Result: INT4 used 62% less memory with almost no accuracy loss; INT8 was slower and bigger than INT4."
+      ]
+    },
+    {
+      "id": "gnn-fraud",
+      "title": "Graph neural network for fraud: 0.923 ROC-AUC",
+      "experience_id": "gnn",
+      "prompts": [
+        "Tell me about a model that beat a strong baseline.",
+        "How do you handle very imbalanced data?"
+      ],
+      "competencies": [
+        "technical-depth",
+        "data-driven",
+        "learning"
+      ],
+      "values": [
+        "trust",
+        "innovation"
+      ],
+      "number_ids": [
+        "gnn-nodes",
+        "gnn-edges",
+        "gnn-fraud-rate",
+        "gnn-auc",
+        "gnn-lift"
+      ],
+      "resume_lines": [
+        "Constructed a heterogeneous IEEE-CIS fraud graph (726K nodes, 19.5M edges), capturing multi-hop links that flat tabular models miss.",
+        "Trained a HeteroRGCN with neighbor sampling and focal loss on a 3.5% fraud rate, reaching 0.923 ROC-AUC, +0.03 over tuned XGBoost."
+      ],
+      "s": "Fraud rings share cards, devices, and emails. Flat tables treat each transaction alone and miss those links.",
+      "t": "Model the links directly and beat a tuned XGBoost baseline.",
+      "a": [
+        "Built a heterogeneous graph from IEEE-CIS data: 726K nodes, 19.5M edges.",
+        "Trained a HeteroRGCN, a GNN that handles several relation types.",
+        "Used neighbor sampling so training fits in memory.",
+        "Used focal loss because only 3.5% of transactions are fraud."
+      ],
+      "r": "0.923 ROC-AUC, 0.03 above tuned XGBoost.",
+      "probes": [
+        {
+          "q": "Is +0.03 AUC meaningful?",
+          "a": "At fraud scale, small ranking gains catch more fraud at the same review budget. [fill: precision at your chosen threshold if you have it]"
+        },
+        {
+          "q": "Why focal loss over class weights?",
+          "a": "Focal loss down-weights easy examples so training focuses on the hard, rare fraud cases."
+        }
+      ],
+      "terms": [
+        "Graph: nodes (like cards or devices) connected by edges (shared use).",
+        "Heterogeneous graph: several node and edge types in one graph.",
+        "GNN (graph neural network): learns from a node and its neighbors.",
+        "Focal loss: a loss that focuses training on hard, rare cases like fraud.",
+        "ROC-AUC: how well the model ranks fraud above normal; 1.0 is perfect, 0.5 is a coin flip."
+      ],
+      "stack": [
+        "IEEE-CIS fraud dataset: the public transaction data.",
+        "HeteroRGCN: a GNN for graphs with multiple relation types.",
+        "Neighbor sampling: train on small subgraphs so a 19.5M-edge graph fits in memory.",
+        "XGBoost: the tabular baseline it beat."
+      ],
+      "simple": [
+        "Fraudsters share cards, devices, and emails, which flat tables miss.",
+        "I built a graph with 726K nodes and 19.5M edges to capture those links.",
+        "I trained a GNN with focal loss because only 3.5% is fraud.",
+        "Result: 0.923 ROC-AUC, 0.03 better than tuned XGBoost."
+      ]
+    }
+  ],
+  "values": [
+    {
+      "id": "trust",
+      "name": "Trust",
+      "angle": "Nothing an agent does should surprise the customer. Confidence routing and SLO-based pages are both about earning trust with evidence."
+    },
+    {
+      "id": "customer-success",
+      "name": "Customer Success",
+      "angle": "Measure what the customer feels: page load time, minutes of outage, days waiting for a migration."
+    },
+    {
+      "id": "innovation",
+      "name": "Innovation",
+      "angle": "Use agents where they remove toil, and keep a human on anything irreversible."
+    },
+    {
+      "id": "equality",
+      "name": "Equality",
+      "angle": "Build tools any engineer can use, not only the most senior: runbook context on every page, one command to validate a deploy."
+    },
+    {
+      "id": "sustainability",
+      "name": "Sustainability",
+      "angle": "Spend compute on real demand: autoscale on load, merge incrementally, quantize when quality holds."
+    }
+  ],
+  "v2mom": {
+    "project": "Multi-agent ERP migration (MSRcosmos)",
+    "vision": "Migrate 12 client entities from Sage X3 to Sage Intacct with reconciliation that reviewers trust, without a 3-day manual review cycle.",
+    "values": [
+      "Trust: no record is written without passing a confidence check or a human.",
+      "Customer success: each client runs on its own cloud, so the system goes to them.",
+      "Auditability over cleverness: explicit agent state and checkpoints."
+    ],
+    "methods": [
+      "Multi-agent workflow on the Claude API and LangGraph.",
+      "Confidence-routed human review over Sage REST APIs and MCP tool calling.",
+      "Nightly Databricks feed: 17 tables, 4.2M rows into Delta Lake.",
+      "Docker images that deploy on AWS, Azure, and GCP."
+    ],
+    "obstacles": [
+      "Every client entity on a different cloud.",
+      "Messy GL, AP, and AR data across 10,000+ records.",
+      "Limited reviewer time.",
+      "A nightly refresh window."
+    ],
+    "measures": [
+      "Manual reconciliation down 68%.",
+      "83% of records auto-approved.",
+      "Turnaround from 3 days to 5.5 hours.",
+      "Full refresh held at 22 minutes."
+    ]
+  },
+  "questions_for_hm": [
+    {
+      "id": "q-mttr-driver",
+      "primary": true,
+      "q": "Where does most of your MTTR go today: detection, diagnosis, or mitigation?",
+      "why": "Tells you where an AI SRE agent pays off first, and lets you map your Oracle work (diagnosis) onto their answer."
+    },
+    {
+      "id": "q-maturity",
+      "primary": true,
+      "q": "How mature is the agentic SRE work: prototype, internal pilot, or running on real incidents?",
+      "why": "Tells you whether the job is zero to one or hardening, and which of your stories to lead with next round."
+    },
+    {
+      "id": "q-90-days",
+      "q": "What would a strong first 90 days look like for this role?",
+      "why": "Concrete expectations, and a chance to say how you would hit them."
+    },
+    {
+      "id": "q-eval",
+      "q": "How do you decide an AI SRE agent is good enough to trust on a live incident?",
+      "why": "Opens your eval answer: replay on past incidents, top-3 root-cause accuracy, wrong-action rate."
+    },
+    {
+      "id": "q-gcp",
+      "q": "Which parts of the GCP migration are hardest right now?",
+      "why": "Shows you are thinking about their roadmap, not only the interview."
+    }
+  ],
+  "intro": "Every resume bullet has a story here, in resume order. Each one maps to Salesforce values and explains the terms and tech in plain words."
+}
