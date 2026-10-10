@@ -47,6 +47,15 @@ class TransitionListener(Protocol):  # Observer
     def on_transition(self, t: Transition) -> None: ...
 
 
+@dataclass(frozen=True)
+class NotificationFailure:
+    """A committed transition whose listener failed; omit exception text/secrets."""
+
+    transition: Transition
+    listener_type: str
+    error_type: str
+
+
 class InMemoryTransitionStore:
     """Append-only history per (workflow, step). Swap for a DB-backed store."""
 
@@ -70,11 +79,23 @@ class WorkflowStepLogger:
         self._policy = policy or TransitionPolicy()
         self._clock = clock
         self._listeners: List[TransitionListener] = []
-        # ponytail: one lock for every step; switch to per-key locks if throughput matters
+        self._notification_failures: List[NotificationFailure] = []
+        # One lock for every step; switch to per-key locks if throughput matters.
         self._lock = threading.Lock()
 
     def subscribe(self, listener: TransitionListener) -> None:
-        self._listeners.append(listener)
+        with self._lock:
+            self._listeners.append(listener)
+
+    @property
+    def notification_failures(self) -> List[NotificationFailure]:
+        """Inspect/retry failed notifications; transition persistence still succeeded.
+
+        This teaching store retains failures in memory; production needs a bounded
+        dead-letter queue and durable retry handling.
+        """
+        with self._lock:
+            return list(self._notification_failures)
 
     def record(self, workflow_id: str, step_id: str, to_state: StepState, actor: str, reason: str = "") -> Transition:
         with self._lock:  # read current state and append atomically, so two writers cannot both pass the check
@@ -92,11 +113,15 @@ class WorkflowStepLogger:
         return self._store.current(workflow_id, step_id)
 
     def _notify(self, t: Transition) -> None:
-        for listener in list(self._listeners):
+        with self._lock:
+            listeners = list(self._listeners)
+        for listener in listeners:
             try:
                 listener.on_transition(t)
-            except Exception:  # one broken listener must not break logging
-                pass
+            except Exception as error:  # isolate failure, preserve evidence for retry
+                failure = NotificationFailure(t, type(listener).__name__, type(error).__name__)
+                with self._lock:
+                    self._notification_failures.append(failure)
 
 
 if __name__ == "__main__":

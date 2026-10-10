@@ -98,6 +98,8 @@ const RULES = [
   [/Sports Analytics(?![^.]*volunteer)[^.]*\b(intern|internship|job|employed)\b/i, 'Sports Analytics is volunteer research'],
 ];
 for (const [name, json] of Object.entries(data)) {
+  // Candidate resume rules do not apply to other candidates' dated reports.
+  if (name === 'experiences') continue;
   for (const [path, text] of strings(json, name)) {
     for (const [re, why] of RULES) if (re.test(text)) fail(path, why);
   }
@@ -109,6 +111,15 @@ for (const n of profile.numbers || []) {
   if (!isCorrect(n, n.a)) fail(`profile.numbers.${n.id}`, `canonical answer "${n.a}" does not parse`);
   for (const a of n.accept || []) if (!isCorrect(n, a)) fail(`profile.numbers.${n.id}`, `accepted "${a}" does not match ${n.a}`);
 }
+
+// 7. Experience sources and site navigation are checked before deployment.
+const { validate } = createRequire(import.meta.url)('../js/experience-model.js');
+for (const error of validate(data.experiences)) fail('experiences', error);
+const pages = data.site?.pages || [];
+for (const page of pages) {
+  if (!walk(root).includes(join(root, page.href))) fail('site.pages', `missing page ${page.href}`);
+}
+for (const stage of loop.stages || []) refs(`loop.${stage.id}.prep_pages`, stage.prep_pages || [], ids(pages));
 
 if (errors.length) {
   console.error(`check failed, ${errors.length} problem(s):\n  ${errors.join('\n  ')}`);

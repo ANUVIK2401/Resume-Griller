@@ -3,6 +3,8 @@ from collections import OrderedDict, defaultdict
 
 class LFUCache:
     def __init__(self, capacity: int):
+        if isinstance(capacity, bool) or not isinstance(capacity, int) or capacity < 0:
+            raise ValueError("capacity must be a nonnegative integer")
         self.capacity = capacity
         self.values = {}  # key -> value
         self.freq = {}  # key -> use count
@@ -31,13 +33,17 @@ class LFUCache:
     def _touch(self, key):
         f = self.freq[key]
         del self.buckets[f][key]
-        if not self.buckets[f] and self.min_freq == f:
-            self.min_freq += 1
+        if not self.buckets[f]:
+            del self.buckets[f]  # empty frequency levels must not accumulate on repeated reads
+            if self.min_freq == f:
+                self.min_freq += 1
         self.freq[key] = f + 1
         self.buckets[f + 1][key] = None
 
     def _evict(self):
         key, _ = self.buckets[self.min_freq].popitem(last=False)  # LRU among least frequent
+        if not self.buckets[self.min_freq]:
+            del self.buckets[self.min_freq]
         del self.values[key], self.freq[key]
 
 

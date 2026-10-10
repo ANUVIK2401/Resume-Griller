@@ -1,0 +1,46 @@
+{
+  "title": "Make the answer land",
+  "intro": "A focused 20-minute practice loop. Say each answer out loud, check the rubric, then retry the weakest sentence. Use your actual work and verified outcomes; keep unknown details visibly unfinished.",
+  "steps": [
+    {
+      "id": "project-story",
+      "title": "Lead with your project story",
+      "minutes": 4,
+      "speaking_seconds": 90,
+      "prompt": "Tell me about a project you owned and why it mattered.",
+      "outline": ["0 to 15 sec: user problem and what you owned.", "15 to 55 sec: two decisions you made and the tradeoff behind each.", "55 to 75 sec: verified result, how it was measured, and any limits.", "75 to 90 sec: what you learned and why it matters for this role."],
+      "checks": ["I made my individual contribution clear.", "I explained a decision, not just the technology stack.", "I used only outcomes I can defend with evidence.", "I stopped within 90 seconds and invited a follow-up."],
+      "retry": "If the opening takes more than 15 seconds, remove background until the problem and your ownership fit in two sentences."
+    },
+    {
+      "id": "coding-narration",
+      "title": "Narrate the coding decision",
+      "minutes": 6,
+      "speaking_seconds": 120,
+      "prompt": "Before coding a saved DSA problem, explain your plan and the invariant.",
+      "outline": ["Confirm inputs, outputs, constraints, and one edge case.", "Give the baseline and why it is too expensive under these constraints.", "State the data structure and the invariant that makes the improved approach work.", "Walk one example, then state time and space complexity."],
+      "checks": ["I asked a useful clarifying question before choosing an approach.", "I explained why the invariant stays true.", "I separated auxiliary space from output space.", "I tested an edge case instead of declaring the code done."],
+      "retry": "Spend the remaining four minutes tracing your chosen example and one boundary case. If you get stuck, name the failed assumption and adjust the plan."
+    },
+    {
+      "id": "design-tradeoff",
+      "title": "Defend a design tradeoff",
+      "minutes": 6,
+      "speaking_seconds": 120,
+      "prompt": "Choose one HLD or LLD design. Why this approach, and when would you change it?",
+      "outline": ["State the requirement that drives your choice; label scale estimates as assumptions.", "Compare your choice with one realistic alternative.", "Explain a failure mode, the customer impact, and recovery behavior.", "Name a metric or threshold that would make you revisit the design."],
+      "checks": ["I tied the design to a requirement rather than naming tools.", "I compared a real alternative and acknowledged its advantage.", "I covered tenant isolation or authorization where relevant.", "I explained how I would observe and recover from failure."],
+      "retry": "Use the remaining four minutes for two follow-ups: what happens at 10 times the load, and what happens when the dependency fails?"
+    },
+    {
+      "id": "manager-followup",
+      "title": "Handle the manager follow-up",
+      "minutes": 4,
+      "speaking_seconds": 60,
+      "prompt": "What would you do differently, and how did you bring others with you?",
+      "outline": ["Answer the question directly in the first sentence.", "Use one concrete moment: disagreement, uncertainty, or something that went wrong.", "Explain your action and what changed for the team or customer.", "Finish with a specific habit you now use. Do not invent a failure or an outcome."],
+      "checks": ["I answered the actual follow-up before adding context.", "I described a real moment rather than a generic leadership claim.", "I gave others credit and stated my own responsibility.", "I ended with a concrete learning in 60 seconds."],
+      "retry": "Use the remaining three minutes to draft one question for the manager and repeat your weakest answer once."
+    }
+  ]
+}

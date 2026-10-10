@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["reviewedAsOf", "records"],
+  "properties": {
+    "reviewedAsOf": { "type": "string", "format": "date" },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "level", "region", "evidence", "interviewDate", "sourceUrl", "reportedRounds", "takeaway", "rehearsalPrompt", "caveat"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "level": { "type": "string", "minLength": 1 },
+          "region": { "type": "string", "minLength": 1 },
+          "evidence": { "enum": ["firsthand", "official"] },
+          "interviewDate": { "type": ["string", "null"] },
+          "sourceUrl": { "type": "string", "pattern": "^https://" },
+          "reportedRounds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "takeaway": { "type": "string", "minLength": 1 },
+          "rehearsalPrompt": { "type": "string", "minLength": 1 },
+          "caveat": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

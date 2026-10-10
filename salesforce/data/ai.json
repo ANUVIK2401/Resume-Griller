@@ -51,7 +51,7 @@
       "topic": "ai-sre",
       "pinned": true,
       "question": "How would you use AI to cut MTTD and MTTR?",
-      "short": "Use AI where engineers lose time: getting context and forming hypotheses. When an alert fires, an agent gathers metrics, logs, traces, and recent changes, searches past incidents and runbooks, and ranks likely causes with cited evidence, abstaining when evidence is weak. It runs read-only diagnostics freely, proposes reversible mitigations for a human to approve, and drafts the RCA. I measure MTTD, MTTR, top-3 root-cause accuracy, and wrong-action rate by replaying a golden set of past incidents.",
+      "short": "Start with diagnosis: gather telemetry and recent changes, retrieve relevant incidents, and rank causes with evidence. Run authorized, bounded diagnostics; put mitigations behind approval and rollback checks. Evaluate hypothesis quality on time-correct incident replay, then use shadow mode and controlled rollout to measure whether engineers actually detect and resolve incidents faster.",
       "terms": [
         "MTTD (mean time to detect): how long until someone knows something is wrong.",
         "MTTR (mean time to resolve): how long until it is fixed.",
@@ -64,7 +64,7 @@
         "Gather context: pull metrics, logs, traces, deploys, and config changes for the affected service and time window.",
         "Retrieve: hybrid search, keyword plus vector, over past incidents and runbooks, filtered by service and error signature.",
         "Rank hypotheses: the LLM proposes the top causes, each citing evidence from tool output; below a confidence bar it abstains.",
-        "Act safely: read-only diagnostics run automatically; mitigations are proposals a human approves, and only reversible ones.",
+        "Act safely: authorized read-only diagnostics run within time and query budgets; mitigations need approval, a blast-radius check, and a tested rollback.",
         "Close the loop: draft the RCA, add the resolved incident to the index, and replay the golden set before any prompt or model change ships."
       ],
       "followups": [
@@ -74,11 +74,11 @@
         },
         {
           "q": "How do you prove it works before trusting it?",
-          "a": "Shadow mode first: it runs on live incidents but only logs. Compare its top 3 causes with the human RCA and track wrong-action rate, then move to suggestions, then approvals, then narrow auto-actions for proven runbooks."
+          "a": "Start with replay, then shadow mode: compare ranked causes and proposed-action quality with human review. Shadow mode validates suggestions but cannot establish the effect on human MTTR. Measure that in a controlled suggestion rollout before approval-gated actions and narrow automation."
         },
         {
           "q": "Where does most MTTR go?",
-          "a": "Usually diagnosis: finding what changed and where. That is where retrieval and ranked hypotheses pay off. Ask the HM which phase dominates for them."
+          "a": "I would measure detection, diagnosis, and mitigation separately instead of assuming one dominates. Retrieval helps context gathering and diagnosis; ask the HM where their engineers currently lose time."
         }
       ],
       "tie": "This is my Oracle tool, which cut P1 MTTR from 94 to 26 minutes with auto-tagged root causes and runbooks, rebuilt with retrieval and LLM ranking, plus my MSRcosmos confidence routing for anything that acts."
@@ -101,7 +101,7 @@
         "Snapshot tool outputs or query historical windows so replays are repeatable.",
         "Score top-3 accuracy, time to first useful hypothesis, wrong-action rate, and abstain rate.",
         "Grade RCA drafts with a rubric and an LLM judge, checked against human ratings first.",
-        "Run shadow mode in production and gate every change on the replay score."
+        "Keep a held-out incident set for regression checks. Use shadow mode for suggestion quality and a controlled rollout for real MTTD and MTTR impact; segment by incident severity and service."
       ],
       "followups": [
         {
@@ -120,7 +120,7 @@
       "topic": "llm-basics",
       "pinned": false,
       "question": "Explain transformers and attention simply.",
-      "short": "A transformer reads all the tokens in a prompt together. Attention lets each token look at every other token and decide which ones matter for its meaning. Stacking many attention and feed-forward layers builds up understanding. A decoder-only LLM like GPT, Claude, or Gemini is trained to predict the next token, and generates text one token at a time.",
+      "short": "A transformer turns tokens into vectors and uses attention to combine relevant context. In a causal decoder, each position attends only to preceding positions and itself. Attention and feed-forward layers transform that context into next-token scores. Prompt processing can be parallel; text generation proceeds token by token. Exact architectures vary by model.",
       "terms": [
         "Token: a chunk of text, roughly a word piece.",
         "Attention: each token weighs how relevant every other token is.",
@@ -137,14 +137,14 @@
       "followups": [
         {
           "q": "Why is long context expensive?",
-          "a": "Attention is quadratic in sequence length for compute, and the KV cache grows with every token for memory."
+          "a": "Standard full-attention prefill has quadratic attention work in sequence length; decode reuses the KV cache, whose memory grows with sequence length. Architectural and kernel choices can change the cost."
         },
         {
           "q": "What does multi-head attention add?",
           "a": "Different heads learn different relationships, like syntax in one and references in another."
         }
       ],
-      "tie": "In ModelScope, most of what I profiled (latency, peak memory) comes down to attention and the KV cache."
+      "tie": "ModelScope gave me hands-on latency, throughput, and memory measurements. I would distinguish measured bottlenecks from architectural explanations I have not profiled."
     },
     {
       "id": "llm-tokens",
@@ -224,7 +224,7 @@
           "a": "Continuous batching, paged KV cache, quantized weights and cache, models with grouped-query attention, and shorter prompts."
         }
       ],
-      "tie": "ModelScope's peak memory numbers include KV cache growth during generation."
+      "tie": "ModelScope measured peak inference memory; I would explain the workload and measurement boundary before attributing the total to weights or KV cache."
     },
     {
       "id": "tradeoff-size",
@@ -398,7 +398,7 @@
       "topic": "agents",
       "pinned": false,
       "question": "What is MCP and why does it matter?",
-      "short": "MCP, the Model Context Protocol, is an open standard for connecting LLM apps to tools and data. A server exposes tools, resources, and prompts, and any MCP-capable client can use them. It turns N apps times M integrations into N plus M, and puts permissions at the server boundary.",
+      "short": "MCP is an open protocol for connecting AI applications to tools and data. Servers can expose tools, resources, and prompts to compatible clients, making integrations reusable. It does not make tools safe automatically: the host and server must enforce authorization, scoped credentials, argument validation, and approval for consequential actions.",
       "terms": [
         "MCP server: wraps one system, like a database or ticketing tool, and exposes it.",
         "MCP client or host: the LLM app that connects to servers, like Claude.",
@@ -406,9 +406,9 @@
         "Resource: data the model can read through the server."
       ],
       "long": [
-        "Each server wraps one system and can be reused across clients.",
+        "A server may expose one or several systems and can be reused by compatible clients.",
         "Scope credentials per server: least privilege, read-only by default.",
-        "Treat tool output as data, never as instructions, to resist prompt injection.",
+        "Treat tool output as untrusted data. Enforce tool authorization and argument validation outside the model, and test adversarial outputs; a prompt instruction alone does not stop injection.",
         "Put irreversible actions behind a separate server with human approval."
       ],
       "followups": [
@@ -470,7 +470,7 @@
           "a": "Agents amplifying each other's mistakes. Validate between steps and keep a human on irreversible actions."
         }
       ],
-      "tie": "The PacSun app splits gather, rank, and write; MSRcosmos split mapping, checking, and review."
+      "tie": "My PacSun work connects live context, issue ranking, and brief drafting. At MSRcosmos I used a multi-agent workflow with confidence-based review; I would confirm the exact agent responsibilities before describing them."
     },
     {
       "id": "evals-basics",
@@ -612,10 +612,10 @@
         "Training up front; can be cheaper per call with a smaller model"
       ],
       [
-        "Cites sources",
-        "No",
-        "Yes",
-        "No"
+        "Source attribution",
+        "Only if supplied context supports it",
+        "Possible, but verify citation support",
+        "Not reliable without external evidence"
       ],
       [
         "Reach for it when",
@@ -629,13 +629,13 @@
     {
       "id": "gap-gcp",
       "gap": "GCP depth",
-      "framing": "My production depth is OCI, plus AWS, Azure, and GCP Databricks workspaces at MSRcosmos. The concepts map one to one: GKE is Kubernetes, Cloud Monitoring speaks PromQL, Pub/Sub plays Kafka's role.",
+      "framing": "My production depth is OCI, plus AWS, Azure, and GCP Databricks workspaces at MSRcosmos. Kubernetes experience transfers to GKE, and PromQL transfers to managed Prometheus. Pub/Sub can serve the messaging role, but its delivery, ordering, and operations differ from Kafka; I would learn those differences explicitly.",
       "plan": "Use the GCP mapping table in every design. [fill: one hands-on GCP step before the onsite, for example a GKE plus Managed Prometheus lab]"
     },
     {
       "id": "gap-rag",
       "gap": "Production RAG at scale",
-      "framing": "I have built retrieval-backed agents and evaluation tooling, not a large-scale RAG service. I know where it breaks: chunking, freshness, access control, and recall under filters.",
+      "framing": "My confirmed experience is connecting agents to live data and building evaluation tooling. I would distinguish that from operating a large-scale RAG service. I know where it breaks: chunking, freshness, access control, and recall under filters.",
       "plan": "[fill: a small hybrid-search build over a public doc set with recall at k measured]"
     },
     {

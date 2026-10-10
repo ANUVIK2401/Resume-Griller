@@ -144,6 +144,12 @@
     pipeline.replaceChildren(...loop.stages.map((s) => stageCard(s, loop, site, onChange)));
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
       ui.section('next', 'Next round', 'Countdown', el('span', {}, 'Next ', el('em', {}, 'round')), heroCard(loop, site)),
+      await window.Prep.delivery.render('delivery'),
+      ui.section('experiences', 'Recent reports', 'Learn from other loops', el('span', {}, 'Evidence into ', el('em', {}, 'practice')),
+        el('div', { class: 'card stack' },
+          el('p', { class: 'h3' }, 'Strong coding still needs a clear story.'),
+          el('p', { class: 'muted' }, 'Read seven first-person reports from 2025 and 2026, plus official Salesforce advice. Each source comes with a speaking drill. Filter by level and location to keep your preparation relevant.'),
+          el('div', { class: 'row' }, el('a', { class: 'btn btn-gold', href: 'experiences.html' }, 'Explore experiences'), el('a', { class: 'btn', href: 'behavioral.html#stories' }, 'Rehearse your projects')))),
       ui.section('loop', 'The loop', `${loop.stages.length} rounds`, el('span', {}, 'The ', el('em', {}, 'loop')),
         el('p', { class: 'section-intro' }, 'Set status and date as rounds get booked. Everything here saves in this browser.'),
         pipeline),

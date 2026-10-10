@@ -84,24 +84,29 @@
         el('a', { href: data.dsa_patterns_site, target: '_blank', rel: 'noopener' }, 'ANUVIK2401.github.io/DSA_Patterns'), '.'));
   }
 
-  function timedSection(data) {
+  function timedSection(data, onStatus) {
     const chosen = new Set(data.patterns.slice(0, 7).map((p) => p.id));
     const stage = el('div', { class: 'stack' });
+    const feedback = el('p', { class: 'muted', role: 'status', 'aria-live': 'polite' });
     const setup = () => stage.replaceChildren(
-      el('p', { class: 'muted' }, `${data.timed.count} random Salesforce problems from the patterns you pick, ${data.timed.minutes} minutes, solutions hidden until you finish.`),
+      el('p', { class: 'muted' }, `${data.timed.count} Salesforce problems with tested solutions from the patterns you pick, ${data.timed.minutes} minutes, solutions hidden until you finish.`),
       el('div', { class: 'row' }, data.patterns.map((p) => el('label', { class: 'check check-pill' },
         el('input', { type: 'checkbox', checked: chosen.has(p.id), onchange: (e) => (e.target.checked ? chosen.add(p.id) : chosen.delete(p.id)) }),
         el('span', {}, p.name)))),
-      el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: start }, `Start ${data.timed.minutes}-minute OA`)));
+      el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: start }, `Start ${data.timed.minutes}-minute OA`)), feedback);
 
     function start() {
-      const pool = data.problems.filter((p) => chosen.has(p.pattern));
-      if (pool.length < data.timed.count) return;
+      const pool = data.problems.filter((p) => chosen.has(p.pattern) && p.solution_file);
+      if (pool.length < data.timed.count) {
+        feedback.textContent = `Choose patterns with at least ${data.timed.count} problems with tested solutions. Currently available: ${pool.length}.`;
+        return;
+      }
+      feedback.textContent = '';
       const picks = ui.shuffle(pool).slice(0, data.timed.count);
       const answers = el('div', { class: 'sheet' });
       const finish = () => {
         t.stop();
-        answers.replaceChildren(sheetHead(), ...picks.map((p) => sheetRow(p, data, null, false)));
+        answers.replaceChildren(sheetHead(), ...picks.map((p) => sheetRow(p, data, onStatus, false)));
         done.disabled = true;
       };
       const t = ui.timer(data.timed.minutes, finish);
@@ -123,7 +128,9 @@
     const data = await load('dsa');
     const solvedId = data.status_options.at(-1).id;
     const updateReadout = () => setReadout('Solved', data.problems.filter((p) => statusOf(data, p) === solvedId).length, data.problems.length);
-    const rows = new Map(data.problems.map((p) => [p.id, sheetRow(p, data, updateReadout)]));
+    let activeFilters = { q: '' };
+    const onStatus = () => { updateReadout(); apply(activeFilters); };
+    const rows = new Map(data.problems.map((p) => [p.id, sheetRow(p, data, onStatus)]));
 
     const groups = data.patterns.map((pat) => ({
       pat,
@@ -134,6 +141,7 @@
 
     let filtered = data.problems;
     const apply = (f) => {
+      activeFilters = { ...f };
       const keep = (p) => (!f.q || `${p.title} ${p.insight || ''} ${(p.topics || []).join(' ')}`.toLowerCase().includes(f.q))
         && (!f.difficulty || p.difficulty === f.difficulty)
         && (!f.status || statusOf(data, p) === f.status)
@@ -174,7 +182,7 @@
         el('span', { class: 'row', style: { gap: '0.75rem' } }, pat.name, count),
         cheatCard(pat), sheet)),
       scriptSection(data),
-      timedSection(data)));
+      timedSection(data, onStatus)));
     apply({ q: '' });
     updateReadout();
   };

@@ -1,4 +1,5 @@
 import hashlib
+import json
 import threading
 import time
 from dataclasses import dataclass
@@ -35,7 +36,7 @@ class AlertDeduplicator:
     @staticmethod
     def fingerprint(alert: Alert) -> str:
         stable = sorted((k, v) for k, v in alert.labels if k not in IGNORED_LABELS)
-        raw = f"{alert.service}|{alert.name}|{stable}"
+        raw = json.dumps((alert.service, alert.name, stable), separators=(",", ":"))
         return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
     def ingest(self, alert: Alert) -> Optional[str]:
@@ -66,7 +67,7 @@ class AlertDeduplicator:
             return g.count if g else 0
 
     def _expire(self, now: float) -> None:
-        # forget groups quiet for 2 windows so memory stays bounded
+        # Idle cleanup, not a hard memory bound: high-cardinality active groups can grow.
         stale = [fp for fp, g in self._groups.items() if now - g.last_emitted > 2 * self.window_s]
         for fp in stale:
             del self._groups[fp]

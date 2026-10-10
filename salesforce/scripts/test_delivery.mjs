@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+
+const context = { window: { Prep: {} } };
+vm.runInNewContext(readFileSync(new URL('../js/delivery.js', import.meta.url), 'utf8'), context);
+const { wordCount, placeholderCount, spokenOutline } = context.window.Prep.delivery;
+assert.equal(wordCount('  I built a tool.\nThen shipped it.  '), 7);
+assert.equal(wordCount(''), 0);
+assert.equal(wordCount(null), 0);
+assert.equal(wordCount('Built [fill: actual metric] safely'), 2, 'Unfinished prompts are not spoken words');
+assert.equal(placeholderCount({ a: ['Real fact', '[fill: system]'], r: '[fill: result]', probes: [{ a: '[fill: review]' }] }), 3);
+assert.equal(placeholderCount({ a: 'No missing details', r: null }), 0);
+const story = { s: 'Production alerts were noisy.', t: 'Improve diagnosis.', simple: ['I built diagnostics.', 'I tested with on-call.'], a: ['Added context.'], r: '[fill: actual result]' };
+const outline = spokenOutline(story);
+assert.equal(outline.length, 4);
+assert.equal(outline[0].text, story.s);
+assert.equal(outline[1].text, story.t);
+assert.equal(outline[2].text, story.a.join(' '), 'Actions must come from STAR actions, not background bullets');
+assert.equal(outline[3].text, story.r, 'Missing result must stay visibly unfinished');
+assert.equal(story.simple.length, 2, 'Source content must not be mutated');
+assert.equal(spokenOutline({ s: 'Context', t: 'Task', a: ['First action', 'Second action', 'Third action'], r: 'Result' })[2].text, 'First action Second action');
+assert.equal(spokenOutline({ simple: ['Fallback action'] })[2].text, 'Fallback action');
+const data = JSON.parse(readFileSync(new URL('../data/delivery.json', import.meta.url), 'utf8'));
+assert.equal(data.steps.reduce((sum, step) => sum + step.minutes, 0), 20, 'Practice loop is exactly twenty minutes');
+assert.equal(new Set(data.steps.map(step => step.id)).size, data.steps.length);
+console.log('Delivery helpers and twenty-minute practice loop passed.');

@@ -1,9 +1,9 @@
 {
   "$schema": "./schema/dsa.schema.json",
   "source": {
-    "label": "LeetCode Salesforce company tag, all 193 problems",
+    "label": "193 company-tagged problems plus 2 reconstructed drills",
     "url": "https://github.com/liquidslr/leetcode-company-wise-problems/tree/main/Salesforce",
-    "note": "Salesforce-tagged problems only, grouped by pattern and sorted by how often Salesforce asks them (100 = most). Problems with a Solution button have a tested Python solution and notes; the rest link to LeetCode."
+    "note": "Practice snapshot from a third-party company-tag dataset: 193 tagged problems plus 2 reconstructed drills, grouped by pattern. Scores rank this dataset, not the probability of your next question. The 30-day and 6-month badges describe source windows at import, not live recency; the original import date was not recorded. Solution buttons include Python reference code and built-in tests; other rows link to LeetCode. Prioritize pattern coverage and spoken reasoning over finishing the entire list."
   },
   "dsa_patterns_site": "https://anuvik2401.github.io/DSA_Patterns/",
   "status_options": [
@@ -247,7 +247,7 @@
         "merge or split lists",
         "cycle detection"
       ],
-      "template": "dummy = ListNode(0, head)\nprev, cur = dummy, head\nwhile cur:\n    nxt = cur.next\n    cur.next = prev  # rewire\n    prev, cur = cur, nxt",
+      "template": "prev, cur = None, head  # full-list reversal\nwhile cur:\n    nxt = cur.next\n    cur.next = prev  # save next before rewiring\n    prev, cur = cur, nxt\nhead = prev",
       "pitfalls": [
         "A dummy head removes edge cases at the front.",
         "Save next before rewiring.",
@@ -331,7 +331,7 @@
         "simulation",
         "greedy"
       ],
-      "prompt": "Each task has a type, a memory need, and a duration. The machine has a memory limit and may run at most 2 tasks of the same type at once. Tasks are prioritized by index; whenever capacity frees up, start every waiting task that fits, earliest index first. Return when all tasks finish, or -1 if some task can never run. (Reconstructed from 2026 reports; confirm the exact rules with your interviewer.)"
+      "prompt": "Each task has a type, a memory need, and a duration. The machine has a memory limit and may run at most 2 tasks of the same type at once. Tasks are prioritized by index; whenever capacity frees up, start every waiting task that fits, earliest index first. Return when all tasks finish, or -1 if some task can never run. (Reconstructed practice variant; the original candidate report is not linked in this snapshot. Confirm the exact scheduling rules before solving. This simulation follows index priority and does not prove an optimal makespan.)"
     },
     {
       "id": "sf-grid-jump-bfs",
@@ -351,7 +351,7 @@
         "Return dist at the target or -1."
       ],
       "solution_file": "data/dsa/sf-grid-jump-bfs.py",
-      "time": "O(rows * cols * 4) amortized with pruning, O(rows * cols * K) worst case without it",
+      "time": "O(rows * cols * K) worst-case upper bound; pruning reduces repeated scans in practice",
       "space": "O(rows * cols)",
       "edge_cases": [
         "Start equals end",
@@ -363,7 +363,7 @@
         "grid",
         "pruning"
       ],
-      "prompt": "Given a grid of open cells '.' and walls '#', a start, an end, and K, each move goes 1 to K cells in one of four directions without passing through a wall. Return the minimum number of moves, or -1. (Reported in 2026 Salesforce loops; same as Codeforces 877D.)"
+      "prompt": "Given a grid of open cells '.' and walls '#', a start, an end, and K, each move goes 1 to K cells in one of four directions without passing through a wall. Return the minimum number of moves, or -1. (Reconstructed practice variant matching the Codeforces 877D movement rules. The original candidate report is not linked in this snapshot; practice the pattern without assuming it will appear.)"
     },
     {
       "id": "minimum-operations-to-reduce-an-integer-to-0",
@@ -1705,7 +1705,7 @@
       "pinned": false,
       "insight": "Map each value to +1 or -1 relative to k; a subarray containing k has median k when its balance is 0 or 1.",
       "approach": [
-        "Find k's index; every valid subarray includes it.",
+        "Find k's index; every valid subarray includes it under the distinct-value constraint.",
         "Count balances of all left extensions.",
         "For each right extension, add matches for balance 0 and 1."
       ],
@@ -2121,7 +2121,7 @@
         "Exact cancel short-circuits."
       ],
       "solution_file": "data/dsa/optimal-account-balancing.py",
-      "time": "O(n!) worst case, n <= 8 nonzero in practice",
+      "time": "O(n!) worst case, where n is the number of nonzero balances; clarify the participant bound",
       "space": "O(n)",
       "edge_cases": [
         "Everything already settled",

@@ -13,14 +13,14 @@
   ],
   "team": {
     "name": "Public Cloud Engineering",
-    "mission": "Moving Salesforce apps onto GCP, with Gemini in Agentforce.",
+    "mission": "Stored team context: Salesforce applications on GCP and Gemini-related Agentforce work. Confirm current scope and priorities in the hiring-manager conversation.",
     "work": [
       "AI SRE tooling to cut MTTD and MTTR",
       "AI developer-velocity tools",
       "GCP platform for agentic solutions",
       "Root cause analyses (RCAs)"
     ],
-    "urgency": "Hiring urgently"
+    "urgency": "Urgent hiring noted in the stored candidate context; confirm the current timeline."
   },
   "visa": {
     "provider": "BAL",
@@ -29,7 +29,7 @@
   },
   "status": {
     "as_of": "2026-10-09",
-    "summary": "HM interview being scheduled"
+    "summary": "HM interview being scheduled. Candidate-specific six-stage plan, last recorded October 9, 2026; confirm dates and format with the recruiter."
   },
   "status_options": [
     { "id": "not_started", "label": "Not started" },
@@ -48,7 +48,7 @@
       "interviewer": "Hiring manager",
       "default_status": "scheduled",
       "default_date": null,
-      "note": "Being scheduled. Not done yet.",
+      "note": "Scheduling is in progress in the stored October 9 update. No interview date has been entered; this is not a confirmed calendar appointment.",
       "prep_pages": ["behavioral", "ai"],
       "checklist": [
         { "id": "hm-pitch", "text": "Say the 90-second pitch out loud three times, timed" },
@@ -56,7 +56,7 @@
         { "id": "hm-stories", "text": "Run the lead stories: P1 MTTR, CLI toolchain, ERP multi-agent" },
         { "id": "hm-gaps", "text": "Fill the gap stories: failure, conflict, mentoring" },
         { "id": "hm-questions", "text": "Pick two questions for the hiring manager" },
-        { "id": "hm-numbers", "text": "Score 90% or better on the numbers quiz" }
+        { "id": "hm-numbers", "text": "Score 90% or better on the numbers quiz and explain how each lead-story metric was measured" }
       ]
     },
     {

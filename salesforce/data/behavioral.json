@@ -19,26 +19,26 @@
     "beats": [
       {
         "label": "Who",
-        "text": "I'm Anuvik. I spent nearly 3 years at Oracle as a Software Engineer II on NSX, owning production infrastructure: observability, incident response, and Kubernetes for 37,000+ enterprise tenants."
+        "text": "I'm Anuvik, an infrastructure engineer who now builds agentic AI systems. I spent nearly 3 years at Oracle as a Software Engineer II on NSX, working on observability, incident response, and Kubernetes across 37,000+ tenants."
       },
       {
         "label": "Proof",
-        "text": "Two results I'm proudest of: I cut P1 MTTR from 94 to 26 minutes by building real-time API diagnostics that auto-tag root causes, so on-call starts with runbook context. And I moved alerting from static thresholds to SLOs, which cut false pages 41%."
+        "text": "At Oracle, my API diagnostics gave on-call engineers root-cause tags and runbook context. P1 MTTR went from 94 to 26 minutes. Moving alerting toward SLOs also cut false pages 41%."
       },
       {
         "label": "Pivot",
-        "text": "I came to USC for my MS to go deep on AI. This summer at MSRcosmos I shipped a multi-agent ERP migration on the Claude API and LangGraph, with a human-in-the-loop layer that auto-approved 83% of records and took turnaround from 3 days to 5.5 hours."
+        "text": "I came to USC for my MS to deepen my AI skills. At MSRcosmos this summer, I shipped a Claude and LangGraph ERP migration workflow with confidence-based review. It auto-approved 83% of records and reduced turnaround from 3 days to 5.5 hours."
       },
       {
         "label": "Now",
-        "text": "Today I build a multi-agent app on Claude Enterprise and MCP at USC Annenberg, and I benchmark frontier LLMs for factual accuracy at the AI Trust Lab."
+        "text": "Now I build a multi-agent retail intelligence app at USC Annenberg and benchmark LLM factual accuracy at the AI Trust Lab."
       },
       {
         "label": "Why you",
-        "text": "Your team is moving Salesforce onto GCP and building AI SRE tooling to cut MTTD and MTTR. I've worked that problem from both sides: as the engineer getting paged, and as the one building agents."
+        "text": "From our team context, the role connects public-cloud engineering with AI SRE. I bring the perspective of the engineer getting paged and the engineer building agents, and I would like to understand where that combination is most useful to your team."
       }
     ],
-    "closing_line": "The incident tooling I built by hand at Oracle is what AI SRE agents can automate, on GCP and at Salesforce scale."
+    "closing_line": "That is the work I want to do next: reliable AI tools that help engineers resolve incidents faster."
   },
   "competencies": [
     {
@@ -510,7 +510,7 @@
       ],
       "simple": [
         "Clients were moving financial records between two ERPs by hand.",
-        "I built agents that map, check, and reconcile records step by step.",
+        "I built a multi-agent workflow to reconcile migration records. [fill: name the actual agent responsibilities]",
         "LangGraph saved each step's state, so runs could resume and be audited.",
         "Docker let it run inside each client's own cloud.",
         "Result: 68% less manual reconciliation over 10,000+ records."
@@ -606,7 +606,7 @@
       "probes": [
         {
           "q": "How did you pick the threshold?",
-          "a": "[fill: method]. The principle: set it where the error rate of auto-approved records is below what human review catches, measured on labeled samples."
+          "a": "[fill: method]. The principle: calibrate on held-out labeled samples and choose a cutoff that meets the acceptable error rate for the business, then audit approved records. Do not treat a model's self-reported confidence as calibrated probability."
         },
         {
           "q": "What if confidence scores are miscalibrated?",
@@ -683,7 +683,7 @@
       "probes": [
         {
           "q": "Why compare to EPA-optimal calls?",
-          "a": "EPA is the standard analytics benchmark for fourth-down decisions, so it gives a fair reference on held-out games."
+          "a": "Expected points gives a useful reference for this experiment. It is not the only objective: win probability, game state, and risk can change the right fourth-down call. Explain how the held-out drives were separated from training."
         },
         {
           "q": "How did you find the data-loader stall?",
@@ -707,7 +707,7 @@
         "I rewarded it using expected points added.",
         "I made training faster by sampling batches at once.",
         "I fixed a stall where the data loader made the model wait.",
-        "Result: 74% agreement with EPA-optimal calls, training 40% faster."
+        "Result: 74% agreement with EPA-optimal calls, and training time about 40% shorter."
       ]
     },
     {
@@ -769,11 +769,11 @@
         "Prometheus: collects metrics over time and evaluates alert rules.",
         "Grafana: dashboards that visualize Prometheus data.",
         "Alert rules: queries that fire when an SLO is at risk.",
-        "NSX: the network virtualization platform your services ran on."
+        "NSX: your Oracle product and team context. [fill: explain the exact product name and service boundary so the interviewer does not assume a different NSX platform]"
       ],
       "simple": [
         "Old alerts fired on fixed numbers, so people got paged for nothing.",
-        "I defined what good looks like for users: CPU, memory, and p99 latency targets.",
+        "I used p99 latency for user impact and CPU and memory targets for saturation signals.",
         "I moved alerts to fire only when those targets were at risk.",
         "I built 47 dashboards so the reason behind each page was one click away.",
         "Result: 41% fewer false pages across 37,000+ tenants."
@@ -836,10 +836,10 @@
       ],
       "terms": [
         "P1 incident: the most severe outage level; customers are affected right now.",
-        "MTTR (mean time to resolve): average minutes from the page firing to the problem being fixed.",
+        "MTTR (mean time to resolve): average resolution time. [fill: state the exact start and end timestamps used in your Oracle metric]",
         "Root cause: the real reason something broke, not just the symptom you see.",
         "Runbook: a step-by-step guide for fixing a known kind of problem.",
-        "400 and 500 series errors: HTTP status codes. 4xx means the request was bad; 5xx means the server failed."
+        "400 and 500 series errors: HTTP status codes. 4xx indicates client-side request handling errors; 5xx indicates a server-side failure. Not every status identifies the root cause."
       ],
       "stack": [
         "Event streams: a continuous feed of API calls and errors, read as they happen.",
@@ -983,7 +983,8 @@
         "I wired it into Jenkins so every pipeline ran it automatically.",
         "Teams adopted it because it saved them rollbacks: 4 teams in total.",
         "Result: failed deploys from 11% to 4%, release cycles 34% shorter."
-      ]
+      ],
+      "lead": true
     },
     {
       "id": "k8s-autoscaling",
@@ -1046,7 +1047,7 @@
     },
     {
       "id": "modelscope",
-      "title": "ModelScope: INT4 at 62% less memory, same accuracy",
+      "title": "ModelScope: INT4 at 62% less memory, MMLU within a point",
       "experience_id": "modelscope",
       "prompts": [
         "Tell me about a performance trade-off you measured.",
@@ -1090,7 +1091,7 @@
         },
         {
           "q": "Would you ship INT4?",
-          "a": "For latency- and cost-bound serving, yes, after checking quality on the real task, not just MMLU."
+          "a": "I would consider it after checking task quality, latency, and cost on the intended serving workload. The result is specific to these models, kernels, and T4 measurements; it is not a universal ranking of INT4 and INT8."
         }
       ],
       "terms": [
@@ -1263,5 +1264,5 @@
       "why": "Shows you are thinking about their roadmap, not only the interview."
     }
   ],
-  "intro": "Every resume bullet has a story here, in resume order. Each one maps to Salesforce values and explains the terms and tech in plain words."
+  "intro": "Lead with the answer, then one concrete decision you owned, the result, and what you learned. The three lead stories are your starting set. Expand other stories when asked. [fill: ...] marks a detail only you can confirm; complete it before calling a story ready. Resume metrics are candidate-provided, and suggested probes are rehearsal guidance, not additional facts."
 }

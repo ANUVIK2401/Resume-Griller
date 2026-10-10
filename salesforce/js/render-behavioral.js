@@ -2,6 +2,9 @@
 (function () {
   const { el, load, ui, store, setReadout } = { ...window.Prep, store: window.Prep.store };
 
+  const delivery = window.Prep.delivery;
+  let resetStoryFilters = () => {};
+
   const STAR = [['s', 'S'], ['t', 'T'], ['a', 'A'], ['r', 'R']];
 
   function starBlock(story) {
@@ -23,6 +26,7 @@
   }
 
   function openStory(id) {
+    resetStoryFilters();
     const node = document.getElementById(`story-${id}`);
     if (!node) return;
     node.open = true;
@@ -32,16 +36,26 @@
 
   function pitchSection(pitch) {
     const t = ui.timer(pitch.target_sec / 60);
+    const sourceText = [...pitch.beats.map((beat) => beat.text), pitch.closing_line].join(' ');
+    const words = delivery.wordCount(sourceText);
+    const minWords = Math.round(pitch.target_sec * 120 / 60);
+    const maxWords = Math.round(pitch.target_sec * 150 / 60);
+    const unfinished = delivery.placeholderCount(pitch);
     return ui.section('pitch', 'Pitch', `${pitch.target_sec}-second pitch`, el('span', {}, 'Tell me about ', el('em', {}, 'yourself')),
-      el('p', { class: 'section-intro' }, 'Say it out loud with the timer. Land the last line word for word.'),
+      el('p', { class: 'section-intro' }, 'Say it out loud with the timer. Lead with your strongest evidence, then connect it to the role.'),
+      el('p', { class: 'delivery-estimate notice' }, `${words} spoken words in this pitch, excluding unfinished prompts. At a practice pace of 120 to 150 words/min, that is about ${Math.ceil(words * 60 / 150)} to ${Math.ceil(words * 60 / 120)} seconds. Your ${pitch.target_sec}-second target is roughly ${minWords} to ${maxWords} words; pauses need extra room.`),
+      unfinished ? el('p', { class: 'delivery-warning notice is-error' }, `${unfinished} unfinished pitch detail${unfinished === 1 ? '' : 's'}. Verify them before using this script.`) : null,
       el('div', { class: 'card pitch' },
         el('div', { class: 'row' }, t.node),
         el('div', {}, pitch.beats.map((b) => el('div', { class: 'pitch-beat' }, el('span', { class: 'label' }, b.label), el('p', {}, ui.fill(b.text))))),
-        el('p', { class: 'pitch-close' }, pitch.closing_line)));
+        el('p', { class: 'pitch-close' }, pitch.closing_line),
+        delivery.rubric('delivery-pitch', ['I named my strongest evidence early.', 'I connected my experience to this role without assuming team details.', 'I met the time target and left room for a follow-up.']),
+        ui.notesBox('delivery-pitch', 'Your shorter pitch, in your own words')));
   }
 
   function storyItem(story, data, profile, onStatus) {
     const exp = sourceOf(profile, story);
+    const unfinished = delivery.placeholderCount(story);
     const facts = (story.number_ids || []).map((id) => profile.numbers.find((n) => n.id === id)?.fact);
     const comps = story.competencies.map((id) => data.competencies.find((c) => c.id === id)?.name);
     const stop = (e) => e.stopPropagation();
@@ -50,12 +64,16 @@
         el('span', { class: 'item-title' }, story.title),
         el('span', { class: 'item-meta', onclick: stop },
           story.lead ? el('span', { class: 'chip chip-gold' }, 'Lead') : null,
+          unfinished ? el('span', { class: 'chip chip-red' }, `${unfinished} unfinished`) : null,
           el('span', { class: 'chip' }, exp.org || exp.name),
           ui.statusSelect(`story-${story.id}`, data.status_options, onStatus))),
       el('div', { class: 'item-body' },
         // Spoken material first: the question, the answer, the numbers, the plain version, the follow-ups.
         el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Questions this answers'), ui.list(story.prompts)),
-        el('p', { class: 'label' }, 'STAR answer'),
+        unfinished ? el('p', { class: 'delivery-warning notice is-error' }, `${unfinished} unfinished detail${unfinished === 1 ? '' : 's'} in this story. Fill them in your personal notes with facts you can verify; keep an ongoing result clearly labeled.`) : null,
+        delivery.outline(story),
+        delivery.storyPractice(story),
+        el('p', { class: 'label' }, 'Full STAR reference'),
         starBlock(story),
         facts.length ? el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Numbers to say'), el('div', { class: 'row' }, [...new Set(facts)].map((f) => el('span', { class: 'chip chip-gold' }, f)))) : null,
         explainBlock(story),
@@ -74,16 +92,23 @@
 
   function storiesSection(data, profile, onStatus) {
     const listBox = el('div', { class: 'item-list' });
-    const items = data.stories.map((s) => ({ story: s, node: storyItem(s, data, profile, onStatus) }));
+    let active = { q: '' };
+    let shown = [...data.stories];
+    const statusChanged = () => { apply(active); onStatus(); };
+    const ordered = [...data.stories].sort((a, b) => Number(Boolean(b.lead)) - Number(Boolean(a.lead)));
+    const items = ordered.map((s) => ({ story: s, node: storyItem(s, data, profile, statusChanged) }));
     const apply = (f) => {
-      listBox.replaceChildren(...items.filter(({ story }) => {
+      active = { ...f };
+      const filtered = items.filter(({ story }) => {
         const text = `${story.title} ${story.s} ${story.prompts.join(' ')}`.toLowerCase();
         return (!f.q || text.includes(f.q))
           && (!f.comp || story.competencies.includes(f.comp))
           && (!f.role || story.experience_id === f.role)
           && (!f.value || story.values.includes(f.value))
           && (!f.status || store.get('status', `story-${story.id}`, data.status_options[0].id) === f.status);
-      }).map((x) => x.node));
+      });
+      shown = filtered.map(({ story }) => story);
+      listBox.replaceChildren(...(filtered.length ? filtered.map((item) => item.node) : [el('p', { class: 'notice' }, 'No stories match these filters. Clear a filter to see more stories.')]));
     };
     const bar = ui.filterBar({
       placeholder: 'Search stories',
@@ -95,16 +120,18 @@
       ],
       onChange: apply,
     });
+    resetStoryFilters = () => bar.resetFilters ? bar.resetFilters() : apply({ q: '' });
     apply({ q: '' });
     // Front is what the interviewer asks; recall the story, say it, then check.
-    const rehearse = () => ui.rehearse(ui.shuffle(data.stories).map((s) => ({
+    const rehearse = () => ui.rehearse(ui.shuffle(shown).map((s) => ({
       kicker: 'Interviewer asks',
       front: () => el('span', {}, ui.shuffle(s.prompts)[0]),
       back: () => el('div', { class: 'stack' }, el('p', { class: 'h3' }, `Story: ${s.title}`), starBlock(s)),
     })), 'Rehearse stories');
     return ui.section('stories', 'STAR bank', `${data.stories.length} stories`, el('span', {}, 'The ', el('em', {}, 'STAR'), ' bank'),
       el('p', { class: 'section-intro' }, `${data.intro} Gold "fill" marks are specifics only you know; replace them in your notes before the interview.`),
-      el('div', { class: 'row', style: { marginBottom: '1rem' } }, el('button', { class: 'btn btn-gold', type: 'button', onclick: rehearse }, 'Rehearse stories')),
+      el('div', { class: 'row', style: { marginBottom: '1rem' } }, el('button', { class: 'btn btn-gold', type: 'button', onclick: rehearse }, 'Rehearse filtered stories'),
+        el('button', { class: 'btn', type: 'button', onclick: () => resetStoryFilters() }, 'Clear filters')),
       bar, listBox);
   }
 

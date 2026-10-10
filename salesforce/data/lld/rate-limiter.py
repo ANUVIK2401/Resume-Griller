@@ -1,6 +1,8 @@
 import threading
 import time
+import math
 from collections import deque
+from numbers import Real
 from typing import Callable, Deque, Dict, Protocol
 
 
@@ -8,16 +10,26 @@ class RateLimiter(Protocol):  # Strategy: swap algorithms behind one interface
     def allow(self, cost: float = 1.0) -> bool: ...
 
 
+def _validate_number(value: float, name: str, allow_zero: bool = False) -> None:
+    if (isinstance(value, bool) or not isinstance(value, Real)
+            or not math.isfinite(value) or value < 0 or (value == 0 and not allow_zero)):
+        qualifier = "nonnegative" if allow_zero else "positive"
+        raise ValueError(f"{name} must be a finite {qualifier} number")
+
+
 class TokenBucket:
-    """Bursts up to capacity, refills continuously at rate tokens per second."""
+    """Bursts up to capacity; fractional costs are allowed. Clock must be monotonic."""
 
     def __init__(self, capacity: float, rate: float, clock: Callable[[], float] = time.monotonic):
+        _validate_number(capacity, "capacity")
+        _validate_number(rate, "rate", allow_zero=True)
         self.capacity, self.rate, self._clock = capacity, rate, clock
         self._tokens = capacity
         self._last = clock()
         self._lock = threading.Lock()
 
     def allow(self, cost: float = 1.0) -> bool:
+        _validate_number(cost, "cost")  # reject before touching quota
         with self._lock:
             self._refill()
             if self._tokens >= cost:
@@ -32,14 +44,23 @@ class TokenBucket:
 
 
 class SlidingWindowLog:
-    """At most limit requests in any window of window_s seconds. Exact, memory grows with limit."""
+    """At most limit request units in (now-window_s, now]. Cost must be integral.
+
+    Exact, O(limit) memory per key. Clock must be monotonic.
+    """
 
     def __init__(self, limit: int, window_s: float, clock: Callable[[], float] = time.monotonic):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        _validate_number(window_s, "window_s")
         self.limit, self.window_s, self._clock = limit, window_s, clock
         self._times: Deque[float] = deque()
         self._lock = threading.Lock()
 
     def allow(self, cost: float = 1.0) -> bool:
+        _validate_number(cost, "cost")
+        if cost != int(cost):
+            raise ValueError("sliding-window cost must be a whole request count")
         with self._lock:
             now = self._clock()
             while self._times and self._times[0] <= now - self.window_s:
@@ -51,7 +72,11 @@ class SlidingWindowLog:
 
 
 class RateLimiterRegistry:
-    """One limiter per key (tenant, user, API key), created on first use (Factory)."""
+    """One limiter per key, created on first use (Factory).
+
+    Registry memory grows with distinct keys; it has no eviction. Production needs
+    a key budget or safe idle expiry that cannot reset an active caller's quota.
+    """
 
     def __init__(self, factory: Callable[[], RateLimiter]):
         self._factory = factory
@@ -59,6 +84,7 @@ class RateLimiterRegistry:
         self._lock = threading.Lock()
 
     def allow(self, key: str, cost: float = 1.0) -> bool:
+        _validate_number(cost, "cost")  # invalid requests must not allocate registry entries
         with self._lock:  # creation must be atomic or two threads build two limiters for one key
             limiter = self._limiters.get(key)
             if limiter is None:

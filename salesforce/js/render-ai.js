@@ -51,11 +51,14 @@
     const knownId = data.status_options.at(-1).id;
     const statusOf = (c) => store.get('status', `ai-${c.id}`, data.status_options[0].id);
     const updateReadout = () => setReadout('Cards known', data.cards.filter((c) => statusOf(c) === knownId).length, data.cards.length);
-    const items = new Map(data.cards.map((c) => [c.id, cardItem(c, data, updateReadout)]));
+    let activeFilters = { q: '' };
+    const onStatus = () => { updateReadout(); apply(activeFilters); };
+    const items = new Map(data.cards.map((c) => [c.id, cardItem(c, data, onStatus)]));
     const lists = data.topics.map((t) => ({ t, list: el('div', { class: 'item-list' }), cards: data.cards.filter((c) => c.topic === t.id) }));
 
     let shown = data.cards;
     const apply = (f) => {
+      activeFilters = { ...f };
       const keep = (c) => (!f.q || `${c.question} ${c.short} ${c.terms.join(' ')}`.toLowerCase().includes(f.q))
         && (!f.status || statusOf(c) === f.status);
       shown = data.cards.filter(keep);

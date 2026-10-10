@@ -9,7 +9,7 @@
   "framework": [
     { "id": "fw-requirements", "step": "Requirements", "minutes": 5, "prompts": ["Functional: the 3 to 5 things it must do. Write them down.", "Non-functional: scale, latency target, availability, consistency, multi-tenancy.", "Out of scope: say what you are not designing."] },
     { "id": "fw-estimates", "step": "Estimates", "minutes": 3, "prompts": ["Requests per second, average and peak.", "Storage per day and per year.", "Only the numbers that change a design decision."] },
-    { "id": "fw-api", "step": "API", "minutes": 4, "prompts": ["3 to 5 endpoints or events with key fields.", "Idempotency keys on writes.", "Pagination and tenant ID in every call."] },
+    { "id": "fw-api", "step": "API", "minutes": 4, "prompts": ["3 to 5 endpoints or events with key fields.", "Idempotency keys on writes.", "Pagination on list calls; derive tenant identity from authenticated context and authorize every tenant-scoped operation."] },
     { "id": "fw-data", "step": "Data model", "minutes": 4, "prompts": ["Entities and the access pattern for each.", "Partition key and why.", "SQL or NoSQL, decided by the access pattern."] },
     { "id": "fw-diagram", "step": "High-level diagram", "minutes": 8, "prompts": ["Client to storage, left to right.", "Walk one request through it out loud.", "Name the GCP service under each box."] },
     { "id": "fw-deep", "step": "Two deep dives", "minutes": 12, "prompts": ["Pick the hardest part, or ask which they care about.", "Show options, pick one, say the trade-off.", "Numbers where they matter."] },
@@ -55,7 +55,7 @@
     "terms": [
       { "term": "SLI", "meaning": "A measured ratio of good events to all events, e.g. requests under 300 ms and not 5xx." },
       { "term": "SLO", "meaning": "The target for the SLI over a window, e.g. 99.9% over 30 days." },
-      { "term": "Error budget", "meaning": "1 minus the SLO: 0.1% of 30 days is about 43 minutes of full outage." },
+      { "term": "Error budget", "meaning": "1 minus the SLO. A time-based 99.9% SLO over 30 days permits about 43 minutes of outage; a request-based SLO permits 0.1% bad requests, which is not automatically a duration." },
       { "term": "Burn rate", "meaning": "How fast the budget is being spent. Burn rate 1 spends exactly the budget in the window." }
     ],
     "burn_rates": [
@@ -101,14 +101,14 @@
     { "generic": "CDN", "gcp": "Cloud CDN", "note": "" },
     { "generic": "Secrets, KMS", "gcp": "Secret Manager, Cloud KMS", "note": "" },
     { "generic": "IAM roles for pods", "gcp": "Workload Identity", "note": "" },
-    { "generic": "Hosted LLMs", "gcp": "Vertex AI (Gemini)", "note": "Agentforce on Gemini is this team's context." },
+    { "generic": "Hosted LLMs", "gcp": "Vertex AI (Gemini)", "note": "Gemini is one possible model integration; confirm the team's actual workload and model choices." },
     { "generic": "Vector DB (Pinecone, Milvus)", "gcp": "Vertex AI Vector Search, AlloyDB pgvector", "note": "" },
     { "generic": "Managed RAG search", "gcp": "Vertex AI Search", "note": "" }
   ],
   "context": [
-    "Salesforce is multi-tenant by design: put the tenant (org) ID in every key, every log line, and every limit.",
-    "Hyperforce is how Salesforce runs on public cloud; this team moves Salesforce apps onto GCP.",
-    "Agentforce with Gemini means LLM calls sit on hot paths: budget tokens and latency like any other dependency.",
+    "Design tenant isolation explicitly: derive org identity from authentication, scope keys and queries to it, enforce quotas, and redact sensitive data from logs.",
+    "Hyperforce is Salesforce public-cloud infrastructure. The GCP emphasis here comes from the stored candidate-specific team context; confirm the precise team scope with the hiring manager.",
+    "For AI workflows using Gemini or other models, decide which calls belong on a synchronous path and budget tokens, latency, and fallback behavior for each.",
     "Trust comes first in their values: lead reliability, isolation, and auditability, not just scale."
   ],
   "problems": [
@@ -136,23 +136,23 @@
         { "name": "Context tools", "role": "Read-only tools for metrics, logs, traces, recent deploys, and service topology.", "gcp": "Cloud Monitoring, Cloud Logging, Cloud Trace" },
         { "name": "Incident and runbook index", "role": "Hybrid keyword plus vector search over past incidents, RCAs, and runbooks, with freshness metadata.", "gcp": "Vertex AI Search, AlloyDB pgvector" },
         { "name": "Hypothesis ranker", "role": "LLM ranks likely causes, each with cited evidence and a confidence; abstains when evidence is weak.", "gcp": "Vertex AI (Gemini)" },
-        { "name": "Action gate", "role": "Diagnostics run freely; mitigations are proposals that need human approval and must be reversible.", "gcp": "Policy service, Workflows" },
+        { "name": "Action gate", "role": "Diagnostics require scoped authorization, query limits, and time budgets. Mitigations need explicit approval, blast-radius checks, and a tested rollback.", "gcp": "Policy service, Workflows" },
         { "name": "RCA drafter", "role": "Drafts the timeline and RCA from the incident record for a human to edit.", "gcp": "Vertex AI" },
         { "name": "Audit and eval store", "role": "Every tool call, prompt, and decision logged; replay harness over a golden set of past incidents.", "gcp": "BigQuery" }
       ],
       "diagram": "flowchart LR\n  A[Alerts] --> B[Intake and grouping<br/>Pub/Sub]\n  B --> C{{Triage orchestrator<br/>state graph}}\n  C --> D[Context tools<br/>metrics, logs, traces, deploys]\n  C --> E[(Incident and runbook index<br/>hybrid search)]\n  C --> F[Hypothesis ranker<br/>Gemini on Vertex AI]\n  F --> G[Slack or console<br/>ranked causes with evidence]\n  G --> H{Human approves?}\n  H -->|yes| I[Reversible mitigation<br/>rollback, scale, flag]\n  H -->|no| C\n  C --> K[(Audit log<br/>BigQuery)]\n  L[Golden-set replay] -.-> C",
       "deep_dives": [
         { "title": "Retrieval over incidents and runbooks", "points": ["Chunk by incident section: symptoms, timeline, root cause, fix.", "Metadata filters first: service, error signature, region, time.", "Hybrid search: keywords catch exact error strings, vectors catch paraphrases. Rerank the union.", "Freshness: runbooks carry a last-verified date; stale ones are downranked and flagged.", "Evaluate retrieval separately: recall at 5 of the right past incident on the golden set."] },
-        { "title": "Autonomy and safety", "points": ["Three tiers: read freely, reversible writes with approval, never (deletes, data changes).", "Every proposal names its blast radius and its undo.", "Per-incident caps on steps, tokens, and wall time, plus a global kill switch.", "Roll out shadow mode first, then suggest, then approve, then narrow auto-actions for proven runbooks."] },
-        { "title": "Evaluation", "points": ["Golden set of past incidents with known root causes.", "Replay with time travel: tools only see data from before the incident's resolution.", "Metrics: top-3 root-cause accuracy, time to first useful hypothesis, wrong-action rate, abstain rate.", "LLM-as-judge for summaries, validated against human ratings before trusting it.", "Regression gate: no prompt or model change ships if top-3 accuracy drops."] }
+        { "title": "Autonomy and safety", "points": ["Three tiers: authorized and bounded read-only tools; allowlisted mitigations with approval and rollback; prohibited destructive actions. Enforce these in code outside the model.", "Every proposal names its blast radius and its undo.", "Per-incident caps on steps, tokens, and wall time, plus a global kill switch.", "Roll out shadow mode first, then suggest, then approve, then narrow auto-actions for proven runbooks."] },
+        { "title": "Evaluation", "points": ["Golden set of past incidents with known root causes.", "Replay with time travel: tools only see data from before the incident's resolution.", "Metrics: top-3 root-cause accuracy, time to first useful hypothesis, wrong-action rate, abstain rate.", "LLM-as-judge for summaries, validated against human ratings before trusting it.", "Regression gate: score a held-out set with a documented tolerance and severity slices. Offline quality is necessary; measure actual MTTR improvement in a controlled live rollout."] }
       ],
       "failure_modes": [
-        { "failure": "Hallucinated root cause", "mitigation": "Every hypothesis must cite evidence from a tool result; abstain below a confidence threshold." },
+        { "failure": "Hallucinated root cause", "mitigation": "Require evidence links and verify that cited results support the claim. Calibrate abstention on labeled incidents; model confidence alone is not a reliable probability." },
         { "failure": "Stale runbooks", "mitigation": "Freshness metadata, downranking, and a flag to the owning team." },
         { "failure": "Alert storm", "mitigation": "Group before triage, cap concurrent investigations, queue the rest by severity." },
         { "failure": "Runaway cost or loops", "mitigation": "Step, token, and time budgets per incident; the graph has no unbounded cycles." },
         { "failure": "Observability backend down during the incident", "mitigation": "Run the agent in a separate failure domain; degrade to partial context and say so." },
-        { "failure": "Prompt injection through log text", "mitigation": "Tool output is data, never instructions; actions only come from the policy-gated tool list." }
+        { "failure": "Prompt injection through log text", "mitigation": "Treat tool output as untrusted data; enforce authorization and argument checks outside the model, separate action permissions, and test injected log text. Prompt instructions alone do not prevent injection." }
       ],
       "followups": [
         "How do you stop it from taking a harmful action?",
@@ -165,7 +165,7 @@
     },
     {
       "id": "realtime-notifications", "title": "Real-time notification system", "reported": true, "difficulty": "medium", "tags": ["fan-out", "websockets", "queues"],
-      "prompt": "Design a real-time notification system that delivers in-app, push, email, and SMS notifications to users of a multi-tenant SaaS product.",
+      "prompt": "Design a real-time notification system that delivers in-app, push, email, and SMS notifications to users of a multi-tenant SaaS product. This practice design is marked as reported in the existing notes, but its original report is not linked; confirm the actual prompt rather than assuming it will appear.",
       "clarifying": [
         "Which channels, and latency per channel (in-app under a second, email within minutes)?",
         "Volume: users, notifications per user per day, peak events?",
@@ -192,7 +192,7 @@
       "diagram": "flowchart LR\n  P[Product services] --> API[Notification API<br/>idempotency key]\n  API --> PREF[(Preferences<br/>and templates)]\n  API --> T[[Priority topics<br/>Pub/Sub]]\n  T --> R[Router and fan-out]\n  R --> INBOX[(Inbox<br/>Bigtable)]\n  R -->|lookup| REG[(Connection registry<br/>Memorystore)]\n  R --> WS[WebSocket gateways]\n  R --> PUSH[Push worker]\n  R --> MAIL[Email worker]\n  R --> SMS[SMS worker]\n  R -.->|after retries| DLQ[[Dead letter topic]]\n  WS --> U((Users))\n  PUSH --> U\n  MAIL --> U\n  SMS --> U",
       "deep_dives": [
         { "title": "Live delivery over WebSockets", "points": ["Gateways register user to node in the registry on connect, with a TTL heartbeat.", "Router looks up the node and forwards; if none, the inbox write is enough.", "On reconnect, the client sends its last-seen cursor and pulls missed items from the inbox.", "Node failure: clients reconnect with jittered backoff; nothing is lost because the inbox is the source of truth."] },
-        { "title": "Delivery guarantees", "points": ["Pub/Sub is at-least-once, so consumers dedupe on the idempotency key with a TTL store.", "Ordering keys per user keep a user's notifications in order without global ordering.", "Retries with exponential backoff, then the dead letter topic.", "Say it plainly: exactly-once end to end is not real; at-least-once plus idempotent consumers is."] },
+        { "title": "Delivery guarantees", "points": ["Design for redelivery: dedupe by tenant plus idempotency key and retain keys through the replay horizon. Commit inbox writes and delivery state atomically where possible.", "Enable ordered subscriptions and publish each tenant/user ordering key in one region. Ordering holds within that key on a topic, not across priority topics or external providers.", "Retries with exponential backoff, then the dead letter topic.", "Scope the guarantee: Pub/Sub supports regional exactly-once delivery for pull subscriptions, but that does not atomically cover external email or SMS side effects. Use provider idempotency where available and disclose residual duplicate risk."] },
         { "title": "Multi-tenant fairness", "points": ["Per-tenant quotas at the API.", "Weighted fair scheduling across tenants in the router so one tenant's blast does not queue everyone.", "Provider rate limits enforced per tenant and globally."] }
       ],
       "failure_modes": [
@@ -281,7 +281,7 @@
       "diagram": "flowchart LR\n  C((Clients)) --> LB[Cloud Load Balancing]\n  LB --> GW1[Gateway and limiter]\n  LB --> GW2[Gateway and limiter]\n  GW1 --> R[(Memorystore Redis<br/>token buckets via Lua)]\n  GW2 --> R\n  CFG[Limits config] -.->|versioned push| GW1\n  CFG -.-> GW2\n  GW1 --> API[Backend APIs]\n  GW2 --> API",
       "deep_dives": [
         { "title": "Algorithm choice", "points": ["Token bucket: allows bursts up to capacity, two numbers per key. Default choice.", "Sliding window counter: smooth, approximate, cheap.", "Fixed window: simplest, but allows 2x bursts at window edges.", "Sliding log: exact, but memory grows with traffic.", "Use Redis server time inside the Lua script so gateway clock skew does not matter."] },
-        { "title": "Hot keys and store load", "points": ["Large tenants: split one key into N sub-buckets across shards and route by request hash.", "Local batches: a gateway takes 50 tokens at a time and accepts small overshoot.", "Keep the limiter in the same zone as gateways."] },
+        { "title": "Hot keys and store load", "points": ["If sharding a hot limit key, partition its capacity and refill budget so the total still equals the tenant limit; account for skew and unused tokens.", "Local batches reserve tokens atomically at the shared store. Bound outstanding leases and expiry; independent fallback limits can overshoot globally, so quantify that bound.", "Keep the limiter in the same zone as gateways."] },
         { "title": "Failure behavior", "points": ["Fail open with conservative local limits for most endpoints, protecting availability.", "Fail closed for abuse-sensitive endpoints such as login.", "Decide per endpoint and write it down; the interviewer wants the reasoning."] }
       ],
       "failure_modes": [

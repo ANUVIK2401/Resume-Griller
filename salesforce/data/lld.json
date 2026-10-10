@@ -19,7 +19,7 @@
     "Sketch the classes and interfaces by hand: who owns which state, and which methods change it.",
     "Ask the AI for boilerplate only: enums, dataclasses, test scaffolding.",
     "Review every generated block out loud: thread safety, single responsibility, missing states, edge cases, leaked internals.",
-    "Run the tests, then add a concurrency test and an edge-case test the AI did not write.",
+    "Run the reference tests, then probe invalid input, concurrency, and state ownership. Built-in tests are examples, not proof that every requirement is covered.",
     "Close with trade-offs and what you would change at scale."
   ],
   "pattern_cards": [
@@ -95,12 +95,12 @@
       "reported": true,
       "pinned": true,
       "difficulty": "medium",
-      "prompt": "Design a component that logs state transitions for steps in a workflow engine. Reported in 2026 Salesforce onsite AI-assisted OOD rounds.",
+      "prompt": "Design a component that logs state transitions for steps in a workflow engine. This reconstructed practice prompt came from the existing prep notes; the original report is not linked, so treat it as a drill rather than a prediction of your onsite question.",
       "requirements": [
         "Record every state change of a workflow step: who, when, from, to, and why.",
         "Reject illegal transitions, such as moving a finished step back to running.",
         "Query the full history and the current state of any step.",
-        "Notify listeners (alerts, metrics) without slowing down logging.",
+        "Notify listeners outside the state lock and record listener failures. The reference callbacks are synchronous; use an asynchronous queue if notification must not delay the caller.",
         "Safe when many workers update steps at once."
       ],
       "entities": [
@@ -134,7 +134,7 @@
         "record(workflow_id, step_id, to_state, actor, reason): validate and append; returns the Transition.",
         "history(workflow_id, step_id): a copy of every transition, oldest first.",
         "current_state(workflow_id, step_id): latest state, or None if never seen.",
-        "subscribe(listener): listener.on_transition(t) is called after each record."
+        "subscribe(listener): listener.on_transition(t) is called after each record; notification_failures records failed callbacks without undoing the transition."
       ],
       "patterns": [
         "strategy",
@@ -237,7 +237,7 @@
       "diagram": "classDiagram\n  class Incident {\n    id\n    severity\n    status\n    assignee\n    rca_link\n    timeline\n  }\n  class IncidentStateMachine {\n    +fire(incident, event, actor) Status\n    +allowed_events(incident) list\n  }\n  class Status {\n    OPEN\n    ACKNOWLEDGED\n    MITIGATED\n    RESOLVED\n    CLOSED\n  }\n  IncidentStateMachine --> Incident : changes\n  Incident --> Status",
       "interfaces": [
         "fire(incident, event, actor): apply an event if the table and guards allow; returns the new status.",
-        "allowed_events(incident): events valid from the current status, for building UI buttons."
+        "allowed_events(incident): events with a transition from the current status; guard checks still run in fire(), so a listed event may require an owner or RCA link."
       ],
       "patterns": [
         "state",
@@ -312,8 +312,8 @@
       "requirements": [
         "Limit requests per key: tenant, user, or API key.",
         "Token bucket allows bursts up to capacity; sliding window enforces an exact count per window.",
-        "Same interface for both so the algorithm can change.",
-        "Thread-safe, testable with a fake clock, bounded memory."
+        "Use one allow interface for whole-request costs. TokenBucket also supports positive fractional cost; SlidingWindowLog rejects fractional request counts.",
+        "Thread-safe and testable with a fake clock. Each sliding window is bounded by its limit; the registry grows with distinct keys and needs an eviction policy for unbounded tenants."
       ],
       "entities": [
         {
@@ -335,7 +335,7 @@
       ],
       "diagram": "classDiagram\n  class RateLimiter {\n    +allow(cost) bool\n  }\n  class TokenBucket {\n    capacity\n    rate\n    +allow(cost) bool\n  }\n  class SlidingWindowLog {\n    limit\n    window_s\n    +allow(cost) bool\n  }\n  class RateLimiterRegistry {\n    +allow(key, cost) bool\n  }\n  RateLimiter <|.. TokenBucket\n  RateLimiter <|.. SlidingWindowLog\n  RateLimiterRegistry --> RateLimiter : creates per key",
       "interfaces": [
-        "allow(cost=1): True if the request may proceed; cost lets you limit by tokens, not just requests.",
+        "allow(cost=1): True if the request may proceed. Cost must be positive and finite; the token bucket supports fractional cost, while the sliding request log requires whole counts.",
         "RateLimiterRegistry.allow(key, cost): looks up or creates the limiter for a key."
       ],
       "patterns": [
@@ -591,7 +591,7 @@
       "requirements": [
         "Subscribe handlers to topics; publish delivers to every current subscriber.",
         "Subscribing returns a handle used to unsubscribe.",
-        "A failing handler must not stop delivery to others.",
+        "A failing handler must not stop delivery to others; record the failure so delivery can be inspected or retried.",
         "Handlers may subscribe, unsubscribe, or publish while being called."
       ],
       "entities": [

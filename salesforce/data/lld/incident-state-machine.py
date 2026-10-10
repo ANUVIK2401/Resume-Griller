@@ -26,10 +26,15 @@ class Incident:
     id: str
     title: str
     severity: int  # 1 is most severe
-    status: Status = Status.OPEN
+    _status: Status = field(default=Status.OPEN, init=False, repr=False)
     assignee: Optional[str] = None
     rca_link: Optional[str] = None
     timeline: List[Tuple[datetime, str]] = field(default_factory=list)
+
+    @property
+    def status(self) -> Status:
+        """Public status is read-only; callers must use fire() to pass guards."""
+        return self._status
 
 
 Guard = Callable[[Incident], Optional[str]]  # returns an error message, or None if allowed
@@ -73,7 +78,7 @@ class IncidentStateMachine:
                 if problem:
                     raise ValueError(problem)
             before = incident.status
-            incident.status = target  # only the machine changes status
+            incident._status = target  # private state: public status has no setter
             incident.timeline.append((self._clock(), f"{actor}: {before.value} -> {target.value}"))
             return target
 

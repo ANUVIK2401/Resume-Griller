@@ -1,0 +1,212 @@
+{
+  "reviewedAsOf": "2026-10-10",
+  "scope": "Software engineering roles at Salesforce, not Salesforce-platform implementation roles at unrelated employers",
+  "records": [
+    {
+      "id": "mts-india-aug-2026",
+      "title": "MTS hiring drive: technical passes, resume deep dive rejection",
+      "role": "MTS / software engineer",
+      "location": "India; city not stated",
+      "interviewDate": "2026-08",
+      "datePrecision": "Month stated in report title; exact interview/publication day unavailable",
+      "sourceUrl": "https://leetcode.com/discuss/post/8508596/salesforce-mts-interview-experience-indi-dcdb/",
+      "sourceType": "First-person community report (named author: Tharun Vemula)",
+      "reportedRounds": [
+        "OA: timestamp-window counting and partition-cost optimization.",
+        "Virtual screening revisited OA reasoning and Merge Intervals.",
+        "DSA: weighted job scheduling, moving from recursion to DP and binary search.",
+        "DSA + LLD: task-dependency queries and a Ludo class design.",
+        "Hiring manager: resume and project discussion; author reports technical hire feedback but manager no-hire and overall rejection."
+      ],
+      "takeaway": "Resume fluency can decide the outcome after strong coding. Prepare an LLD fallback even when the anticipated MTS loop is coding-heavy.",
+      "rehearsalPrompt": "In 90 seconds, explain one resume project: customer problem, your ownership, architecture, one trade-off, measured outcome. Then defend every noun you used.",
+      "caveat": "Self-reported, independently unverified. Unexpected LLD occurred in this candidate's drive; it does not establish the format for another team.",
+      "level": "MTS",
+      "evidence": "firsthand",
+      "region": "India"
+    },
+    {
+      "id": "mts-bangalore-jun-2026",
+      "title": "MTS Bangalore: coding-heavy onsite and an offer",
+      "role": "MTS / software engineer; author reports 3 years' experience",
+      "location": "Bangalore, India",
+      "interviewDate": "2026-06-06",
+      "datePrecision": "Onsite day explicitly stated in report body; OA date reported as 2026-05-15",
+      "sourceUrl": "https://leetcode.com/discuss/post/8373008/salesforce-mts-interview-selected-by-ano-gtal/",
+      "sourceType": "First-person community report (anonymous)",
+      "reportedRounds": [
+        "HackerRank OA and virtual screening.",
+        "Two one-hour onsite DSA rounds: permutation counting, repeated array-sum reduction using a heap, randomized-set operations, and Coin Change II.",
+        "A 30-40 minute hiring-manager conversation covered work problems, project decisions, and behavior.",
+        "Author explicitly reports no dedicated LLD/HLD round in this MTS pool drive and says they accepted an offer."
+      ],
+      "takeaway": "Practice explaining and implementing two problems under a clock, then switch cleanly into a concise work-story discussion.",
+      "rehearsalPrompt": "Explain the invariant and complexity before coding a heap problem. Dry-run duplicates and boundary inputs; leave five minutes for validation.",
+      "caveat": "Anonymous anecdote. Absence of design here conflicts with other MTS reports, so do not remove design prep. The author's claimed randomized-set implementation is not validated.",
+      "level": "MTS",
+      "evidence": "firsthand",
+      "region": "India"
+    },
+    {
+      "id": "amts-bangalore-jan-2026",
+      "title": "AMTS Bangalore: CS fundamentals and a small-system design",
+      "role": "AMTS / Associate Member of Technical Staff",
+      "location": "Bangalore, India",
+      "interviewDate": "2026-01",
+      "datePrecision": "Month stated in title; exact interview/publication day unavailable",
+      "sourceUrl": "https://leetcode.com/discuss/post/7650288/salesforce-amts-bangalore-jan-2026-inter-5dfd/",
+      "sourceType": "First-person community report (anonymous)",
+      "reportedRounds": [
+        "A 100-minute OA with bit-operation, array-update, and tree-diameter problems.",
+        "Technical round: project architecture, linked-list intersection, distinct islands, and C++/OOP fundamentals.",
+        "Design conversation: library-management entities, relational data, a filtering request structure, and concurrent trending-book counts.",
+        "Author reports selection."
+      ],
+      "takeaway": "Even an early-career loop can assess how you connect entities, APIs, storage, and concurrency. Refresh the language fundamentals on your resume.",
+      "rehearsalPrompt": "Design a library checkout flow in six minutes. State entities, API input/output, one database invariant, and how you prevent conflicting concurrent updates.",
+      "caveat": "Anonymous, unverified report for a specific AMTS position. Its C++ topics are evidence from this candidate, not a universal language requirement.",
+      "level": "AMTS",
+      "evidence": "firsthand",
+      "region": "India"
+    },
+    {
+      "id": "swe-sf-jan-2026",
+      "title": "San Francisco: coding screens and a conversational final round",
+      "role": "Software engineering; exact level not stated",
+      "level": "Unspecified",
+      "location": "San Francisco, USA",
+      "region": "USA",
+      "interviewDate": "2026-01-14",
+      "datePrecision": "Onsite date explicitly stated; post reports an offer on February 2, 2026",
+      "sourceUrl": "https://www.reddit.com/r/leetcode/comments/1qw6mgp/finally_an_offer_after_9_months_of_hell/",
+      "sourceType": "First-person community report (anonymous Reddit author)",
+      "evidence": "firsthand",
+      "reportedRounds": [
+        "OA followed by a manager conversation combining background and technical problem solving.",
+        "Two engineer interviews included binary search/sorting and a modulo-based encoding problem.",
+        "A roughly 90-minute onsite with an engineering leader mixed behavioral discussion and real team engineering problems. The candidate reports receiving an offer."
+      ],
+      "takeaway": "Practice switching from code to an engineering conversation: clarify the real problem, explain assumptions, compare alternatives, and defend one decision.",
+      "rehearsalPrompt": "In 90 seconds, explain a production incident you worked on. Then spend five minutes answering how you diagnosed it, what you changed, and what you would monitor next.",
+      "caveat": "Anonymous and independently unverified. Exact role level and team are not stated; this final-round format is not a promise for another San Francisco role."
+    },
+    {
+      "id": "smts-dec-2025",
+      "title": "SMTS: whiteboard metrics design and music-service LLD",
+      "role": "SMTS / software engineer",
+      "location": "Not stated; an in-office round is reported",
+      "interviewDate": "2025-12",
+      "datePrecision": "First round explicitly described as the first week of December 2025; later onsite day unspecified",
+      "sourceUrl": "https://leetcode.com/discuss/post/7455964/",
+      "sourceType": "First-person community report (anonymous)",
+      "reportedRounds": [
+        "First round combined behavior questions with enumeration of weekly work-hour strings that meet a target sum.",
+        "In-office whiteboard round: a metrics-collection system HLD and music-service class diagrams.",
+        "Follow-ups included password-storage knowledge.",
+        "Author reports rejection and reflects that their system-design answers lacked practical depth."
+      ],
+      "takeaway": "Practice operational explanations: data volume, ingestion, aggregation, retention, failure modes, and security. Diagrams need defensible reasoning.",
+      "rehearsalPrompt": "Explain a metrics pipeline in eight minutes. Pick a write path, quantify load, and defend how you handle backpressure, duplicates, retention, and an unavailable downstream service.",
+      "caveat": "Self-assessment does not prove why the employer rejected the candidate. Location and exact onsite date are not supplied.",
+      "level": "SMTS",
+      "evidence": "firsthand",
+      "region": "Unspecified"
+    },
+    {
+      "id": "lmts-india-sep-2025",
+      "title": "LMTS backend: connection pool and distributed-systems depth",
+      "role": "LMTS / Lead Software Engineer, Backend / Distributed Systems; author reports approximately 10.3 years' experience",
+      "location": "India; city not stated",
+      "interviewDate": "2025-09",
+      "datePrecision": "Month stated in title; exact interview/publication day unavailable",
+      "sourceUrl": "https://leetcode.com/discuss/post/7333207/salesforce-lmts-india-interview-experien-bb2k/",
+      "sourceType": "First-person community report (anonymous)",
+      "reportedRounds": [
+        "75-minute OA with heap and DP/sorting reasoning.",
+        "Virtual DSA included stack implementations and a project challenge.",
+        "LLD asked for a connection pool with acquisition, return/close, bounded capacity, timeout, and concurrent callers.",
+        "In-person HLD: marketing campaigns with distributed transactions, scaling, failure recovery, and saga discussion.",
+        "Manager round deeply explored current architecture, leadership, and mentoring. Author reports an offer."
+      ],
+      "takeaway": "Use a drawing to establish shared understanding, state concurrency invariants, and make implementation trade-offs explicit before moving on.",
+      "rehearsalPrompt": "Design a bounded connection pool. Narrate its lifecycle, timeout behavior, double-return protection, and concurrent access, then explain a deliberate time-versus-complexity trade-off.",
+      "caveat": "Lead-level India anecdote; its depth and format should not be assumed for every level. The candidate's complexity claims and concurrency implementation were not independently verified.",
+      "level": "LMTS",
+      "evidence": "firsthand",
+      "region": "India"
+    },
+    {
+      "id": "lmts-apr-2025",
+      "title": "LMTS: job scheduling and a zero-downtime cache migration",
+      "role": "LMTS / software engineer",
+      "location": "Not stated",
+      "interviewDate": "2025-04",
+      "datePrecision": "Month stated in title; exact interview/publication day unavailable",
+      "sourceUrl": "https://leetcode.com/discuss/post/6857467/",
+      "sourceType": "First-person community report (anonymous)",
+      "reportedRounds": [
+        "75-minute OA and DSA involving array queries/reordering.",
+        "Job-scheduler LLD covered creation, persistence, dispatch, and execution.",
+        "HLD addressed migration from Memcached to Redis with consistency, fallback, and rollout.",
+        "An 80-minute manager round reportedly mixed a deletion-tolerant palindrome, distributed priority queue, and ownership/collaboration discussion.",
+        "Author reports receiving and declining an offer."
+      ],
+      "takeaway": "Design answers should cover rollout, observability, consistency, and rollback, alongside the steady-state architecture.",
+      "rehearsalPrompt": "Pitch a zero-downtime cache migration in seven minutes. Define success metrics, compare transition strategies, explain stale-read risks, and specify rollback triggers.",
+      "caveat": "Anonymous lead-level anecdote. The post's broad statement about final interviews being in-house is not sufficient to establish a company-wide rule.",
+      "level": "LMTS",
+      "evidence": "firsthand",
+      "region": "Unspecified"
+    },
+    {
+      "id": "official-onsite-guidance",
+      "title": "Official: narrate decisions and demonstrate collaboration",
+      "role": "Engineering candidates (general guidance)",
+      "location": "General; recruiter confirms local format",
+      "interviewDate": null,
+      "datePrecision": "Undated official Trailhead guidance; reviewed 2026-10-10",
+      "sourceUrl": "https://trailhead.salesforce.com/content/learn/modules/strategies-for-successful-software-engineer-interviews/own-your-onsite-interview",
+      "sourceType": "Official Salesforce Trailhead",
+      "reportedRounds": [
+        "The guidance describes technical and behavioral conversations with engineers and a hiring manager, often including whiteboard work.",
+        "It explicitly recommends asking clarifying questions, thinking aloud, explaining decisions, and preparing examples of individual and team strengths.",
+        "It also describes adapting to panel changes and preparing questions for interviewers."
+      ],
+      "takeaway": "Make the reasoning visible: clarify, propose, compare, implement, validate, and connect decisions to requirements.",
+      "rehearsalPrompt": "Ask a mock interviewer to interrupt with a new constraint. Restate the change, revise your approach, and explain why the revision meets it.",
+      "caveat": "An undated learning module describes a general process; exact panel size, whiteboard format, and ordering may differ from the candidate's current recruiter-confirmed loop.",
+      "level": "Official",
+      "evidence": "official",
+      "region": "Global"
+    },
+    {
+      "id": "official-interview-tips-2025",
+      "title": "Official: rehearse STAR stories and engage thoughtfully",
+      "role": "All Salesforce candidates",
+      "location": "General",
+      "interviewDate": null,
+      "datePrecision": "Official article publication date explicitly shown as 2025-08-13; reviewed 2026-10-10",
+      "sourceUrl": "https://www.salesforce.com/blog/salesforce-candidate-interview-tips/",
+      "sourceType": "Official Salesforce recruiting blog (Amanda Norton)",
+      "reportedRounds": [
+        "General candidate guidance rather than a round-by-round experience.",
+        "Match preparation to the job description, rehearse your delivery, organize experiences with STAR, and demonstrate a learning mindset when receiving feedback.",
+        "Prepare informed questions about the role, team, and AI."
+      ],
+      "takeaway": "Prepare short stories with a specific personal action and a verifiable outcome; rehearse aloud until they sound conversational.",
+      "rehearsalPrompt": "Answer 'Tell me about a disagreement' in two minutes using situation, task, action, and result. Follow with what you changed afterward.",
+      "caveat": "General official advice, not a guaranteed engineering interview rubric. The article also says AI use during interviews requires a specific interviewer prompt and asks candidates not to record or transcribe interviews.",
+      "level": "Official",
+      "evidence": "official",
+      "region": "Global"
+    }
+  ],
+  "editorialNotes": [
+    "Dates on anecdotes are reported interview dates, not asserted publication dates.",
+    "Community reports are self-reported and independently unverified; use them as practice prompts, not forecasts or verified company policy.",
+    "Coverage is weighted toward India because recent detailed accessible reports are from India. No team names were supplied in the selected reports.",
+    "Exclude the April 2026 Reddit eight-round post from premium curated content: placeholder location and promotional guide link reduce editorial confidence.",
+    "Avoid universal round counts, guaranteed question claims, unverified OA cut-offs, compensation promises, and source authors' unverified algorithm-complexity claims."
+  ],
+  "$schema": "./schema/experiences.schema.json"
+}

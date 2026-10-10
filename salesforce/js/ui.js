@@ -30,14 +30,28 @@
     return select;
   }
 
+  // Flush only dirty notes, including text entered just before navigation.
+  let pendingNotes = new Set();
+  const flushNotes = () => [...pendingNotes].forEach((flush) => flush());
+  window.addEventListener('pagehide', flushNotes);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushNotes(); });
+
   function notesBox(id, placeholder = 'Your notes') {
-    const area = el('textarea', { class: 'field notes', rows: '3', placeholder, 'aria-label': placeholder });
+    const area = el('textarea', { class: 'field notes', rows: '3', maxlength: '100000', placeholder, 'aria-label': placeholder });
     area.value = store.get('notes', id, '');
-    let timer;
+    let handle;
+    const flush = () => {
+      if (!pendingNotes.has(flush)) return;
+      clearTimeout(handle);
+      store.set('notes', id, area.value.trim() ? area.value : null);
+      pendingNotes = new Set([...pendingNotes].filter((entry) => entry !== flush));
+    };
     area.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => store.set('notes', id, area.value.trim() ? area.value : null), 400);
+      clearTimeout(handle);
+      pendingNotes = new Set([...pendingNotes, flush]);
+      handle = setTimeout(flush, 400);
     });
+    area.addEventListener('blur', flush);
     return area;
   }
 
@@ -75,49 +89,74 @@
 
   // Search plus selects. Calls onChange({ q, [key]: value }) on every edit.
   function filterBar({ placeholder = 'Search', selects = [], toggles = [], onChange }) {
-    const state = { q: '' };
+    let state = { q: '' };
+    const update = (patch) => { state = { ...state, ...patch }; onChange({ ...state }); };
     const search = el('input', { class: 'field', type: 'search', placeholder, 'aria-label': placeholder });
-    search.addEventListener('input', () => { state.q = search.value.trim().toLowerCase(); onChange({ ...state }); });
+    search.addEventListener('input', () => update({ q: search.value.trim().toLowerCase() }));
     const selectNodes = selects.map(({ key, label, options }) => {
-      state[key] = '';
+      state = { ...state, [key]: '' };
       const s = el('select', { class: 'field', 'aria-label': label },
         el('option', { value: '' }, label), options.map((o) => el('option', { value: o.id }, o.label)));
-      s.addEventListener('change', () => { state[key] = s.value; onChange({ ...state }); });
+      s.addEventListener('change', () => update({ [key]: s.value }));
       return s;
     });
-    const toggleNodes = toggles.map(({ key, label }) => {
-      state[key] = false;
-      return el('label', { class: 'check check-pill' },
-        el('input', { type: 'checkbox', onchange: (e) => { state[key] = e.target.checked; onChange({ ...state }); } }),
-        el('span', {}, label));
+    const toggleInputs = toggles.map(({ key }) => {
+      state = { ...state, [key]: false };
+      return el('input', { type: 'checkbox', onchange: (e) => update({ [key]: e.target.checked }) });
     });
-    return el('div', { class: 'toolbar', role: 'search' }, search, selectNodes, toggleNodes);
+    const toggleNodes = toggles.map(({ label }, i) => el('label', { class: 'check check-pill' }, toggleInputs[i], el('span', {}, label)));
+    const toolbar = el('div', { class: 'toolbar', role: 'search' }, search, selectNodes, toggleNodes);
+    toolbar.resetFilters = () => {
+      search.value = '';
+      selectNodes.forEach((select) => { select.value = ''; });
+      toggleInputs.forEach((input) => { input.checked = false; });
+      state = Object.fromEntries(Object.entries(state).map(([key, value]) => [key, typeof value === 'boolean' ? false : '']));
+      onChange({ ...state });
+    };
+    return toolbar;
   }
 
-  // Countdown. Returns { node, start, stop, reset }. onEnd fires once at zero.
+  // Use a deadline so background tabs and delayed ticks count real elapsed time.
   function timer(minutes, onEnd) {
-    let left = minutes * 60;
-    const lowAt = Math.min(300, minutes * 60 * 0.2); // last 20%, capped at 5 min
+    const duration = Math.round(Number(minutes) * 60000);
+    if (!Number.isFinite(duration) || duration <= 0) throw new Error('Timer duration must be positive.');
+    let remaining = duration;
+    let deadline = null;
     let handle = null;
+    let ended = false;
+    const lowAt = Math.min(300000, duration * 0.2);
     const face = el('span', { class: 'timer-face', role: 'timer', 'aria-live': 'off' });
     const paint = () => {
-      const m = Math.floor(left / 60);
-      const s = left % 60;
-      face.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-      face.classList.toggle('is-low', left <= lowAt);
+      const seconds = Math.ceil(remaining / 1000);
+      face.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+      face.classList.toggle('is-low', remaining <= lowAt);
     };
-    const stop = () => { clearInterval(handle); handle = null; toggle.textContent = 'Start'; };
+    const stop = () => {
+      if (deadline !== null) remaining = Math.max(0, deadline - Date.now());
+      deadline = null;
+      clearInterval(handle);
+      handle = null;
+      document.removeEventListener('visibilitychange', tick);
+      toggle.textContent = remaining <= 0 ? 'Done' : 'Start';
+      paint();
+    };
+    const tick = () => {
+      if (deadline === null) return;
+      remaining = Math.max(0, deadline - Date.now());
+      paint();
+      if (remaining > 0) return;
+      stop();
+      if (!ended) { ended = true; onEnd?.(); }
+    };
     const start = () => {
-      if (handle || left <= 0) return;
+      if (handle !== null || remaining <= 0) return;
+      deadline = Date.now() + remaining;
       toggle.textContent = 'Pause';
-      handle = setInterval(() => {
-        left -= 1;
-        paint();
-        if (left <= 0) { stop(); onEnd?.(); }
-      }, 1000);
+      handle = setInterval(tick, 250);
+      document.addEventListener('visibilitychange', tick);
     };
-    const reset = () => { stop(); left = minutes * 60; paint(); };
-    const toggle = el('button', { class: 'btn btn-sm', type: 'button', onclick: () => (handle ? stop() : start()) }, 'Start');
+    const reset = () => { stop(); remaining = duration; ended = false; toggle.textContent = 'Start'; paint(); };
+    const toggle = el('button', { class: 'btn btn-sm', type: 'button', onclick: () => (handle !== null ? stop() : start()) }, 'Start');
     paint();
     return { node: el('div', { class: 'timer' }, face, toggle, el('button', { class: 'btn btn-sm', type: 'button', onclick: reset }, 'Reset')), start, stop, reset };
   }

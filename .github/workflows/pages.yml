@@ -22,6 +22,25 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate interview content and browser runtime
+        run: |
+          node salesforce/scripts/check.mjs
+          node salesforce/scripts/test_runtime.mjs
+          node salesforce/scripts/test_delivery.mjs
+          node salesforce/scripts/test_experiences.mjs
+      - name: Verify coding reference solutions
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python3 salesforce/scripts/test_solutions.py
+          python3 salesforce/scripts/test_rate_limiter.py
+          python3 salesforce/scripts/test_lld_regressions.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
