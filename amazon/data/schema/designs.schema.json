@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "designs.schema.json",
+  "title": "Whiteboard framework and practice designs",
+  "type": "object",
+  "required": ["whiteboard_minutes", "status_options", "framework", "designs"],
+  "properties": {
+    "whiteboard_minutes": { "type": "integer", "minimum": 1 },
+    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"] } },
+    "framework": { "type": "array", "items": { "type": "object", "required": ["id", "step", "minutes", "prompts"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "step": { "$ref": "common.schema.json#/$defs/text" }, "minutes": { "type": "integer" }, "prompts": { "$ref": "common.schema.json#/$defs/textList" }, "differentiator": { "type": "boolean" } } } },
+    "designs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "prompt", "clarifying", "requirements", "components", "flow", "tradeoff", "failure_modes", "diagram"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "title": { "$ref": "common.schema.json#/$defs/text" },
+          "prompt": { "$ref": "common.schema.json#/$defs/text" },
+          "story": { "type": "string", "description": "behavioral.stories[].id" },
+          "clarifying": { "$ref": "common.schema.json#/$defs/textList" },
+          "requirements": { "type": "object", "required": ["functional", "non_functional"] },
+          "components": { "type": "array", "items": { "type": "object", "required": ["name", "role"] } },
+          "flow": { "$ref": "common.schema.json#/$defs/textList" },
+          "scale": { "$ref": "common.schema.json#/$defs/textList" },
+          "security": { "$ref": "common.schema.json#/$defs/textList" },
+          "cost": { "$ref": "common.schema.json#/$defs/textList" },
+          "tradeoff": { "$ref": "common.schema.json#/$defs/text" },
+          "failure_modes": { "type": "array", "items": { "type": "object", "required": ["failure", "mitigation"] } },
+          "followups": { "$ref": "common.schema.json#/$defs/textList" },
+          "diagram": { "$ref": "common.schema.json#/$defs/mermaid" }
+        }
+      }
+    }
+  }
+}

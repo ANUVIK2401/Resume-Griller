@@ -34,6 +34,8 @@ jobs:
           node salesforce/scripts/test_runtime.mjs
           node salesforce/scripts/test_delivery.mjs
           node salesforce/scripts/test_experiences.mjs
+          node amazon/scripts/check.mjs
+          node amazon/scripts/test_practice.mjs
       - name: Verify coding reference solutions
         env:
           PYTHONDONTWRITEBYTECODE: '1'

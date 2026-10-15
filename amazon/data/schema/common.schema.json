@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable kebab-case id. Progress in localStorage is keyed by it, so never rename one that has progress." },
+    "text": { "type": "string", "minLength": 1, "not": { "pattern": "[\u2013\u2014]" }, "description": "Copy. No em or en dashes." },
+    "textList": { "type": "array", "items": { "$ref": "#/$defs/text" } },
+    "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "difficulty": { "enum": ["easy", "medium", "hard"] },
+    "mermaid": { "type": "string", "description": "Mermaid source, rendered client side." },
+    "code": { "type": "string", "description": "Source code, shown verbatim." },
+    "url": { "type": "string", "format": "uri" }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "site.schema.json",
+  "title": "Site navigation and page headers",
+  "type": "object",
+  "required": ["title", "pages"],
+  "properties": {
+    "title": { "$ref": "common.schema.json#/$defs/text" },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "href", "label", "prompt", "title", "accent", "lede"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "href": { "type": "string" },
+          "label": { "$ref": "common.schema.json#/$defs/text" },
+          "prompt": { "type": "string", "description": "Terminal-style eyebrow above the title." },
+          "title": { "$ref": "common.schema.json#/$defs/text" },
+          "accent": { "$ref": "common.schema.json#/$defs/text", "description": "Last words of the title, set in gold." },
+          "lede": { "$ref": "common.schema.json#/$defs/text" }
+        }
+      }
+    }
+  }
+}

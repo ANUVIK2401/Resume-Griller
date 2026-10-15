@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aws.schema.json",
+  "title": "AWS glossary, frameworks, and resume mapping",
+  "type": "object",
+  "required": ["mental_model", "status_options", "categories", "services", "pillars", "seven_rs", "dr_tiers", "shared_responsibility", "resume_map"],
+  "properties": {
+    "mental_model": { "$ref": "common.schema.json#/$defs/text" },
+    "verify_note": { "$ref": "common.schema.json#/$defs/text" },
+    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"] } },
+    "categories": { "type": "array", "items": { "type": "object", "required": ["id", "name"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "name": { "type": "string" } } } },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "category", "name", "one_liner", "use_when", "avoid_when"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "category": { "type": "string", "description": "categories[].id" },
+          "name": { "$ref": "common.schema.json#/$defs/text" },
+          "one_liner": { "$ref": "common.schema.json#/$defs/text" },
+          "use_when": { "$ref": "common.schema.json#/$defs/text" },
+          "avoid_when": { "$ref": "common.schema.json#/$defs/text" }
+        }
+      }
+    },
+    "pillars": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "type": "object", "required": ["id", "name", "question", "practices", "tie"] } },
+    "seven_rs": { "type": "array", "minItems": 7, "maxItems": 7, "items": { "type": "object", "required": ["id", "name", "what", "example"] } },
+    "dr_tiers": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "object", "required": ["id", "name", "rpo", "rto", "cost", "how"] } },
+    "dr_terms": { "type": "array", "items": { "type": "object", "required": ["term", "meaning"] } },
+    "shared_responsibility": { "type": "object", "required": ["aws", "customer", "note"] },
+    "other_frameworks": { "type": "array", "items": { "type": "object", "required": ["name", "what"] } },
+    "resume_map": { "type": "array", "items": { "type": "object", "required": ["you_did", "aws", "story"], "properties": { "you_did": { "$ref": "common.schema.json#/$defs/text" }, "aws": { "$ref": "common.schema.json#/$defs/text" }, "story": { "type": ["string", "null"], "description": "behavioral.stories[].id" } } } }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "questions.schema.json",
+  "title": "Question bank: openers (A), LP questions (B), rapid fire (C), role-play (E), questions to ask (F). Designs (D) live in designs.json.",
+  "type": "object",
+  "required": ["status_options", "openers", "lp_questions", "rapid_fire", "roleplay_rules", "roleplays", "ask"],
+  "properties": {
+    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"] } },
+    "openers": { "type": "array", "items": { "type": "object", "required": ["id", "q", "outline"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "q": { "$ref": "common.schema.json#/$defs/text" }, "outline": { "$ref": "common.schema.json#/$defs/textList" } } } },
+    "lp_questions": { "type": "array", "items": { "type": "object", "required": ["id", "lp", "q"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "lp": { "type": "string", "description": "behavioral.lps[].id" }, "q": { "$ref": "common.schema.json#/$defs/text" } } } },
+    "rapid_fire": { "type": "array", "items": { "type": "object", "required": ["id", "q", "a"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "q": { "$ref": "common.schema.json#/$defs/text" }, "a": { "$ref": "common.schema.json#/$defs/text" } } } },
+    "roleplay_rules": { "$ref": "common.schema.json#/$defs/textList" },
+    "roleplays": { "type": "array", "items": { "type": "object", "required": ["id", "title", "audience", "opening", "discovery", "options", "close"] } },
+    "ask": { "type": "array", "items": { "type": "object", "required": ["q", "why"] } }
+  }
+}

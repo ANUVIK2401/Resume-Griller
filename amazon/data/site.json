@@ -1,0 +1,60 @@
+{
+  "$schema": "./schema/site.schema.json",
+  "title": "AWS SA prep",
+  "pages": [
+    {
+      "id": "home",
+      "href": "index.html",
+      "label": "Loop",
+      "prompt": "AWSI EMERGING TALENT, SOLUTIONS ARCHITECT",
+      "title": "Amazon SA",
+      "accent": "loop",
+      "lede": "Thirteen days to the on-campus loop. One plan per day, a checklist per round, and a countdown that keeps you honest."
+    },
+    {
+      "id": "behavioral",
+      "href": "behavioral.html",
+      "label": "Leadership Principles",
+      "prompt": "~/prep/lp --rehearse",
+      "title": "Stories and",
+      "accent": "principles",
+      "lede": "A 60-second pitch, twelve STAR stories mapped to all 16 Leadership Principles, and the three gaps to close before the loop."
+    },
+    {
+      "id": "aws",
+      "href": "aws.html",
+      "label": "AWS glossary",
+      "prompt": "~/prep/aws --flashcards",
+      "title": "AWS in",
+      "accent": "one line each",
+      "lede": "Every service you might draw, what it is, when to pick it, and when not to. Then the frameworks every SA quotes."
+    },
+    {
+      "id": "design",
+      "href": "design.html",
+      "label": "Whiteboard",
+      "prompt": "~/prep/design --whiteboard",
+      "title": "Whiteboard",
+      "accent": "architectures",
+      "lede": "One framework said out loud, six practice designs with the answer hidden until you have tried."
+    },
+    {
+      "id": "questions",
+      "href": "questions.html",
+      "label": "Questions",
+      "prompt": "~/prep/questions --rapid-fire",
+      "title": "Questions and",
+      "accent": "role-play",
+      "lede": "Openers, a rapid-fire technical quiz, an LP question randomizer, customer role-plays, and what to ask them."
+    },
+    {
+      "id": "mock",
+      "href": "mock.html",
+      "label": "Mock round",
+      "prompt": "~/prep/mock --45min",
+      "title": "Mock",
+      "accent": "round",
+      "lede": "Two Leadership Principle questions and one technical question under a timer, then an honest self-score."
+    }
+  ]
+}

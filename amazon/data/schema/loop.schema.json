@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "loop.schema.json",
+  "title": "Amazon loop: rounds, the day-by-day plan, logistics. UI edits to status and dates override the defaults in localStorage.",
+  "type": "object",
+  "required": ["req", "event", "status_options", "stages", "plan", "logistics"],
+  "properties": {
+    "req": {
+      "type": "object", "required": ["id", "title", "company"],
+      "properties": { "id": { "type": "string" }, "title": { "$ref": "common.schema.json#/$defs/text" }, "company": { "type": "string" }, "source": { "type": "string" } }
+    },
+    "event": {
+      "type": "object", "required": ["date", "confirmed", "note"],
+      "properties": { "date": { "type": "string", "description": "ISO local datetime of the on-campus loop" }, "confirmed": { "type": "boolean" }, "location": { "type": "string" }, "note": { "$ref": "common.schema.json#/$defs/text" } }
+    },
+    "structure_note": { "$ref": "common.schema.json#/$defs/text" },
+    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"], "properties": { "id": { "$ref": "#/$defs/status" }, "label": { "type": "string" } } } },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "title", "format", "default_status", "lead_stories", "prep_pages", "checklist"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "order": { "type": "integer", "minimum": 1 },
+          "title": { "$ref": "common.schema.json#/$defs/text" },
+          "format": { "$ref": "common.schema.json#/$defs/text" },
+          "duration_min": { "type": ["integer", "null"] },
+          "location": { "type": "string" },
+          "default_status": { "$ref": "#/$defs/status" },
+          "default_date": { "type": ["string", "null"] },
+          "note": { "type": "string" },
+          "lead_stories": { "type": "array", "items": { "type": "string", "description": "behavioral.stories[].id" } },
+          "prep_pages": { "type": "array", "items": { "type": "string", "description": "site.pages[].id" } },
+          "checklist": { "$ref": "#/$defs/checks" }
+        }
+      }
+    },
+    "plan": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "date", "focus", "tasks"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "date": { "type": "string", "format": "date" },
+          "focus": { "$ref": "common.schema.json#/$defs/text" },
+          "tasks": { "type": "array", "items": { "type": "object", "required": ["id", "text"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "text": { "$ref": "common.schema.json#/$defs/text" }, "page": { "type": "string", "description": "site.pages[].id" } } } }
+        }
+      }
+    },
+    "logistics": { "$ref": "common.schema.json#/$defs/textList" }
+  },
+  "$defs": {
+    "status": { "enum": ["not_started", "scheduled", "done", "passed"] },
+    "checks": { "type": "array", "items": { "type": "object", "required": ["id", "text"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "text": { "$ref": "common.schema.json#/$defs/text" } } } }
+  }
+}

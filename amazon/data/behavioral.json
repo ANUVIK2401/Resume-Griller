@@ -1,0 +1,365 @@
+{
+  "$schema": "./schema/behavioral.schema.json",
+  "rules": [
+    "60 to 90 seconds per story. Answer first, then context.",
+    "One decision you owned, one number, then stop and let them probe.",
+    "Say \"I\", not \"we\". Credit the team in one clause, then say what you did.",
+    "Oracle tenure is spoken as \"nearly 3 years\".",
+    "Do not reuse one story more than twice across the whole loop."
+  ],
+  "status_options": [
+    { "id": "draft", "label": "Draft" },
+    { "id": "rehearsing", "label": "Rehearsing" },
+    { "id": "ready", "label": "Ready" }
+  ],
+  "pitch": {
+    "target_sec": 60,
+    "beats": [
+      { "label": "Who", "text": "I'm Anuvik, finishing my MS in computer science at USC in December. Before USC I spent nearly 3 years at Oracle as a Software Engineer II on NSX, running observability and incident response for 37,000+ enterprise tenants." },
+      { "label": "Proof", "text": "The work I'm proudest of there: real-time API diagnostics that cut P1 MTTR from 94 to 26 minutes, because on-call engineers started with a likely root cause instead of a blank screen." },
+      { "label": "Customer", "text": "This summer at MSRcosmos I was forward deployed with a client moving financial records from Sage X3 to Sage Intacct across 12 entities, each on its own cloud. I built a multi-agent system with a human review step, and turnaround went from 3 days to 5.5 hours." },
+      { "label": "Why SA", "text": "That was my favorite work: sitting with the customer, understanding an audit constraint, and designing around it. That is the Solutions Architect job, and I want to do it at AWS scale." }
+    ],
+    "closing_line": "I want to be the person between a customer's problem and the right architecture."
+  },
+  "lps": [
+    { "id": "customer-obsession", "name": "Customer Obsession", "meaning": "Start with the customer and work backwards; earn and keep their trust.", "primary": "erp-hitl", "backup": "pacsun-exec" },
+    { "id": "ownership", "name": "Ownership", "meaning": "Act on behalf of the whole company and the long term; never say that is not my job.", "primary": "erp-hitl", "backup": "p1-mttr" },
+    { "id": "invent-and-simplify", "name": "Invent and Simplify", "meaning": "Expect and find new ways; make the complex simple.", "primary": "cli-toolchain", "backup": "trust-hitl" },
+    { "id": "are-right-a-lot", "name": "Are Right, A Lot", "meaning": "Strong judgment and good instincts; seek diverse views and try to disprove your own beliefs.", "primary": "slo-alerting", "backup": "modelscope" },
+    { "id": "learn-and-be-curious", "name": "Learn and Be Curious", "meaning": "Never done learning; explore new possibilities.", "primary": "learn-langgraph", "backup": "modelscope" },
+    { "id": "hire-and-develop", "name": "Hire and Develop the Best", "meaning": "Raise the bar and help other people grow.", "primary": "cli-toolchain", "backup": null, "gap": "mentoring" },
+    { "id": "highest-standards", "name": "Insist on the Highest Standards", "meaning": "Keep raising the bar; do not pass defects downstream.", "primary": "erp-hitl", "backup": "k8s-autoscaling" },
+    { "id": "think-big", "name": "Think Big", "meaning": "Set a bold direction that inspires results.", "primary": "pacsun-exec", "backup": "p1-mttr" },
+    { "id": "bias-for-action", "name": "Bias for Action", "meaning": "Speed matters; many decisions are reversible, so take calculated risks.", "primary": "p1-mttr", "backup": "dqn-stall" },
+    { "id": "frugality", "name": "Frugality", "meaning": "Accomplish more with less; constraints breed invention.", "primary": "modelscope", "backup": "netsuite-latency" },
+    { "id": "earn-trust", "name": "Earn Trust", "meaning": "Listen, speak candidly, admit mistakes, and treat others respectfully.", "primary": "erp-hitl", "backup": "cli-toolchain" },
+    { "id": "dive-deep", "name": "Dive Deep", "meaning": "Stay connected to the details; no task is beneath you.", "primary": "netsuite-latency", "backup": "dqn-stall" },
+    { "id": "have-backbone", "name": "Have Backbone; Disagree and Commit", "meaning": "Challenge decisions respectfully, then commit fully once decided.", "primary": null, "backup": null, "gap": "disagreement" },
+    { "id": "deliver-results", "name": "Deliver Results", "meaning": "Focus on the key inputs and deliver them with quality and on time.", "primary": "p1-mttr", "backup": "databricks-feed", "gap": "failure" },
+    { "id": "best-employer", "name": "Strive to be Earth's Best Employer", "meaning": "Make the work environment safer, more productive, and more fulfilling for people.", "primary": "cli-toolchain", "backup": "slo-alerting" },
+    { "id": "broad-responsibility", "name": "Success and Scale Bring Broad Responsibility", "meaning": "Think about second-order effects on people and society; act responsibly.", "primary": "trust-hitl", "backup": "erp-hitl" }
+  ],
+  "gaps": [
+    {
+      "id": "failure",
+      "name": "Failure or mistake",
+      "lps": ["deliver-results", "earn-trust", "are-right-a-lot"],
+      "asked_as": ["Tell me about a time you failed.", "A time you missed a deadline.", "A time your judgment was wrong."],
+      "seeds": "Look at Oracle deploys before the CLI toolchain existed, or an early MSRcosmos agent run that produced a wrong result.",
+      "template": {
+        "s": "What did I own that went wrong, and who felt it?",
+        "t": "What was I on the hook for when it broke?",
+        "a": "What did I do in the first hour, and what did I change so it could not repeat the same way?",
+        "r": "The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse."
+      }
+    },
+    {
+      "id": "disagreement",
+      "name": "Disagreement (Have Backbone)",
+      "lps": ["have-backbone"],
+      "asked_as": ["Tell me about a time you disagreed with your manager.", "A time you disagreed with a customer.", "A time you committed to a decision you disagreed with."],
+      "seeds": "Build from S3 (moving alerts from static thresholds to SLOs) or S4 (a team resisting the CLI validation gate). Use a real disagreement only.",
+      "template": {
+        "s": "Who did I disagree with, about which technical decision?",
+        "t": "What was at stake, and who owned the decision?",
+        "a": "How did I understand their view first, what data did I bring, and how was it decided?",
+        "r": "What shipped. If I lost, how I committed fully anyway. What I learned about disagreeing well."
+      }
+    },
+    {
+      "id": "mentoring",
+      "name": "Mentoring (Hire and Develop)",
+      "lps": ["hire-and-develop"],
+      "asked_as": ["Tell me about a time you helped someone grow.", "How have you raised the bar on your team?"],
+      "seeds": "A new teammate, a lab member, an on-call engineer using your runbooks, or an engineer on one of the 4 teams adopting the CLI toolchain.",
+      "template": {
+        "s": "Who did I help ramp up, and where were they starting from?",
+        "t": "What did they need to be able to do, and by when?",
+        "a": "How did I teach it: pairing, docs, reviews? One specific thing I did.",
+        "r": "What they could do on their own afterward. A concrete outcome."
+      }
+    }
+  ],
+  "stories": [
+    {
+      "id": "erp-hitl",
+      "code": "S1",
+      "title": "Multi-agent ERP migration with human-in-the-loop",
+      "experience_id": "msrcosmos",
+      "lead": true,
+      "lps": ["customer-obsession", "ownership", "earn-trust", "highest-standards", "broad-responsibility"],
+      "number_ids": ["msr-records", "msr-entities", "msr-cycle-before", "msr-cycle-after", "msr-reconciliation", "msr-auto-approved"],
+      "s": "A client was moving 10,000+ GL, AP, and AR records from Sage X3 to Sage Intacct across 12 entities, each on its own cloud. Reconciliation was manual and took about 3 days per cycle.",
+      "t": "As the sole engineer on it, automate the reconciliation without letting a single silent financial error through.",
+      "a": [
+        "I built a multi-agent system on the Claude API and LangGraph and containerized it with Docker so the same image ran on AWS, Azure, and GCP.",
+        "I chose LangGraph for explicit state and checkpoints, so every agent decision left an audit trail.",
+        "I added field-level reconciliation checks and a confidence score per record: above the threshold it auto-approves, below it goes to a human reviewer through Sage REST APIs and MCP tool calls."
+      ],
+      "r": "Manual reconciliation dropped 68%, 83% of records auto-approved, and turnaround went from 3 days to 5.5 hours.",
+      "twist": "This is the SA job in miniature: understand a customer's business constraint (audit compliance), design around it, and earn trust by keeping a human in the loop.",
+      "aws": "Bedrock running Claude for the agents, Step Functions for state, retries, and the human-review wait (task token), S3 for staging, Lambda functions as tools, DynamoDB for the audit trail.",
+      "probes": [
+        { "q": "How did you set the confidence threshold?", "a": "[fill: how you chose it, for example precision on a hand-labeled sample]. The principle: start conservative and lower it only when reviewers stop correcting auto-approved records." },
+        { "q": "What happened when the model was confidently wrong?", "a": "The field-level checks run regardless of confidence, so a confident answer that fails a check still goes to a human. [fill: a real example if you have one]" },
+        { "q": "What did it cost per record?", "a": "[fill: tokens or dollars per record if you measured it]. If you did not measure it, say so, then explain how: tokens per call times calls per record, against reviewer minutes saved." },
+        { "q": "How would you build it on AWS only?", "a": "Bedrock for the model, Step Functions for the workflow with a task-token wait for review, S3 for staging, Lambda tools, DynamoDB for decisions and audit, CloudWatch for monitoring." }
+      ]
+    },
+    {
+      "id": "p1-mttr",
+      "code": "S2",
+      "title": "P1 MTTR from 94 to 26 minutes",
+      "experience_id": "oracle",
+      "lead": true,
+      "lps": ["deliver-results", "bias-for-action", "ownership", "think-big"],
+      "number_ids": ["oracle-tenants", "oracle-endpoints", "oracle-mttr-before", "oracle-mttr-after", "oracle-mttr-pct"],
+      "s": "NSX served 37,000+ enterprise tenants. During P1 incidents, on-call engineers searched event streams across 1M+ endpoints by hand, and P1s averaged 94 minutes to resolve.",
+      "t": "Cut the time from page to diagnosis.",
+      "a": [
+        "I instrumented real-time API diagnostics on the high-throughput event streams.",
+        "I auto-tagged likely root causes on 400 and 500 series failures.",
+        "I attached runbook context to each tag, so the on-call engineer started with a likely cause and a next step."
+      ],
+      "r": "P1 MTTR fell from 94 to 26 minutes, a 72% cut.",
+      "twist": "Faster recovery is a customer outcome. Every minute of a P1 is a customer down.",
+      "aws": "CloudWatch Logs Insights and metric filters, X-Ray traces, EventBridge rules to tag and route, Systems Manager Automation runbooks attached to alarms.",
+      "probes": [
+        { "q": "Which signals drove the tags?", "a": "[fill: the fields you keyed on, for example status code, endpoint, tenant, recent deploy]" },
+        { "q": "Rules or a model?", "a": "[fill: rules, a model, or both]. Rules first is a defensible answer: explainable to on-call, cheap, and easy to correct." },
+        { "q": "How was MTTR measured, and over what window?", "a": "[fill: source and window, for example the incident tracker over N months before and after]" },
+        { "q": "What did you get wrong first?", "a": "[fill: a real first mistake and what you changed]" }
+      ]
+    },
+    {
+      "id": "slo-alerting",
+      "code": "S3",
+      "title": "SLO alerting, 41% fewer false pages",
+      "experience_id": "oracle",
+      "lead": false,
+      "lps": ["are-right-a-lot", "best-employer"],
+      "number_ids": ["oracle-tenants", "oracle-dashboards", "oracle-false-pages"],
+      "s": "Alerts fired on static CPU, memory, and latency thresholds across 37,000+ tenants, so on-call was paged for noise.",
+      "t": "Make every page mean something.",
+      "a": [
+        "I rebuilt the Prometheus and Grafana stack around SLOs for CPU, memory, and p99 latency instead of static thresholds.",
+        "I shipped 47 dashboards and alert rules."
+      ],
+      "r": "False-positive pages dropped 41%.",
+      "twist": "It is the same advice you give a customer on CloudWatch: alert on user impact, not raw thresholds.",
+      "aws": "Amazon Managed Service for Prometheus and Amazon Managed Grafana, CloudWatch Application Signals SLOs, composite alarms to cut noise.",
+      "probes": [
+        { "q": "How did you pick the targets?", "a": "[fill: how the SLO targets were chosen and who agreed to them]" },
+        { "q": "How did you handle cardinality across 37,000+ tenants?", "a": "[fill: how you avoided a per-tenant label explosion, for example aggregating by tier or region]" },
+        { "q": "Did you use burn-rate alerting?", "a": "[fill: yes or no]. The idea: page on a fast burn of the error budget, open a ticket on a slow burn." }
+      ]
+    },
+    {
+      "id": "cli-toolchain",
+      "code": "S4",
+      "title": "CLI validation toolchain adopted by 4 teams",
+      "experience_id": "oracle",
+      "lead": true,
+      "lps": ["invent-and-simplify", "earn-trust", "hire-and-develop", "best-employer"],
+      "number_ids": ["oracle-cli-teams", "oracle-release", "oracle-deploy-before", "oracle-deploy-after"],
+      "s": "Each NSX team validated builds its own way, so config errors reached production.",
+      "t": "As a Software Engineer II with no authority over other teams, standardize pre-deployment validation.",
+      "a": [
+        "I built a CLI toolchain on Jenkins CI/CD that ran scripted validation before every deploy, so config errors failed in CI instead of production.",
+        "I drove adoption one team at a time, starting with each team's specific pain."
+      ],
+      "r": "4 teams adopted it, release cycles got 34% shorter, and failed deploys went from 11% to 4%.",
+      "twist": "An SA drives adoption with no authority over the customer. Same skill.",
+      "aws": "CodePipeline with a CodeBuild validation stage, cfn-lint and CloudFormation Guard for templates, AWS Config rules for drift.",
+      "probes": [
+        { "q": "Who pushed back, and why?", "a": "[fill: the team and their real objection, for example slower builds]" },
+        { "q": "How did you handle team-specific needs?", "a": "[fill: per-team config or plugins]" },
+        { "q": "How did you get the other teams onboarded?", "a": "[fill: pairing, docs, a demo]. This is also your best seed for a mentoring story." }
+      ]
+    },
+    {
+      "id": "netsuite-latency",
+      "code": "S5",
+      "title": "NetSuite search latency down 30%",
+      "experience_id": "oracle",
+      "lead": true,
+      "lps": ["dive-deep", "frugality"],
+      "number_ids": ["oracle-p50-before", "oracle-p50-after", "oracle-p50-pct"],
+      "s": "NetSuite search was slow at enterprise data volumes.",
+      "t": "Find and fix the root cause without new hardware.",
+      "a": [
+        "I profiled query plans and found full scans on hot predicates.",
+        "I restructured the indexes on those predicates and rewrote the SQL."
+      ],
+      "r": "P50 page load went from 840 ms to 588 ms, a 30% improvement.",
+      "twist": "Map it to AWS advice: RDS Performance Insights and the right indexes before read replicas or bigger instances.",
+      "aws": "RDS or Aurora with Performance Insights and EXPLAIN plans; indexes first, then read replicas or ElastiCache, a bigger instance last.",
+      "probes": [
+        { "q": "How did you find the hot predicates?", "a": "[fill: the tool or query log you used]" },
+        { "q": "Did the new indexes slow writes?", "a": "Every index costs write time and storage. [fill: how you checked insert and update latency afterward]" },
+        { "q": "How did you test safely?", "a": "[fill: staging copy, canary, or rollback plan]" }
+      ]
+    },
+    {
+      "id": "k8s-autoscaling",
+      "code": "S6",
+      "title": "Kubernetes autoscaling on custom metrics",
+      "experience_id": "oracle",
+      "lead": false,
+      "lps": ["highest-standards", "are-right-a-lot"],
+      "number_ids": ["oracle-slo-peak"],
+      "s": "NSX services on OCI had to survive release surges without breaking latency SLOs.",
+      "t": "Containerize the services and scale them on the signal that actually predicts latency.",
+      "a": [
+        "I containerized NSX services with Docker and Kubernetes.",
+        "I drove horizontal autoscaling off custom Prometheus metrics instead of CPU alone."
+      ],
+      "r": "p99 SLOs held at 2x peak load through release surges.",
+      "twist": "On AWS this is EKS with the Horizontal Pod Autoscaler on custom metrics, or ECS target tracking.",
+      "aws": "EKS with HPA on custom metrics (Prometheus adapter or KEDA), Karpenter for nodes; or ECS service auto scaling with target tracking.",
+      "probes": [
+        { "q": "Which metric, and why not CPU?", "a": "[fill: the metric, for example queue depth or in-flight requests]. CPU lags the real bottleneck for I/O-bound services." },
+        { "q": "How did you handle scale-up lag?", "a": "[fill: warm pool, lower threshold, or faster images]" },
+        { "q": "How did you prevent flapping?", "a": "A stabilization window and cooldown, and scaling down more slowly than up." }
+      ]
+    },
+    {
+      "id": "learn-langgraph",
+      "code": "S7",
+      "title": "Ramping up on LangGraph and MCP fast",
+      "experience_id": "msrcosmos",
+      "lead": false,
+      "lps": ["learn-and-be-curious"],
+      "number_ids": ["msr-reconciliation"],
+      "s": "I joined MSRcosmos as a forward-deployed intern on a stack I had not used in production: LangGraph and MCP tool calling.",
+      "t": "Ship a working system for a real client in one summer.",
+      "a": [
+        "I built small prototypes first and read the LangGraph source for checkpointing.",
+        "I translated the client's ERP rules into agent task specs and wired Sage REST APIs through MCP tools."
+      ],
+      "r": "That is the system that cut manual reconciliation 68% (S1).",
+      "twist": "SAs learn a new customer's domain and a new AWS service every quarter.",
+      "aws": "Same pattern for a new AWS service: read the quotas and pricing pages, build a small hands-on prototype, then learn its failure modes.",
+      "probes": [
+        { "q": "How do you learn a new AWS service quickly?", "a": "Quotas and pricing first, then a small hands-on build, then the failure modes and the Well-Architected guidance for it." },
+        { "q": "What have you learned recently outside work?", "a": "[fill: something real and recent]" }
+      ]
+    },
+    {
+      "id": "dqn-stall",
+      "code": "S8",
+      "title": "DQN training stall, 40% faster runs",
+      "experience_id": "sports",
+      "lead": false,
+      "lps": ["dive-deep", "bias-for-action"],
+      "note": "Say \"volunteer research\" if asked about the role.",
+      "number_ids": ["sports-plays", "sports-train-before", "sports-train-after", "sports-train-pct", "sports-agree-before", "sports-agree-after"],
+      "s": "In volunteer research at USC, my DQN for NFL fourth-down calls trained over 420K plays and took 52 minutes per run, which slowed iteration.",
+      "t": "Make each experiment cheaper so I could try more ideas.",
+      "a": [
+        "I profiled the training loop.",
+        "I vectorized replay-buffer sampling and removed a data-loader stall."
+      ],
+      "r": "Runs went from 52 to 31 minutes, 40% faster, and agreement with EPA-optimal calls rose from 68% to 74% on held-out 2024 drives.",
+      "twist": "Profile before you buy: the same advice as right-sizing before scaling out.",
+      "aws": "SageMaker AI training jobs with Profiler and Debugger; Spot training for cheaper runs.",
+      "probes": [
+        { "q": "How did you find the stall?", "a": "[fill: the profiler and what it showed]" },
+        { "q": "Did the speedup change results?", "a": "[fill: how you confirmed the faster loop trained the same model]" }
+      ]
+    },
+    {
+      "id": "pacsun-exec",
+      "code": "S9",
+      "title": "PacSun executive intelligence app",
+      "experience_id": "annenberg",
+      "lead": true,
+      "ongoing": true,
+      "lps": ["customer-obsession", "think-big"],
+      "number_ids": [],
+      "s": "PacSun executives had no single ranked view of operational issues.",
+      "t": "Build something executives would actually use to decide what to act on.",
+      "a": [
+        "I am building a multi-agent app on Claude Enterprise with MCP connectors into internal systems.",
+        "Agents rank operational issues by urgency and owner into one view, then draft CEO briefs and meeting agendas."
+      ],
+      "r": "Ongoing. [fill: what is live today, and what you learned about writing for executives]",
+      "twist": "This mirrors the SA skill of communicating complex ideas to executives.",
+      "aws": "Bedrock Agents with action groups (Lambda) in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.",
+      "probes": [
+        { "q": "How do agents get live data safely?", "a": "Through connectors that each expose a small set of tools into one system, with access scoped to what the agent needs." },
+        { "q": "How do you stop a wrong brief from reaching the CEO?", "a": "Every claim should cite its source. [fill: your review step]" },
+        { "q": "Why several agents instead of one?", "a": "Separate jobs: gather, rank, write. Each is easier to test and fix alone." }
+      ]
+    },
+    {
+      "id": "trust-hitl",
+      "code": "S10",
+      "title": "Human-in-the-loop annotation pipeline",
+      "experience_id": "trust-lab",
+      "lead": false,
+      "ongoing": true,
+      "lps": ["invent-and-simplify", "broad-responsibility"],
+      "number_ids": [],
+      "s": "The AI Trust Lab needed caseworker notes labeled consistently, and the notes are sensitive.",
+      "t": "Label at scale without letting the model make the hard calls alone.",
+      "a": [
+        "I built a rubric-based annotation pipeline on Llama 3.3 70B that labels each note and scores its confidence.",
+        "Low-confidence cases route to domain experts for human review.",
+        "Separately, I benchmarked 6 frontier LLMs on Veracity across 8 trust pillars."
+      ],
+      "r": "[fill: share of notes routed to experts, or agreement with expert labels, if measured]",
+      "twist": "Responsible AI is a common customer question on Bedrock: Guardrails, model evaluation, and human review.",
+      "aws": "Bedrock or SageMaker AI for the model, Bedrock Guardrails, Bedrock model evaluation, Amazon A2I for human review.",
+      "probes": [
+        { "q": "How did you design the rubric?", "a": "[fill: who wrote it and how it was tested]" },
+        { "q": "How do you know the labels are good?", "a": "[fill: expert agreement on a sample, if measured]" }
+      ]
+    },
+    {
+      "id": "modelscope",
+      "code": "S11",
+      "title": "ModelScope quantization study",
+      "experience_id": "modelscope",
+      "lead": false,
+      "lps": ["are-right-a-lot", "frugality", "learn-and-be-curious"],
+      "number_ids": ["ms-configs", "ms-int4-mb", "ms-int4-pct", "ms-tps", "ms-mmlu", "ms-int8-mem", "ms-int8-tps"],
+      "s": "I wanted evidence, not folklore, on quantization tradeoffs for small models.",
+      "t": "Find the cheapest configuration that keeps quality.",
+      "a": [
+        "I benchmarked Llama-3.2-3B and Gemma-2-2B across 8 quantization configs (FP16, INT8, INT4, NF4) on a T4 GPU.",
+        "I profiled latency, throughput, and peak memory, then ran a Pareto sweep."
+      ],
+      "r": "INT4 landed at 2299 MB, 62% below FP16, at 13.7 tok/s with MMLU within a point. INT8 was strictly dominated: 53% more memory and 2.1x lower throughput.",
+      "twist": "Customer cost advice: right-size the model and instance before scaling out.",
+      "aws": "Inferentia or G instances for inference, smaller models on Bedrock, SageMaker AI endpoints sized from a benchmark, not a guess.",
+      "probes": [
+        { "q": "Why was INT8 slower?", "a": "[fill: your explanation from the profiling]" },
+        { "q": "Would you ship INT4 to a customer?", "a": "Only after running their own evaluation set; one benchmark is evidence, not a guarantee." }
+      ]
+    },
+    {
+      "id": "databricks-feed",
+      "code": "S12",
+      "title": "Nightly Databricks feed",
+      "experience_id": "msrcosmos",
+      "lead": false,
+      "lps": ["deliver-results", "frugality"],
+      "number_ids": ["msr-tables", "msr-rows", "msr-refresh"],
+      "s": "The ERP agents needed fresh financial data from workspaces on AWS, Azure, and GCP every night.",
+      "t": "Automate the feed and keep the refresh inside the nightly window.",
+      "a": [
+        "I automated the nightly Databricks feed across the three workspaces.",
+        "PySpark jobs staged 17 financial tables and 4.2M rows into Delta Lake, with partition pruning and incremental merges."
+      ],
+      "r": "Full refresh held at 22 minutes.",
+      "twist": "Same pipeline on AWS: Glue or EMR into S3 with Iceberg tables, queried by Athena.",
+      "aws": "Glue or EMR jobs into S3 with Apache Iceberg tables, Athena for queries, Step Functions or MWAA for scheduling.",
+      "probes": [
+        { "q": "Why incremental merges?", "a": "Only changed rows are rewritten, so the job scales with change volume, not table size." },
+        { "q": "What if a source workspace is late?", "a": "[fill: how the job handled a late or failed source]" }
+      ]
+    }
+  ]
+}
