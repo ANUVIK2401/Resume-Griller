@@ -11,7 +11,7 @@
 ---
 
 ## A. Openers (have crisp answers)
-1. **Tell me about yourself (60 sec).** Infra engineer at Oracle for nearly 3 years, 37,000+ tenants, MTTR 94 to 26 min. Then forward-deployed at MSRcosmos: customer-facing, 12 entities on 3 clouds, 3 days to 5.5 hours. Close: "I want to be the person who sits between the customer's problem and the right architecture."
+1. **Tell me about yourself (60 sec).** Infra engineer at Oracle for close to 3 years, 37,000+ tenants, MTTR 94 to 26 min. Then forward-deployed at MSRcosmos: customer-facing, 12 entities on 3 clouds, 3 days to 5.5 hours. Close: "I want to be the person who sits between the customer's problem and the right architecture."
 2. **Why AWS? Why Solutions Architect and not SDE?** You liked the customer-facing part of MSRcosmos most: translating a business constraint into a design. Success measured by customer impact, not quota (quote Naomi's note).
 3. **Why AWSI / strategic accounts?** Large, regulated enterprises, the scale you worked at Oracle.
 4. **Which LP resonates most?** Customer Obsession or Dive Deep, with a story attached.

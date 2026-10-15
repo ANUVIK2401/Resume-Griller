@@ -32,7 +32,7 @@
           "org": { "type": "string" },
           "role": { "type": "string" },
           "kind": { "enum": ["current", "full time", "internship", "volunteer research"] },
-          "dates_display": { "$ref": "common.schema.json#/$defs/text", "description": "What prep text says. Oracle is always 'nearly 3 years'." },
+          "dates_display": { "$ref": "common.schema.json#/$defs/text", "description": "What prep text says. Oracle is always 'close to 3 years'." },
           "legal_dates": {
             "type": "object", "description": "Exact dates for forms only. Never rendered in prep text.",
             "required": ["start", "end"],

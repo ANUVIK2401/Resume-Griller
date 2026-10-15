@@ -14,10 +14,22 @@
   },
   "structure_note": "Likely structure, inferred from SA new-grad reports: about 3 interviews, each mixing 2 Leadership Principle questions with a technical or customer segment. Confirm the format with the recruiter.",
   "status_options": [
-    { "id": "not_started", "label": "Not started" },
-    { "id": "scheduled", "label": "Scheduled" },
-    { "id": "done", "label": "Done" },
-    { "id": "passed", "label": "Passed" }
+    {
+      "id": "not_started",
+      "label": "Not started"
+    },
+    {
+      "id": "scheduled",
+      "label": "Scheduled"
+    },
+    {
+      "id": "done",
+      "label": "Done"
+    },
+    {
+      "id": "passed",
+      "label": "Passed"
+    }
   ],
   "stages": [
     {
@@ -27,13 +39,16 @@
       "format": "Online",
       "duration_min": null,
       "location": "Remote",
-      "default_status": "done",
+      "default_status": "passed",
       "default_date": "2026-10-14T12:00",
-      "note": "Completed Oct 14. Nothing to prepare; the loop is next.",
+      "note": "Passed. Nothing more to prepare here; all focus goes to the loop.",
       "lead_stories": [],
       "prep_pages": [],
       "checklist": [
-        { "id": "oa-done", "text": "Online assessment submitted" }
+        {
+          "id": "oa-done",
+          "text": "Online assessment passed"
+        }
       ]
     },
     {
@@ -46,15 +61,40 @@
       "default_status": "scheduled",
       "default_date": null,
       "note": "Expect 2 to 3 LP questions and drill-downs on your numbers. Lead with S1, S2, S5.",
-      "lead_stories": ["erp-hitl", "p1-mttr", "netsuite-latency"],
-      "prep_pages": ["behavioral", "mock"],
+      "lead_stories": [
+        "erp-hitl",
+        "p1-mttr",
+        "netsuite-latency"
+      ],
+      "prep_pages": [
+        "behavioral",
+        "mock"
+      ],
       "checklist": [
-        { "id": "r1-pitch", "text": "Say the 60-second pitch out loud three times with the timer" },
-        { "id": "r1-leads", "text": "Rehearse S1, S2, S5 in under 90 seconds each, answer first" },
-        { "id": "r1-numbers", "text": "Score 90% or better on the numbers quiz" },
-        { "id": "r1-measured", "text": "Say how each lead metric was measured, or say plainly that you would need to check" },
-        { "id": "r1-gaps", "text": "Draft the failure, disagreement, and mentoring stories from real events" },
-        { "id": "r1-i", "text": "Record one answer and count every \"we\" that should be \"I\"" }
+        {
+          "id": "r1-pitch",
+          "text": "Say the 60-second pitch out loud three times with the timer"
+        },
+        {
+          "id": "r1-leads",
+          "text": "Rehearse S1, S2, S5 in under 90 seconds each, answer first"
+        },
+        {
+          "id": "r1-numbers",
+          "text": "Score 90% or better on the numbers quiz"
+        },
+        {
+          "id": "r1-measured",
+          "text": "Say how each lead metric was measured, or say plainly that you would need to check"
+        },
+        {
+          "id": "r1-gaps",
+          "text": "Draft the failure, disagreement, and mentoring stories from real events"
+        },
+        {
+          "id": "r1-i",
+          "text": "Record one answer and count every \"we\" that should be \"I\""
+        }
       ]
     },
     {
@@ -68,14 +108,36 @@
       "default_date": null,
       "note": "Rapid-fire fundamentals, then one architecture on the whiteboard. Clarify before drawing.",
       "lead_stories": [],
-      "prep_pages": ["aws", "design", "questions"],
+      "prep_pages": [
+        "aws",
+        "design",
+        "questions"
+      ],
       "checklist": [
-        { "id": "r2-framework", "text": "Write the 7-step whiteboard framework from memory" },
-        { "id": "r2-designs", "text": "Finish 4 of the 6 designs under the 30-minute timer" },
-        { "id": "r2-rapid", "text": "Answer all 24 rapid-fire questions in two sentences each" },
-        { "id": "r2-frameworks", "text": "Recite the 6 pillars, the 7 Rs, and the 4 DR tiers with RPO and RTO" },
-        { "id": "r2-map", "text": "Say your resume-to-AWS mapping out loud, one line per row" },
-        { "id": "r2-paper", "text": "Draw one design on paper by hand, not on a screen" }
+        {
+          "id": "r2-framework",
+          "text": "Write the 7-step whiteboard framework from memory"
+        },
+        {
+          "id": "r2-designs",
+          "text": "Finish 4 of the 6 designs under the 30-minute timer"
+        },
+        {
+          "id": "r2-rapid",
+          "text": "Answer all 24 rapid-fire questions in two sentences each"
+        },
+        {
+          "id": "r2-frameworks",
+          "text": "Recite the 6 pillars, the 7 Rs, and the 4 DR tiers with RPO and RTO"
+        },
+        {
+          "id": "r2-map",
+          "text": "Say your resume-to-AWS mapping out loud, one line per row"
+        },
+        {
+          "id": "r2-paper",
+          "text": "Draw one design on paper by hand, not on a screen"
+        }
       ]
     },
     {
@@ -88,125 +150,326 @@
       "default_status": "scheduled",
       "default_date": null,
       "note": "Ask before proposing. Match the audience. Close with next steps. Lead with S1, S4, S9.",
-      "lead_stories": ["erp-hitl", "cli-toolchain", "pacsun-exec"],
-      "prep_pages": ["questions", "behavioral"],
+      "lead_stories": [
+        "erp-hitl",
+        "cli-toolchain",
+        "pacsun-exec"
+      ],
+      "prep_pages": [
+        "questions",
+        "behavioral"
+      ],
       "checklist": [
-        { "id": "r3-roleplay", "text": "Run two role-plays out loud with the checklist" },
-        { "id": "r3-cfo", "text": "Explain containers and the cloud bill to a CFO with no jargon" },
-        { "id": "r3-leads", "text": "Rehearse S1, S4, S9 with the SA twist at the end" },
-        { "id": "r3-ask", "text": "Pick two questions to ask your interviewers" },
-        { "id": "r3-close", "text": "Practice the close: restate, recommend, next step" }
+        {
+          "id": "r3-roleplay",
+          "text": "Run two role-plays out loud with the checklist"
+        },
+        {
+          "id": "r3-cfo",
+          "text": "Explain containers and the cloud bill to a CFO with no jargon"
+        },
+        {
+          "id": "r3-leads",
+          "text": "Rehearse S1, S4, S9 with the SA twist at the end"
+        },
+        {
+          "id": "r3-ask",
+          "text": "Pick two questions to ask your interviewers"
+        },
+        {
+          "id": "r3-close",
+          "text": "Practice the close: restate, recommend, next step"
+        }
       ]
     }
   ],
   "plan": [
     {
-      "id": "d01", "date": "2026-10-15", "focus": "Foundations",
+      "id": "d01",
+      "date": "2026-10-15",
+      "focus": "Foundations",
       "tasks": [
-        { "id": "d01-lp", "text": "Read the 16-LP map and note the 3 gaps", "page": "behavioral" },
-        { "id": "d01-pitch", "text": "Draft your 60-second pitch in your own words and time it", "page": "behavioral" },
-        { "id": "d01-aws", "text": "AWS glossary: global infrastructure, compute, storage", "page": "aws" }
+        {
+          "id": "d01-lp",
+          "text": "Read the 16-LP map and note the 3 gaps",
+          "page": "behavioral"
+        },
+        {
+          "id": "d01-pitch",
+          "text": "Draft your 60-second pitch in your own words and time it",
+          "page": "behavioral"
+        },
+        {
+          "id": "d01-aws",
+          "text": "AWS glossary: global infrastructure, compute, storage",
+          "page": "aws"
+        }
       ]
     },
     {
-      "id": "d02", "date": "2026-10-16", "focus": "Lead stories",
+      "id": "d02",
+      "date": "2026-10-16",
+      "focus": "Lead stories",
       "tasks": [
-        { "id": "d02-s1s2", "text": "S1 and S2 out loud, 3 times each, 90-second timer", "page": "behavioral" },
-        { "id": "d02-aws", "text": "AWS glossary: databases and networking, then flashcards", "page": "aws" },
-        { "id": "d02-numbers", "text": "Numbers quiz, all numbers", "page": "behavioral" }
+        {
+          "id": "d02-s1s2",
+          "text": "S1 and S2 out loud, 3 times each, 90-second timer",
+          "page": "behavioral"
+        },
+        {
+          "id": "d02-aws",
+          "text": "AWS glossary: databases and networking, then flashcards",
+          "page": "aws"
+        },
+        {
+          "id": "d02-numbers",
+          "text": "Numbers quiz, all numbers",
+          "page": "behavioral"
+        }
       ]
     },
     {
-      "id": "d03", "date": "2026-10-17", "focus": "Close the gaps",
+      "id": "d03",
+      "date": "2026-10-17",
+      "focus": "Close the gaps",
       "tasks": [
-        { "id": "d03-gaps", "text": "Write the failure, disagreement, and mentoring stories from real events", "page": "behavioral" },
-        { "id": "d03-sec", "text": "AWS glossary: security and identity; shared responsibility", "page": "aws" }
+        {
+          "id": "d03-gaps",
+          "text": "Write the failure, disagreement, and mentoring stories from real events",
+          "page": "behavioral"
+        },
+        {
+          "id": "d03-sec",
+          "text": "AWS glossary: security and identity; shared responsibility",
+          "page": "aws"
+        }
       ]
     },
     {
-      "id": "d04", "date": "2026-10-18", "focus": "Whiteboard basics",
+      "id": "d04",
+      "date": "2026-10-18",
+      "focus": "Whiteboard basics",
       "tasks": [
-        { "id": "d04-framework", "text": "Learn the 7-step framework; say it without notes", "page": "design" },
-        { "id": "d04-d1", "text": "Design: 3-tier retail app with Black Friday spikes, timed", "page": "design" },
-        { "id": "d04-pillars", "text": "Well-Architected: the 6 pillars and one question each", "page": "aws" }
+        {
+          "id": "d04-framework",
+          "text": "Learn the 7-step framework; say it without notes",
+          "page": "design"
+        },
+        {
+          "id": "d04-d1",
+          "text": "Design: 3-tier retail app with Black Friday spikes, timed",
+          "page": "design"
+        },
+        {
+          "id": "d04-pillars",
+          "text": "Well-Architected: the 6 pillars and one question each",
+          "page": "aws"
+        }
       ]
     },
     {
-      "id": "d05", "date": "2026-10-19", "focus": "Oracle stories and serverless",
+      "id": "d05",
+      "date": "2026-10-19",
+      "focus": "Oracle stories and serverless",
       "tasks": [
-        { "id": "d05-stories", "text": "S3, S4, S5, S6 out loud with the SA twist", "page": "behavioral" },
-        { "id": "d05-int", "text": "AWS glossary: integration and serverless", "page": "aws" },
-        { "id": "d05-d3", "text": "Design: serverless document processing, timed", "page": "design" }
+        {
+          "id": "d05-stories",
+          "text": "S3, S4, S5, S6 out loud with the SA twist",
+          "page": "behavioral"
+        },
+        {
+          "id": "d05-int",
+          "text": "AWS glossary: integration and serverless",
+          "page": "aws"
+        },
+        {
+          "id": "d05-d3",
+          "text": "Design: serverless document processing, timed",
+          "page": "design"
+        }
       ]
     },
     {
-      "id": "d06", "date": "2026-10-20", "focus": "First mock",
+      "id": "d06",
+      "date": "2026-10-20",
+      "focus": "First mock",
       "tasks": [
-        { "id": "d06-mock", "text": "Full 45-minute mock round, then self-score", "page": "mock" },
-        { "id": "d06-rf", "text": "Rapid-fire quiz, questions 1 to 12", "page": "questions" },
-        { "id": "d06-map", "text": "Say the resume-to-AWS mapping out loud", "page": "aws" }
+        {
+          "id": "d06-mock",
+          "text": "Full 45-minute mock round, then self-score",
+          "page": "mock"
+        },
+        {
+          "id": "d06-rf",
+          "text": "Rapid-fire quiz, questions 1 to 12",
+          "page": "questions"
+        },
+        {
+          "id": "d06-map",
+          "text": "Say the resume-to-AWS mapping out loud",
+          "page": "aws"
+        }
       ]
     },
     {
-      "id": "d07", "date": "2026-10-21", "focus": "AI on AWS",
+      "id": "d07",
+      "date": "2026-10-21",
+      "focus": "AI on AWS",
       "tasks": [
-        { "id": "d07-ai", "text": "AWS glossary: AI and ML (Bedrock, SageMaker AI, chips)", "page": "aws" },
-        { "id": "d07-d4", "text": "Design: GenAI chatbot over company docs (RAG), timed", "page": "design" },
-        { "id": "d07-stories", "text": "S7, S9, S10, S11 out loud", "page": "behavioral" }
+        {
+          "id": "d07-ai",
+          "text": "AWS glossary: AI and ML (Bedrock, SageMaker AI, chips)",
+          "page": "aws"
+        },
+        {
+          "id": "d07-d4",
+          "text": "Design: GenAI chatbot over company docs (RAG), timed",
+          "page": "design"
+        },
+        {
+          "id": "d07-stories",
+          "text": "S7, S9, S10, S11 out loud",
+          "page": "behavioral"
+        }
       ]
     },
     {
-      "id": "d08", "date": "2026-10-22", "focus": "Migration and DR",
+      "id": "d08",
+      "date": "2026-10-22",
+      "focus": "Migration and DR",
       "tasks": [
-        { "id": "d08-frameworks", "text": "The 7 Rs and the 4 DR tiers with RPO and RTO", "page": "aws" },
-        { "id": "d08-d2", "text": "Design: migrate an on-prem ERP to AWS", "page": "design" },
-        { "id": "d08-d6", "text": "Design: multi-region DR for a payments app", "page": "design" }
+        {
+          "id": "d08-frameworks",
+          "text": "The 7 Rs and the 4 DR tiers with RPO and RTO",
+          "page": "aws"
+        },
+        {
+          "id": "d08-d2",
+          "text": "Design: migrate an on-prem ERP to AWS",
+          "page": "design"
+        },
+        {
+          "id": "d08-d6",
+          "text": "Design: multi-region DR for a payments app",
+          "page": "design"
+        }
       ]
     },
     {
-      "id": "d09", "date": "2026-10-23", "focus": "Customer role-play",
+      "id": "d09",
+      "date": "2026-10-23",
+      "focus": "Customer role-play",
       "tasks": [
-        { "id": "d09-rp", "text": "Two role-plays out loud; record one and listen back", "page": "questions" },
-        { "id": "d09-rf", "text": "Rapid-fire quiz, questions 13 to 24", "page": "questions" }
+        {
+          "id": "d09-rp",
+          "text": "Two role-plays out loud; record one and listen back",
+          "page": "questions"
+        },
+        {
+          "id": "d09-rf",
+          "text": "Rapid-fire quiz, questions 13 to 24",
+          "page": "questions"
+        }
       ]
     },
     {
-      "id": "d10", "date": "2026-10-24", "focus": "Second mock",
+      "id": "d10",
+      "date": "2026-10-24",
+      "focus": "Second mock",
       "tasks": [
-        { "id": "d10-mock", "text": "Two mock rounds back to back", "page": "mock" },
-        { "id": "d10-d5", "text": "Design: real-time clickstream analytics; analytics glossary", "page": "design" },
-        { "id": "d10-weak", "text": "Rewrite your weakest story from the mock scores", "page": "behavioral" }
+        {
+          "id": "d10-mock",
+          "text": "Two mock rounds back to back",
+          "page": "mock"
+        },
+        {
+          "id": "d10-d5",
+          "text": "Design: real-time clickstream analytics; analytics glossary",
+          "page": "design"
+        },
+        {
+          "id": "d10-weak",
+          "text": "Rewrite your weakest story from the mock scores",
+          "page": "behavioral"
+        }
       ]
     },
     {
-      "id": "d11", "date": "2026-10-25", "focus": "Light review",
+      "id": "d11",
+      "date": "2026-10-25",
+      "focus": "Light review",
       "tasks": [
-        { "id": "d11-random", "text": "LP randomizer for 20 minutes", "page": "questions" },
-        { "id": "d11-ask", "text": "Pick your questions to ask interviewers", "page": "questions" },
-        { "id": "d11-notes", "text": "Read every note you wrote this week" }
+        {
+          "id": "d11-random",
+          "text": "LP randomizer for 20 minutes",
+          "page": "questions"
+        },
+        {
+          "id": "d11-ask",
+          "text": "Pick your questions to ask interviewers",
+          "page": "questions"
+        },
+        {
+          "id": "d11-notes",
+          "text": "Read every note you wrote this week"
+        }
       ]
     },
     {
-      "id": "d12", "date": "2026-10-26", "focus": "Live practice",
+      "id": "d12",
+      "date": "2026-10-26",
+      "focus": "Live practice",
       "tasks": [
-        { "id": "d12-friend", "text": "Mock with a friend asking the questions; whiteboard on paper", "page": "mock" },
-        { "id": "d12-numbers", "text": "Numbers quiz at 90% or better", "page": "behavioral" },
-        { "id": "d12-flash", "text": "AWS flashcards: only the ones you still miss", "page": "aws" }
+        {
+          "id": "d12-friend",
+          "text": "Mock with a friend asking the questions; whiteboard on paper",
+          "page": "mock"
+        },
+        {
+          "id": "d12-numbers",
+          "text": "Numbers quiz at 90% or better",
+          "page": "behavioral"
+        },
+        {
+          "id": "d12-flash",
+          "text": "AWS flashcards: only the ones you still miss",
+          "page": "aws"
+        }
       ]
     },
     {
-      "id": "d13", "date": "2026-10-27", "focus": "Taper",
+      "id": "d13",
+      "date": "2026-10-27",
+      "focus": "Taper",
       "tasks": [
-        { "id": "d13-core", "text": "Pitch, 6 lead stories, 6 pillars. Nothing new.", "page": "behavioral" },
-        { "id": "d13-logistics", "text": "Confirm time in PT, room, and dress (business casual)" },
-        { "id": "d13-pack", "text": "Pack a notebook and pen; sleep early" }
+        {
+          "id": "d13-core",
+          "text": "Pitch, 6 lead stories, 6 pillars. Nothing new.",
+          "page": "behavioral"
+        },
+        {
+          "id": "d13-logistics",
+          "text": "Confirm time in PT, room, and dress (business casual)"
+        },
+        {
+          "id": "d13-pack",
+          "text": "Pack a notebook and pen; sleep early"
+        }
       ]
     },
     {
-      "id": "d14", "date": "2026-10-28", "focus": "Interview day",
+      "id": "d14",
+      "date": "2026-10-28",
+      "focus": "Interview day",
       "tasks": [
-        { "id": "d14-early", "text": "Arrive 15 minutes early" },
-        { "id": "d14-thanks", "text": "Send a short thank-you note to the recruiter the same evening" }
+        {
+          "id": "d14-early",
+          "text": "Arrive 15 minutes early"
+        },
+        {
+          "id": "d14-thanks",
+          "text": "Send a short thank-you note to the recruiter the same evening"
+        }
       ]
     }
   ],

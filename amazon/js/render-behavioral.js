@@ -65,7 +65,9 @@
         el('div', { class: 'row' }, story.lps.map((id) => el('span', { class: 'chip chip-gold' }, lpName(id)))),
         story.note ? el('p', { class: 'notice' }, story.note) : null,
         el('div', { class: 'row' }, el('span', { class: 'label' }, `${STORY_SECONDS}-second rehearsal`), timer.node),
+        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Open with'), el('p', { class: 'answer-short' }, story.headline)),
         starBlock(story),
+        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Close with'), el('p', { class: 'resume-line' }, ui.fill(story.lesson))),
         facts.length ? el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Numbers to say'), el('div', { class: 'row' }, facts.map((f) => el('span', { class: 'chip chip-gold' }, f)))) : null,
         fold('SA twist and the AWS version',
           el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'SA twist'), el('p', {}, story.twist)),
@@ -117,7 +119,7 @@
     const rehearse = () => ui.rehearse(ui.shuffle(shown).map((s) => ({
       kicker: s.lps.map(lpName).join(' · '),
       front: () => el('span', {}, `${s.code}. ${s.title}`),
-      back: () => el('div', { class: 'stack' }, starBlock(s), el('p', { class: 'muted' }, s.twist)),
+      back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.headline), starBlock(s), el('p', { class: 'muted' }, ui.fill(s.lesson))),
     })), 'Rehearse stories');
     return ui.section('stories', 'STAR bank', `${data.stories.length} stories`, el('span', {}, 'The ', el('em', {}, 'STAR'), ' bank'),
       el('p', { class: 'section-intro' }, 'Filter by principle, open a story, start the timer, and say it before you read it. Orange "fill" marks are specifics only you know.'),

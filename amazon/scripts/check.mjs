@@ -1,7 +1,7 @@
 // Content guard. Run before every commit: node amazon/scripts/check.mjs
 // Fails on: invalid JSON, schema violations, em/en dashes anywhere, duplicate ids,
 // broken story/LP cross references, candidate metrics missing from profile.json,
-// and Oracle tenure written as anything but "nearly 3 years" or "about 3 years".
+// and Oracle tenure written as anything but "close to 3 years".
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createRequire } from 'node:module';
@@ -162,17 +162,17 @@ const known = new Set(strings(profile).flatMap(numbersIn));
 const spoken = [
   ...(behavioral.pitch?.beats || []).map((b) => ['behavioral.pitch', b.text]),
   ['behavioral.pitch.closing_line', behavioral.pitch?.closing_line || ''],
-  ...(behavioral.stories || []).flatMap((s) => [s.s, s.t, ...s.a, s.r, s.twist].map((text) => [`behavioral.stories.${s.id}`, text])),
+  ...(behavioral.stories || []).flatMap((s) => [s.headline, s.s, s.t, ...s.a, s.r, s.lesson, s.twist].map((text) => [`behavioral.stories.${s.id}`, text])),
   ...(aws.resume_map || []).map((r) => ['aws.resume_map', r.you_did]),
 ];
 for (const [where, text] of spoken) {
   for (const n of numbersIn(String(text).replace(/\[fill:[^\]]*\]/g, ''))) if (!known.has(n)) fail(where, `metric "${n}" is not in profile.json`);
 }
 
-// 8. Oracle tenure is "nearly 3 years" or "about 3 years", everywhere. Other resume rules carry over.
-const TENURE = /\b(?<!(?:nearly|about) )(?:\d+(?:\.\d+)?\+?|one|two|three|four|five)(?: and a half)? years\b/i;
+// 8. Oracle tenure is "close to 3 years", everywhere. Other resume rules carry over.
+const TENURE = /\b(?<!close to )(?:\d+(?:\.\d+)?\+?|one|two|three|four|five)(?: and a half)? years\b/i;
 const RULES = [
-  [TENURE, 'Oracle tenure is "nearly 3 years" or "about 3 years"'],
+  [TENURE, 'Oracle tenure is "close to 3 years"'],
   [/\bJul(y)? 2022\b/, 'exact Oracle dates belong in legal_dates only'],
   [/Sports Analytics(?![^.]*volunteer)[^.]*\b(intern|internship|job|employed)\b/i, 'Sports Analytics is volunteer research'],
 ];
@@ -192,6 +192,12 @@ const { isCorrect } = createRequire(import.meta.url)('../js/quiz.js');
 for (const n of profile.numbers || []) {
   if (!isCorrect(n, n.a)) fail(`profile.numbers.${n.id}`, `canonical answer "${n.a}" does not parse`);
   for (const a of n.accept || []) if (!isCorrect(n, a)) fail(`profile.numbers.${n.id}`, `accepted "${a}" does not match ${n.a}`);
+}
+
+// 10. stories.md is generated from behavioral.json and must be current.
+const { render: storiesMd } = await import('./stories_md.mjs');
+if (data.behavioral && data.profile && readFileSync(join(root, 'stories.md'), 'utf8') !== storiesMd(data.behavioral, data.profile)) {
+  fail('stories.md', 'out of date: run node amazon/scripts/stories_md.mjs');
 }
 
 for (const w of warnings) console.warn(`warning: ${w}`);
