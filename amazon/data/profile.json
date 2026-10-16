@@ -206,8 +206,8 @@
     {
       "id": "oracle-dashboards",
       "group": "oracle",
-      "fact": "47 dashboards",
-      "q": "Oracle: how many dashboards?",
+      "fact": "47 dashboards and alert rules combined",
+      "q": "Oracle: what was the combined total of dashboards and alert rules?",
       "a": "47",
       "unit": "",
       "accept": []
@@ -493,26 +493,6 @@
         "one",
         "a point",
         "within a point"
-      ]
-    },
-    {
-      "id": "ms-int8-mem",
-      "group": "modelscope",
-      "fact": "Resume reports INT8 dominated: 53% more memory and 2.1x lower throughput; comparator and setup need confirmation.",
-      "q": "ModelScope (resume comparator needs confirmation): INT8 used what percent more memory?",
-      "a": "53",
-      "unit": "%",
-      "accept": []
-    },
-    {
-      "id": "ms-int8-tps",
-      "group": "modelscope",
-      "fact": "Resume reports INT8 dominated: 53% more memory and 2.1x lower throughput; comparator and setup need confirmation.",
-      "q": "ModelScope (resume comparator needs confirmation): INT8 throughput was how many times lower?",
-      "a": "2.1",
-      "unit": "x",
-      "accept": [
-        "2.1x"
       ]
     },
     {

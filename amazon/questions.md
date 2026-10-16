@@ -34,20 +34,20 @@ Use stories.md. Prepare varied examples so different questions reveal different 
 - **Deliver Results:** Your biggest impact. A time you missed a deadline. *(Failure story needed.)*
 - **Hire and Develop:** A time you helped someone grow. *(Mentoring story needed.)*
 
-## C. Technical fundamentals (rapid fire, 1 to 2 sentence answers)
+## C. Technical fundamentals (lead with 2 sentences, then defend the choice)
 1. Region vs AZ vs edge location?
-2. How do you make a web app highly available on AWS? (Multi-AZ ASG behind ALB, Multi-AZ RDS, Route 53 health checks.)
+2. How do you make a web app highly available on AWS? Distinguish surviving a zonal failure, client reconnects, enough surviving capacity, tested backups, and regional DR.
 3. Security group vs NACL?
 4. Public vs private subnet? What does a NAT Gateway do?
 5. ALB vs NLB? When API Gateway?
 6. S3 storage classes and lifecycle policies. How to make S3 data cheaper?
 7. EBS vs EFS vs S3?
-8. RDS Multi-AZ vs read replica?
-9. DynamoDB vs RDS: when each? What is a hot partition?
+8. RDS Multi-AZ DB instance vs Multi-AZ DB cluster vs read replica vs backup?
+9. DynamoDB vs RDS: which access patterns, transactions and consistency? What is a hot key? Can a GSI serve a strong read?
 10. Lambda limits and cold starts; when not to use Lambda?
 11. ECS vs EKS vs Fargate?
-12. SQS vs SNS vs EventBridge vs Kinesis?
-13. IAM role vs user; what is least privilege?
+12. SQS vs SNS vs EventBridge vs Kinesis? What does FIFO deduplicate, and what happens after a side effect succeeds but acknowledgment fails?
+13. IAM role vs user; trust vs permissions; explicit deny; cross-account access. Why does a role with an allow still receive AccessDenied?
 14. Shared responsibility model.
 15. Encryption at rest vs in transit; KMS.
 16. RPO vs RTO and the four DR strategies.
@@ -55,7 +55,7 @@ Use stories.md. Prepare varied examples so different questions reveal different 
 18. The 7 Rs of migration.
 19. CloudWatch vs CloudTrail vs Config.
 20. How would you reduce a customer's AWS bill? (Right-size, Savings Plans, Spot, S3 tiering, delete idle, Graviton.)
-21. What happens when you type a URL in a browser? (DNS, TCP, TLS, HTTP, CDN, LB.)
+21. What happens when you type a URL? Explain caches, DNS, transport, TLS validation, HTTP, edge/origin, application and dependencies; mention connection reuse and HTTP/3 when relevant.
 22. TCP vs UDP; common HTTP status codes.
 23. What is Bedrock? How would you build RAG on AWS?
 24. How would you choose between a large model and a small model for a customer?
@@ -64,7 +64,7 @@ Use stories.md. Prepare varied examples so different questions reveal different 
 **Framework (say it out loud):** clarify requirements and constraints (users, traffic, data, compliance, budget) -> draw the simple version -> scale it -> make it reliable -> secure it -> cost it -> state one tradeoff.
 
 1. **3-tier web app for a retailer with Black Friday spikes.** Route 53 -> CloudFront -> ALB -> ASG across 2 AZs -> Aurora Multi-AZ + ElastiCache; S3 for images; scheduled + target-tracking scaling. Commit checkout and an outbox event together; publish to SQS with idempotent fulfillment.
-2. **Migrate an on-prem ERP / financial system to AWS** (your S1 story). Discovery, 7 Rs per workload, DMS for data, landing zone with Control Tower, cutover plan, rollback.
+2. **Migrate an on-prem ERP / financial system to AWS** (hypothetical AWS mapping of S1). Discovery, 7 Rs per workload, DMS where supported, landing zone, reconciliation and cutover. Explain how rollback preserves writes already accepted on the target.
 3. **Serverless document processing pipeline.** S3 upload -> EventBridge -> Step Functions -> Textract -> Bedrock summarization -> DynamoDB -> human review for low confidence (S1 pattern).
 4. **GenAI chatbot over company docs (RAG).** S3 docs -> Bedrock Knowledge Base (embeddings + vector store such as OpenSearch Serverless) -> Bedrock model with Guardrails -> API Gateway + Lambda -> Cognito auth; derive server-side retrieval filters from trusted identity; isolate caches by authorization. Guardrails do not replace document permissions. Evaluate answer quality before launch.
 5. **Real-time analytics / clickstream.** Kinesis -> Firehose -> S3 -> Glue -> Athena / QuickSight.
@@ -102,3 +102,18 @@ Technical answer details and AWS sources: [AWS terminology](aws-terms.md). Treat
 The supplied email confirms AWSI - ETP Solutions Architect, customer-solution design, sales collaboration, and communication from technical experts to executives. It describes success through positive customer impact rather than sales quotas. These are role expectations, not evidence that any particular candidate story demonstrated them.
 
 Practise with a sales colleague seeking a financial-migration commitment before data and cutover assumptions are tested. Ask about the customer outcome, reconciliation, downtime tolerance, approval owners, rollback and evidence. Propose a bounded pilot with jointly agreed success criteria. Explain validation and failure handling to an engineer, then explain business impact, risk and the next decision to an executive. State what remains untested before making a commitment.
+
+## Technical follow-up drill: isolate, decide, validate
+
+Use the expanded browser answers and [AWS-CHEATSHEET.md](AWS-CHEATSHEET.md) for evidence and sources. Keep 24 core answers; add depth through these follow-ups rather than memorizing more service names.
+
+| Prompt | Evidence or decision to explain |
+|---|---|
+| DNS resolves but HTTPS fails | Separate TCP connection, TLS hostname/trust/expiry, HTTP status and dependency time. Use sanitized curl timings; do not disable certificate verification as a fix. |
+| ALB returns 504 and the process is running | Compare target reachability, listener/port, SG/NACL return path, worker saturation and downstream latency. A running process is not proof of a healthy request path. |
+| Linux service is slow | Use ss for listeners, top/free for CPU/memory, df -h/df -i for space/inodes, journalctl for the service time window; choose the next command from a hypothesis. |
+| Role allows s3:GetObject but access is denied | Identify principal, object ARN and conditions; check applicable explicit denies, endpoint/resource policies and KMS permissions where relevant. |
+| A payment worker retries | Preserve a stable business idempotency key, durable state and provider reconciliation; queue deduplication alone does not atomically charge a card. |
+| Customer asks for a cheaper design | Establish the business metric, baseline usage and constraints. Compare total/unit cost and failure risk; prove improvement with a bounded pilot. |
+
+Close each answer with a measurable next step: the observation that would reject your hypothesis, a representative benchmark, a restore/failover rehearsal, or a customer-approved pilot criterion.

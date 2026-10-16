@@ -12,7 +12,8 @@
     "logistics",
     "plan_start",
     "plan_note",
-    "recruiting_context"
+    "recruiting_context",
+    "sprint"
   ],
   "properties": {
     "req": {
@@ -42,7 +43,9 @@
       "required": [
         "date",
         "confirmed",
-        "note"
+        "note",
+        "target_date",
+        "target_status"
       ],
       "properties": {
         "date": {
@@ -58,6 +61,15 @@
         },
         "note": {
           "$ref": "common.schema.json#/$defs/text"
+        },
+        "target_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "target_status": {
+          "enum": [
+            "tentative"
+          ]
         }
       }
     },
@@ -345,6 +357,129 @@
         }
       },
       "additionalProperties": false
+    },
+    "sprint": {
+      "type": "object",
+      "required": [
+        "start",
+        "note",
+        "story_strategy",
+        "gap_policy",
+        "days",
+        "interview_day"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "note": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "story_strategy": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "gap_policy": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "days": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "date",
+              "focus",
+              "tasks",
+              "deliverable",
+              "readiness_gate",
+              "full_mock",
+              "paper_design"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/$defs/id"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "focus": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "text",
+                    "minutes",
+                    "minimum"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "common.schema.json#/$defs/id"
+                    },
+                    "text": {
+                      "$ref": "common.schema.json#/$defs/text"
+                    },
+                    "page": {
+                      "type": "string",
+                      "description": "site.pages[].id"
+                    },
+                    "minutes": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "minimum": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "deliverable": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "readiness_gate": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "full_mock": {
+                "type": "boolean"
+              },
+              "paper_design": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "interview_day": {
+          "type": "object",
+          "required": [
+            "date",
+            "title",
+            "note",
+            "tasks"
+          ],
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date"
+            },
+            "title": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "note": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "tasks": {
+              "$ref": "#/$defs/checks"
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {

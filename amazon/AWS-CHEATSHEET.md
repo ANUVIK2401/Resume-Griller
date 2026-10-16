@@ -1,6 +1,6 @@
 # AWS Solutions Architect interview cheatsheet
 
-Verified against linked official AWS documentation: 2026-10-15.
+Verified against linked official AWS documentation: 2026-10-16.
 
 Two-week Amazon Solutions Architect rehearsal: explain the customer decision, tradeoff, failure mode and validation before naming more services.
 
@@ -23,10 +23,10 @@ Days 1-7, then daily retrieval practice. Master these before expanding breadth.
 - Choose: Trace DNS, route table, security controls and return traffic. A public subnet has an internet-gateway route; an IPv4 instance also needs a public address for direct internet access.
 - Tradeoff: Use public ingress with private application/data tiers. NAT supplies outbound IPv4 connectivity, with a cost and availability design to justify.
 - Failure: A private subnet does not automatically have internet access. Check routes, NAT connectivity, DNS and security rules separately.
-- Say: I would draw the complete packet path and isolate the first failed hop before changing firewall rules.
+- Say: I would trace DNS, TCP, TLS and HTTP separately, then use the request-path walkthrough to choose a read-only diagnostic before changing anything.
 - Probe: Can the private worker download a package, and what happens if its egress path fails?
 
-Sources: [VPC internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html), [NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html)
+Sources: [VPC internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html), [NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html), [Route 53 DNS concepts](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/route-53-concepts.html), [EC2 Linux connection troubleshooting](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html)
 
 ### Security groups, NACLs and private endpoints
 
@@ -41,12 +41,12 @@ Sources: [Security groups](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-
 ### IAM roles, least privilege and Organizations
 
 - Choose: Use temporary role credentials, workload identities and narrowly scoped actions/resources. Applicable explicit denies override allows; trust policy and permissions answer different questions.
-- Tradeoff: SCPs set an organization permission ceiling; they do not grant access. Identity, resource, key, boundary and organization policies interact.
-- Failure: An AdministratorAccess policy does not bypass an applicable explicit deny. Cross-account access also needs the correct trust/resource side.
+- Tradeoff: SCPs limit member-account principals but do not grant access or restrict management-account principals/service-linked roles. Identity, resource, key, boundary, session and organization policies can all matter.
+- Failure: Example: s3:GetObject is allowed by the role but explicitly denied by the bucket policy outside an approved endpoint. The applicable deny wins; assuming a role does not bypass it.
 - Say: I would identify the principal, action, resource and request conditions, then evaluate the applicable policies.
 - Probe: Why does an assumed role still receive AccessDenied?
 
-Sources: [IAM policy evaluation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html)
+Sources: [IAM policy evaluation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html), [SCP scope and exceptions](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html)
 
 ### EC2, Lambda and ECS on Fargate
 
@@ -61,12 +61,12 @@ Sources: [Fargate or Lambda decision guide](https://docs.aws.amazon.com/decision
 ### ALB, NLB, API Gateway and CloudFront
 
 - Choose: ALB fits HTTP application routing; NLB fits transport-layer load balancing. Discuss API management and edge caching as separate needs.
-- Tradeoff: Pick ingress from protocol, authentication, caching and latency requirements. Avoid stacking services without a customer benefit.
+- Tradeoff: Select the API type deliberately: REST APIs support usage plans/API keys, unlike HTTP APIs. API keys are not authentication; use a supported authorizer or IAM.
 - Failure: Healthy load balancer targets can still fail customer requests if a dependency is unhealthy; test meaningful health checks.
 - Say: I would first ask whether this is a web application, a managed public API or a TCP service.
 - Probe: Where does TLS terminate and which component owns authentication?
 
-Sources: [Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html)
+Sources: [Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html), [API Gateway REST versus HTTP APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html), [API keys and usage-plan limitations](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html)
 
 ### S3, EBS and EFS
 
@@ -90,13 +90,13 @@ Sources: [Amazon S3 overview](https://docs.aws.amazon.com/AmazonS3/latest/usergu
 
 ### RDS/Aurora versus DynamoDB
 
-- Choose: Use relational engines for relational transactions and query flexibility; consider DynamoDB for designed key-value/document access patterns.
-- Tradeoff: For DynamoDB, explain partition/access-pattern design. For relational systems, explain connections, indexing and query/load behavior.
+- Choose: Use RDS/Aurora for joins and flexible relational queries; DynamoDB supports regional ACID transactions too, but needs designed key-based access patterns.
+- Tradeoff: Compare consistency, indexing, partition skew and connection management. DynamoDB tables/LSIs support optional strong reads; GSIs are eventually consistent.
 - Failure: A hot key or inefficient query can defeat capacity planning. Test skewed traffic and realistic queries.
 - Say: I would choose the data model from the reads, writes, transactions and consistency requirements.
 - Probe: What new access pattern would cause you to reconsider this choice?
 
-Sources: [Aurora and DynamoDB comparison](https://aws.amazon.com/compare/aurora-and-dynamodb/)
+Sources: [Aurora and DynamoDB comparison](https://aws.amazon.com/compare/aurora-and-dynamodb/), [DynamoDB read consistency](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html), [DynamoDB transaction semantics](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/transaction-apis.html)
 
 ### Multi-AZ, read replicas and backups
 
@@ -110,13 +110,13 @@ Sources: [RDS Multi-AZ DB instance deployments](https://docs.aws.amazon.com/Amaz
 
 ### SQS, retries, DLQs and idempotency
 
-- Choose: Use SQS to buffer work and decouple consumers. Receive hides a message; delete after successful processing.
-- Tradeoff: Tune visibility to processing time and retries; a longer timeout delays recovery. DLQs need alarms, investigation and controlled redrive.
+- Choose: Use SQS to buffer work: receive hides a message, and delete acknowledges success. FIFO orders within a message group and deduplicates sends within a 5-minute window.
+- Tradeoff: Bound retries with backoff/jitter, extend visibility for long processing, and monitor DLQs plus redrive. Commit database changes and an outbox event atomically to avoid a publish gap.
 - Failure: The worker can commit a side effect then crash before deletion. Use a durable idempotency strategy for business effects.
 - Say: I would make duplicate delivery safe and monitor queue age alongside the dead-letter queue.
 - Probe: What happens if a payment succeeds but the worker crashes before acknowledging?
 
-Sources: [SQS visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html), [SQS at-least-once delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)
+Sources: [SQS visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html), [SQS at-least-once delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html), [Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
 
 ### Availability, RPO/RTO and disaster recovery
 
@@ -174,33 +174,33 @@ Sources: [Management and governance services](https://docs.aws.amazon.com/whitep
 
 ### Migration strategy, DMS and DataSync
 
-- Choose: Assess dependencies and choose a migration strategy before tools. Evaluate DMS for supported database migration/CDC and DataSync for supported data transfer.
+- Choose: Assess dependencies and choose a migration strategy before tools. Evaluate DMS for supported database migration/CDC and DataSync for supported data transfer. Verify discovery-tool availability: Application Discovery Service is closed to new customers; AWS identifies AWS Transform as a current discovery path.
 - Tradeoff: Rehosting can reduce initial change; replatforming/refactoring may improve operations but increases testing and delivery risk.
-- Failure: A copy completing does not prove a cutover works. Reconcile data, test dependencies and define rollback plus write ownership.
+- Failure: Reconcile and rehearse cutover with one write authority. Once the target accepts writes, rollback requires tested reverse replication or reconciliation; switching DNS back can lose those writes.
 - Say: I would propose a representative pilot with success criteria, cutover rehearsal and an explicit rollback trigger.
 - Probe: What if the source continues receiving writes during migration?
 
-Sources: [Migration decision guide](https://docs.aws.amazon.com/decision-guides/latest/decision-guides/migration-on-aws-how-to-choose.html)
+Sources: [Migration decision guide](https://docs.aws.amazon.com/decision-guides/latest/decision-guides/migration-on-aws-how-to-choose.html), [Application Discovery Service availability change](https://docs.aws.amazon.com/application-discovery/latest/userguide/application-discovery-service-availability-change.html)
 
 ### Bedrock, RAG, evaluation and guardrails
 
 - Choose: For a knowledge assistant, evaluate retrieval-grounded generation with Bedrock and Knowledge Bases against the customer task.
 - Tradeoff: Evaluate retrieval quality, groundedness, latency and cost on a representative test set. RAG and fine-tuning solve different needs.
-- Failure: Retrieved text may carry prompt injection or stale content. Enforce authorization before retrieval and treat model output as untrusted.
+- Failure: Retrieved content may carry prompt injection or stale data. Enforce retrieval filters server-side from trusted identity, prevent bypass, isolate answer caches by authorization, and check source-link permissions. Guardrails do not apply to retrieved references.
 - Say: I would build an evaluation set, test retrieval and citations, and define escalation for uncertain answers.
 - Probe: How will you prevent one tenant from retrieving another tenant's documents?
 
-Sources: [Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html), [Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
+Sources: [Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html), [Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html), [Knowledge Base Guardrails reference limitations](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-retrieve-generate.html)
 
 ### GenAI data handling and shared responsibility
 
-- Choose: For standard Bedrock model inference, AWS documentation describes isolation from model providers. Review the exact model, feature and data path before promising data handling.
+- Choose: Inventory the exact model/API, retention mode, invocation logs and inference profile. Cross-Region inference can process prompts outside the source Region; do not promise all data remains in the customer account or Region.
 - Tradeoff: Application logs, knowledge stores, tool calls and external integrations have their own permissions and retention choices.
 - Failure: A secure model endpoint does not stop sensitive prompts being written to an application log or sent to an external tool.
 - Say: I would inventory where prompts, retrieved content, outputs and logs travel and apply the customer's data policy.
 - Probe: Which components can retain customer content and who can read it?
 
-Sources: [Bedrock data protection](https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html)
+Sources: [Bedrock data protection](https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html), [Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html), [Bedrock global cross-Region inference](https://docs.aws.amazon.com/bedrock/latest/userguide/global-cross-region-inference.html)
 
 ### CloudFront, WAF and protected origins
 
@@ -486,6 +486,32 @@ Validate: Evaluate held-out questions, unsupported answers, cross-tenant access 
 
 Sources: [Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html), [Bedrock data protection](https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html), [Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
 
+### Trace a slow or failing HTTPS request
+
+A customer says the website is down for some users. Diagnose before proposing a replacement architecture.
+
+Ask first:
+
+- Which URL, users, locations and time window fail? Is it DNS failure, timeout, certificate error, HTTP error or slow content?
+- What changed, which paths still work, and what is the customer impact? Compare a successful request and a failing one.
+- May we inspect sanitized client timings, request IDs, load-balancer access logs and application telemetry? Agree a safe rollback trigger.
+
+Proposed flow:
+
+1. Resolve the name: browser/OS/resolver cache first; a recursive resolver asks authoritative DNS when needed. Use dig to inspect the returned name/IP and TTL. Route 53 is not an HTTP proxy.
+2. Trace TCP, TLS, then HTTP for a normal HTTPS connection. HTTP/3 uses QUIC instead of TCP. Use curl -v or timing output to distinguish name resolution, connect, handshake and response time; validate certificate hostname, trust and expiry without disabling verification.
+3. At CloudFront/ALB, inspect cache behavior, target health and request logs. A 502 can come from an upstream reset or invalid response; a 504 can be a connection/response timeout. Follow the request ID before blaming the database.
+4. With authorized host access, use ss -lnt to check listeners, curl to test a local health endpoint, top/free to inspect CPU or memory, df -h and df -i for space/inodes, and journalctl for the service error window. Compare routes, SGs, NACL return ports, DNS and process state; command availability depends on the OS.
+5. Correlate dependency latency, connection-pool saturation, throttling and recent deployments. Restore service using the smallest evidence-backed reversible change, then validate the original failing user path.
+
+Tradeoff: Read-only diagnosis preserves evidence and avoids widening access blindly. Health checks must represent useful service readiness without cascading an optional dependency failure across all targets.
+
+Failure drill: DNS works and TLS validates, but the ALB returns 504 while the app process is running. Explain how you distinguish a blocked target path, a saturated worker pool and a slow downstream call.
+
+Validate: State a hypothesis and a discriminating observation at every hop. Confirm customer success rate and tail latency after recovery, retain sanitized evidence, and explain why ping alone cannot prove HTTPS or application health.
+
+Sources: [Route 53 DNS concepts](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/route-53-concepts.html), [CloudFront protocols and TLS settings](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistValuesGeneral.html), [EC2 Linux connection troubleshooting](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html), [ALB troubleshooting and HTTP response codes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html), [Security groups](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html), [Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html), [Management and governance services](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/management-governance.html)
+
 ## Optional labs
 
 Labs are optional and are not executed by this preparation site. Prefer the offline exercise if time or billing access is limited. Use a dedicated sandbox, MFA and temporary credentials. Estimate current regional charges first, use synthetic data and a short timer, and inspect every resource after cleanup. AWS Budgets alerts are not a hard spending cap; billing and notifications can lag. No lab requires NAT gateways, paid database instances, EKS clusters, provisioned concurrency, OpenSearch domains or live Bedrock calls.
@@ -596,5 +622,19 @@ Sources: [Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/us
 - [Amazon CloudFront](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 - [Amazon ElastiCache](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html)
 - [Amazon EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html)
+- [Route 53 DNS concepts](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/route-53-concepts.html)
+- [CloudFront protocols and TLS settings](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistValuesGeneral.html)
+- [EC2 Linux connection troubleshooting](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html)
+- [ALB troubleshooting and HTTP response codes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html)
+- [SCP scope and exceptions](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html)
+- [API Gateway REST versus HTTP APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html)
+- [API keys and usage-plan limitations](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html)
+- [DynamoDB read consistency](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html)
+- [DynamoDB transaction semantics](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/transaction-apis.html)
+- [Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
+- [Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html)
+- [Bedrock global cross-Region inference](https://docs.aws.amazon.com/bedrock/latest/userguide/global-cross-region-inference.html)
+- [Knowledge Base Guardrails reference limitations](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-retrieve-generate.html)
+- [Application Discovery Service availability change](https://docs.aws.amazon.com/application-discovery/latest/userguide/application-discovery-service-availability-change.html)
 
 Use this for decision practice. Confirm Region, feature, pricing, availability and current limits before a real design.

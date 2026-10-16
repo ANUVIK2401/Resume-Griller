@@ -7,7 +7,7 @@
   function resolve(item, questions, designs, behavioral) {
     if (item.kind === 'lp') {
       const q = questions.lp_questions.find((x) => x.id === item.id);
-      return { ...item, text: q.q, hint: practice.suggestStories(q.lp, behavioral) };
+      return { ...item, text: q.q, hint: practice.suggestQuestionStories(q, behavioral) };
     }
     if (item.kind === 'tech') return { ...item, text: questions.rapid_fire.find((x) => x.id === item.id).q, answer: questions.rapid_fire.find((x) => x.id === item.id).a };
     const d = designs.designs.find((x) => `design-${x.id}` === item.id);
@@ -20,7 +20,7 @@
     const missCount = new Map();
     mocks.flatMap((m) => m.missed.map((id) => id.replace(/-\d+$/, ''))).forEach((id) => missCount.set(id, (missCount.get(id) || 0) + 1));
     const weakest = [...missCount.entries()].sort((a, b) => b[1] - a[1])[0];
-    const weakLabel = weakest && [...practice.RUBRIC, ...practice.rubricFor('design')].find((r) => r.id === weakest[0])?.label;
+    const weakLabel = weakest && [...practice.RUBRIC, ...practice.rubricFor('design'), ...practice.rubricFor('tech')].find((r) => r.id === weakest[0])?.label;
     return el('div', { class: 'stack' },
       weakLabel ? el('p', { class: 'notice is-error' }, `Most missed across your mocks: ${weakLabel}. Fix this first.`) : null,
       ui.table(['When', 'Asked', 'Score'], [...mocks].reverse().map((m) => [
@@ -44,7 +44,7 @@
     function intro() {
       stage.replaceChildren(
         el('p', { class: 'h3' }, 'Two Leadership Principle questions, then one technical question or whiteboard design.'),
-        ui.list([`About ${MINUTES.lp} minutes per LP question including follow-ups; ${MINUTES.tech} for a technical question, ${MINUTES.design} for a design.`, 'Answer out loud. Type notes as you go: what you said, what you forgot.', 'At the end, use five checks per answer: evidence and ownership for stories; requirements, tradeoffs, failure, security, and cost for architecture.']),
+        ui.list([`About ${MINUTES.lp} minutes per LP question including follow-ups; ${MINUTES.tech} for a technical question, ${MINUTES.design} for a design.`, 'Answer out loud. Type notes as you go: what you said, what you forgot.', 'At the end, use the checks for the answer type: outcome and ownership for stories, correctness and clarity for rapid-fire, or requirements and tradeoffs for a design.']),
         el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: start }, 'Start a mock round')));
     }
 
@@ -101,9 +101,10 @@
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
       ui.section('round', 'Mock round', '30 to 40 minutes + review', el('span', {}, 'Run a ', el('em', {}, 'round')), stage),
       ui.section('rubric', 'Rubric', 'Five checks', el('span', {}, 'The ', el('em', {}, 'rubric')),
-        el('div', { class: 'grid-2' },
+        el('div', { class: 'grid-3' },
           el('div', { class: 'card card-navy stack' }, el('h3', { class: 'h3' }, 'Leadership Principles'), ui.list(practice.RUBRIC.map((r) => r.label))),
-          el('div', { class: 'card stack' }, el('h3', { class: 'h3' }, 'Technical and design'), ui.list(practice.rubricFor('design').map((r) => r.label))))),
+          el('div', { class: 'card stack' }, el('h3', { class: 'h3' }, 'Architecture design'), ui.list(practice.rubricFor('design').map((r) => r.label))),
+          el('div', { class: 'card stack' }, el('h3', { class: 'h3' }, 'Rapid-fire technical'), ui.list(practice.rubricFor('tech').map((r) => r.label))))),
       ui.section('history', 'History', 'Saved in this browser', el('span', {}, 'Your ', el('em', {}, 'history')), history)));
   };
 })();

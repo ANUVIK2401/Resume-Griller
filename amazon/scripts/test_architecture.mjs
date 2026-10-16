@@ -64,3 +64,49 @@ test('candidate openers request genuine motives and preserve reviewed resume chr
   assert.match(openers, /confirm.*(motivation|reason)/i);
   assert.match(openers, /human.review routing/i);
 });
+
+test('fundamentals explain the request path and a safe Linux diagnosis without growing the rapid-fire set', () => {
+  assert.equal(questions.rapid_fire.length, 24);
+  const url = questions.rapid_fire.find(item => item.id === 'rf-url').a;
+  assert.match(url, /cache/i);
+  assert.match(url, /certificate|hostname/i);
+  assert.match(url, /HTTP\/3|QUIC/i);
+  const cheatsheet = JSON.parse(read('data/cheatsheet.json'));
+  const drill = JSON.stringify(cheatsheet.walkthroughs.find(item => item.id === 'request-troubleshoot'));
+  for (const command of ['dig', 'curl', 'ss', 'df', 'journalctl']) assert.match(drill, new RegExp(command));
+  assert.match(drill, /502.*504/);
+  assert.match(drill, /TCP.*TLS.*HTTP/);
+});
+test('IAM reasoning covers an explicit-deny example and organization scope exceptions', () => {
+  const answer = questions.rapid_fire.find(item => item.id === 'rf-iam').a;
+  assert.match(answer, /explicit deny/i);
+  assert.match(answer, /s3:GetObject/);
+  assert.match(service('organizations'), /management account/);
+  assert.match(service('organizations'), /service.linked roles/i);
+  assert.doesNotMatch(service('kms'), /every key use/i);
+});
+test('storage and database answers preserve scoped consistency and deployment exceptions', () => {
+  assert.match(service('ebs'), /Multi.Attach/);
+  assert.match(service('efs'), /One Zone/);
+  const answer = questions.rapid_fire.find(item => item.id === 'rf-dynamo-rds').a;
+  assert.match(answer, /DynamoDB.*transactions/i);
+  assert.match(answer, /GSI.*eventually consistent/i);
+  assert.match(questions.rapid_fire.find(item => item.id === 'rf-ha-web').a, /backup|restore/i);
+});
+test('service scope caveats avoid outdated API, buffering, and runtime claims', () => {
+  assert.match(service('api-gateway'), /REST.*usage plans/i);
+  assert.match(service('api-gateway'), /not.*authentication/i);
+  assert.doesNotMatch(design('clickstream'), /within minutes, not seconds/);
+  assert.match(design('clickstream'), /zero.buffer/i);
+  assert.match(service('timestream'), /new customers/i);
+  assert.match(JSON.stringify(aws.shared_responsibility), /dependencies/);
+  assert.match(service('direct-connect'), /not encrypted by default/i);
+  assert.match(design('erp-migration'), /Discovery Service.*closed to new customers/i);
+});
+test('study priorities stay bounded and cutover accounts for writes after the switch', () => {
+  const cheatsheet = JSON.parse(read('data/cheatsheet.json'));
+  assert.equal(cheatsheet.topics.filter(item => item.priority === 'P0').length, 13);
+  assert.match(design('erp-migration'), /reverse.replication|target writes|writes on the target/i);
+  assert.match(JSON.stringify(cheatsheet.topics.find(item => item.id === 'queue')), /FIFO.*5.minute/i);
+  assert.match(JSON.stringify(cheatsheet.topics.find(item => item.id === 'ai-data')), /cross.Region/i);
+});

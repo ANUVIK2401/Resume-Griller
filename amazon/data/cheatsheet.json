@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-10-15",
+  "verified_on": "2026-10-16",
   "purpose": "Two-week Amazon Solutions Architect rehearsal: explain the customer decision, tradeoff, failure mode and validation before naming more services.",
   "experience_boundary": "Your OCI and Databricks work is actual experience only where supported by your resume and confirmed details. Every AWS architecture below is a hypothetical translation or practice design, not evidence you deployed it. Say: In my OCI work I did X; on AWS I would evaluate Y because Z. A completed lab is a lab, not production AWS experience.",
   "answer_frame": [
@@ -207,6 +207,76 @@
       "id": "eks",
       "title": "Amazon EKS",
       "url": "https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html"
+    },
+    {
+      "id": "dns",
+      "title": "Route 53 DNS concepts",
+      "url": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/route-53-concepts.html"
+    },
+    {
+      "id": "http3",
+      "title": "CloudFront protocols and TLS settings",
+      "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistValuesGeneral.html"
+    },
+    {
+      "id": "linux",
+      "title": "EC2 Linux connection troubleshooting",
+      "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html"
+    },
+    {
+      "id": "alb-errors",
+      "title": "ALB troubleshooting and HTTP response codes",
+      "url": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html"
+    },
+    {
+      "id": "scp",
+      "title": "SCP scope and exceptions",
+      "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+    },
+    {
+      "id": "api-types",
+      "title": "API Gateway REST versus HTTP APIs",
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html"
+    },
+    {
+      "id": "api-keys",
+      "title": "API keys and usage-plan limitations",
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html"
+    },
+    {
+      "id": "dynamo-reads",
+      "title": "DynamoDB read consistency",
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html"
+    },
+    {
+      "id": "dynamo-transactions",
+      "title": "DynamoDB transaction semantics",
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/transaction-apis.html"
+    },
+    {
+      "id": "outbox",
+      "title": "Transactional outbox pattern",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+    },
+    {
+      "id": "bedrock-retention",
+      "title": "Bedrock data retention",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html"
+    },
+    {
+      "id": "bedrock-regions",
+      "title": "Bedrock global cross-Region inference",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/global-cross-region-inference.html"
+    },
+    {
+      "id": "kb-references",
+      "title": "Knowledge Base Guardrails reference limitations",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-retrieve-generate.html"
+    },
+    {
+      "id": "discovery-eligibility",
+      "title": "Application Discovery Service availability change",
+      "url": "https://docs.aws.amazon.com/application-discovery/latest/userguide/application-discovery-service-availability-change.html"
     }
   ],
   "topics": [
@@ -218,11 +288,13 @@
       "decision": "Trace DNS, route table, security controls and return traffic. A public subnet has an internet-gateway route; an IPv4 instance also needs a public address for direct internet access.",
       "tradeoff": "Use public ingress with private application/data tiers. NAT supplies outbound IPv4 connectivity, with a cost and availability design to justify.",
       "failure": "A private subnet does not automatically have internet access. Check routes, NAT connectivity, DNS and security rules separately.",
-      "say": "I would draw the complete packet path and isolate the first failed hop before changing firewall rules.",
+      "say": "I would trace DNS, TCP, TLS and HTTP separately, then use the request-path walkthrough to choose a read-only diagnostic before changing anything.",
       "probe": "Can the private worker download a package, and what happens if its egress path fails?",
       "sources": [
         "vpc",
-        "nat"
+        "nat",
+        "dns",
+        "linux"
       ]
     },
     {
@@ -247,12 +319,13 @@
       "domain": "security",
       "name": "IAM roles, least privilege and Organizations",
       "decision": "Use temporary role credentials, workload identities and narrowly scoped actions/resources. Applicable explicit denies override allows; trust policy and permissions answer different questions.",
-      "tradeoff": "SCPs set an organization permission ceiling; they do not grant access. Identity, resource, key, boundary and organization policies interact.",
-      "failure": "An AdministratorAccess policy does not bypass an applicable explicit deny. Cross-account access also needs the correct trust/resource side.",
+      "tradeoff": "SCPs limit member-account principals but do not grant access or restrict management-account principals/service-linked roles. Identity, resource, key, boundary, session and organization policies can all matter.",
+      "failure": "Example: s3:GetObject is allowed by the role but explicitly denied by the bucket policy outside an approved endpoint. The applicable deny wins; assuming a role does not bypass it.",
       "say": "I would identify the principal, action, resource and request conditions, then evaluate the applicable policies.",
       "probe": "Why does an assumed role still receive AccessDenied?",
       "sources": [
-        "iam"
+        "iam",
+        "scp"
       ]
     },
     {
@@ -275,12 +348,14 @@
       "domain": "networking",
       "name": "ALB, NLB, API Gateway and CloudFront",
       "decision": "ALB fits HTTP application routing; NLB fits transport-layer load balancing. Discuss API management and edge caching as separate needs.",
-      "tradeoff": "Pick ingress from protocol, authentication, caching and latency requirements. Avoid stacking services without a customer benefit.",
+      "tradeoff": "Select the API type deliberately: REST APIs support usage plans/API keys, unlike HTTP APIs. API keys are not authentication; use a supported authorizer or IAM.",
       "failure": "Healthy load balancer targets can still fail customer requests if a dependency is unhealthy; test meaningful health checks.",
       "say": "I would first ask whether this is a web application, a managed public API or a TCP service.",
       "probe": "Where does TLS terminate and which component owns authentication?",
       "sources": [
-        "elb"
+        "elb",
+        "api-types",
+        "api-keys"
       ]
     },
     {
@@ -316,13 +391,15 @@
       "priority": "P0",
       "domain": "database",
       "name": "RDS/Aurora versus DynamoDB",
-      "decision": "Use relational engines for relational transactions and query flexibility; consider DynamoDB for designed key-value/document access patterns.",
-      "tradeoff": "For DynamoDB, explain partition/access-pattern design. For relational systems, explain connections, indexing and query/load behavior.",
+      "decision": "Use RDS/Aurora for joins and flexible relational queries; DynamoDB supports regional ACID transactions too, but needs designed key-based access patterns.",
+      "tradeoff": "Compare consistency, indexing, partition skew and connection management. DynamoDB tables/LSIs support optional strong reads; GSIs are eventually consistent.",
       "failure": "A hot key or inefficient query can defeat capacity planning. Test skewed traffic and realistic queries.",
       "say": "I would choose the data model from the reads, writes, transactions and consistency requirements.",
       "probe": "What new access pattern would cause you to reconsider this choice?",
       "sources": [
-        "db"
+        "db",
+        "dynamo-reads",
+        "dynamo-transactions"
       ]
     },
     {
@@ -345,14 +422,15 @@
       "priority": "P0",
       "domain": "messaging",
       "name": "SQS, retries, DLQs and idempotency",
-      "decision": "Use SQS to buffer work and decouple consumers. Receive hides a message; delete after successful processing.",
-      "tradeoff": "Tune visibility to processing time and retries; a longer timeout delays recovery. DLQs need alarms, investigation and controlled redrive.",
+      "decision": "Use SQS to buffer work: receive hides a message, and delete acknowledges success. FIFO orders within a message group and deduplicates sends within a 5-minute window.",
+      "tradeoff": "Bound retries with backoff/jitter, extend visibility for long processing, and monitor DLQs plus redrive. Commit database changes and an outbox event atomically to avoid a publish gap.",
       "failure": "The worker can commit a side effect then crash before deletion. Use a durable idempotency strategy for business effects.",
       "say": "I would make duplicate delivery safe and monitor queue age alongside the dead-letter queue.",
       "probe": "What happens if a payment succeeds but the worker crashes before acknowledging?",
       "sources": [
         "visibility",
-        "duplicates"
+        "duplicates",
+        "outbox"
       ]
     },
     {
@@ -434,13 +512,14 @@
       "priority": "P1",
       "domain": "migration",
       "name": "Migration strategy, DMS and DataSync",
-      "decision": "Assess dependencies and choose a migration strategy before tools. Evaluate DMS for supported database migration/CDC and DataSync for supported data transfer.",
+      "decision": "Assess dependencies and choose a migration strategy before tools. Evaluate DMS for supported database migration/CDC and DataSync for supported data transfer. Verify discovery-tool availability: Application Discovery Service is closed to new customers; AWS identifies AWS Transform as a current discovery path.",
       "tradeoff": "Rehosting can reduce initial change; replatforming/refactoring may improve operations but increases testing and delivery risk.",
-      "failure": "A copy completing does not prove a cutover works. Reconcile data, test dependencies and define rollback plus write ownership.",
+      "failure": "Reconcile and rehearse cutover with one write authority. Once the target accepts writes, rollback requires tested reverse replication or reconciliation; switching DNS back can lose those writes.",
       "say": "I would propose a representative pilot with success criteria, cutover rehearsal and an explicit rollback trigger.",
       "probe": "What if the source continues receiving writes during migration?",
       "sources": [
-        "migration"
+        "migration",
+        "discovery-eligibility"
       ]
     },
     {
@@ -450,12 +529,13 @@
       "name": "Bedrock, RAG, evaluation and guardrails",
       "decision": "For a knowledge assistant, evaluate retrieval-grounded generation with Bedrock and Knowledge Bases against the customer task.",
       "tradeoff": "Evaluate retrieval quality, groundedness, latency and cost on a representative test set. RAG and fine-tuning solve different needs.",
-      "failure": "Retrieved text may carry prompt injection or stale content. Enforce authorization before retrieval and treat model output as untrusted.",
+      "failure": "Retrieved content may carry prompt injection or stale data. Enforce retrieval filters server-side from trusted identity, prevent bypass, isolate answer caches by authorization, and check source-link permissions. Guardrails do not apply to retrieved references.",
       "say": "I would build an evaluation set, test retrieval and citations, and define escalation for uncertain answers.",
       "probe": "How will you prevent one tenant from retrieving another tenant's documents?",
       "sources": [
         "rag",
-        "guardrails"
+        "guardrails",
+        "kb-references"
       ]
     },
     {
@@ -463,13 +543,15 @@
       "priority": "P1",
       "domain": "security",
       "name": "GenAI data handling and shared responsibility",
-      "decision": "For standard Bedrock model inference, AWS documentation describes isolation from model providers. Review the exact model, feature and data path before promising data handling.",
+      "decision": "Inventory the exact model/API, retention mode, invocation logs and inference profile. Cross-Region inference can process prompts outside the source Region; do not promise all data remains in the customer account or Region.",
       "tradeoff": "Application logs, knowledge stores, tool calls and external integrations have their own permissions and retention choices.",
       "failure": "A secure model endpoint does not stop sensitive prompts being written to an application log or sent to an external tool.",
       "say": "I would inventory where prompts, retrieved content, outputs and logs travel and apply the customer's data policy.",
       "probe": "Which components can retain customer content and who can read it?",
       "sources": [
-        "bedrock"
+        "bedrock",
+        "bedrock-retention",
+        "bedrock-regions"
       ]
     },
     {
@@ -796,6 +878,35 @@
         "rag",
         "bedrock",
         "guardrails"
+      ]
+    },
+    {
+      "id": "request-troubleshoot",
+      "name": "Trace a slow or failing HTTPS request",
+      "customer": "A customer says the website is down for some users. Diagnose before proposing a replacement architecture.",
+      "discovery": [
+        "Which URL, users, locations and time window fail? Is it DNS failure, timeout, certificate error, HTTP error or slow content?",
+        "What changed, which paths still work, and what is the customer impact? Compare a successful request and a failing one.",
+        "May we inspect sanitized client timings, request IDs, load-balancer access logs and application telemetry? Agree a safe rollback trigger."
+      ],
+      "flow": [
+        "Resolve the name: browser/OS/resolver cache first; a recursive resolver asks authoritative DNS when needed. Use dig to inspect the returned name/IP and TTL. Route 53 is not an HTTP proxy.",
+        "Trace TCP, TLS, then HTTP for a normal HTTPS connection. HTTP/3 uses QUIC instead of TCP. Use curl -v or timing output to distinguish name resolution, connect, handshake and response time; validate certificate hostname, trust and expiry without disabling verification.",
+        "At CloudFront/ALB, inspect cache behavior, target health and request logs. A 502 can come from an upstream reset or invalid response; a 504 can be a connection/response timeout. Follow the request ID before blaming the database.",
+        "With authorized host access, use ss -lnt to check listeners, curl to test a local health endpoint, top/free to inspect CPU or memory, df -h and df -i for space/inodes, and journalctl for the service error window. Compare routes, SGs, NACL return ports, DNS and process state; command availability depends on the OS.",
+        "Correlate dependency latency, connection-pool saturation, throttling and recent deployments. Restore service using the smallest evidence-backed reversible change, then validate the original failing user path."
+      ],
+      "tradeoff": "Read-only diagnosis preserves evidence and avoids widening access blindly. Health checks must represent useful service readiness without cascading an optional dependency failure across all targets.",
+      "challenge": "DNS works and TLS validates, but the ALB returns 504 while the app process is running. Explain how you distinguish a blocked target path, a saturated worker pool and a slow downstream call.",
+      "validation": "State a hypothesis and a discriminating observation at every hop. Confirm customer success rate and tail latency after recovery, retain sanitized evidence, and explain why ping alone cannot prove HTTPS or application health.",
+      "sources": [
+        "dns",
+        "http3",
+        "linux",
+        "alb-errors",
+        "sg",
+        "nacl",
+        "ops"
       ]
     }
   ],

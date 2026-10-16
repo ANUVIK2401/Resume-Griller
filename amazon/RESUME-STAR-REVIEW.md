@@ -18,10 +18,10 @@ At MSRcosmos, I worked on moving 10,000+ financial records from Sage X3 to Sage 
 
 **Practise these follow-ups:**
 
-- What did the finance stakeholder ask you to protect, in their own words?
-- What was one record that automation could not safely approve, and how was it handled?
-- How did you validate 83% auto-approval without interpreting confidence as correctness?
-- Were 68% effort reduction and 3-day to 5.5-hour turnaround measured over the same entities and period?
+- How did you set the confidence threshold?
+- What happened when the model was confidently wrong?
+- What did it cost per record?
+- How would you build it on AWS only?
 
 ### S2. P1 MTTR from 94 to 26 minutes
 
@@ -29,10 +29,10 @@ At Oracle, I worked on NSX observability for a platform serving 37,000+ enterpri
 
 **Practise these follow-ups:**
 
-- Walk through one P1 from first signal to mitigation, naming your own intervention.
-- What fields produced a root-cause tag, and when was it wrong?
-- What other changes could explain part of the MTTR decrease?
-- How did you avoid leaking tenant data in diagnostic context?
+- Which signals drove the tags?
+- Rules or a model?
+- How was MTTR measured, and over what window?
+- What is a limitation of automatic root-cause tagging?
 
 ### S3. SLO alerting, 41% fewer false pages
 
@@ -40,10 +40,9 @@ The NSX environment served 37,000+ enterprise tenants. Static thresholds can pro
 
 **Practise these follow-ups:**
 
-- What was the actual SLI and which customer promise set the SLO?
-- Were CPU and memory leading signals or objectives themselves?
-- How did you ensure true-positive detection did not get worse?
-- How did you control high-cardinality labels and telemetry cost?
+- How did you pick the targets?
+- How did you handle cardinality across 37,000+ tenants?
+- Did you use burn-rate alerting?
 
 ### S4. CLI validation toolchain adopted by 4 teams
 
@@ -51,10 +50,9 @@ At Oracle, configuration errors could be discovered during deployment or after a
 
 **Practise these follow-ups:**
 
-- Show one check that prevented a real configuration failure.
-- What did you personally do for another team to adopt it?
-- Did any team disagree, and what was their actual concern?
-- Did someone become more capable independently because of your coaching, or was this only tooling adoption?
+- What made the validation useful across teams?
+- How did you handle team-specific needs?
+- How large was the deployment improvement?
 
 ### S5. NetSuite search latency down 30%
 
@@ -62,10 +60,9 @@ At Oracle, I worked on search performance at enterprise data volumes. A slow pag
 
 **Practise these follow-ups:**
 
-- What did EXPLAIN show before and after?
-- Why that column order and selectivity for the index?
-- What happened to writes, storage, and p95 or p99 latency?
-- How did you check correctness and roll back the SQL or index change?
+- How did you find the hot predicates?
+- Did the new indexes slow writes?
+- How would you roll out the query changes safely?
 
 ### S6. Kubernetes autoscaling on custom metrics
 
@@ -73,10 +70,9 @@ At Oracle, release surges created changing demand for NSX services. Keeping the 
 
 **Practise these follow-ups:**
 
-- Which metric predicted the bottleneck, and why did CPU alone miss it?
-- What was the p99 objective and how long did the 2x test run?
-- How did node provisioning and pod readiness affect scale-up?
-- What prevented scale-down from causing another surge or connection loss?
+- Which metric, and why not CPU?
+- How would you handle scale-up lag on AWS?
+- How did you prevent flapping?
 
 ### S7. Applying LangGraph and MCP to the ERP workflow
 
@@ -84,10 +80,8 @@ At MSRcosmos, the migration from Sage X3 to Sage Intacct involved financial reco
 
 **Practise these follow-ups:**
 
-- What did you not know on day one, and how did you test that you understood it?
-- What was the first thing you tried that did not work?
-- Which source or small experiment changed the implementation?
-- What changed in your behavior afterward, beyond shipping S1?
+- What did LangGraph and MCP each contribute?
+- How would you learn an unfamiliar AWS service?
 
 ### S8. DQN training stall, 40% shorter runs
 
@@ -95,10 +89,8 @@ In sports analytics research at USC, I prototyped a reinforcement-learning agent
 
 **Practise these follow-ups:**
 
-- Which timing trace isolated replay sampling and the loader stall?
-- What sampling behavior and convergence checks did you preserve?
-- What changed agreement from 68% to 74%, independent of runtime?
-- Was the official appointment an internship, volunteer role, or another research classification?
+- How would you isolate the same training bottleneck?
+- How do the runtime and quality results differ?
 
 ### S9. PacSun executive intelligence app
 
@@ -106,10 +98,9 @@ At USC Annenberg, my work is a multi-agent application on Claude Enterprise for 
 
 **Practise these follow-ups:**
 
-- What did an actual executive or stakeholder ask for?
-- Which component has real users, and what feedback changed your design?
-- How are connector scopes enforced and meeting proposals approved?
-- What would make you abandon the multi-agent design for a simpler workflow?
+- How do agents get live data safely?
+- How do you stop a wrong brief from reaching the CEO?
+- Why several agents instead of one?
 
 ### S10. Human-in-the-loop annotation pipeline
 
@@ -117,10 +108,8 @@ At USC AI Trust Lab, my work includes using Llama 3.3 70B to label caseworker no
 
 **Practise these follow-ups:**
 
-- Who defined the rubric and how were disagreements resolved?
-- How did expert labels validate the confidence threshold?
-- What percentage of high-confidence outputs was sampled for errors?
-- What data access, retention, and redaction controls actually existed?
+- What does the rubric contribute?
+- How do you know the labels are good?
 
 ### S11. ModelScope quantization study
 
@@ -128,10 +117,8 @@ I benchmarked Llama-3.2-3B and Gemma-2-2B on a T4 GPU to understand quantization
 
 **Practise these follow-ups:**
 
-- Which exact model/configuration produced 2299 MB and 13.7 tok/s?
-- What was INT8 compared against for the 53% and 2.1x claims?
-- What was the MMLU sample and uncertainty, and what did it fail to capture?
-- What changes on different GPU kernels or a customer-specific evaluation set?
+- Why was INT8 slower?
+- Would you ship INT4 to a customer?
 
 ### S12. Nightly Databricks feed
 
@@ -139,10 +126,9 @@ At MSRcosmos, the ERP agents depended on financial data from Databricks workspac
 
 **Practise these follow-ups:**
 
-- Was 22 minutes a full reload, full scan with merge, or incremental refresh?
-- How did you handle source deletes and late or replayed updates?
-- What happened if one workspace was unavailable?
-- What did correctness and freshness checks compare before publishing data?
+- Why incremental merges?
+- What would you do if a source workspace were late?
+- How do full refresh and incremental merges fit together?
 
 ## Delivery drills
 

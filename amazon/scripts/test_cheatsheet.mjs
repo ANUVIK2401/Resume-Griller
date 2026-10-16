@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 const get = () => JSON.parse(readFileSync(new URL('../data/cheatsheet.json', import.meta.url)));
 test('two-week AWS scope includes decision-ready priorities and all critical domains', () => {
   const data = get();
-  assert.equal(data.verified_on, '2026-10-15');
+  assert.equal(data.verified_on, '2026-10-16');
   for (const priority of ['P0', 'P1', 'P2']) assert.ok(data.topics.some(t => t.priority === priority));
   for (const domain of ['networking', 'security', 'compute', 'storage', 'database', 'messaging', 'reliability', 'cost', 'migration', 'genai']) assert.ok(data.topics.some(t => t.domain === domain), domain);
   for (const topic of data.topics) {

@@ -188,7 +188,7 @@
     {
       "id": "rf-ha-web",
       "q": "How do you make a web app highly available on AWS?",
-      "a": "Auto Scaling group across at least 2 AZs behind an ALB, Multi-AZ RDS or Aurora, state kept out of instances (ElastiCache, S3), and Route 53 health checks. For a Region failure, add a DR tier."
+      "a": "Clarify the availability target and failure scope. Use stateless capacity across at least 2 AZs behind an ALB, a suitable Multi-AZ database, health checks, and enough surviving capacity. Make requests idempotent and test reconnects after failover. Backups plus restore drills protect against accidental deletion/corruption; replication is not a backup. Regional DR depends on business RPO/RTO, not an automatic requirement."
     },
     {
       "id": "rf-sg-nacl",
@@ -198,12 +198,12 @@
     {
       "id": "rf-subnets",
       "q": "Public vs private subnet? What does a NAT Gateway do?",
-      "a": "A public subnet's route table points to an Internet Gateway; a private one does not. A NAT Gateway in a public subnet lets private instances make outbound connections without accepting inbound ones."
+      "a": "A public subnet has an Internet Gateway route; direct IPv4 access also requires a public IP and allowed traffic. A public NAT gateway lets private workloads initiate internet traffic; responses return through the NAT, while unsolicited inbound traffic is blocked. Check both directions through routes, security groups and stateless NACLs. S3/DynamoDB gateway endpoints can avoid NAT for those services; endpoint policies do not grant all required permissions."
     },
     {
       "id": "rf-alb-nlb",
       "q": "ALB vs NLB? When API Gateway?",
-      "a": "ALB is layer 7: HTTP routing by path, host, header. NLB is layer 4: TCP and UDP, static IPs, very high throughput, low latency. API Gateway when you want a managed API front door with auth, throttling, and usage plans, often in front of Lambda."
+      "a": "Use ALB for HTTP host/path routing and NLB for transport-layer TCP/UDP/TLS, static IPs, or supported PrivateLink services. Use API Gateway for an API-management requirement; REST and HTTP APIs have different features and prices. REST usage plans/API keys meter clients; API keys are not user authentication. Ask who authenticates requests, where TLS terminates, and whether the origin is reachable around the front door."
     },
     {
       "id": "rf-s3-classes",
@@ -213,7 +213,7 @@
     {
       "id": "rf-ebs-efs-s3",
       "q": "EBS vs EFS vs S3?",
-      "a": "EBS is block storage for one instance in one AZ, for boot volumes and databases. EFS is a shared NFS file system across instances and AZs. S3 is object storage over HTTP for data lakes, backups, and static assets."
+      "a": "EBS is block storage scoped to one AZ, usually attached to one instance; supported Multi-Attach io1/io2 volumes require coordinated writes. EFS is shared NFS with Regional or One Zone resilience. S3 is object storage through APIs. Pick from the application access protocol, sharing and recovery requirements; a mounted volume or multi-AZ copy is not a tested backup."
     },
     {
       "id": "rf-multiaz-replica",
@@ -223,12 +223,12 @@
     {
       "id": "rf-dynamo-rds",
       "q": "DynamoDB vs RDS? What is a hot partition?",
-      "a": "DynamoDB for known access patterns at any scale with fast key lookups and no joins; RDS for joins, ad hoc queries, and multi-table transactions. A hot partition is too much traffic on one partition key; fix it with a higher-cardinality key or write sharding."
+      "a": "RDS/Aurora fits joins, flexible relational queries, and relational transactions. DynamoDB also supports transactions within an account/Region; choose it for designed key-value/document access patterns. Tables and LSIs can provide strong reads; GSIs are eventually consistent. A popular key can overload one partition even when total capacity looks sufficient. Example: use a designed user-ID lookup for sessions; benchmark SQL for changing finance-report joins. Write sharding adds read/aggregation work."
     },
     {
       "id": "rf-lambda",
       "q": "Lambda limits and cold starts. When not to use Lambda?",
-      "a": "15-minute max runtime, up to 10 GB memory, payload limits. Cold starts add latency for new environments; reduce with provisioned concurrency or SnapStart. Avoid it for long jobs, steady very high throughput, or GPU work."
+      "a": "15-minute max runtime, up to 10 GB memory, payload limits. Cold starts add latency for new environments; reduce with provisioned concurrency or SnapStart where the runtime and configuration support it. Avoid it for long jobs, steady very high throughput, or GPU work."
     },
     {
       "id": "rf-ecs-eks",
@@ -238,12 +238,12 @@
     {
       "id": "rf-messaging",
       "q": "SQS vs SNS vs EventBridge vs Kinesis?",
-      "a": "SQS is a queue to decouple and buffer. SNS pushes one message to many subscribers. EventBridge routes events by content rules, including SaaS and AWS events and schedules. Kinesis is an ordered, replayable stream for real-time analytics with many consumers."
+      "a": "SQS buffers work; competing consumers share work rather than each receiving a copy. SNS fans out; separate SQS queues let each subscriber process independently. EventBridge routes events; Kinesis provides retained streams and replay with ordering scoped to a shard. SQS FIFO orders by message group and deduplicates sends within 5 minutes; external side effects still need durable idempotency. Use bounded backoff with jitter, visibility extension, a monitored DLQ and controlled redrive."
     },
     {
       "id": "rf-iam",
       "q": "IAM role vs user? What is least privilege?",
-      "a": "A user has long-term credentials; a role is assumed and gives temporary credentials, preferred for apps and federated people. Least privilege means granting only the actions and resources needed, then trimming with IAM Access Analyzer."
+      "a": "A role supplies temporary credentials; its trust policy controls who may assume it, while permissions control subsequent actions. Identify principal, action, resource and conditions. An applicable explicit deny wins. Example: a role allows s3:GetObject, but a bucket policy denies that principal outside an approved endpoint: the read is denied. Check resource/key policies, boundaries, sessions and organization policies as applicable; cross-account paths need appropriate grants on both sides."
     },
     {
       "id": "rf-shared",
@@ -253,7 +253,7 @@
     {
       "id": "rf-encryption",
       "q": "Encryption at rest vs in transit? What does KMS do?",
-      "a": "At rest means stored data is encrypted, with keys in KMS. In transit means TLS between clients and services, with ACM certificates. KMS manages keys, logs every use in CloudTrail, and key policies control who can use them."
+      "a": "TLS protects data in transit; verify certificate hostname, trust and expiry at each termination point. At rest, services may use service-managed keys or KMS keys. KMS controls key operations, not application authorization. A role can have data-read access but lack required decrypt access. CloudTrail records KMS API calls; verify event selectors and data-event coverage rather than promising an audit entry for every local use of a data key."
     },
     {
       "id": "rf-rpo-rto",
@@ -273,22 +273,22 @@
     {
       "id": "rf-cw-ct-config",
       "q": "CloudWatch vs CloudTrail vs Config?",
-      "a": "CloudWatch is performance: metrics, logs, alarms. CloudTrail is audit: who called which API, when. Config is configuration history and compliance rules for each resource."
+      "a": "CloudWatch supports metrics, logs, alarms and request telemetry; CloudTrail records supported AWS API/account activity; Config records supported resource configuration and evaluates rules. For a latency incident, correlate request IDs, tail latency, dependency errors and recent changes. For who deleted an S3 object, enable the required CloudTrail data events; management-event history alone will not answer every object-level question."
     },
     {
       "id": "rf-bill",
       "q": "How would you reduce a customer's AWS bill?",
-      "a": "Find the drivers in Cost Explorer first. Then right-size, delete idle resources, Savings Plans for baseline, Spot for interruptible work, S3 lifecycle and Intelligent-Tiering, Graviton, and gateway endpoints instead of NAT for S3 traffic."
+      "a": "Start with the business metric, Cost Explorer drivers, recent changes and tags. Reduce idle/oversized capacity, excess logs, storage versions and avoidable transfer/NAT before committing spend. Model baseline commitments, interruptible Spot and storage lifecycle against actual demand. Example: compare NAT charges with S3 gateway endpoints while retaining the required access controls. Validate latency and cost per successful transaction; Budgets alerts are not a guaranteed spending cap."
     },
     {
       "id": "rf-url",
       "q": "What happens when you type a URL into a browser?",
-      "a": "DNS resolves the name, the browser opens TCP and TLS connections, often to a CDN edge, and sends an HTTP request. A cache hit returns at the edge; a miss goes through a load balancer to an app server, which may hit a cache and database, and the response comes back to render."
+      "a": "Check browser/OS caches; a recursive DNS resolver uses cached answers or queries authoritative servers. For a new HTTPS connection, establish transport (usually TCP; HTTP/3 uses QUIC), then TLS validates the certificate hostname/trust and negotiates encryption. HTTP goes to the CDN or origin; cache policy determines an edge hit or a request through the ALB, application, cache and database. Existing connections can be reused. Trace DNS, connect, TLS and application time separately; Route 53 answers DNS rather than proxying the HTTP request."
     },
     {
       "id": "rf-tcp-udp",
       "q": "TCP vs UDP, and common HTTP status codes?",
-      "a": "TCP is connection-oriented, ordered, and retransmits; UDP is connectionless and low latency (DNS, video). 200 OK, 201 Created, 301 and 302 redirects, 304 Not Modified, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 429 Too Many Requests, 500, 502, 503, 504 server-side errors."
+      "a": "TCP provides an ordered reliable byte stream with congestion control; UDP provides datagrams without built-in delivery or ordering guarantees. Applications can add reliability over UDP: QUIC powers HTTP/3. DNS can use UDP or TCP. For HTTP: 401 needs valid authentication; 403 is refusal; 429 is throttling; 502 can indicate an invalid upstream response; 504 is an upstream timeout. A status code narrows the investigation but does not prove the root cause."
     },
     {
       "id": "rf-bedrock-rag",
@@ -324,15 +324,15 @@
       ],
       "options": [
         {
-          "name": "Quick win before the next peak",
-          "tradeoff": "CloudFront in front, Auto Scaling with scheduled pre-warming, read replicas. Fast to ship, does not fix deeper bottlenecks."
+          "name": "Prove and relieve the bottleneck",
+          "tradeoff": "Use request traces and a representative load test to decide whether scheduled scaling, safe caching or read capacity addresses the current failure. Faster intervention with measured limits; it may leave deeper write-path issues."
         },
         {
-          "name": "Re-architect the hot path",
-          "tradeoff": "Cache sessions, queue order processing, move to Aurora. More durable fix, takes longer and needs testing."
+          "name": "Change the constrained path",
+          "tradeoff": "If the evidence supports it, move state out of app instances and add an atomic order/outbox handoff with idempotent workers. Evaluate a database change separately; Aurora does not automatically fix every bottleneck."
         }
       ],
-      "close": "Propose a load test against a copy of their stack this month, then a Well-Architected review focused on Reliability."
+      "close": "Agree a pilot and load-test success criteria before the next customer peak: checkout success, tail latency, recovery behavior and unit cost."
     },
     {
       "id": "rp-cfo-containers",
@@ -346,11 +346,11 @@
       "options": [
         {
           "name": "Plain explanation",
-          "tradeoff": "A container is a standard shipping box for software: it runs the same everywhere, so more apps share each server and releases are faster. Upfront migration cost, lower run cost and less risk per release."
+          "tradeoff": "A container packages software and its dependencies consistently, helping teams deploy and share host capacity. Savings and release benefits depend on utilization, migration effort and platform operations; prove them with a pilot."
         },
         {
           "name": "Start small",
-          "tradeoff": "Move one service first and measure cost per transaction and release frequency before committing the budget."
+          "tradeoff": "Move one service first and compare total cost per transaction, release frequency and failure recovery before committing a wider budget."
         }
       ],
       "close": "Offer a one-page cost comparison after a small pilot, with numbers they can check."
@@ -435,11 +435,11 @@
       "options": [
         {
           "name": "Shared responsibility explained",
-          "tradeoff": "AWS secures the infrastructure and offers HIPAA-eligible services under a BAA; you configure access, encryption, and logging correctly. Clear, but they must own their part."
+          "tradeoff": "Confirm the applicable agreement and current HIPAA-eligible services with the security/compliance owner. AWS eligibility does not make the application compliant; the customer owns access, configuration and operating controls."
         },
         {
-          "name": "Guardrailed starting point",
-          "tradeoff": "Control Tower landing zone, KMS everywhere, CloudTrail, Config rules, GuardDuty. More setup, much easier audits."
+          "name": "Reviewable starting point",
+          "tradeoff": "Evaluate account separation, logging, least privilege, key management, monitored threat detection and incident response against the actual data flow. Each control needs an owner and evidence."
         }
       ],
       "close": "Offer a security-focused architecture review and point them to HIPAA-eligible services only."

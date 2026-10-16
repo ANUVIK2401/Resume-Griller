@@ -33,6 +33,23 @@ test('suggestStories returns primary then backup, and the gap for missing slots'
   assert.equal(practice.suggestStories('not-an-lp', behavioral).lp, null);
 });
 
+test('prompt-specific suggestions refuse unrelated success stories for missing episodes', () => {
+  const missing = { 'rl-wrong': 'failure', 'dr-missed': 'failure', 'hb-manager': 'disagreement',
+    'hd-grow': 'mentoring', 'co-no': 'refusal', 'et-feedback': 'feedback', 'hs-refuse': 'refusal',
+    'lc-fast': 'learning-specific', 'lc-recent': 'recent-learning' };
+  for (const [id, gap] of Object.entries(missing)) {
+    const question = questions.lp_questions.find((q) => q.id === id);
+    const result = practice.suggestQuestionStories(question, behavioral);
+    assert.equal(result.lp.id, question.lp);
+    assert.deepEqual(result.stories, [], `${id} must not suggest a mismatched success story`);
+    assert.equal(result.gap.id, gap);
+    assert.ok(result.gap.name);
+  }
+  const details = practice.suggestQuestionStories(questions.lp_questions.find((q) => q.id === 'dd-details'), behavioral);
+  assert.equal(details.stories[0].story.id, 'netsuite-latency');
+  assert.equal(details.gap, null);
+});
+
 test('mock round has two LP questions on different principles and one technical item', () => {
   for (let seed = 1; seed < 200; seed += 1) {
     const round = practice.pickMockRound(questions, designs, seeded(seed));
@@ -65,6 +82,16 @@ test('technical mock answers use architecture criteria instead of personal STAR'
   assert.ok(!criteria.some((c) => ['star', 'metric', 'i-not-we'].includes(c.id)));
   assert.deepEqual(practice.scoreRound([{ kind: 'design' }], [criteria.map((c) => c.id)]), { score: 5, total: 5, missed: [] });
   assert.equal(practice.rubricFor('lp'), practice.RUBRIC);
+});
+
+test('rapid-fire technical rubric rewards explanation without demanding a full architecture', () => {
+  const quick = practice.rubricFor('tech');
+  assert.equal(quick.length, 5);
+  assert.ok(quick.some((item) => item.id === 'direct-answer'));
+  assert.ok(!quick.some((item) => ['recovery', 'security', 'requirements'].includes(item.id)));
+  assert.notDeepEqual(quick, practice.rubricFor('design'));
+  assert.match(practice.RUBRIC.find((item) => item.id === 'metric').label, /outcome or progress/i);
+  assert.match(practice.RUBRIC.find((item) => item.id === 'tradeoff').label, /personal decision.*learning/i);
 });
 
 test('date logic uses Pacific calendar days and rejects impossible dates', () => {
@@ -129,6 +156,31 @@ test('recruiting context separates established assessment facts from tentative i
   assert.match(context.role.success, /sales quotas/i);
   assert.equal(loop.event.date, '');
   assert.equal(loop.event.confirmed, false);
+});
+
+test('tentative date-only target drives a twelve-day sprint without inventing a time', () => {
+  assert.equal(loop.event.target_date, '2026-10-28');
+  assert.equal(loop.event.target_status, 'tentative');
+  assert.equal(loop.event.date, '');
+  assert.equal(loop.sprint.start, '2026-10-16');
+  assert.equal(loop.sprint.days.length, 12);
+  assert.equal(loop.sprint.days[0].date, '2026-10-16');
+  assert.equal(loop.sprint.days.at(-1).date, '2026-10-27');
+  assert.match(loop.sprint.days.at(-1).focus, /taper/i);
+  assert.equal(loop.sprint.days.filter((day) => day.full_mock).length, 3);
+  assert.equal(loop.sprint.days.filter((day) => day.paper_design).length, 3);
+  for (const day of loop.sprint.days) {
+    assert.equal(day.tasks.reduce((sum, task) => sum + task.minutes, 0), 180);
+    assert.equal(day.tasks.filter((task) => task.minimum).reduce((sum, task) => sum + task.minutes, 0), 90);
+    assert.ok(day.deliverable && day.readiness_gate);
+  }
+  const first = loop.sprint.days[0].tasks.map((task) => task.text).join(' ');
+  assert.match(first, /60.second.*S1.*S2/i);
+  assert.match(first, /IAM.*request path/i);
+  assert.match(first, /10.minute.*discovery/i);
+  assert.match(loop.sprint.story_strategy, /S1.*S2.*S4.*S5.*S3.*S6/);
+  assert.match(loop.sprint.gap_policy, /optional.*private.*real/i);
+  assert.ok(loop.sprint.interview_day.tasks.every((task) => !/9:00|45.minute|round [123]/i.test(task.text)));
 });
 
 // The progress store runs in a sandbox with an in-memory localStorage.
@@ -202,15 +254,30 @@ test('home rerenders and persists a moved plan independently of interview date',
   assert.ok(invalid.validationMessage);
 });
 
-test('home shows sourced recruiting context before scheduling controls', async () => {
+test('home retains sourced recruiting context as secondary reference', async () => {
   const view = homeContext(storeContext().store);
   await view.home({ main: view.main, loop });
   const text = visibleText(view.main);
   assert.ok(text.includes('Online assessment passed'));
   assert.ok(text.includes('Tentative Wednesday hold'));
   assert.ok(text.includes('Exact date, start time, and time zone'));
-  assert.ok(text.indexOf('Online assessment passed') < text.indexOf('Interview date and time (Pacific Time)'));
+  assert.ok(flatten(view.main).some((node) => node.tag === 'details' && node.id === 'recruiting-context'));
+  assert.ok(text.includes('Set recruiter-confirmed date and time'));
   assert.ok(text.includes('2027-01-04') && text.includes('2027-07-06'));
+});
+
+test('home leads with date-only target and current-day sprint while keeping old plan secondary', async () => {
+  const view = homeContext(storeContext().store, '2026-10-16T19:00:00Z');
+  await view.home({ main: view.main, loop });
+  const nodes = flatten(view.main);
+  const text = visibleText(view.main);
+  assert.ok(text.includes('12 days to tentative target'));
+  assert.ok(text.includes('Wed, Oct 28, 2026'));
+  assert.ok(text.includes('Start time and room unconfirmed'));
+  assert.equal(nodes.filter((node) => node.class?.startsWith('sprint-day')).length, 12);
+  assert.ok(nodes.some((node) => node.id === 'sprint-sp01' && node.class.includes('plan-today')));
+  assert.ok(nodes.some((node) => node.tag === 'details' && node.id === 'extended-plan'));
+  assert.ok(nodes.some((node) => node.tag === 'details' && node.id === 'recruiting-context'));
 });
 
 test('home refreshes across Pacific midnight without rebuilding the plan each minute', async () => {
@@ -222,7 +289,7 @@ test('home refreshes across Pacific midnight without rebuilding the plan each mi
   const initialDay = day('day-d01');
   assert.ok(initialDay.class.includes('plan-today'));
   assert.ok(visibleText(view.main).includes('2 days'));
-  assert.equal(view.timers.length, 2);
+  assert.equal(view.timers.length, 3);
   assert.ok(view.timers.every((timer) => timer.interval === 60000));
   view.timers.forEach((timer) => timer.run());
   assert.equal(day('day-d01'), initialDay, 'same-day timer preserves checkbox DOM and focus');

@@ -4,20 +4,27 @@
   // Self-score after every mock answer. Ids are stored in quiz history as "missed".
   const RUBRIC = [
     { id: 'star', label: 'STAR complete: situation, task, action, result' },
-    { id: 'metric', label: 'A metric stated, and I could defend it' },
+    { id: 'metric', label: 'Defensible outcome or progress, quantitative when available' },
     { id: 'i-not-we', label: 'Said "I", not "we", for my own actions' },
     { id: 'under-2', label: 'Finished in under 2 minutes before follow-ups' },
-    { id: 'tradeoff', label: 'Named a tradeoff or the alternative I rejected' },
+    { id: 'tradeoff', label: 'Explained a personal decision, tradeoff, or learning relevant to the prompt' },
   ];
 
-  const TECH_RUBRIC = [
+  const DESIGN_RUBRIC = [
     { id: 'requirements', label: 'Clarified the customer requirements and constraints' },
     { id: 'choice', label: 'Justified the choice and discussed an alternative' },
     { id: 'recovery', label: 'Explained a failure mode and recovery approach' },
     { id: 'security', label: 'Addressed identity, access, and data security' },
     { id: 'cost-next', label: 'Covered cost drivers and a practical next step' },
   ];
-  const rubricFor = (kind) => ['tech', 'design'].includes(kind) ? TECH_RUBRIC : RUBRIC;
+  const TECH_RUBRIC = [
+    { id: 'direct-answer', label: 'Gave a direct and correct answer' },
+    { id: 'mechanism', label: 'Explained how it works, beyond naming the service' },
+    { id: 'example', label: 'Used a useful distinction or example' },
+    { id: 'scope', label: 'Stated the relevant scope or limitation' },
+    { id: 'clarity', label: 'Kept the explanation concise and clear' },
+  ];
+  const rubricFor = (kind) => kind === 'design' ? DESIGN_RUBRIC : kind === 'tech' ? TECH_RUBRIC : RUBRIC;
 
   const pick = (list, rng) => list[Math.floor(rng() * list.length)];
 
@@ -31,6 +38,29 @@
       .map(([role, id]) => ({ role, story: byId(id) }))
       .filter((x) => x.story);
     return { lp, stories, gap: lp.gap ? behavioral.gaps.find((g) => g.id === lp.gap) || null : null };
+  }
+
+  // These prompts require a specific episode that the current story bank does not
+  // establish. Revisit this map only after adding a verified matching episode.
+  const QUESTION_GAPS = {
+    'rl-wrong': ['failure', 'Failure or mistake'],
+    'dr-missed': ['failure', 'Failure or mistake'],
+    'hb-manager': ['disagreement', 'Disagreement (Have Backbone)'],
+    'hd-grow': ['mentoring', 'Mentoring (Hire and Develop)'],
+    'co-no': ['refusal', 'A real customer request you declined'],
+    'et-feedback': ['feedback', 'A real difficult-feedback conversation'],
+    'hs-refuse': ['refusal', 'A real refusal to accept a quality compromise'],
+    'lc-fast': ['learning-specific', 'A real rapid-learning episode and learning sequence'],
+    'lc-recent': ['recent-learning', 'A recent learning episode you can date and explain'],
+  };
+
+  function suggestQuestionStories(question, behavioral) {
+    const suggestion = suggestStories(question.lp, behavioral);
+    const missing = QUESTION_GAPS[question.id];
+    if (!missing) return suggestion;
+    const [id, name] = missing;
+    const gap = behavioral.gaps.find((item) => item.id === id) || { id, name };
+    return { lp: suggestion.lp, stories: [], gap };
   }
 
   // Two LP questions on different principles, then one technical item:
@@ -86,7 +116,7 @@
     return plan.map((day, index) => ({ ...day, date: new Date(epoch + index * 86400000).toISOString().slice(0, 10) }));
   }
 
-  const api = { RUBRIC, rubricFor, suggestStories, pickMockRound, scoreRound, daysUntil, dayState, validPlanDate, schedulePlan };
+  const api = { RUBRIC, rubricFor, suggestStories, suggestQuestionStories, pickMockRound, scoreRound, daysUntil, dayState, validPlanDate, schedulePlan };
   if (typeof module !== 'undefined') { module.exports = api; return; }
   root.Prep = root.Prep || {};
   root.Prep.practice = api;

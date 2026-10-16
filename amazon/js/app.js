@@ -136,6 +136,15 @@
   }
 
   function renderSidebar(site, loop, pageId) {
+    const storageMessage = el('p', { id: 'storage-message', role: 'status', 'aria-live': 'polite' });
+    const updateStorageMessage = () => {
+      storageMessage.textContent = Prep.store.persistent
+        ? 'Progress saves in this browser. Export to back it up.'
+        : 'Saving is unavailable. Your latest changes stay in memory; export before leaving.';
+    };
+    updateStorageMessage();
+    const stopStorageStatus = Prep.store.subscribe(updateStorageMessage);
+    window.addEventListener('pagehide', event => { if (!event.persisted) stopStorageStatus(); });
     document.getElementById('sidebar').replaceChildren(
       el('div', { class: 'sidebar-head' },
         wordmark(),
@@ -150,7 +159,7 @@
       el('nav', { class: 'side-toc', id: 'toc', 'aria-label': 'On this page', hidden: true }),
       el('div', { class: 'sidebar-foot' },
         el('div', { class: 'sidebar-tools' }, textSizeButtons(), themeButton(), progressButtons()),
-        el('p', {}, Prep.store.persistent ? 'Progress saves in this browser. Export to back it up.' : 'Storage is blocked here, so progress resets on reload. Export before leaving.')),
+        storageMessage),
     );
   }
 
@@ -172,6 +181,19 @@
     }, { rootMargin: '-15% 0px -75% 0px' });
     sections.forEach((s) => spy.observe(s));
   }
+
+  // Reveal direct links even when their destination lives inside collapsed details.
+  function revealFragment() {
+    let id;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+    const target = id && document.getElementById(id);
+    if (!target) return;
+    for (let node = target; node; node = node.parentElement) {
+      if (node.tagName === 'DETAILS') node.open = true;
+    }
+    target.scrollIntoView();
+  }
+  window.addEventListener('hashchange', revealFragment);
 
   function renderMasthead(page) {
     document.getElementById('masthead').replaceChildren(el('div', { class: 'wrap' },
@@ -238,7 +260,7 @@
         el('h2', {}, 'Not built yet'),
         el('p', { class: 'muted' }, `This segment lands in a later commit. Its content will come from data/${pageId === 'home' ? 'loop' : pageId}.json.`))));
       buildToc();
-      if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+      revealFragment();
     } catch (err) {
       console.error(err);
       showError(err);

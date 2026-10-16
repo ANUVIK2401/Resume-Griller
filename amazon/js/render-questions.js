@@ -80,13 +80,13 @@
     const roll = () => {
       timer?.stop();
       const q = data.lp_questions[Math.floor(Math.random() * data.lp_questions.length)];
-      const { lp, stories, gap } = practice.suggestStories(q.lp, behavioral);
+      const { lp, stories, gap } = practice.suggestQuestionStories(q, behavioral);
       timer = ui.timer(LP_ANSWER_MIN);
       box.replaceChildren(
         el('span', { class: 'chip chip-gold' }, lp.name),
         el('p', { class: 'quiz-q' }, q.q),
         el('div', { class: 'row' }, el('span', { class: 'label' }, 'Suggested stories'), stories.map(({ story, role }) => storyChip(story, role))),
-        gap ? el('p', { class: 'notice is-error' }, `Gap: ${gap.name}. Answer from your drafted story, not a borrowed one.`) : null,
+        gap ? el('p', { class: 'notice is-error' }, `Gap: ${gap.name}. Use a real episode that answers this particular question.`) : null,
         el('div', { class: 'row' }, el('span', { class: 'label' }, `${LP_ANSWER_MIN}-minute answer`), timer.node),
         el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: roll }, 'Another question')));
     };

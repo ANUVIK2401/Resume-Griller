@@ -92,10 +92,10 @@
         "measurement": "Define reconciliation effort, turnaround start/end, sample size, and whether all metrics share the same cohort."
       },
       "probes": [
-        "What did the finance stakeholder ask you to protect, in their own words?",
-        "What was one record that automation could not safely approve, and how was it handled?",
-        "How did you validate 83% auto-approval without interpreting confidence as correctness?",
-        "Were 68% effort reduction and 3-day to 5.5-hour turnaround measured over the same entities and period?"
+        "How did you set the confidence threshold?",
+        "What happened when the model was confidently wrong?",
+        "What did it cost per record?",
+        "How would you build it on AWS only?"
       ],
       "delivery": [
         "Open with turnaround, then briefly explain GL/AP/AR as financial records.",
@@ -132,10 +132,10 @@
         "measurement": "MTTR is 94 to 26 minutes, about 72% lower; incident count, time window, and other changes are missing."
       },
       "probes": [
-        "Walk through one P1 from first signal to mitigation, naming your own intervention.",
-        "What fields produced a root-cause tag, and when was it wrong?",
-        "What other changes could explain part of the MTTR decrease?",
-        "How did you avoid leaking tenant data in diagnostic context?"
+        "Which signals drove the tags?",
+        "Rules or a model?",
+        "How was MTTR measured, and over what window?",
+        "What is a limitation of automatic root-cause tagging?"
       ],
       "delivery": [
         "Explain the old on-call workflow before describing the event pipeline.",
@@ -172,10 +172,9 @@
         "measurement": "41% reduction needs before/after page counts, labels, measurement windows, and comparable traffic."
       },
       "probes": [
-        "What was the actual SLI and which customer promise set the SLO?",
-        "Were CPU and memory leading signals or objectives themselves?",
-        "How did you ensure true-positive detection did not get worse?",
-        "How did you control high-cardinality labels and telemetry cost?"
+        "How did you pick the targets?",
+        "How did you handle cardinality across 37,000+ tenants?",
+        "Did you use burn-rate alerting?"
       ],
       "delivery": [
         "Use one noisy alert and the signal that replaced it.",
@@ -212,10 +211,9 @@
         "measurement": "Define release-cycle duration, deploy denominator, comparison period, and attribution."
       },
       "probes": [
-        "Show one check that prevented a real configuration failure.",
-        "What did you personally do for another team to adopt it?",
-        "Did any team disagree, and what was their actual concern?",
-        "Did someone become more capable independently because of your coaching, or was this only tooling adoption?"
+        "What made the validation useful across teams?",
+        "How did you handle team-specific needs?",
+        "How large was the deployment improvement?"
       ],
       "delivery": [
         "Begin with the production error, then show how CI moved detection earlier.",
@@ -252,10 +250,9 @@
         "measurement": "P50 is median page load, not a query percentile or p99; test conditions and tail behavior are missing."
       },
       "probes": [
-        "What did EXPLAIN show before and after?",
-        "Why that column order and selectivity for the index?",
-        "What happened to writes, storage, and p95 or p99 latency?",
-        "How did you check correctness and roll back the SQL or index change?"
+        "How did you find the hot predicates?",
+        "Did the new indexes slow writes?",
+        "How would you roll out the query changes safely?"
       ],
       "delivery": [
         "Describe a user waiting for search, using an actual workflow.",
@@ -292,10 +289,9 @@
         "measurement": "2x peak needs baseline RPS, workload shape, p99 threshold, duration, and test or production distinction."
       },
       "probes": [
-        "Which metric predicted the bottleneck, and why did CPU alone miss it?",
-        "What was the p99 objective and how long did the 2x test run?",
-        "How did node provisioning and pod readiness affect scale-up?",
-        "What prevented scale-down from causing another surge or connection loss?"
+        "Which metric, and why not CPU?",
+        "How would you handle scale-up lag on AWS?",
+        "How did you prevent flapping?"
       ],
       "delivery": [
         "Say OCI explicitly, then explain the portable scaling principle.",
@@ -332,10 +328,8 @@
         "measurement": "S1 metrics are shared results; do not double-count this as a distinct episode."
       },
       "probes": [
-        "What did you not know on day one, and how did you test that you understood it?",
-        "What was the first thing you tried that did not work?",
-        "Which source or small experiment changed the implementation?",
-        "What changed in your behavior afterward, beyond shipping S1?"
+        "What did LangGraph and MCP each contribute?",
+        "How would you learn an unfamiliar AWS service?"
       ],
       "delivery": [
         "Use only for a question that asks about learning, after confirming the learning sequence.",
@@ -372,10 +366,8 @@
         "measurement": "52 to 31 minutes is about 40% less runtime, not a 40% increase in speed; agreement gain is 6 percentage points."
       },
       "probes": [
-        "Which timing trace isolated replay sampling and the loader stall?",
-        "What sampling behavior and convergence checks did you preserve?",
-        "What changed agreement from 68% to 74%, independent of runtime?",
-        "Was the official appointment an internship, volunteer role, or another research classification?"
+        "How would you isolate the same training bottleneck?",
+        "How do the runtime and quality results differ?"
       ],
       "delivery": [
         "Use 52 to 31 minutes and say shorter runtime.",
@@ -412,10 +404,9 @@
         "measurement": "No outcome metric or accepted milestone is in the resume; retain ongoing status."
       },
       "probes": [
-        "What did an actual executive or stakeholder ask for?",
-        "Which component has real users, and what feedback changed your design?",
-        "How are connector scopes enforced and meeting proposals approved?",
-        "What would make you abandon the multi-agent design for a simpler workflow?"
+        "How do agents get live data safely?",
+        "How do you stop a wrong brief from reaching the CEO?",
+        "Why several agents instead of one?"
       ],
       "delivery": [
         "Use present tense and a concrete current milestone.",
@@ -452,10 +443,8 @@
         "measurement": "No label-agreement, throughput, reviewer-load, or business-result measure is supplied."
       },
       "probes": [
-        "Who defined the rubric and how were disagreements resolved?",
-        "How did expert labels validate the confidence threshold?",
-        "What percentage of high-confidence outputs was sampled for errors?",
-        "What data access, retention, and redaction controls actually existed?"
+        "What does the rubric contribute?",
+        "How do you know the labels are good?"
       ],
       "delivery": [
         "Keep the annotation story separate from the six-model benchmark.",
@@ -492,10 +481,8 @@
         "measurement": "Clarify model, batch size, sequence length, warmup, repeats, memory definition, and INT8 comparator."
       },
       "probes": [
-        "Which exact model/configuration produced 2299 MB and 13.7 tok/s?",
-        "What was INT8 compared against for the 53% and 2.1x claims?",
-        "What was the MMLU sample and uncertainty, and what did it fail to capture?",
-        "What changes on different GPU kernels or a customer-specific evaluation set?"
+        "Why was INT8 slower?",
+        "Would you ship INT4 to a customer?"
       ],
       "delivery": [
         "Say in this T4 benchmark before stating the result.",
@@ -532,10 +519,9 @@
         "measurement": "22 minutes is labeled full refresh while merges suggest incrementality; clarify exactly what was timed."
       },
       "probes": [
-        "Was 22 minutes a full reload, full scan with merge, or incremental refresh?",
-        "How did you handle source deletes and late or replayed updates?",
-        "What happened if one workspace was unavailable?",
-        "What did correctness and freshness checks compare before publishing data?"
+        "Why incremental merges?",
+        "What would you do if a source workspace were late?",
+        "How do full refresh and incremental merges fit together?"
       ],
       "delivery": [
         "Start with the downstream need for fresh financial data.",

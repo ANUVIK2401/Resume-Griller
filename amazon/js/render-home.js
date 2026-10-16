@@ -22,32 +22,63 @@
 
   function recruitingContext(loop) {
     const context = loop.recruiting_context;
-    return ui.section('recruiting-context', 'Recruiting context', 'What the supplied emails establish',
-      el('span', {}, 'Your recruiting ', el('em', {}, 'context')),
-      el('p', { class: 'section-intro' }, `${loop.req.title}. ${context.source}`),
-      el('div', { class: 'grid-3' },
-        el('article', { class: 'card stack' },
-          el('span', { class: 'chip chip-green' }, 'Established'),
-          el('h3', { class: 'h3' }, context.assessment.title),
-          el('p', {}, context.assessment.detail),
-          el('p', { class: 'muted' }, context.assessment.source)),
-        el('article', { class: 'card stack' },
-          el('span', { class: 'chip chip-gold' }, 'Tentative'),
-          el('h3', { class: 'h3' }, context.hold.title),
-          el('p', {}, context.hold.detail),
-          el('p', {}, context.interview_conditions)),
-        el('article', { class: 'card stack' },
-          el('span', { class: 'chip chip-red' }, 'Clarification needed'),
-          el('h3', { class: 'h3' }, 'Resolve the scheduling conflict'),
-          el('p', {}, context.timing_conflict), ui.list(context.pending))),
-      el('div', { class: 'card stack' },
-        el('h3', { class: 'h3' }, 'Role and preparation focus'),
-        el('p', {}, context.role.locations),
-        el('p', {}, `Planned cohort starts: ${context.role.cohort_starts.join(' or ')}.`),
-        el('p', { class: 'muted' }, context.role.cohort_note),
-        ui.list(context.role.focus),
-        el('p', {}, context.role.success),
-        el('p', { class: 'muted' }, context.plan_relationship)));
+    return el('details', { class: 'card stack', id: 'recruiting-context' },
+      el('summary', {}, 'Recruiting context and older email notes'),
+      el('p', {}, context.assessment.title),
+      el('p', {}, context.assessment.detail),
+      el('p', {}, context.hold.title),
+      el('p', {}, context.hold.detail),
+      el('p', {}, context.interview_conditions),
+      el('p', {}, el('strong', {}, 'Older email clarification: '), context.timing_conflict),
+      ui.list(context.pending),
+      el('p', {}, context.role.locations),
+      el('p', {}, `Planned cohort starts: ${context.role.cohort_starts.join(' or ')}.`),
+      el('p', { class: 'muted' }, context.role.cohort_note),
+      ui.list(context.role.focus),
+      el('p', {}, context.role.success),
+      el('p', { class: 'muted' }, context.plan_relationship));
+  }
+
+  function sprintSection(loop, site, onChange) {
+    const sprint = loop.sprint;
+    const schedule = el('div', { class: 'stack' });
+    let displayedDay;
+    const paint = () => {
+      displayedDay = pacificToday();
+      const active = sprint.days.find((day) => practice.dayState(day.date) === 'today');
+      schedule.replaceChildren(
+        active ? el('a', { class: 'btn btn-gold', href: `#sprint-${active.id}` }, `Start today: ${active.focus}`) : null,
+        el('div', { class: 'plan-grid' }, sprint.days.map((day) => {
+          const state = practice.dayState(day.date);
+          const countDone = () => day.tasks.filter((task) => store.get('checks', `sprint-${task.id}`, false)).length;
+          const count = el('span', { class: 'chip' }, `${countDone()} / ${day.tasks.length}`);
+          const card = el('article', { class: `sprint-day plan-day plan-${state}`, id: `sprint-${day.id}` },
+            el('div', { class: 'row' }, el('p', { class: 'plan-date' }, fmtDay(day.date)),
+              state === 'today' ? el('span', { class: 'chip chip-gold' }, 'Today') : null, count),
+            el('h3', { class: 'h3' }, day.focus),
+            el('p', { class: 'muted' }, day.id === 'sp12' ? '90-minute taper; extensions optional, rest first' : '90-minute minimum; about 3 hours full path'),
+            el('div', { class: 'stage-checks' }, day.tasks.map((task) => {
+              const page = pageOf(site, task.page);
+              return el('div', { class: 'plan-task' }, ui.checkbox(`sprint-${task.id}`, `${task.minimum ? 'Minimum' : 'Extension'} · ${task.minutes} min: ${task.text}`),
+                page ? el('a', { class: 'chip', href: page.href }, page.label) : null);
+            })),
+            el('p', {}, el('strong', {}, 'Deliverable: '), day.deliverable),
+            el('p', {}, el('strong', {}, 'Readiness gate: '), day.readiness_gate));
+          card.addEventListener('change', () => { count.textContent = `${countDone()} / ${day.tasks.length}`; onChange(); });
+          return card;
+        })));
+    };
+    paint();
+    setInterval(() => { if (pacificToday() !== displayedDay) paint(); }, 60000);
+    return ui.section('sprint', '12-day sprint', 'October 16-27 preparation', el('span', {}, 'Your focused ', el('em', {}, 'sprint')),
+      el('p', { class: 'section-intro' }, sprint.note),
+      el('a', { class: 'btn', href: 'FINAL-PREP.md', download: 'FINAL-PREP.md' }, 'Download the final preparation card'),
+      el('p', {}, sprint.story_strategy),
+      el('p', { class: 'muted' }, sprint.gap_policy), schedule,
+      el('article', { class: 'card stack', id: 'interview-day' },
+        el('h3', { class: 'h3' }, `${sprint.interview_day.title}: ${fmtDay(sprint.interview_day.date)}`),
+        el('p', {}, sprint.interview_day.note),
+        sprint.interview_day.tasks.map((task) => ui.checkbox(`sprint-${task.id}`, task.text))));
   }
 
   function heroCard(loop) {
@@ -56,15 +87,15 @@
     const face = el('div', { class: 'stack', style: { gap: '0.4rem' }, 'aria-live': 'polite' });
     const paint = () => {
       const iso = eventDate(loop);
-      const days = practice.daysUntil(iso);
+      const days = practice.daysUntil(iso || loop.event.target_date);
       const isConfirmed = !!iso && store.get('checks', 'interview-confirmed', false);
       face.replaceChildren(
-        el('p', { class: 'countdown' }, days === null ? 'Date unconfirmed' : days > 1 ? `${days} days` : days === 1 ? 'Tomorrow' : days === 0 ? 'Today' : 'Date has passed'),
-        el('p', { class: 'h3' }, iso ? `Interview: ${fmtDate(iso)}` : 'Enter your interview details when available'),
+        el('p', { class: 'countdown' }, days === null ? 'Date unconfirmed' : days > 1 ? `${days} days${iso ? '' : ' to tentative target'}` : days === 1 ? 'Tomorrow' : days === 0 ? 'Today' : 'Date has passed'),
+        el('p', { class: 'h3' }, iso ? `Interview: ${fmtDate(iso)}` : `Tentative: ${fmtDay(loop.event.target_date)} on campus at USC`),
         el('div', { class: 'row' },
           el('span', { class: `chip ${isConfirmed ? 'chip-green' : 'chip-red'}` }, isConfirmed ? 'Confirmed by you' : 'Pending confirmation'),
           el('span', { class: 'chip' }, loop.event.location)),
-        el('p', { class: 'muted' }, 'Changing the interview date does not move the study plan. Set the plan start below separately; day 14 is a readiness checkpoint.'));
+        el('a', { class: 'btn btn-gold', href: '#sprint' }, 'Start today’s essentials'));
     };
     date.addEventListener('change', () => {
       if (date.value && (!date.validity.valid || !practice.validPlanDate(date.value.slice(0, 10)))) return;
@@ -77,9 +108,11 @@
     paint();
     setInterval(paint, 60000);
     return el('div', { class: 'card card-navy next-round' },
-      el('p', { class: 'label' }, 'Your interview'), face,
-      el('p', { class: 'muted' }, loop.event.note),
-      el('label', { class: 'stack' }, 'Interview date and time (Pacific Time)', date), confirmed);
+      el('p', { class: 'label' }, 'Latest target: tentative Wednesday October 28'), face,
+      el('details', {}, el('summary', {}, 'Set recruiter-confirmed date and time'),
+        el('p', { class: 'muted' }, loop.event.note),
+        el('p', { class: 'muted' }, 'Changing the interview date does not move the study plan. The sprint stays October 16-27; the original movable plan retains its saved dates below.'),
+        el('label', { class: 'stack' }, 'Interview date and time (Pacific Time)', date), confirmed));
   }
 
   function planSection(loop, site, onChange) {
@@ -193,12 +226,13 @@
 
   window.Prep.pages.home = async ({ main, loop }) => {
     const [site, behavioral] = await Promise.all([load('site'), load('behavioral')]);
-    const allChecks = [...loop.stages.flatMap((s) => s.checklist.map((c) => `loop-${c.id}`)), ...loop.plan.flatMap((d) => d.tasks.map((t) => `plan-${t.id}`))];
-    const updateReadout = () => setReadout('Plan and practice checklists', allChecks.filter((id) => store.get('checks', id, false)).length, allChecks.length);
+    const sprintChecks = [...loop.sprint.days.flatMap((day) => day.tasks.filter((task) => task.minimum).map((task) => `sprint-${task.id}`)), ...loop.sprint.interview_day.tasks.map((task) => `sprint-${task.id}`)];
+    const updateReadout = () => setReadout('Sprint essentials', sprintChecks.filter((id) => store.get('checks', id, false)).length, sprintChecks.length);
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
+      ui.section('countdown', 'Interview details', 'Tentative date-only target', el('span', {}, 'The ', el('em', {}, 'date')), heroCard(loop)),
+      sprintSection(loop, site, updateReadout),
       recruitingContext(loop),
-      ui.section('countdown', 'Interview details', 'Exact date and time unconfirmed', el('span', {}, 'The ', el('em', {}, 'date')), heroCard(loop)),
-      planSection(loop, site, updateReadout),
+      el('details', { class: 'card', id: 'extended-plan' }, el('summary', {}, 'Original adjustable 14-day plan (saved progress retained)'), planSection(loop, site, updateReadout)),
       ui.section('rounds', 'Practice scenarios', `${loop.stages.length} practice scenarios`, el('span', {}, 'Skills to ', el('em', {}, 'rehearse')),
         el('p', { class: 'section-intro' }, loop.structure_note),
         el('div', { class: 'pipeline' }, loop.stages.map((s) => stageCard(s, loop, site, behavioral, updateReadout)))),

@@ -85,7 +85,7 @@
       "id": "hire-and-develop",
       "name": "Hire and Develop the Best",
       "meaning": "Raise the bar and help other people grow.",
-      "primary": "cli-toolchain",
+      "primary": null,
       "backup": null,
       "gap": "mentoring"
     },
@@ -310,19 +310,19 @@
       "probes": [
         {
           "q": "Which signals drove the tags?",
-          "a": "The implementation used real-time API diagnostics on event streams and tagged root causes on 400- and 500-series failures, with runbook context for on-call engineers. Those are the implementation details I can substantiate here. In a proposed extension, I would evaluate request identifiers, service context, and recent changes as diagnostic inputs rather than assuming a status code alone proves the cause."
+          "a": "I instrumented real-time API diagnostics on event streams and used automatic root-cause tags for 400- and 500-series failures, with runbook context for on-call engineers. The tag gives the engineer an investigation starting point. For a new design, I would correlate status codes with request and service context and recent changes, because a status code alone does not establish the root cause."
         },
         {
           "q": "Rules or a model?",
-          "a": "The contribution I can describe is API instrumentation, automatic root-cause tagging, and runbook context. I would not label the tagging engine as machine learning without supporting implementation detail. For a new system, I would start with explainable rules for known failure patterns and add a model only if evaluation showed a useful improvement."
+          "a": "My contribution was API instrumentation, automatic root-cause tagging, and runbook context. That result does not depend on presenting the tagger as machine learning. For a new implementation, I would start with explainable rules for known failure patterns, measure incorrect tags, and add a model only if evaluation showed a useful improvement."
         },
         {
           "q": "How was MTTR measured, and over what window?",
-          "a": "The result was P1 MTTR falling from 94 to 26 minutes. I would not invent an incident count or comparison window. To substantiate causality, I would examine the incident tracker, use a consistent start and recovery definition, compare incident severity and workload, and separate the effect of diagnostics from other operational changes."
+          "a": "P1 MTTR went from 94 to 26 minutes. To give the exact incident count and comparison window, I would need the underlying incident-tracker data. A defensible comparison uses consistent incident-start and recovery definitions, comparable severity and workload, and accounts for other operational changes. The metric supports the recovery result; it does not establish that diagnostics were the only contributor."
         },
         {
-          "q": "What did you get wrong first?",
-          "a": "I would not invent a failed incident to embellish this result. A real design limitation is that a root-cause tag is a hypothesis, so the engineer still needs the supporting evidence and a way to investigate further. In a new design, I would track incorrect tags as carefully as successful diagnoses."
+          "q": "What is a limitation of automatic root-cause tagging?",
+          "a": "A root-cause tag is a hypothesis, not proof. The engineer needs supporting evidence and runbook context so they can verify it and continue investigating if it is wrong. For a new system, I would evaluate incorrect tags, missing tags, and time to a useful action, rather than optimize only the number of failures labeled."
         }
       ],
       "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
@@ -361,11 +361,11 @@
         },
         {
           "q": "How did you handle cardinality across 37,000+ tenants?",
-          "a": "The observability scope covered 37,000+ tenants, but I would not imply every metric used a tenant label. In an AWS design, I would choose labels deliberately, aggregate the main operational view by useful service dimensions, and reserve detailed tenant investigation for controlled queries. Unbounded labels can make the monitoring system expensive and difficult to operate."
+          "a": "The monitoring scope covered 37,000+ tenants; that scope does not mean every metric had a tenant label. For a new design, I would aggregate the operational view by useful service dimensions and use controlled queries for detailed tenant investigation. Labels need a deliberate budget, because an unbounded combination of tenants, endpoints, and request identifiers can make the monitoring system costly and difficult to operate."
         },
         {
           "q": "Did you use burn-rate alerting?",
-          "a": "I can substantiate the move toward SLO-based alerting and the 41% reduction in false-positive pages; I would not add an unverified burn-rate implementation. For a new design, I would consider multi-window burn-rate alerts to distinguish rapid error-budget consumption from slower degradation, then test whether the alerts produce an actionable response."
+          "a": "The implementation moved toward SLO-based alerting and reduced false-positive pages by 41%. I would need the original alert configuration to describe the exact burn-rate policy. For a new design, I would consider multi-window burn-rate alerts to distinguish rapid error-budget consumption from slower degradation, then test whether the alerts produce an actionable response."
         }
       ],
       "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
@@ -379,7 +379,6 @@
       "lps": [
         "invent-and-simplify",
         "earn-trust",
-        "hire-and-develop",
         "best-employer"
       ],
       "number_ids": [
@@ -402,16 +401,16 @@
       "aws": "Proposed AWS design, not a claim of AWS implementation: CodePipeline with a CodeBuild validation stage, cfn-lint and CloudFormation Guard for templates, AWS Config rules for drift.",
       "probes": [
         {
-          "q": "Who pushed back, and why?",
-          "a": "Four teams adopted the toolchain, but adoption alone does not establish that someone opposed it. I would not invent a disagreement. In a customer discussion, I would expect to explore concerns such as build time, false rejections, and exceptions, and show how a validation check prevents a specific downstream problem."
+          "q": "What made the validation useful across teams?",
+          "a": "The common value was catching configuration errors in the Jenkins workflow before deployment. Four NSX teams adopted the toolchain, release cycles became 34% shorter, and failed deployments fell from 11% to 4%. For a customer-facing design, I would evaluate the same adoption tradeoff: useful protection with clear errors and an explicit exception policy, balanced against build time and false rejections."
         },
         {
           "q": "How did you handle team-specific needs?",
-          "a": "The implementation was a Jenkins CLI toolchain with scripted pre-deployment validation, adopted by 4 NSX teams. I would not add an unverified plugin or configuration mechanism. For a new design, I would separate common checks from team-specific policy and make exceptions explicit, so flexibility does not silently disable the important safeguards."
+          "a": "The implementation was a Jenkins CLI toolchain with scripted pre-deployment validation, adopted by 4 NSX teams. The team-specific extension mechanism would require the original implementation details. In a new design, I would separate shared checks from team policy, return actionable errors, and make exceptions explicit so customization does not silently disable the safeguards."
         },
         {
-          "q": "How did you get the other teams onboarded?",
-          "a": "The concrete outcome is that 4 engineering teams adopted the toolchain. I can explain the product value: checks ran in CI, configuration errors were caught earlier, and failed deployments fell from 11% to 4%. I would not turn that into a mentoring or persuasion anecdote without a real interaction to describe."
+          "q": "How large was the deployment improvement?",
+          "a": "The failed-deployment rate went from 11% to 4%, a decrease of 7 percentage points. That is different from saying a 7% relative reduction. Four teams adopted the toolchain, and release cycles became 34% shorter. Those are separate measures of adoption, deployment reliability, and delivery time; none by itself demonstrates mentoring or a particular persuasion tactic."
         }
       ],
       "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
@@ -453,8 +452,8 @@
           "a": "The measured result I can give is the P50 page-load reduction from 840 to 588 milliseconds. I would not claim a write-latency result that I cannot substantiate. An index adds write and storage work, so I would evaluate insert and update latency, index size, and workload balance alongside the read improvement."
         },
         {
-          "q": "How did you test safely?",
-          "a": "I can describe the query-plan, index, and SQL changes, but I would not invent a canary or rollback procedure. For a production rollout, I would verify result correctness on representative data, compare read and write behavior, check locking implications for the database engine, and plan how to revert the query or index change."
+          "q": "How would you roll out the query changes safely?",
+          "a": "My implementation work was query-plan profiling, index restructuring, and SQL changes. For a production rollout, I would verify result correctness on representative data, compare read and write behavior, inspect tail latency, and check locking implications for the database engine. I would also define how to revert the query or index change before exposing the full workload."
         }
       ],
       "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
@@ -487,11 +486,11 @@
       "probes": [
         {
           "q": "Which metric, and why not CPU?",
-          "a": "The implementation used custom Prometheus metrics rather than CPU alone. I would not substitute a guessed metric for the actual configuration. The principle is that CPU can miss a workload bottleneck; in a new design, I would test whether queue depth, in-flight requests, or another service signal predicts saturation and latency for that application."
+          "a": "I used custom Prometheus metrics instead of relying on CPU alone. The precise signal and target would need to come from the autoscaler configuration. The reason to go beyond CPU is that it can miss a workload bottleneck. For a new design, I would test whether queue depth, in-flight requests, or another service signal predicts saturation and latency for that application."
         },
         {
-          "q": "How did you handle scale-up lag?",
-          "a": "The result was maintaining p99 SLOs at 2x peak load on OCI. I would not invent a warm-pool or node-provisioning mechanism. For an AWS design, I would account separately for detecting demand, adding replicas, obtaining node capacity, and becoming ready to serve traffic, then test whether the total delay fits the service objective."
+          "q": "How would you handle scale-up lag on AWS?",
+          "a": "The OCI implementation held p99 SLOs at 2x peak load. In an AWS design, I would account separately for detecting demand, adding replicas, obtaining node capacity, and becoming ready to serve traffic. I would measure the total delay against the service objective and test whether scaling capacity arrives before the workload saturates."
         },
         {
           "q": "How did you prevent flapping?",
@@ -570,12 +569,12 @@
       "aws": "Proposed AWS design, not a claim of AWS implementation: SageMaker AI training jobs with Profiler and Debugger; Spot training for cheaper runs.",
       "probes": [
         {
-          "q": "How did you find the stall?",
-          "a": "The changes I can describe are vectorized replay-buffer sampling and removal of a data-loader stall. I would not name a profiler or invent a trace. To investigate the same class of problem, I would time sampling, transfer, and model computation separately and compare utilization with the wall-clock time spent in each stage."
+          "q": "How would you isolate the same training bottleneck?",
+          "a": "The changes were vectorized replay-buffer sampling and removal of a data-loader stall. To isolate that class of bottleneck, I would time sampling, data transfer, and model computation separately and compare utilization with the wall-clock time spent in each stage. The aim is to distinguish waiting for input from computing the model, then optimize the stage that dominates runtime."
         },
         {
-          "q": "Did the speedup change results?",
-          "a": "The runtime result was 52 to 31 minutes per run. The separate quality result was agreement with EPA-optimal calls improving from 68% to 74% on held-out 2024 drives. I would not claim that the runtime optimization caused the quality gain. To verify equivalence, I would compare sampling behavior, training curves, and held-out results under controlled conditions."
+          "q": "How do the runtime and quality results differ?",
+          "a": "Runtime fell from 52 to 31 minutes, about 40% less time per run. Separately, agreement with EPA-optimal calls increased from 68% to 74%, a gain of 6 percentage points. I do not attribute the quality gain to faster data handling. To verify an optimization preserves training behavior, I would compare sampling semantics, training curves, and held-out results under controlled conditions."
         }
       ],
       "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
@@ -646,8 +645,8 @@
       "aws": "Proposed AWS design, not a claim of AWS implementation: choose a supported model on Bedrock or deploy a compatible model with SageMaker AI, evaluate on expert-labeled cases, and implement an authenticated human-review workflow with Step Functions Standard callbacks. Add explicit permissions and retention controls; guardrails do not validate factual accuracy. Callback pattern: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html.",
       "probes": [
         {
-          "q": "How did you design the rubric?",
-          "a": "The pipeline uses rubric-based annotation on Llama 3.3 70B. I would not claim to have authored the domain criteria without that evidence. A strong rubric needs clear label definitions and examples, and I would work with domain experts to test ambiguous cases and refine the criteria when reviewers disagree."
+          "q": "What does the rubric contribute?",
+          "a": "The rubric gives the Llama 3.3 70B annotation workflow explicit criteria for assigning labels. I built the rubric-based pipeline; that is separate from claiming sole authorship of the domain definitions. For evaluation, I would work with experts on clear label descriptions and examples, test ambiguous cases, and refine the criteria when reviewers disagree."
         },
         {
           "q": "How do you know the labels are good?",
@@ -672,9 +671,7 @@
         "ms-int4-mb",
         "ms-int4-pct",
         "ms-tps",
-        "ms-mmlu",
-        "ms-int8-mem",
-        "ms-int8-tps"
+        "ms-mmlu"
       ],
       "headline": "In ModelScope, my INT4 benchmark used 2299 MB and sustained 13.7 tokens per second with MMLU within a point of baseline.",
       "s": "I benchmarked Llama-3.2-3B and Gemma-2-2B on a T4 GPU to understand quantization tradeoffs. A smaller memory footprint is only useful if the model also meets the quality and performance requirements of its workload.",
@@ -733,8 +730,12 @@
           "a": "Incremental merges let the pipeline incorporate changes rather than rewrite everything for each update, while partition pruning reduces unnecessary reads. The correctness details still matter: a new design needs a reliable merge key, a policy for deletes and late arrivals, and a way to reconcile the output with the source."
         },
         {
-          "q": "What if a source workspace is late?",
-          "a": "The feed covered Databricks workspaces across AWS, Azure, and GCP. I would not invent a failure policy for the implementation. In a new design, I would make freshness visible, distinguish complete from partial inputs, retry safely, and decide with the customer whether to delay publication or expose explicitly stale data."
+          "q": "What would you do if a source workspace were late?",
+          "a": "The feed covered Databricks workspaces across AWS, Azure, and GCP. For the recovery design, I would make source freshness visible, distinguish complete from partial inputs, retry safely, and agree with the customer whether to delay publication or expose explicitly stale data. That policy must match what the downstream agents can safely do with incomplete inputs."
+        },
+        {
+          "q": "How do full refresh and incremental merges fit together?",
+          "a": "The 22-minute result is the full-refresh measure. Partition pruning describes reducing reads, while incremental merges describe how changes are applied. They are not interchangeable runtime measures. Before comparing that result with an incremental run, I would match the input snapshot, rows changed, compute size, and definition of when the refresh begins and ends."
         }
       ],
       "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."

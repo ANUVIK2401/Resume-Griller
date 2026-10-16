@@ -22,10 +22,7 @@
       "prompt": "A retailer's site slows down and sometimes fails on peak days like Black Friday. Design an AWS architecture that stays fast and up.",
       "story": "k8s-autoscaling",
       "clarifying": ["How big is the spike versus a normal day, and is the date known in advance?", "Is the slowness in the web tier, the database, or checkout?", "Global or US-only users? Any PCI scope for payments?"],
-      "requirements": {
-        "functional": ["Browse catalog, search, cart, checkout", "Product images and static assets"],
-        "non_functional": ["Survive a known, many-times-normal spike", "Checkout must not lose orders", "Page loads fast for users across the country"]
-      },
+      "requirements": { "functional": ["Browse catalog, search, cart, checkout", "Product images and static assets"], "non_functional": ["Survive a known, many-times-normal spike", "Checkout must not lose orders", "Page loads fast for users across the country"] },
       "components": [
         { "name": "Route 53", "role": "DNS with health checks" },
         { "name": "CloudFront + WAF", "role": "Caches images and pages at the edge, blocks bots" },
@@ -55,12 +52,9 @@
       "prompt": "A mid-size company runs its ERP and financial reporting on premises. Their data center lease ends in a year. Plan the move to AWS.",
       "story": "erp-hitl",
       "clarifying": ["Which workloads, how many, and how coupled are they?", "Audit and compliance rules on financial data? Allowed downtime at cutover?", "Is the ERP vendor offering a SaaS version?"],
-      "requirements": {
-        "functional": ["Every ERP workload moved or retired", "Financial reports reconcile before and after"],
-        "non_functional": ["No data loss at cutover", "Audit trail preserved", "Rollback possible until sign-off"]
-      },
+      "requirements": { "functional": ["Every ERP workload moved or retired", "Financial reports reconcile before and after"], "non_functional": ["No data loss at cutover", "Audit trail preserved", "Rollback possible until sign-off"] },
       "components": [
-        { "name": "Migration Evaluator and Application Discovery", "role": "Inventory servers and dependencies" },
+        { "name": "AWS Transform / supported discovery tools", "role": "Inventory servers and dependencies; Application Discovery Service is closed to new customers, so confirm current tool availability" },
         { "name": "Control Tower", "role": "Multi-account landing zone with guardrails and central logging" },
         { "name": "Application Migration Service", "role": "Rehost servers that stay as they are" },
         { "name": "DMS + Schema Conversion", "role": "Database migration with change data capture" },
@@ -68,15 +62,16 @@
         { "name": "Direct Connect or Site-to-Site VPN", "role": "Hybrid network during the transition" },
         { "name": "S3 + Athena", "role": "Archive and reconciliation queries" }
       ],
-      "flow": ["Discover: inventory every workload and map dependencies.", "Decide a 7 R per workload: retire, retain, rehost, relocate, repurchase, replatform, refactor.", "Build the landing zone with Control Tower; connect on-prem with VPN, then Direct Connect.", "Replicate databases with DMS change data capture; run parallel reconciliation reports.", "Cut over in waves, lowest risk first; keep rollback until finance signs off."],
+      "flow": ["Discover: inventory every workload and map dependencies.", "Decide a 7 R per workload: retire, retain, rehost, relocate, repurchase, replatform, refactor.", "Build the landing zone with Control Tower; connect on-prem with VPN, then Direct Connect.", "Replicate databases with DMS change data capture; run parallel reconciliation reports.", "Rehearse cutover: stop or coordinate source writes, confirm replication catch-up and reconciliation, then switch one authoritative write path. Before accepting target writes, define how rollback will preserve them through supported reverse replication or reconciliation; do not blindly switch DNS back."],
       "scale": ["Migrate in waves so the team learns on low-risk workloads first", "Automate repeatable steps for later waves"],
       "security": ["Separate accounts for prod, non-prod, logging, security", "KMS encryption, CloudTrail organization trail, least-privilege roles"],
       "cost": ["Retire unused workloads first; they are pure savings", "Right-size after a few weeks of real usage, then commit to Savings Plans"],
       "tradeoff": "Rehost gets out of the data center fastest; replatform or repurchase saves more long term. I would rehost what blocks the exit date and modernize the rest after the move.",
       "failure_modes": [
-        { "failure": "Data drift between source and target", "mitigation": "DMS change data capture plus automated reconciliation reports, like the field-level checks in S1" },
+        { "failure": "Data drift between source and target", "mitigation": "DMS change data capture where supported plus automated reconciliation reports; use the actual S1 validation method only if confirmed" },
         { "failure": "Hidden dependency breaks after cutover", "mitigation": "Dependency mapping up front, wave planning, rollback plan" },
-        { "failure": "Cutover runs over the window", "mitigation": "Rehearse the cutover; define go and no-go criteria" }
+        { "failure": "Cutover runs over the window", "mitigation": "Rehearse the cutover; define go and no-go criteria" },
+        { "failure": "Rollback discards writes accepted on the target", "mitigation": "Fence target writes and reconcile or reverse-replicate them using a tested plan before resuming source writes; define the point of no automatic rollback." }
       ],
       "followups": ["Which 7 R would you pick for the ERP itself, and why?", "How do you prove the books still balance?", "What does rollback look like?"],
       "diagram": "flowchart LR\n  ON[\"On-prem ERP + DB\"] -- \"VPN / Direct Connect\" --> LZ[\"Landing zone, Control Tower\"]\n  ON --> MGN[\"Application Migration Service\"] --> EC2[\"Rehosted servers\"]\n  ON --> DMS[\"DMS with CDC\"] --> RDS[\"RDS / Aurora\"]\n  RDS --> REC[\"Reconciliation reports, S3 + Athena\"]\n  LZ --> EC2\n  LZ --> RDS"
@@ -87,10 +82,7 @@
       "prompt": "An insurance company receives thousands of claim documents a day as PDFs. Extract the data, summarize each claim, and route uncertain ones to a person.",
       "story": "erp-hitl",
       "clarifying": ["Volume per day and peak per hour? Document types and quality?", "How fast must a claim be processed? What accuracy is acceptable?", "PII and retention rules?"],
-      "requirements": {
-        "functional": ["Upload documents", "Extract fields and tables", "Summarize", "Human review for low confidence", "Searchable results"],
-        "non_functional": ["Scales with bursts", "No document lost", "PII protected", "Pay per document, not per idle server"]
-      },
+      "requirements": { "functional": ["Upload documents", "Extract fields and tables", "Summarize", "Human review for low confidence", "Searchable results"], "non_functional": ["Scales with bursts", "No document lost", "PII protected", "Pay per document, not per idle server"] },
       "components": [
         { "name": "S3", "role": "Upload bucket, triggers processing" },
         { "name": "EventBridge", "role": "Routes the object-created event" },
@@ -119,10 +111,7 @@
       "prompt": "A company wants an internal assistant that answers employee questions from its policies and wikis, with sources. Design it on AWS.",
       "story": "pacsun-exec",
       "clarifying": ["How many documents, where do they live, how often do they change?", "Who may see which documents? Any data that must never reach the model?", "How will we know answers are good enough to launch?"],
-      "requirements": {
-        "functional": ["Ask questions in natural language", "Answers cite sources", "Respect document permissions"],
-        "non_functional": ["Low hallucination rate on an evaluation set", "Only authenticated employees", "Reasonable cost per question"]
-      },
+      "requirements": { "functional": ["Ask questions in natural language", "Answers cite sources", "Respect document permissions"], "non_functional": ["Low hallucination rate on an evaluation set", "Only authenticated employees", "Reasonable cost per question"] },
       "components": [
         { "name": "S3", "role": "Source documents" },
         { "name": "Bedrock Knowledge Base", "role": "Chunking, embeddings, retrieval" },
@@ -150,10 +139,7 @@
       "prompt": "A media company wants to see what users click in near real time and analyze history for trends. Design the pipeline.",
       "story": "databricks-feed",
       "clarifying": ["Events per second at peak? How fresh must dashboards be: seconds or minutes?", "How long to keep raw history?", "Who queries it and how often?"],
-      "requirements": {
-        "functional": ["Collect click events from web and apps", "Near real-time dashboard", "Historical queries"],
-        "non_functional": ["Handles bursts without losing events", "Cheap long-term storage", "Schema can evolve"]
-      },
+      "requirements": { "functional": ["Collect click events from web and apps", "Near real-time dashboard", "Historical queries"], "non_functional": ["Handles bursts without losing events", "Cheap long-term storage", "Schema can evolve"] },
       "components": [
         { "name": "Kinesis Data Streams", "role": "Ingests events, ordered per shard, replayable" },
         { "name": "Data Firehose", "role": "Batches and writes events to S3 in Parquet" },
@@ -166,11 +152,12 @@
       "scale": ["Add shards or use on-demand capacity mode", "Partition S3 by date and use columnar Parquet so Athena scans less"],
       "security": ["Encrypt streams and buckets with KMS", "Lake Formation for column-level access to user data"],
       "cost": ["Athena charges per data scanned: partitions and Parquet cut it", "Lifecycle raw data to cheaper tiers"],
-      "tradeoff": "Firehose buffering makes data land in S3 within minutes, not seconds. That is fine for history; true real-time metrics come from a stream consumer instead.",
+      "tradeoff": "Firehose delivery latency depends on destination, buffering, transforms and partitioning. Supported zero-buffering configurations can deliver within seconds, while dynamic partitioning does not support zero buffering. Use a stream consumer when processing semantics or tighter latency require it; measure end-to-end freshness.",
       "failure_modes": [
         { "failure": "Hot shard from one popular key", "mitigation": "Better partition key or random suffix" },
         { "failure": "Bad event schema", "mitigation": "Validate at ingest; send bad records to an error prefix" },
-        { "failure": "Consumer falls behind", "mitigation": "Monitor iterator age; scale consumers" }
+        { "failure": "Consumer falls behind", "mitigation": "Monitor iterator age; scale consumers" },
+        { "failure": "Duplicate or late events inflate metrics", "mitigation": "Use stable event IDs, define deduplication scope and event-time windows, and publish corrections for late arrivals; a random partition suffix can change per-key ordering." }
       ],
       "followups": ["Kinesis or MSK, and why?", "How do you handle late-arriving events?", "What would you change at 10x volume?"],
       "diagram": "flowchart LR\n  APP[\"Web and apps\"] --> KDS[\"Kinesis Data Streams\"]\n  KDS --> RT[\"Real-time consumer\"] --> DASH[\"Live metrics\"]\n  KDS --> FH[\"Data Firehose\"] --> S3[\"S3 Parquet lake\"]\n  S3 --> GL[\"Glue Catalog\"] --> ATH[\"Athena\"] --> QS[\"QuickSight\"]"
@@ -181,10 +168,7 @@
       "prompt": "A payments company runs in one Region. Regulators and customers want it to survive a full Region outage. Design the DR approach.",
       "story": "p1-mttr",
       "clarifying": ["What RPO and RTO does the business need, in minutes?", "Which flows must survive: payments only, or reporting too?", "Any data residency rules that limit which Regions?"],
-      "requirements": {
-        "functional": ["Accept and record payments", "Fail over to a second Region"],
-        "non_functional": ["Explicit RPO and RTO", "No double-charging", "Tested failover"]
-      },
+      "requirements": { "functional": ["Accept and record payments", "Fail over to a second Region"], "non_functional": ["Explicit RPO and RTO", "No double-charging", "Tested failover"] },
       "components": [
         { "name": "Route 53 failover routing + health checks", "role": "Moves traffic to the healthy Region" },
         { "name": "Aurora Global Database", "role": "Single primary writer with asynchronous cross-Region replication; explicitly promote a secondary during controlled failover" },

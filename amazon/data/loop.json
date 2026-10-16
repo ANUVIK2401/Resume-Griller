@@ -9,8 +9,10 @@
   "event": {
     "date": "",
     "confirmed": false,
-    "location": "USC, Los Angeles, in person if selected; room unconfirmed",
-    "note": "The Wednesday hold remains tentative and the email has conflicting date/time wording. Leave this blank until clarified. Enter a confirmed time converted to Pacific Time (America/Los_Angeles); the input does not interpret CST or another time zone."
+    "location": "Tentative on-campus interview at USC, Los Angeles; room unconfirmed",
+    "note": "Your latest update points to Wednesday, October 28, on campus at USC. Treat this as a tentative date-only target. Start time and room unconfirmed. Enter the recruiter-confirmed time below in Pacific Time only when available.",
+    "target_date": "2026-10-28",
+    "target_status": "tentative"
   },
   "plan_start": "2026-10-15",
   "plan_note": "Default: 3 hours per day for 14 days. On a busy day, complete the two Minimum blocks (90 minutes); add the remaining blocks when time permits. Readiness gates are self-assessment targets, not hiring predictions. If a gate is missed, use the next day's extension blocks to repair it.",
@@ -47,6 +49,7 @@
       "lead_stories": [
         "erp-hitl",
         "p1-mttr",
+        "cli-toolchain",
         "netsuite-latency"
       ],
       "prep_pages": [
@@ -64,7 +67,7 @@
         },
         {
           "id": "practice-stories-3",
-          "text": "Prepare real failure, disagreement, and mentoring examples; leave gaps visible until verified."
+          "text": "If helpful, privately recall real failure, disagreement, or mentoring examples. Keep missing examples visible and never invent or force a rewrite."
         },
         {
           "id": "practice-stories-4",
@@ -230,7 +233,7 @@
       "tasks": [
         {
           "id": "d03-1",
-          "text": "Draft a real failure or disagreement story. Name your mistake or opposing view, the evidence, and the change you made; retain blanks for unknown facts.",
+          "text": "Optional private recall: if useful, outline a real failure, disagreement, or mentoring event. Leave unknown facts blank; do not invent an example or force a rewrite.",
           "page": "behavioral",
           "minutes": 45,
           "minimum": true
@@ -244,7 +247,7 @@
         },
         {
           "id": "d03-3",
-          "text": "Draft a second real gap example; map both to relevant Leadership Principles without forcing coverage.",
+          "text": "Optional private recall: if useful, outline a real failure, disagreement, or mentoring event. Leave unknown facts blank; do not invent an example or force a rewrite.",
           "page": "behavioral",
           "minutes": 45,
           "minimum": false
@@ -378,7 +381,7 @@
       "tasks": [
         {
           "id": "d07-1",
-          "text": "Record three randomly selected STAR answers; include a failure/disagreement and defend every metric or qualify it clearly.",
+          "text": "Optional private recall: if useful, outline a real failure, disagreement, or mentoring event. Leave unknown facts blank; do not invent an example or force a rewrite.",
           "page": "behavioral",
           "minutes": 45,
           "minimum": true
@@ -685,7 +688,7 @@
       "status": "tentative",
       "weekday": "Wednesday",
       "title": "Tentative Wednesday hold",
-      "detail": "The recruiter says the candidate is on hold for Wednesday. This is a tentative hold, not a confirmed interview slot or final-round schedule."
+      "detail": "Latest candidate update: a possible on-campus interview on Wednesday, October 28, 2026. The Wednesday hold remains tentative; selection and the exact slot are not confirmed."
     },
     "interview_conditions": "The intake describes an in-person interview at USC in Los Angeles if selected. Selection, room, exact format, and individual interview structure have not been confirmed.",
     "pending": [
@@ -708,6 +711,512 @@
       ],
       "success": "The role brief frames success through positive customer impact, not sales quotas."
     },
-    "plan_relationship": "Keep the October 15 to October 28 preparation window until the actual interview timing is clarified. Day 14 is a readiness checkpoint. A tentative Wednesday hold does not automatically move or shorten the study plan."
+    "plan_relationship": "The primary sprint prepares October 16 through October 27 for the tentative October 28 target. The original movable 14-day plan remains available below with its saved dates and checkmarks."
+  },
+  "sprint": {
+    "start": "2026-10-16",
+    "note": "Twelve preparation days, October 16-27, for a tentative Wednesday October 28 campus interview. Take the 90-minute minimum path first; the full path is about 3 hours. Taper on October 27. If a readiness gate is missed, use the next extension block to repeat the weakness.",
+    "story_strategy": "Core: S1, S2, S4, S5. Reserves: S3, S6. Practise different examples and honest follow-ups; keep personal decisions and measurable customer outcomes clear.",
+    "gap_policy": "Failure, disagreement, and mentoring recall is optional and private. Use real events only; missing examples are gaps, not permission to invent stories or obligations to rewrite them.",
+    "days": [
+      {
+        "id": "sp01",
+        "date": "2026-10-16",
+        "focus": "Start here: pitch, S1/S2, request path",
+        "deliverable": "Three short recordings, a labelled request-path sketch, and a discovery checklist.",
+        "readiness_gate": "Pitch fits 60 seconds; S1/S2 have clear I-actions and defensible results; explain who can access each resource and why.",
+        "full_mock": false,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp01-1",
+            "minutes": 30,
+            "text": "Record the 60-second pitch and S1/S2 in two minutes each. Open with the outcome, then your personal decision and what changed.",
+            "page": "behavioral",
+            "minimum": true
+          },
+          {
+            "id": "sp01-2",
+            "minutes": 40,
+            "text": "Draw the network and IAM request path: DNS, TLS, load balancer, private app, database, assumed role, least privilege, and logs.",
+            "page": "aws",
+            "minimum": true
+          },
+          {
+            "id": "sp01-3",
+            "minutes": 20,
+            "text": "Run a 10-minute customer discovery role-play, then review: goal, users, traffic, data, latency, budget, constraints, and success measure.",
+            "page": "questions",
+            "minimum": true
+          },
+          {
+            "id": "sp01-4",
+            "minutes": 45,
+            "text": "Probe S1/S2: baseline, measurement window, your contribution, rejected option, and customer impact; qualify anything you cannot defend.",
+            "page": "review",
+            "minimum": false
+          },
+          {
+            "id": "sp01-5",
+            "minutes": 45,
+            "text": "Retest the request path without notes and explain the same design to an engineer and a business stakeholder.",
+            "page": "design",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp02",
+        "date": "2026-10-17",
+        "focus": "Core S4/S5 and paper design 1",
+        "deliverable": "Core S4/S5 recordings and a photographed paper web-app design.",
+        "readiness_gate": "Four core stories (S1/S2/S4/S5) each have one personal decision, an honest result, and one tradeoff.",
+        "full_mock": false,
+        "paper_design": true,
+        "tasks": [
+          {
+            "id": "sp02-1",
+            "minutes": 45,
+            "text": "Rehearse S4/S5 with a concrete setting, the constraint, your turning-point decision, and measured customer outcome.",
+            "page": "behavioral",
+            "minimum": true
+          },
+          {
+            "id": "sp02-2",
+            "minutes": 45,
+            "text": "Paper design 1: secure multi-AZ retail web app. Spend 10 minutes on discovery, 25 drawing, and 10 narrating security, failure, scaling, and cost.",
+            "page": "design",
+            "minimum": true
+          },
+          {
+            "id": "sp02-3",
+            "minutes": 45,
+            "text": "Compare EC2, ECS/Fargate, Lambda, ALB, and CloudFront using the design requirements; name one rejected alternative.",
+            "page": "cheatsheet",
+            "minimum": false
+          },
+          {
+            "id": "sp02-4",
+            "minutes": 45,
+            "text": "Replay the weakest answer from yesterday. Repair one weakness and answer the same follow-up again without a script.",
+            "page": "review",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp03",
+        "date": "2026-10-18",
+        "focus": "Full mock 1 and targeted repair",
+        "deliverable": "One scored full mock and two improved answers.",
+        "readiness_gate": "Correct both largest misses immediately; if a claim cannot be verified, qualify or remove it from your spoken answer.",
+        "full_mock": true,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp03-1",
+            "minutes": 45,
+            "text": "Full mock 1: use the mock timer for two LP questions and one technical/design discussion. Record your answers.",
+            "page": "mock",
+            "minimum": true
+          },
+          {
+            "id": "sp03-2",
+            "minutes": 45,
+            "text": "Self-score the recording, name the two biggest misses, and repeat those answers. Keep an error log with the corrected reasoning.",
+            "page": "review",
+            "minimum": true
+          },
+          {
+            "id": "sp03-3",
+            "minutes": 45,
+            "text": "Practise IAM roles, KMS, Secrets Manager, S3 controls, CloudTrail, and CloudWatch through the workload rather than isolated definitions.",
+            "page": "cheatsheet",
+            "minimum": false
+          },
+          {
+            "id": "sp03-4",
+            "minutes": 45,
+            "text": "Ask a friend to probe a core story or run the probes yourself: why you, why this option, how measured, and what failed.",
+            "page": "behavioral",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp04",
+        "date": "2026-10-19",
+        "focus": "Storage, databases, and S3/S6 reserves",
+        "deliverable": "Two reserve recordings and a storage/database decision matrix.",
+        "readiness_gate": "Answer at least four of five database choices with requirement-based reasons and one alternative.",
+        "full_mock": false,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp04-1",
+            "minutes": 45,
+            "text": "Prepare S3/S6 as reserve stories. Rehearse personal ownership and a useful contrast with the four core stories.",
+            "page": "behavioral",
+            "minimum": true
+          },
+          {
+            "id": "sp04-2",
+            "minutes": 45,
+            "text": "Choose S3/EBS/EFS and RDS/Aurora/DynamoDB for five access patterns; distinguish durability, backup, high availability, read scaling, and cache.",
+            "page": "cheatsheet",
+            "minimum": true
+          },
+          {
+            "id": "sp04-3",
+            "minutes": 45,
+            "text": "Draw the data path and explain partition keys, transactions, encryption, restore tests, and a likely hot spot.",
+            "page": "design",
+            "minimum": false
+          },
+          {
+            "id": "sp04-4",
+            "minutes": 45,
+            "text": "Retest the two weakest items in the error log; if helpful privately recall a real failure or disagreement without inventing a story.",
+            "page": "review",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp05",
+        "date": "2026-10-20",
+        "focus": "Paper design 2: decoupled workflow",
+        "deliverable": "A photographed workflow diagram with failure paths and operating signals.",
+        "readiness_gate": "Explain duplicate delivery, recovery from a poisoned message, and the observable customer status.",
+        "full_mock": false,
+        "paper_design": true,
+        "tasks": [
+          {
+            "id": "sp05-1",
+            "minutes": 45,
+            "text": "Paper design 2: document/order workflow with API Gateway, Lambda or containers, S3, SQS, and a database. Clarify requirements first.",
+            "page": "design",
+            "minimum": true
+          },
+          {
+            "id": "sp05-2",
+            "minutes": 45,
+            "text": "Walk failures end to end: duplicates, idempotency, retries, DLQ, timeouts, least privilege, alarms, and operator recovery.",
+            "page": "cheatsheet",
+            "minimum": true
+          },
+          {
+            "id": "sp05-3",
+            "minutes": 45,
+            "text": "Rehearse S1/S4 with follow-ups about customer adoption, constraints, tradeoffs, and your own actions.",
+            "page": "behavioral",
+            "minimum": false
+          },
+          {
+            "id": "sp05-4",
+            "minutes": 45,
+            "text": "Retest weak service choices from yesterday; explain SQS versus SNS versus EventBridge and when Step Functions helps.",
+            "page": "questions",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp06",
+        "date": "2026-10-21",
+        "focus": "Customer translation and commercial judgment",
+        "deliverable": "Two discovery recordings and engineer/executive explanations of one recommendation.",
+        "readiness_gate": "Ask before proposing; explain business value without jargon and close with a measurable next step.",
+        "full_mock": false,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp06-1",
+            "minutes": 45,
+            "text": "Run two 10-minute discovery scenarios. Restate the business problem, constraints, success measure, and next step before recommending.",
+            "page": "questions",
+            "minimum": true
+          },
+          {
+            "id": "sp06-2",
+            "minutes": 45,
+            "text": "Explain one design to an engineer, then a CFO. Discuss cost drivers, risk, measurable customer benefit, and a small validation pilot.",
+            "page": "design",
+            "minimum": true
+          },
+          {
+            "id": "sp06-3",
+            "minutes": 45,
+            "text": "Rehearse S2/S5 and reserve S3; answer what you rejected and how you know the result mattered.",
+            "page": "behavioral",
+            "minimum": false
+          },
+          {
+            "id": "sp06-4",
+            "minutes": 45,
+            "text": "Retest security and networking errors from the first mock; keep the correction in your own words.",
+            "page": "cheatsheet",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp07",
+        "date": "2026-10-22",
+        "focus": "Full mock 2 and readiness checkpoint",
+        "deliverable": "A second scored mock, ten decision answers, and a short repair list.",
+        "readiness_gate": "Target eight of ten justified service choices and four complete core STAR answers. Use extension time for misses, not new breadth.",
+        "full_mock": true,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp07-1",
+            "minutes": 45,
+            "text": "Full mock 2: unseen LP prompts and one unseen technical scenario. Ask a friend if available; otherwise record without notes.",
+            "page": "mock",
+            "minimum": true
+          },
+          {
+            "id": "sp07-2",
+            "minutes": 45,
+            "text": "Score the mock and repeat the weakest story and weakest technical explanation. Retest ten core service comparisons.",
+            "page": "review",
+            "minimum": true
+          },
+          {
+            "id": "sp07-3",
+            "minutes": 45,
+            "text": "Practise why Amazon, why SA, and two informed interviewer questions grounded in customer impact and collaboration.",
+            "page": "questions",
+            "minimum": false
+          },
+          {
+            "id": "sp07-4",
+            "minutes": 45,
+            "text": "Repair remaining gaps in the six-story bank; privately recall a real mentoring or disagreement event only if useful.",
+            "page": "behavioral",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp08",
+        "date": "2026-10-23",
+        "focus": "Paper design 3: resilience and migration",
+        "deliverable": "A photographed migration/DR design with rollback, recovery objectives, and cost drivers.",
+        "readiness_gate": "Justify recovery from business needs and distinguish an available replica from a tested recoverable backup.",
+        "full_mock": false,
+        "paper_design": true,
+        "tasks": [
+          {
+            "id": "sp08-1",
+            "minutes": 45,
+            "text": "Paper design 3: migrate an ERP-style workload to AWS. Discover dependencies, choose a pilot, plan cutover and rollback, and set recovery objectives.",
+            "page": "design",
+            "minimum": true
+          },
+          {
+            "id": "sp08-2",
+            "minutes": 45,
+            "text": "Explain RTO/RPO, Multi-AZ versus multi-Region, backups, replication, restore drills, and the cost of your recovery choice.",
+            "page": "cheatsheet",
+            "minimum": true
+          },
+          {
+            "id": "sp08-3",
+            "minutes": 45,
+            "text": "Rehearse S1/S2/S5 follow-ups on operational risk and stakeholder communication. Keep AWS mappings separate from actual experience.",
+            "page": "behavioral",
+            "minimum": false
+          },
+          {
+            "id": "sp08-4",
+            "minutes": 45,
+            "text": "Repeat the largest weakness from mock 2 using a fresh customer scenario; explain one cheaper or simpler alternative.",
+            "page": "questions",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp09",
+        "date": "2026-10-24",
+        "focus": "Resume deep dive and bounded AI review",
+        "deliverable": "A defensible project deep dive, six story hooks, and an updated error log.",
+        "readiness_gate": "Separate actual work from proposed AWS designs; qualify unknown metrics and demonstrate a clear request path.",
+        "full_mock": false,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp09-1",
+            "minutes": 45,
+            "text": "Explain one real resume project: problem, personal contribution, evaluation, deployment boundary, limitations, and customer effect.",
+            "page": "review",
+            "minimum": true
+          },
+          {
+            "id": "sp09-2",
+            "minutes": 45,
+            "text": "Retest priority compute/network/security/database choices. Explain the full request path from a blank sheet and repair one recurring miss.",
+            "page": "cheatsheet",
+            "minimum": true
+          },
+          {
+            "id": "sp09-3",
+            "minutes": 45,
+            "text": "If relevant to the resume discussion, sketch RAG with retrieval, Bedrock, access controls, evaluation, citations, latency, and cost. Explain when search is enough.",
+            "page": "design",
+            "minimum": false
+          },
+          {
+            "id": "sp09-4",
+            "minutes": 45,
+            "text": "Rehearse all four core story openings and two reserve hooks; probe measurement and the hardest decision.",
+            "page": "behavioral",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp10",
+        "date": "2026-10-25",
+        "focus": "Full mock 3 and final repairs",
+        "deliverable": "Three completed full mocks in total, final scores, and five corrected recurring errors.",
+        "readiness_gate": "Four core stories plus two reserves are defensible; an unseen design includes requirements, security, failure/recovery, scaling, cost, and tradeoffs.",
+        "full_mock": true,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp10-1",
+            "minutes": 45,
+            "text": "Full mock 3: introduction, two LP questions, one architecture/customer discussion, and your questions within the practice timer.",
+            "page": "mock",
+            "minimum": true
+          },
+          {
+            "id": "sp10-2",
+            "minutes": 45,
+            "text": "Review the recording and repeat the two weakest answers. Score the concrete readiness gates below instead of memorizing wording.",
+            "page": "review",
+            "minimum": true
+          },
+          {
+            "id": "sp10-3",
+            "minutes": 45,
+            "text": "Run a 30-minute unseen paper architecture and a 15-minute discussion of security, recovery, cost, and an alternative.",
+            "page": "design",
+            "minimum": false
+          },
+          {
+            "id": "sp10-4",
+            "minutes": 45,
+            "text": "Retest the five most repeated errors from all three mocks. Explain why each corrected choice fits the requirements.",
+            "page": "cheatsheet",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp11",
+        "date": "2026-10-26",
+        "focus": "Final rehearsal and USC logistics",
+        "deliverable": "A concise recall sheet, ten service-choice answers, and known versus pending campus logistics.",
+        "readiness_gate": "Target eight of ten justified choices, six honest story hooks, and a complete 30-minute design. Pending scheduling facts stay explicitly pending.",
+        "full_mock": false,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp11-1",
+            "minutes": 45,
+            "text": "Rehearse the 60-second pitch, weakest core story, and two reserve hooks; answer follow-ups without a script.",
+            "page": "behavioral",
+            "minimum": true
+          },
+          {
+            "id": "sp11-2",
+            "minutes": 45,
+            "text": "Retest ten priority service decisions and explain one paper design to two audiences. Review only the largest remaining weaknesses.",
+            "page": "cheatsheet",
+            "minimum": true
+          },
+          {
+            "id": "sp11-3",
+            "minutes": 45,
+            "text": "Confirm whether October 28 is selected and scheduled: exact Pacific start time, USC building/room, arrival instructions, ID, and permitted materials. Plan route and transport buffer.",
+            "page": "questions",
+            "minimum": false
+          },
+          {
+            "id": "sp11-4",
+            "minutes": 45,
+            "text": "Prepare two interviewer questions and a one-page private recall sheet; test any requested tools and pack a notebook and pen.",
+            "page": "questions",
+            "minimum": false
+          }
+        ]
+      },
+      {
+        "id": "sp12",
+        "date": "2026-10-27",
+        "focus": "Taper: short recall, logistics, and rest",
+        "deliverable": "A packed bag, short recall sheet, three reviewed paper diagrams, and a rested evening.",
+        "readiness_gate": "Know your opening and strongest examples; identify remaining unknowns calmly. The 90-minute minimum is enough today; optional blocks are a buffer, not a cram target.",
+        "full_mock": false,
+        "paper_design": false,
+        "tasks": [
+          {
+            "id": "sp12-1",
+            "minutes": 45,
+            "text": "Light recall only: pitch, four core story hooks, two reserves, and the hardest follow-up. Stop drilling once clear.",
+            "page": "behavioral",
+            "minimum": true
+          },
+          {
+            "id": "sp12-2",
+            "minutes": 45,
+            "text": "Review the cheat sheet and three paper diagrams, then check campus route, confirmed arrival instructions, notebook, ID, and sleep plan.",
+            "page": "cheatsheet",
+            "minimum": true
+          },
+          {
+            "id": "sp12-3",
+            "minutes": 45,
+            "text": "Optional quiet review of your own corrected error log; add no new services, stories, or architecture patterns. Stop early if ready.",
+            "page": "review",
+            "minimum": false
+          },
+          {
+            "id": "sp12-4",
+            "minutes": 45,
+            "text": "Optional practical buffer: pack, check travel conditions, prepare clothes and water, then protect rest. Extra study is not required.",
+            "page": "questions",
+            "minimum": false
+          }
+        ]
+      }
+    ],
+    "interview_day": {
+      "date": "2026-10-28",
+      "title": "Tentative interview day: USC campus",
+      "note": "Use this checklist only if the interview is confirmed. No start time, room, duration, or round structure is assumed. If the date changes, keep the completed practice and revise the remaining priorities deliberately.",
+      "tasks": [
+        {
+          "id": "campus-arrival",
+          "text": "Follow recruiter-confirmed arrival instructions and allow travel and check-in buffer; verify the building and room."
+        },
+        {
+          "id": "campus-ready",
+          "text": "Bring requested ID and permitted materials, a notebook, a pen, water, and your recruiter-confirmed schedule."
+        },
+        {
+          "id": "campus-warmup",
+          "text": "Use a short pitch and one story opening as warm-up; avoid last-minute new material."
+        },
+        {
+          "id": "campus-listen",
+          "text": "Listen, clarify customer requirements, think aloud, state assumptions, and explain tradeoffs and next steps."
+        }
+      ]
+    }
   }
 }

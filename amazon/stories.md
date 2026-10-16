@@ -35,7 +35,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 | Invent and Simplify | S4 CLI validation toolchain adopted by 4 teams | S10 Human-in-the-loop annotation pipeline |
 | Are Right, A Lot | S3 SLO alerting, 41% fewer false pages | S11 ModelScope quantization study |
 | Learn and Be Curious | S7 Applying LangGraph and MCP to the ERP workflow | S11 ModelScope quantization study |
-| Hire and Develop the Best | S4 CLI validation toolchain adopted by 4 teams | **GAP** |
+| Hire and Develop the Best | **GAP** | **GAP** |
 | Insist on the Highest Standards | S1 Multi-agent ERP migration with human-in-the-loop | S6 Kubernetes autoscaling on custom metrics |
 | Think Big | S9 PacSun executive intelligence app | S2 P1 MTTR from 94 to 26 minutes |
 | Bias for Action | S2 P1 MTTR from 94 to 26 minutes | S8 DQN training stall, 40% shorter runs |
@@ -104,10 +104,10 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Probes:**
 
-- *Which signals drove the tags?* The implementation used real-time API diagnostics on event streams and tagged root causes on 400- and 500-series failures, with runbook context for on-call engineers. Those are the implementation details I can substantiate here. In a proposed extension, I would evaluate request identifiers, service context, and recent changes as diagnostic inputs rather than assuming a status code alone proves the cause.
-- *Rules or a model?* The contribution I can describe is API instrumentation, automatic root-cause tagging, and runbook context. I would not label the tagging engine as machine learning without supporting implementation detail. For a new system, I would start with explainable rules for known failure patterns and add a model only if evaluation showed a useful improvement.
-- *How was MTTR measured, and over what window?* The result was P1 MTTR falling from 94 to 26 minutes. I would not invent an incident count or comparison window. To substantiate causality, I would examine the incident tracker, use a consistent start and recovery definition, compare incident severity and workload, and separate the effect of diagnostics from other operational changes.
-- *What did you get wrong first?* I would not invent a failed incident to embellish this result. A real design limitation is that a root-cause tag is a hypothesis, so the engineer still needs the supporting evidence and a way to investigate further. In a new design, I would track incorrect tags as carefully as successful diagnoses.
+- *Which signals drove the tags?* I instrumented real-time API diagnostics on event streams and used automatic root-cause tags for 400- and 500-series failures, with runbook context for on-call engineers. The tag gives the engineer an investigation starting point. For a new design, I would correlate status codes with request and service context and recent changes, because a status code alone does not establish the root cause.
+- *Rules or a model?* My contribution was API instrumentation, automatic root-cause tagging, and runbook context. That result does not depend on presenting the tagger as machine learning. For a new implementation, I would start with explainable rules for known failure patterns, measure incorrect tags, and add a model only if evaluation showed a useful improvement.
+- *How was MTTR measured, and over what window?* P1 MTTR went from 94 to 26 minutes. To give the exact incident count and comparison window, I would need the underlying incident-tracker data. A defensible comparison uses consistent incident-start and recovery definitions, comparable severity and workload, and accounts for other operational changes. The metric supports the recovery result; it does not establish that diagnostics were the only contributor.
+- *What is a limitation of automatic root-cause tagging?* A root-cause tag is a hypothesis, not proof. The engineer needs supporting evidence and runbook context so they can verify it and continue investigating if it is wrong. For a new system, I would evaluate incorrect tags, missing tags, and time to a useful action, rather than optimize only the number of failures labeled.
 
 ## S3. SLO alerting, 41% fewer false pages (Oracle)
 
@@ -136,12 +136,12 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 **Probes:**
 
 - *How did you pick the targets?* The stack moved toward SLO-based alerting with CPU, memory, and p99 latency signals. I would distinguish resource metrics from the actual service objective rather than treat them as interchangeable. When defining a new SLO, I would start with the customer-facing operation, its acceptable latency or availability, and the reliability tradeoff the stakeholders can accept.
-- *How did you handle cardinality across 37,000+ tenants?* The observability scope covered 37,000+ tenants, but I would not imply every metric used a tenant label. In an AWS design, I would choose labels deliberately, aggregate the main operational view by useful service dimensions, and reserve detailed tenant investigation for controlled queries. Unbounded labels can make the monitoring system expensive and difficult to operate.
-- *Did you use burn-rate alerting?* I can substantiate the move toward SLO-based alerting and the 41% reduction in false-positive pages; I would not add an unverified burn-rate implementation. For a new design, I would consider multi-window burn-rate alerts to distinguish rapid error-budget consumption from slower degradation, then test whether the alerts produce an actionable response.
+- *How did you handle cardinality across 37,000+ tenants?* The monitoring scope covered 37,000+ tenants; that scope does not mean every metric had a tenant label. For a new design, I would aggregate the operational view by useful service dimensions and use controlled queries for detailed tenant investigation. Labels need a deliberate budget, because an unbounded combination of tenants, endpoints, and request identifiers can make the monitoring system costly and difficult to operate.
+- *Did you use burn-rate alerting?* The implementation moved toward SLO-based alerting and reduced false-positive pages by 41%. I would need the original alert configuration to describe the exact burn-rate policy. For a new design, I would consider multi-window burn-rate alerts to distinguish rapid error-budget consumption from slower degradation, then test whether the alerts produce an actionable response.
 
 ## S4. CLI validation toolchain adopted by 4 teams (Oracle)
 
-**LPs:** Invent and Simplify, Earn Trust, Hire and Develop the Best, Strive to be Earth's Best Employer
+**LPs:** Invent and Simplify, Earn Trust, Strive to be Earth's Best Employer
 
 **Open with:** I shipped a validation toolchain adopted by 4 teams that reduced failed deployments from 11% to 4%.
 
@@ -165,9 +165,9 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Probes:**
 
-- *Who pushed back, and why?* Four teams adopted the toolchain, but adoption alone does not establish that someone opposed it. I would not invent a disagreement. In a customer discussion, I would expect to explore concerns such as build time, false rejections, and exceptions, and show how a validation check prevents a specific downstream problem.
-- *How did you handle team-specific needs?* The implementation was a Jenkins CLI toolchain with scripted pre-deployment validation, adopted by 4 NSX teams. I would not add an unverified plugin or configuration mechanism. For a new design, I would separate common checks from team-specific policy and make exceptions explicit, so flexibility does not silently disable the important safeguards.
-- *How did you get the other teams onboarded?* The concrete outcome is that 4 engineering teams adopted the toolchain. I can explain the product value: checks ran in CI, configuration errors were caught earlier, and failed deployments fell from 11% to 4%. I would not turn that into a mentoring or persuasion anecdote without a real interaction to describe.
+- *What made the validation useful across teams?* The common value was catching configuration errors in the Jenkins workflow before deployment. Four NSX teams adopted the toolchain, release cycles became 34% shorter, and failed deployments fell from 11% to 4%. For a customer-facing design, I would evaluate the same adoption tradeoff: useful protection with clear errors and an explicit exception policy, balanced against build time and false rejections.
+- *How did you handle team-specific needs?* The implementation was a Jenkins CLI toolchain with scripted pre-deployment validation, adopted by 4 NSX teams. The team-specific extension mechanism would require the original implementation details. In a new design, I would separate shared checks from team policy, return actionable errors, and make exceptions explicit so customization does not silently disable the safeguards.
+- *How large was the deployment improvement?* The failed-deployment rate went from 11% to 4%, a decrease of 7 percentage points. That is different from saying a 7% relative reduction. Four teams adopted the toolchain, and release cycles became 34% shorter. Those are separate measures of adoption, deployment reliability, and delivery time; none by itself demonstrates mentoring or a particular persuasion tactic.
 
 ## S5. NetSuite search latency down 30% (Oracle)
 
@@ -197,7 +197,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 - *How did you find the hot predicates?* I profiled the query plans and restructured indexes on hot predicates in the SQL driving full scans. The useful technical question is whether the access path matches the filters and data distribution. I would examine plan shape, estimated versus actual rows, selectivity, and the frequency of the relevant query before recommending an index.
 - *Did the new indexes slow writes?* The measured result I can give is the P50 page-load reduction from 840 to 588 milliseconds. I would not claim a write-latency result that I cannot substantiate. An index adds write and storage work, so I would evaluate insert and update latency, index size, and workload balance alongside the read improvement.
-- *How did you test safely?* I can describe the query-plan, index, and SQL changes, but I would not invent a canary or rollback procedure. For a production rollout, I would verify result correctness on representative data, compare read and write behavior, check locking implications for the database engine, and plan how to revert the query or index change.
+- *How would you roll out the query changes safely?* My implementation work was query-plan profiling, index restructuring, and SQL changes. For a production rollout, I would verify result correctness on representative data, compare read and write behavior, inspect tail latency, and check locking implications for the database engine. I would also define how to revert the query or index change before exposing the full workload.
 
 ## S6. Kubernetes autoscaling on custom metrics (Oracle)
 
@@ -225,8 +225,8 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Probes:**
 
-- *Which metric, and why not CPU?* The implementation used custom Prometheus metrics rather than CPU alone. I would not substitute a guessed metric for the actual configuration. The principle is that CPU can miss a workload bottleneck; in a new design, I would test whether queue depth, in-flight requests, or another service signal predicts saturation and latency for that application.
-- *How did you handle scale-up lag?* The result was maintaining p99 SLOs at 2x peak load on OCI. I would not invent a warm-pool or node-provisioning mechanism. For an AWS design, I would account separately for detecting demand, adding replicas, obtaining node capacity, and becoming ready to serve traffic, then test whether the total delay fits the service objective.
+- *Which metric, and why not CPU?* I used custom Prometheus metrics instead of relying on CPU alone. The precise signal and target would need to come from the autoscaler configuration. The reason to go beyond CPU is that it can miss a workload bottleneck. For a new design, I would test whether queue depth, in-flight requests, or another service signal predicts saturation and latency for that application.
+- *How would you handle scale-up lag on AWS?* The OCI implementation held p99 SLOs at 2x peak load. In an AWS design, I would account separately for detecting demand, adding replicas, obtaining node capacity, and becoming ready to serve traffic. I would measure the total delay against the service objective and test whether scaling capacity arrives before the workload saturates.
 - *How did you prevent flapping?* I would not quote stabilization settings without the actual autoscaler configuration. In a new design, I would use a stable workload signal, tune the observation and stabilization periods, and scale down conservatively. I would test oscillating demand and dependency limits, because rapid replica changes can create instability rather than solve it.
 
 ## S7. Applying LangGraph and MCP to the ERP workflow (MSRcosmos)
@@ -288,8 +288,8 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Probes:**
 
-- *How did you find the stall?* The changes I can describe are vectorized replay-buffer sampling and removal of a data-loader stall. I would not name a profiler or invent a trace. To investigate the same class of problem, I would time sampling, transfer, and model computation separately and compare utilization with the wall-clock time spent in each stage.
-- *Did the speedup change results?* The runtime result was 52 to 31 minutes per run. The separate quality result was agreement with EPA-optimal calls improving from 68% to 74% on held-out 2024 drives. I would not claim that the runtime optimization caused the quality gain. To verify equivalence, I would compare sampling behavior, training curves, and held-out results under controlled conditions.
+- *How would you isolate the same training bottleneck?* The changes were vectorized replay-buffer sampling and removal of a data-loader stall. To isolate that class of bottleneck, I would time sampling, data transfer, and model computation separately and compare utilization with the wall-clock time spent in each stage. The aim is to distinguish waiting for input from computing the model, then optimize the stage that dominates runtime.
+- *How do the runtime and quality results differ?* Runtime fell from 52 to 31 minutes, about 40% less time per run. Separately, agreement with EPA-optimal calls increased from 68% to 74%, a gain of 6 percentage points. I do not attribute the quality gain to faster data handling. To verify an optimization preserves training behavior, I would compare sampling semantics, training curves, and held-out results under controlled conditions.
 
 ## S9. PacSun executive intelligence app (USC Annenberg)
 
@@ -351,7 +351,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Probes:**
 
-- *How did you design the rubric?* The pipeline uses rubric-based annotation on Llama 3.3 70B. I would not claim to have authored the domain criteria without that evidence. A strong rubric needs clear label definitions and examples, and I would work with domain experts to test ambiguous cases and refine the criteria when reviewers disagree.
+- *What does the rubric contribute?* The rubric gives the Llama 3.3 70B annotation workflow explicit criteria for assigning labels. I built the rubric-based pipeline; that is separate from claiming sole authorship of the domain definitions. For evaluation, I would work with experts on clear label descriptions and examples, test ambiguous cases, and refine the criteria when reviewers disagree.
 - *How do you know the labels are good?* The implemented workflow scores confidence and routes lower-confidence cases to domain experts. That provides a review path; it is not by itself an accuracy result. I would evaluate expert agreement on a labeled sample, inspect disagreements by category, and also sample high-confidence outputs so confident mistakes are not invisible.
 
 ## S11. ModelScope quantization study (ModelScope)
@@ -410,7 +410,8 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 **Probes:**
 
 - *Why incremental merges?* Incremental merges let the pipeline incorporate changes rather than rewrite everything for each update, while partition pruning reduces unnecessary reads. The correctness details still matter: a new design needs a reliable merge key, a policy for deletes and late arrivals, and a way to reconcile the output with the source.
-- *What if a source workspace is late?* The feed covered Databricks workspaces across AWS, Azure, and GCP. I would not invent a failure policy for the implementation. In a new design, I would make freshness visible, distinguish complete from partial inputs, retry safely, and decide with the customer whether to delay publication or expose explicitly stale data.
+- *What would you do if a source workspace were late?* The feed covered Databricks workspaces across AWS, Azure, and GCP. For the recovery design, I would make source freshness visible, distinguish complete from partial inputs, retry safely, and agree with the customer whether to delay publication or expose explicitly stale data. That policy must match what the downstream agents can safely do with incomplete inputs.
+- *How do full refresh and incremental merges fit together?* The 22-minute result is the full-refresh measure. Partition pruning describes reducing reads, while incremental merges describe how changes are applied. They are not interchangeable runtime measures. Before comparing that result with an incremental run, I would match the input snapshot, rows changed, compute size, and definition of when the refresh begins and ends.
 
 ## Gap stories: write these from real events
 
