@@ -26,7 +26,7 @@
     const t = ui.timer(pitch.target_sec / 60);
     const words = [...pitch.beats.map((b) => b.text), pitch.closing_line].join(' ').split(/\s+/).filter(Boolean).length;
     return ui.section('pitch', 'Pitch', `${pitch.target_sec}-second pitch`, el('span', {}, 'Tell me about ', el('em', {}, 'yourself')),
-      el('p', { class: 'section-intro' }, `${words} words: about ${Math.round(words / 2.5)} seconds at a calm 150 words a minute. Say it with the timer, then write your own version below.`),
+      el('p', { class: 'section-intro' }, `${words} words: about ${Math.round(words / 2.5)} seconds at a calm 150 words a minute. Say it with the timer. The answer is ready to rehearse; the notes field is optional.`),
       el('div', { class: 'card pitch' },
         el('div', { class: 'row' }, t.node),
         el('div', {}, pitch.beats.map((b) => el('div', { class: 'pitch-beat' }, el('span', { class: 'label' }, b.label), el('p', {}, confirmed(b.text))))),
@@ -59,19 +59,20 @@
         el('span', { class: 'item-title' }, `${story.code}. ${story.title}`),
         el('span', { class: 'item-meta', onclick: (e) => e.stopPropagation() },
           story.lead ? el('span', { class: 'chip chip-gold' }, 'Lead') : null,
-          story.ongoing ? el('span', { class: 'chip' }, 'Ongoing: say "building"') : null,
+          story.ongoing ? el('span', { class: 'chip' }, 'In progress') : null,
           el('span', { class: 'chip' }, exp.org || exp.name),
           ui.statusSelect(`story-${story.id}`, data.status_options, onStatus))),
       el('div', { class: 'item-body' },
         el('div', { class: 'row' }, story.lps.map((id) => el('span', { class: 'chip chip-gold' }, lpName(id)))),
-        story.note ? el('p', { class: 'notice' }, story.note) : null,
-        el('p', { class: 'muted' }, story.evidence_note),
-        el('a', { href: `review.html#review-${story.id}` }, 'Read evidence and delivery review'),
         el('div', { class: 'row' }, el('span', { class: 'label' }, `${STORY_SECONDS}-second rehearsal`), timer.node),
         el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Open with'), el('p', { class: 'answer-short' }, story.headline)),
         starBlock(story),
         el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Close with'), el('p', { class: 'resume-line' }, confirmed(story.lesson))),
         facts.length ? el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Numbers to say'), el('div', { class: 'row' }, facts.map((f) => el('span', { class: 'chip chip-gold' }, f)))) : null,
+        fold('Optional preparation notes',
+          story.note ? el('p', {}, story.note) : null,
+          el('p', {}, story.evidence_note),
+          el('a', { href: `review.html#review-${story.id}` }, 'Open coaching and follow-up preparation')),
         fold('SA framing and a proposed AWS design',
           el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'SA twist'), el('p', {}, story.twist)),
           el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'If they ask how you would build it on AWS'), el('p', {}, story.aws))),
@@ -125,7 +126,7 @@
       back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.headline), starBlock(s), el('p', { class: 'muted' }, confirmed(s.lesson))),
     })), 'Rehearse stories');
     return ui.section('stories', 'STAR bank', `${data.stories.length} stories`, el('span', {}, 'The ', el('em', {}, 'STAR'), ' bank'),
-      el('p', { class: 'section-intro' }, 'Filter by principle, open a story, start the timer, and say it before you read it. Confirmation prompts identify personal details you must supply from real experience. Open the evidence review before treating a draft as ready.'),
+      el('p', { class: 'section-intro' }, 'Filter by principle, open a story, start the timer, and say it before you read it. These complete answers use your resume numbers. Start with S1, S2, S4, and S5; rehearse aloud, then open the follow-ups only when you need more depth.'),
       el('div', { class: 'row lp-chips', role: 'group', 'aria-label': 'Filter by Leadership Principle' }, chips),
       bar,
       el('div', { class: 'row', style: { marginBottom: '1rem' } }, el('button', { class: 'btn btn-gold', type: 'button', onclick: rehearse }, 'Rehearse shown stories')),
@@ -151,12 +152,12 @@
     const readyId = data.status_options.at(-1).id;
     const updateReadout = () => setReadout('Stories ready', data.stories.filter((s) => store.get('status', `story-${s.id}`) === readyId).length, data.stories.length);
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
-      rulesSection(data),
       pitchSection(data.pitch),
+      storiesSection(data, profile, updateReadout),
       ui.section('numbers', 'Numbers quiz', 'Rapid fire', el('span', {}, 'Know your ', el('em', {}, 'numbers')), window.Prep.quiz.mount(profile)),
       lpMapSection(data),
-      storiesSection(data, profile, updateReadout),
-      gapsSection(data)));
+      rulesSection(data),
+      fold('Optional: build additional failure, disagreement, and mentoring examples', gapsSection(data))));
     updateReadout();
     if (location.hash.startsWith('#story-')) showStory(location.hash.slice(7));
   };

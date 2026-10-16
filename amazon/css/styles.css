@@ -651,3 +651,5 @@ details.fold[open] > summary { border-bottom: 1px solid var(--line); }
   .table-wrap { overflow: visible; }
   a { color: #111; }
 }
+
+.speaking-script { font-size: var(--text-lg); line-height: 1.7; max-width: 72ch; }

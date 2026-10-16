@@ -36,7 +36,7 @@ jobs:
           node salesforce/scripts/test_experiences.mjs
           node amazon/scripts/check.mjs
           node amazon/scripts/test_practice.mjs
-          node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs
+          node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs amazon/scripts/test_rehearsal.mjs
           node amazon/scripts/test_integration.mjs
       - name: Verify coding reference solutions
         env:

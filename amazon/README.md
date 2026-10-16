@@ -18,7 +18,7 @@ Start at the repo root landing page or `amazon/index.html`. The prior general in
 ## Study artifacts
 
 - `AWS-CHEATSHEET.md`: portable study reference with sources. Rebuild with `node amazon/scripts/cheatsheet_md.mjs`.
-- `RESUME-STAR-REVIEW.md`: resume and all-story assessment, with faithful rehearsal drafts and explicit details to confirm.
+- `RESUME-STAR-REVIEW.md`: complete speaking scripts and optional deeper preparation. Rebuild with `node amazon/scripts/review_md.mjs`.
 - `stories.md`: generated from `data/behavioral.json`. Rebuild with `node amazon/scripts/stories_md.mjs`.
 - `aws-terms.md` and `questions.md`: longer references; JSON drives the pages.
 
@@ -42,7 +42,7 @@ From repo root:
 ```sh
 node amazon/scripts/check.mjs
 node amazon/scripts/test_practice.mjs
-node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs
+node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs amazon/scripts/test_rehearsal.mjs
 node amazon/scripts/test_integration.mjs
 node --test --experimental-test-coverage --test-coverage-include='**/amazon/js/practice.js' amazon/scripts/test_practice.mjs
 ```

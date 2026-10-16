@@ -12,7 +12,9 @@ test('every existing STAR has an evidence-aware review and a speakable draft', (
     assert.ok(['needs-confirmation', 'needs-outcome', 'overlapping-angle'].includes(story.readiness));
     for (const key of ['evidence', 'strengths', 'missing', 'probes', 'delivery']) assert.ok(story[key].length >= 2, `${story.story_id}.${key}`);
     for (const field of ['stakes', 'ownership', 'decision', 'tradeoff', 'measurement']) assert.ok(story.assessment[field].length > 20);
-    assert.match(story.draft, /\[confirm:/);
+    assert.doesNotMatch(story.draft, /\[(?:confirm|fill):|reported|resume reports|Proposed motivation/i);
+    const source = bank.stories.find(item => item.id === story.story_id);
+    assert.equal(story.draft, [source.s, source.t, ...source.a, source.r, source.lesson].join(' '));
     assert.ok(story.draft.split(/\s+/).length >= 90, story.story_id);
     assert.match(story.evidence_status, /resume|not independent/i);
   }
@@ -41,7 +43,7 @@ test('the bank no longer turns plausible details into personal history', () => {
     assert.ok(story.evidence_note.length > 30);
   }
   assert.match(bank.stories.find(s => s.id === 'dqn-stall').r, /shorter|reduction/);
-  assert.match(bank.stories.find(s => s.id === 'modelscope').r, /compar|confirm/);
+  assert.match(bank.stories.find(s => s.id === 'modelscope').r, /2299|2,299/);
   const profile = read('profile');
   assert.equal(profile.experience.find(e => e.id === 'msrcosmos').legal_dates.start, '2026-05');
   assert.equal(profile.experience.find(e => e.id === 'sports').role, 'AI/ML Research Intern');
@@ -113,7 +115,7 @@ test('review filters preserve the edited draft and load templates without overwr
   search.value = 'S1 '; search.dispatchEvent({ type: 'input' });
   const card = find(stories, node => node.attrs.id === 'review-erp-hitl')[0];
   const editor = find(card, node => node.tag === 'textarea')[0];
-  const button = find(card, node => node.tag === 'button' && node.textContent.includes('Load template'))[0];
+  const button = find(card, node => node.tag === 'button' && node.textContent.includes('Load answer'))[0];
   button.dispatchEvent({ type: 'click' });
   assert.equal(editor.value, read('review').stories[0].draft);
   editor.dispatchEvent({ type: 'blur' });
@@ -146,7 +148,12 @@ test('recruiter-confirmed AWSI-ETP context and audience drills preserve evidence
   assert.match(drill.steps.join(' '), /30.second/);
   assert.match(drill.steps.join(' '), /3 days.*5\.5 hours/);
   assert.match(drill.steps.join(' '), /confirm.*measurement/i);
-  assert.match(bank.pitch.closing_line, /confirm:/);
+  assert.doesNotMatch(bank.pitch.closing_line, /confirm:|Proposed close/);
   assert.match(bank.pitch.beats.find(beat => beat.label === 'Why SA').text, /customer/);
   for (const story of bank.stories) assert.match(story.twist, /engineer|technical audience|executive/i);
+});
+
+test('portable review contains the same complete speaking scripts', async () => {
+  const { render } = await import('./review_md.mjs');
+  assert.equal(readFileSync(new URL('../RESUME-STAR-REVIEW.md', import.meta.url), 'utf8'), render(read('review')));
 });
