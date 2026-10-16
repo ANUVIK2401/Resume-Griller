@@ -1,8 +1,8 @@
-# Question Bank: AWSI ETP Solutions Architect On-Campus Loop
+# Question Bank: AWSI - ETP Solutions Architect Interview
 
-**Likely structure (inferred from SA new-grad reports, confirm with Naomi):** about 3 interviews, each mixing 2 Leadership Principle questions with a technical or customer segment. One round may be a whiteboard architecture or customer role-play.
+**Practice structure, not a confirmed interview schedule:** rehearse behavioral evidence, a resume deep dive, AWS architecture, and customer communication. Confirm interview count, level, team, coding expectations, and format with your recruiter. Use the three sessions below to rehearse; they are not a prediction of your loop.
 
-| Round | Likely focus | Lead stories |
+| Practice session | Focus | Lead stories |
 |---|---|---|
 | 1 | Behavioral LPs + resume deep dive | S1, S2, S5 |
 | 2 | Technical: AWS fundamentals + architecture whiteboard | aws-terms.md, designs below |
@@ -11,13 +11,13 @@
 ---
 
 ## A. Openers (have crisp answers)
-1. **Tell me about yourself (60 sec).** Infra engineer at Oracle for close to 3 years, 37,000+ tenants, MTTR 94 to 26 min. Then forward-deployed at MSRcosmos: customer-facing, 12 entities on 3 clouds, 3 days to 5.5 hours. Close: "I want to be the person who sits between the customer's problem and the right architecture."
-2. **Why AWS? Why Solutions Architect and not SDE?** You liked the customer-facing part of MSRcosmos most: translating a business constraint into a design. Success measured by customer impact, not quota (quote Naomi's note).
-3. **Why AWSI / strategic accounts?** Large, regulated enterprises, the scale you worked at Oracle.
-4. **Which LP resonates most?** Customer Obsession or Dive Deep, with a story attached.
+1. **Tell me about yourself (60 sec).** Oracle, July 2022 to January 2025 (about 2.5 years), 37,000+ tenants, MTTR 94 to 26 min. Then forward-deployed at MSRcosmos: customer-facing, 12 entities on 3 clouds, 3 days to 5.5 hours. Candidate confirmation: close with your genuine motivation for connecting customer problems to architecture decisions.
+2. **Why AWS? Why Solutions Architect and not SDE?** State your genuine reason for choosing SA. If customer-facing work motivates you, support it with your verified MSRcosmos migration and human-review routing experience. Explain the actual customer need and your contribution without assuming auditor requirements or a personal preference.
+3. **Why AWSI - ETP Solutions Architect?** The role is confirmed in the supplied recruiter email. Connect a supported migration or reliability example to customer outcomes, collaboration with sales, and communication to engineers and executives. Supply your own genuine motivation; account segment and specialty remain unspecified.
+4. **Which LP resonates most?** Choose the principle you actually connect with and explain why, using verified actions. For S1 human-review routing, confirm the customer need that drove the safeguard.
 
-## B. Leadership Principle questions (2 to 3 per round)
-Use stories.md. One story should not be reused more than twice across the loop.
+## B. Leadership Principle question practice
+Use stories.md. Prepare varied examples so different questions reveal different evidence; adapt story choice to the question.
 
 - **Customer Obsession:** Tell me about a time you went above and beyond for a customer. A time you had to say no to a customer.
 - **Ownership:** A time you took on something outside your role. A time you saw a problem nobody owned.
@@ -63,14 +63,14 @@ Use stories.md. One story should not be reused more than twice across the loop.
 ## D. Whiteboard architectures (practice 4, framework below)
 **Framework (say it out loud):** clarify requirements and constraints (users, traffic, data, compliance, budget) -> draw the simple version -> scale it -> make it reliable -> secure it -> cost it -> state one tradeoff.
 
-1. **3-tier web app for a retailer with Black Friday spikes.** Route 53 -> CloudFront -> ALB -> ASG across 2 AZs -> Aurora Multi-AZ + ElastiCache; S3 for images; scheduled + target-tracking scaling.
+1. **3-tier web app for a retailer with Black Friday spikes.** Route 53 -> CloudFront -> ALB -> ASG across 2 AZs -> Aurora Multi-AZ + ElastiCache; S3 for images; scheduled + target-tracking scaling. Commit checkout and an outbox event together; publish to SQS with idempotent fulfillment.
 2. **Migrate an on-prem ERP / financial system to AWS** (your S1 story). Discovery, 7 Rs per workload, DMS for data, landing zone with Control Tower, cutover plan, rollback.
 3. **Serverless document processing pipeline.** S3 upload -> EventBridge -> Step Functions -> Textract -> Bedrock summarization -> DynamoDB -> human review for low confidence (S1 pattern).
-4. **GenAI chatbot over company docs (RAG).** S3 docs -> Bedrock Knowledge Base (embeddings + vector store such as OpenSearch Serverless) -> Bedrock model with Guardrails -> API Gateway + Lambda -> Cognito auth; evaluate answer quality before launch.
+4. **GenAI chatbot over company docs (RAG).** S3 docs -> Bedrock Knowledge Base (embeddings + vector store such as OpenSearch Serverless) -> Bedrock model with Guardrails -> API Gateway + Lambda -> Cognito auth; derive server-side retrieval filters from trusted identity; isolate caches by authorization. Guardrails do not replace document permissions. Evaluate answer quality before launch.
 5. **Real-time analytics / clickstream.** Kinesis -> Firehose -> S3 -> Glue -> Athena / QuickSight.
-6. **Multi-region DR for a payments app.** Pick a DR tier from RPO/RTO, Aurora Global Database, Route 53 failover.
+6. **Multi-region DR for a payments app.** Pick a DR tier from measured RPO/RTO, a single Aurora Global Database writer, writer fencing, Route 53 failover, stable payment-provider keys, and reconciliation. DNS alone does not prevent duplicate charges.
 
-## E. Customer role-play (expect at least one)
+## E. Customer role-play practice
 Scenario styles: "I'm the CTO of a retailer. Our site goes down on peak days. What should we do?" or "Explain containers to my CFO."
 
 How to win it:
@@ -78,18 +78,27 @@ How to win it:
 - **Restate** the problem in their words.
 - **Propose 1 or 2 options**, with a tradeoff and a cost direction for each.
 - **Match the audience:** CFO hears cost and risk; engineers hear services and design.
-- **Never overpromise.** If unsure: "I'll confirm with the service team and follow up by Friday."
+- **Never overpromise.** If unsure: "I will verify the documented behavior and agree a realistic follow-up time with you."
 - **Close with next steps:** a proof of concept, a Well-Architected review, a follow-up meeting.
 
 ## F. Questions to ask interviewers
-1. What does a strong ETP graduate look like after the first 6 months?
-2. How are customer accounts assigned after the program?
+1. What outcomes distinguish a strong Solutions Architect in the first 6 months?
+2. How are customer accounts assigned, and how does a new SA build customer context?
 3. What share of customer conversations right now involve generative AI on Bedrock?
-4. How do SAs in AWSI split time between customer work and building reusable assets?
+4. How do SAs on this team split time between customer work and building reusable assets?
 5. What is one thing new SAs underestimate?
 
 ## G. Logistics for the day
-- Arrive 15 minutes early; confirm start time in PT with Naomi.
+- Confirm the current interview schedule, timezone, format, and recruiter instructions; join or arrive early.
 - Bring a notebook and pen for whiteboard practice; dress business casual.
 - Have the 60-second intro, 6 lead stories, and the 6 pillars memorized.
-- Send a short thank-you note to Naomi the same evening.
+- Write down follow-up items after the interview and verify any promised technical answers before sending them.
+
+Technical answer details and AWS sources: [AWS terminology](aws-terms.md). Treat design exercises as hypothetical; separate verified project experience from AWS equivalents. Confirm role level and interview format with the recruiter before assuming a program-specific loop.
+
+
+## Recruiter role context and sales-partner drill
+
+The supplied email confirms AWSI - ETP Solutions Architect, customer-solution design, sales collaboration, and communication from technical experts to executives. It describes success through positive customer impact rather than sales quotas. These are role expectations, not evidence that any particular candidate story demonstrated them.
+
+Practise with a sales colleague seeking a financial-migration commitment before data and cutover assumptions are tested. Ask about the customer outcome, reconciliation, downtime tolerance, approval owners, rollback and evidence. Propose a bounded pilot with jointly agreed success criteria. Explain validation and failure handling to an engineer, then explain business impact, risk and the next decision to an executive. State what remains untested before making a commitment.

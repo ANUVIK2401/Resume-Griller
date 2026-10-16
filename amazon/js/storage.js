@@ -9,6 +9,12 @@
   const record = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
   const validId = (value) => typeof value === 'string' && ID.test(value) && !['constructor', 'prototype', '__proto__'].includes(value);
   const validDate = (value) => typeof value === 'string' && value.length <= 40 && /^\d{4}-\d{2}-\d{2}T/.test(value) && Number.isFinite(Date.parse(value));
+  // Interview settings are Pacific wall-clock input, not UTC timestamps.
+  const validWallDate = (value) => {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) return false;
+    const parsed = new Date(`${value}:00Z`);
+    return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 16) === value;
+  };
   const copy = (value) => JSON.parse(JSON.stringify(value));
   const invalid = () => { throw new Error('This progress file has invalid data. Import an unmodified export from this site.'); };
 
@@ -19,7 +25,7 @@
     if (bucket === 'checks') return typeof value === 'boolean';
     return record(value) && Object.keys(value).every((key) => ['status', 'date'].includes(key))
       && (value.status === undefined || ['not_started', 'scheduled', 'done', 'passed'].includes(value.status))
-      && (value.date === undefined || value.date === null || validDate(value.date));
+      && (value.date === undefined || value.date === null || validWallDate(value.date));
   }
 
   // kind separates the numbers quiz, the rapid-fire tech quiz, and mock rounds; items lists what was asked.

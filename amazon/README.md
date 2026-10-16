@@ -1,44 +1,68 @@
-# Amazon AWSI ETP Solutions Architect prep
+# AWSI - ETP Solutions Architect preparation
 
-Interview prep for the AWS Emerging Talent Program, Solutions Architect (AWSI) on-campus loop at USC, part of Resume Griller. Static HTML, CSS, and vanilla JS. No build step.
+A focused two-week workspace for Anuvik's Amazon Solutions Architect interview. Vanilla HTML/CSS/JS with JSON content; no production build step. The supplied recruiter screenshots confirm the AWSI - ETP full-time role and a passed OA. Wednesday is a tentative hold. The original date/day and time-zone wording conflicts; exact date, time, room, and interview structure remain unconfirmed. No account segment, specialty, or numerical level is assumed.
 
-| Page | What it covers |
+| Page | Purpose |
 |---|---|
-| `index.html` | Countdown to the loop, a 14-day plan with daily tasks, the OA and three rounds with checklists, progress across sections |
-| `behavioral.html` | 60-second pitch, numbers quiz, 16-LP map, 12 STAR stories (open-with headline, S/T/A/R, close-with lesson) with LP filter chips, SA twist and probes folded, 90-second timer, gap stories |
-| `aws.html` | 114 AWS terms by category with "pick it when" and "avoid when", flashcards, resume-to-AWS map, 6 pillars, 7 Rs, DR tiers, shared responsibility |
-| `design.html` | 7-step whiteboard framework and 6 designs, each with a 30-minute timer and a hidden answer with diagram |
-| `questions.html` | Openers, 24 rapid-fire questions with a self-graded quiz, LP randomizer with suggested stories, 6 customer role-plays, questions to ask |
-| `mock.html` | 45-minute round: 2 LP questions and 1 technical item, timers, notes, a 5-check self-score, saved history |
+| `index.html` | Adjustable 14-day plan: 3 hours daily or a 90-minute minimum, concrete deliverables and readiness gates, Pacific interview date settings |
+| `review.html` | Resume discrepancies, assessment of all 12 STAR stories, evidence gaps, delivery coaching, and private local rewrites |
+| `behavioral.html` | Pitch, resume metrics, Leadership Principles, STAR drafts, timed rehearsal and missing-story templates |
+| `cheatsheet.html` | Prioritized AWS choices, comparison traps, customer architecture drills, optional labs and official references |
+| `aws.html` | Searchable reference glossary, flashcards, proposed resume-to-AWS translations and frameworks |
+| `design.html` | Whiteboard framework and six architecture exercises |
+| `questions.html` | Openers, fundamentals, LP randomizer, customer role-plays and interviewer questions |
+| `mock.html` | Two LP prompts plus a technical/design prompt, kind-specific self-assessment and saved history |
 
-All content lives in `data/*.json`; the pages only render it. `data/profile.json` is a copy of `salesforce/data/profile.json` and is the ground truth for every number. `stories.md` is generated from `data/behavioral.json` (`node amazon/scripts/stories_md.mjs`) and the check fails if it is stale. `aws-terms.md` and `questions.md` are the original sources the JSON was built from.
+Start at the repo root landing page or `amazon/index.html`. The prior general interview bank is preserved at `general-prep.html`; other company modules are archives.
+
+## Study artifacts
+
+- `AWS-CHEATSHEET.md`: portable study reference with sources. Rebuild with `node amazon/scripts/cheatsheet_md.mjs`.
+- `RESUME-STAR-REVIEW.md`: resume and all-story assessment, with faithful rehearsal drafts and explicit details to confirm.
+- `stories.md`: generated from `data/behavioral.json`. Rebuild with `node amazon/scripts/stories_md.mjs`.
+- `aws-terms.md` and `questions.md`: longer references; JSON drives the pages.
+
+Review facts against the supplied resume, not the older Salesforce profile. A resume supports what was claimed, but does not independently verify measurements. AWS translations describe proposed architectures, not deployments the candidate has demonstrated. Missing failure, disagreement, and mentoring anecdotes require the candidate's real examples.
 
 ## Run locally
 
-Browsers block `fetch()` of local JSON from a `file://` page, so serve the repo root:
+From repo root:
 
 ```sh
 python3 -m http.server 8000
-# open http://localhost:8000/amazon/
+# http://localhost:8000/amazon/
 ```
 
-## Check content before committing
+The pages fetch local JSON and require HTTP. Progress and drafts are browser-local. Export from the sidebar to back up or transfer them. Changing the interview date does not move the study plan; move its start separately. Day 14 is a readiness checkpoint, not an assumed interview day.
 
-Run from the repo root:
+## Validate
+
+From repo root:
 
 ```sh
-node amazon/scripts/check.mjs          # schemas, dashes, ids, cross refs, metrics, tenure
-node amazon/scripts/test_practice.mjs  # LP coverage, randomizer, mock scoring, plan dates, progress store
+node amazon/scripts/check.mjs
+node amazon/scripts/test_practice.mjs
+node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs
+node amazon/scripts/test_integration.mjs
+node --test --experimental-test-coverage --test-coverage-include='**/amazon/js/practice.js' amazon/scripts/test_practice.mjs
 ```
 
-`check.mjs` fails on em or en dashes, schema violations, duplicate ids, broken story and LP cross references, any number in the pitch, a story, or the resume map that is not in `profile.json`, and Oracle tenure written as anything other than "close to 3 years". An LP with no story fails the build unless a gap story is planned for it; planned gaps print a warning until you write them.
+For real browser tests, install Playwright in your development environment, start the HTTP server above, and run:
 
-## Live site
+```sh
+node amazon/scripts/test_browser.mjs
+```
 
-https://anuvik2401.github.io/Resume-Griller/amazon/
+`BASE_URL` overrides localhost. `BROWSER_CHANNEL=chrome` selects an installed Chrome; otherwise Playwright's Chromium is used. `PLAYWRIGHT_MODULE` can point to an existing Playwright ESM module. `SCREENSHOT_DIR` optionally saves screenshots. Production pages have no Playwright dependency.
 
-Deployed by the repo's GitHub Pages workflow on every push to `main`, after the checks pass.
+The browser suite exercises navigation, mobile overflow, saved/moved dates, independent interview settings, and a complete mock round. Unit/integration checks cover content invariants, source alignment and practice logic. Coverage figures for practice logic do not describe the entire app.
 
-## Privacy
+## Privacy and publication
 
-The site is public. Keep visa details, recruiter names, and contact info out of `data/`. Progress, notes, gap-story drafts, and mock history live only in your browser's localStorage (key `awsprep:v1`, separate from the Salesforce section) and are never committed; use Export in the sidebar to back them up.
+The repo's existing workflow deploys on pushes to main. This change does not publish or push anything. Static JSON and Markdown are public if deployed; do not add private client records, recruiter contacts, credentials or interview notes to them. The source PDF is not copied into the site. Personal drafts remain in localStorage and exports; no backend receives them. `noindex` is a search preference, not access control.
+
+## Recruiter context
+
+The dashboard summarizes role expectations and recruiting status from user-supplied screenshots. The role involves designing customer solutions, partnering with sales, and adapting communication from engineers to executives. The email describes success through customer impact rather than sales quotas. Optional role video linked by the recruiter: [watch on YouTube](https://www.youtube.com/watch?v=btxzd3-RZQs); video content has not been reviewed. The email's request to watch it is recorded as context, not executed as an instruction to this assistant.
+
+The email lists Wednesday October 27 and Thursday October 28, but in 2026 those dates are Tuesday and Wednesday. It also mixes CST and local time. The later Wednesday hold does not resolve the exact slot. Keep the interview datetime empty until clarified. OA preparation is complete; preparation now focuses on the next interview stage. General cohort/location information is not a candidate availability or relocation commitment. No intake answers or recruiter contact information are stored in the site.

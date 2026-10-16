@@ -1,0 +1,113 @@
+// Real browser regression test. Serve repo root at BASE_URL, install playwright or set PLAYWRIGHT_MODULE.
+import assert from 'node:assert/strict';
+import { mkdirSync } from 'node:fs';
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const base = process.env.BASE_URL || 'http://127.0.0.1:8000';
+// Allow a newly started CI server a brief startup window.
+for (let attempt = 0; ; attempt++) {
+  try { const response = await fetch(base); if (response.ok) break; } catch {}
+  if (attempt >= 30) throw new Error(`Test server unavailable at ${base}`);
+  await new Promise(resolve => setTimeout(resolve, 100));
+}
+const browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, timezoneId: 'America/New_York' });
+const page = await context.newPage();
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+const visit = async path => {
+  await page.goto(`${base}/${path}`);
+  await page.waitForFunction(() => document.querySelector('main')?.textContent.trim().length > 100);
+  assert.equal(await page.getByRole('alert').count(), 0, `${path} failed to render`);
+  assert.equal(await page.locator('h1').count(), 1);
+};
+try {
+  await visit('index.html');
+  await page.getByRole('link', { name: /Open my two-week plan/ }).click();
+  await page.getByLabel('14-day study plan start date').waitFor();
+  assert.equal(await page.locator('.plan-day').count(), 14);
+  assert.match(await page.locator('#recruiting-context').innerText(), /passed/i);
+  assert.match(await page.locator('#recruiting-context').innerText(), /Wednesday/);
+  assert.match(await page.locator('#recruiting-context').innerText(), /CST/);
+  assert.match(await page.locator('.countdown').innerText(), /unconfirmed/i);
+  const start = page.getByLabel('14-day study plan start date');
+  await start.fill('2026-11-01'); await start.dispatchEvent('change');
+  assert.match(await page.locator('#day-d01').innerText(), /Nov 1, 2026/i);
+  await page.locator('#day-d01 input[type="checkbox"]').first().check();
+  await page.reload();
+  assert.equal(await start.inputValue(), '2026-11-01');
+  assert.equal(await page.locator('#day-d01 input[type="checkbox"]').first().isChecked(), true);
+  const event = page.getByLabel('Interview date and start time in Pacific Time');
+  await event.fill('2026-11-15T09:30'); await event.dispatchEvent('change');
+  assert.match(await page.locator('.next-round').innerText(), /09:30 Pacific Time/);
+  await page.getByLabel('Date and time confirmed with the recruiter', { exact: true }).check();
+  await event.fill('2026-11-16T10:30'); await event.dispatchEvent('change');
+  assert.equal(await page.getByLabel('Date and time confirmed with the recruiter', { exact: true }).isChecked(), false);
+  for (const path of ['review', 'behavioral', 'cheatsheet', 'aws', 'design', 'questions', 'mock']) await visit(`amazon/${path}.html`);
+  await visit('amazon/review.html');
+  const story = page.locator('#review-erp-hitl');
+  await story.locator('summary').first().click();
+  const editor = story.getByRole('textbox');
+  await story.getByRole('button', { name: 'Load template into empty editor', exact: true }).click();
+  assert.match(await editor.inputValue(), /MSRcosmos/);
+  await editor.fill('My confirmed scope: implemented the review router.'); await editor.blur();
+  await story.getByRole('button', { name: 'Load template into empty editor', exact: true }).click();
+  assert.equal(await editor.inputValue(), 'My confirmed scope: implemented the review router.');
+  await page.reload(); await story.locator('summary').first().click();
+  assert.equal(await editor.inputValue(), 'My confirmed scope: implemented the review router.');
+  await page.getByPlaceholder('Search story reviews').fill('no-such-interview-story');
+  assert.match(await page.locator('#story-review').innerText(), /No stories match/);
+  await page.getByPlaceholder('Search story reviews').fill('');
+  assert.equal(await page.locator('#story-review details.item').count(), 12);
+  await visit('amazon/cheatsheet.html');
+  assert.equal(await page.getByLabel('All priorities', { exact: true }).inputValue(), 'P0');
+  const decisionSearch = page.getByPlaceholder('Search decisions, tradeoffs or failure modes');
+  await decisionSearch.fill('idempotency');
+  assert.equal(await page.getByLabel('All priorities', { exact: true }).inputValue(), 'P0');
+  assert.ok(await page.locator('#decisions article').count() > 0);
+  await decisionSearch.fill('');
+  await page.locator('#decisions input[type="checkbox"]').first().check();
+  assert.match(await page.locator('#readout').innerText(), /1 \/ 23/);
+  await page.getByRole('button', { name: 'Rehearse shown decisions', exact: true }).click();
+  await page.locator('dialog').waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await page.locator('dialog').waitFor({ state: 'hidden' });
+  const downloadEvent = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export progress to a file', exact: true }).click();
+  const download = await downloadEvent;
+  await page.locator('#decisions input[type="checkbox"]').first().uncheck();
+  await Promise.all([page.waitForEvent('load'), page.locator('input[type="file"]').setInputFiles(await download.path())]);
+  await page.locator('#decisions article').first().waitFor();
+  assert.equal(await page.locator('#decisions input[type="checkbox"]').first().isChecked(), true);
+  await visit('amazon/mock.html');
+  await page.getByRole('button', { name: 'Start a mock round', exact: true }).click();
+  await page.getByRole('button', { name: 'Show hint after answering', exact: true }).click();
+  await page.getByRole('button', { name: 'Next question', exact: true }).click();
+  await page.getByRole('button', { name: 'Next question', exact: true }).click();
+  await page.getByRole('button', { name: 'Finish and self-score', exact: true }).click();
+  const groups = page.locator('fieldset.rubric');
+  assert.equal(await groups.count(), 3);
+  const technical = await groups.nth(2).innerText();
+  assert.doesNotMatch(technical, /STAR complete|Said "I"/);
+  for (const box of await groups.locator('input').all()) await box.check();
+  await page.getByRole('button', { name: 'Save score', exact: true }).click();
+  assert.equal(await page.locator('.score').innerText(), '15 / 15');
+  await page.reload();
+  assert.match(await page.locator('#history').innerText(), /15 \/ 15/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ['index', 'review', 'cheatsheet', 'behavioral']) {
+    await visit(`amazon/${path}.html`);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, `${path}: mobile overflow`);
+  }
+  await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
+  await page.locator('.side-nav').getByRole('link', { name: 'AWS cheat sheet', exact: true }).click();
+  await page.locator('#main section').first().waitFor();
+  if (process.env.SCREENSHOT_DIR) {
+    mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
+    await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/cheatsheet-mobile.png`, fullPage: false });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await visit('amazon/review.html');
+    await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/review-desktop.png`, fullPage: false });
+  }
+  assert.deepEqual(errors, []);
+  console.log('Browser checks passed: 9 routes, movable plan, Pacific date, saved progress, private draft preservation, cheat sheet filters/flashcards, export/import, tailored mock scoring, mobile layout and navigation.');
+} finally { await browser.close(); }

@@ -43,6 +43,7 @@
       back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.one_liner), useAvoid(s)),
     })), 'AWS flashcards');
     const intro = el('div', { class: 'card stack' },
+      el('a', { class: 'btn btn-gold', href: 'cheatsheet.html' }, 'Start with the two-week AWS cheat sheet'),
       el('p', { class: 'h3' }, data.mental_model),
       el('p', { class: 'muted' }, `${data.services.length} terms. ${data.verify_note}`),
       bar,
@@ -56,7 +57,7 @@
   function resumeSection(data, behavioral) {
     const story = (id) => behavioral.stories.find((s) => s.id === id);
     return ui.section('resume-map', 'Resume to AWS', 'Say this out loud', el('span', {}, 'Your resume, ', el('em', {}, 'on AWS')),
-      el('p', { class: 'section-intro' }, 'When they ask about your work, finish with the AWS version in one sentence. It shows you can translate.'),
+      el('p', { class: 'section-intro' }, 'These are proposed AWS designs. Describe the platform you actually used first; then say how you would approach the same problem on AWS.'),
       table(['You did', 'AWS equivalent', 'Story'], data.resume_map.map((r) => [r.you_did, r.aws,
         r.story ? el('a', { href: `behavioral.html#story-${r.story}` }, story(r.story).code) : ''])));
   }

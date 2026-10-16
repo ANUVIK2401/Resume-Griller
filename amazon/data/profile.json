@@ -2,8 +2,8 @@
   "$schema": "./schema/profile.schema.json",
   "name": "Anuvik Thota",
   "location": "Los Angeles, CA",
-  "identity": "Production infrastructure engineer (observability, incident response, Kubernetes at Oracle scale) who now builds agentic LLM systems in production.",
-  "availability": "Full time from January 2027",
+  "identity": "Engineer with Oracle observability, incident-response, and Kubernetes experience, now building agentic AI systems; preparing to translate those skills into customer architecture discussions.",
+  "availability": "[confirm: actual full-time start availability; graduation is Dec 2026]",
   "links": {
     "github": "https://github.com/ANUVIK2401",
     "linkedin": "https://linkedin.com/in/anuvik-thota",
@@ -81,9 +81,9 @@
       "org": "MSRcosmos",
       "role": "AI Forward Deployed SWE Intern",
       "kind": "internship",
-      "dates_display": "Jun 2026 to Aug 2026",
+      "dates_display": "May 2026 to Aug 2026",
       "legal_dates": {
-        "start": "2026-06",
+        "start": "2026-05",
         "end": "2026-08"
       },
       "summary": "Multi-agent ERP migration with human-in-the-loop confidence routing and a Databricks feed.",
@@ -96,14 +96,14 @@
     {
       "id": "sports",
       "org": "USC Sports Analytics",
-      "role": "Volunteer research",
-      "kind": "volunteer research",
+      "role": "AI/ML Research Intern",
+      "kind": "internship",
       "dates_display": "Jun 2025 to Sep 2025",
       "legal_dates": {
         "start": "2025-06",
         "end": "2025-09"
       },
-      "summary": "Volunteer research: DQN reinforcement learning agent for NFL fourth-down calls over 420K plays.",
+      "summary": "DQN research for NFL fourth-down calls over 420K plays. PDF title used; earlier site called this volunteer research, so confirm official classification.",
       "highlights": [
         "DQN agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
         "Agreement with EPA-optimal calls up from 68% to 74% on held-out 2024 drives; per-run training time down 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."
@@ -114,7 +114,7 @@
       "org": "Oracle",
       "role": "Software Engineer II",
       "kind": "full time",
-      "dates_display": "close to 3 years",
+      "dates_display": "Jul 2022 to Jan 2025",
       "legal_dates": {
         "start": "2022-07",
         "end": "2025-01"
@@ -498,8 +498,8 @@
     {
       "id": "ms-int8-mem",
       "group": "modelscope",
-      "fact": "INT8 was dominated: 53% more memory, 2.1x lower throughput",
-      "q": "ModelScope: INT8 used what percent more memory?",
+      "fact": "Resume reports INT8 dominated: 53% more memory and 2.1x lower throughput; comparator and setup need confirmation.",
+      "q": "ModelScope (resume comparator needs confirmation): INT8 used what percent more memory?",
       "a": "53",
       "unit": "%",
       "accept": []
@@ -507,8 +507,8 @@
     {
       "id": "ms-int8-tps",
       "group": "modelscope",
-      "fact": "INT8 was dominated: 53% more memory, 2.1x lower throughput",
-      "q": "ModelScope: INT8 throughput was how many times lower?",
+      "fact": "Resume reports INT8 dominated: 53% more memory and 2.1x lower throughput; comparator and setup need confirmation.",
+      "q": "ModelScope (resume comparator needs confirmation): INT8 throughput was how many times lower?",
       "a": "2.1",
       "unit": "x",
       "accept": [

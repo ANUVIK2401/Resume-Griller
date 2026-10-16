@@ -637,3 +637,17 @@ details.fold[open] > summary { border-bottom: 1px solid var(--line); }
 /* Navy cards keep signal colors readable; narrow phones keep text size in the sidebar only. */
 .card-navy { --danger: #FFA59C; --ok: #8FE0B5; }
 @media (max-width: 400px) { .topbar .text-size { display: none; } }
+
+/* Printable interview references. Browser printing keeps study content legible. */
+@media print {
+  :root { color-scheme: light; --ink: #111; --ink-muted: #333; --surface: #fff; --surface-card: #fff; --surface-sunk: #f4f4f4; }
+  .sidebar, .topbar, .scrim, .skip, .readout, .site-footer, button, .status, .timer, .filter-bar, textarea { display: none !important; }
+  .shell { margin-left: 0 !important; padding: 0 !important; }
+  body, .masthead, main { background: #fff !important; color: #111 !important; }
+  .masthead { padding: 1rem 0 !important; }
+  .masthead h1, .masthead .lede, .masthead .prompt { color: #111 !important; }
+  .card, .plan-day, .item { box-shadow: none !important; border: 1px solid #bbb; break-inside: avoid; }
+  .card-navy { background: #f4f4f4 !important; color: #111 !important; --on-navy: #111; --on-navy-muted: #333; --accent-ink: #333; }
+  .table-wrap { overflow: visible; }
+  a { color: #111; }
+}

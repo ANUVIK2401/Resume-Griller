@@ -32,13 +32,13 @@
         { "name": "S3", "role": "Product images and static assets" },
         { "name": "ALB", "role": "Spreads traffic across AZs" },
         { "name": "Auto Scaling group across 2+ AZs", "role": "Stateless web and app servers" },
-        { "name": "ElastiCache", "role": "Sessions, carts, hot catalog reads" },
+        { "name": "ElastiCache", "role": "Hot catalog reads and a session cache; durable carts remain in a database" },
         { "name": "Aurora Multi-AZ + read replicas", "role": "Orders and catalog; replicas serve reads" },
         { "name": "SQS", "role": "Buffers order processing so checkout accepts orders even when downstream is slow" }
       ],
-      "flow": ["User resolves the domain in Route 53 and hits CloudFront; cached images and pages return from the edge.", "Cache misses go to the ALB, then to app servers in an Auto Scaling group across 2 AZs.", "App servers read sessions and hot catalog data from ElastiCache, the rest from Aurora read replicas.", "Checkout writes the order to Aurora and puts fulfillment work on SQS for workers to process."],
+      "flow": ["User resolves the domain in Route 53 and hits CloudFront; cached images and pages return from the edge.", "Cache misses go to the ALB, then to app servers in an Auto Scaling group across 2 AZs.", "App servers read sessions and hot catalog data from ElastiCache, the rest from Aurora read replicas.", "Checkout commits the order and an outbox event in the same Aurora transaction. An outbox publisher retries delivery to SQS; idempotent workers track processed event IDs before fulfillment."],
       "scale": ["Scheduled scaling to pre-warm before the known peak, plus target tracking on request count", "Cache aggressively at CloudFront and ElastiCache so the database sees a fraction of traffic", "Queue order fulfillment so spikes do not hit downstream systems directly"],
-      "security": ["WAF rate limits and bot control at CloudFront", "App and database in private subnets", "Payment data kept out of scope via a tokenizing payment provider"],
+      "security": ["WAF rate limits and bot control at CloudFront", "App and database in private subnets", "Use a tokenizing payment provider to reduce PCI scope; confirm remaining scope with the compliance owner"],
       "cost": ["Savings Plans for the baseline fleet, On-Demand or Spot for the peak", "Scale back down after the event"],
       "tradeoff": "Pre-warming with scheduled scaling costs money before the peak, but reactive scaling alone can lag a sudden spike. For a known date I pay for headroom; I would revisit if the spike were unpredictable.",
       "failure_modes": [
@@ -47,7 +47,7 @@
         { "failure": "Fulfillment system slow", "mitigation": "SQS buffers orders; dead-letter queue catches poison messages" }
       ],
       "followups": ["How would you test this before Black Friday?", "What if traffic is 10x what they predicted?", "How do you keep sessions if an instance dies?"],
-      "diagram": "flowchart LR\n  U[\"Users\"] --> R53[\"Route 53\"] --> CF[\"CloudFront + WAF\"]\n  CF --> S3[\"S3 assets\"]\n  CF --> ALB[\"ALB\"] --> ASG[\"App servers, ASG over 2 AZs\"]\n  ASG --> EC[\"ElastiCache\"]\n  ASG --> AUR[\"Aurora Multi-AZ + replicas\"]\n  ASG --> Q[\"SQS orders\"] --> W[\"Fulfillment workers\"]"
+      "diagram": "flowchart LR\n  U[\"Users\"] --> R53[\"Route 53\"] --> CF[\"CloudFront + WAF\"]\n  CF --> S3[\"S3 assets\"]\n  CF --> ALB[\"ALB\"] --> ASG[\"App servers, ASG over 2 AZs\"]\n  ASG --> EC[\"ElastiCache\"]\n  ASG --> AUR[\"Aurora Multi-AZ + replicas\"]\n  AUR --> OB[\"Transactional outbox publisher\"] --> Q[\"SQS orders\"] --> W[\"Idempotent fulfillment workers\"]"
     },
     {
       "id": "erp-migration",
@@ -100,18 +100,18 @@
         { "name": "A2I or a task-token review queue", "role": "Human review below the confidence threshold" },
         { "name": "DynamoDB", "role": "Results and status per document" }
       ],
-      "flow": ["A document lands in S3; EventBridge starts a Step Functions execution.", "Textract extracts fields; Bedrock summarizes and scores confidence.", "Above the threshold, results go straight to DynamoDB.", "Below it, the workflow pauses for a human reviewer, then writes the corrected result."],
-      "scale": ["Every step is serverless and scales with load", "Use Textract asynchronous APIs for multi-page documents", "Queue in front of Bedrock calls if model quotas are the limit"],
-      "security": ["S3 encryption with KMS, block public access", "Macie to find PII; Bedrock Guardrails to redact PII in summaries", "Least-privilege role per step"],
+      "flow": ["A document lands in S3; EventBridge starts a Step Functions execution.", "Textract extracts fields; Bedrock summarizes. Compute a calibrated review score from extraction confidence, schema and reconciliation checks, and a labeled evaluation set; model self-confidence alone is insufficient.", "Above the threshold, results go straight to DynamoDB.", "Below it, the workflow pauses for a human reviewer, then writes the corrected result."],
+      "scale": ["Managed steps scale within quotas; cap concurrency, monitor throttling, and provide backpressure", "Use Textract asynchronous APIs for multi-page documents", "Queue in front of Bedrock calls if model quotas are the limit"],
+      "security": ["S3 encryption with KMS, block public access", "Macie can discover sensitive S3 data; Guardrails can filter or mask detected PII but are not a complete DLP or authorization boundary", "Least-privilege role per step"],
       "cost": ["Pay per document and per token; no idle servers", "Lifecycle old documents to Glacier"],
-      "tradeoff": "A lower confidence threshold means fewer human reviews and lower cost, but more risk of a wrong claim slipping through. Start conservative and lower it as reviewers stop correcting results, as I did in S1.",
+      "tradeoff": "A lower review threshold reduces review cost but can increase incorrect automatic approvals. Start with conservative thresholds, then adjust using labeled accuracy, financial reconciliation, and reviewer corrections. This is a hypothetical AWS design; use S1 only for experience you can verify.",
       "failure_modes": [
         { "failure": "Textract or Bedrock throttles", "mitigation": "Step Functions retries with backoff; request quota increases ahead of time" },
         { "failure": "Bad or unreadable scan", "mitigation": "Route to human review instead of guessing" },
         { "failure": "Duplicate events", "mitigation": "Idempotency key per document in DynamoDB" }
       ],
       "followups": ["How do you measure extraction accuracy?", "What happens at 10x volume?", "How do you keep PII out of model logs?"],
-      "diagram": "flowchart LR\n  UP[\"Upload\"] --> S3[\"S3\"] --> EB[\"EventBridge\"] --> SF[\"Step Functions\"]\n  SF --> TX[\"Textract\"]\n  SF --> BR[\"Bedrock summary + confidence\"]\n  BR -- \"high\" --> DDB[\"DynamoDB results\"]\n  BR -- \"low\" --> HR[\"Human review\"] --> DDB"
+      "diagram": "flowchart LR\n  UP[\"Upload\"] --> S3[\"S3\"] --> EB[\"EventBridge\"] --> SF[\"Step Functions\"]\n  SF --> TX[\"Textract\"]\n  SF --> BR[\"Summary + calibrated checks\"]\n  BR -- \"high\" --> DDB[\"DynamoDB results\"]\n  BR -- \"low\" --> HR[\"Human review\"] --> DDB"
     },
     {
       "id": "rag-chatbot",
@@ -131,15 +131,15 @@
         { "name": "API Gateway + Lambda", "role": "Chat API" },
         { "name": "Cognito or Identity Center", "role": "Employee sign-in" }
       ],
-      "flow": ["Documents in S3 sync into the Knowledge Base, which chunks and embeds them into the vector store.", "An employee signs in and asks a question through API Gateway and Lambda.", "The Knowledge Base retrieves the most relevant chunks, filtered by the user's permissions.", "The model answers from those chunks with citations; Guardrails check input and output."],
-      "scale": ["Serverless API and vector store scale with use", "Cache frequent questions", "Use a smaller model where evaluation shows it is good enough"],
-      "security": ["Metadata filters so users only retrieve documents they may read", "Guardrails for PII and denied topics", "Customer data is not used to train the base models"],
+      "flow": ["Documents in S3 sync into the Knowledge Base, which chunks and embeds them into the vector store.", "An employee signs in and asks a question through API Gateway and Lambda.", "Lambda derives document entitlements from trusted authenticated identity server-side and enforces metadata filters on every retrieval. Never accept tenant IDs or permission filters supplied by the client as authority.", "The model answers from those chunks with citations; Guardrails check input and output."],
+      "scale": ["Serverless API and vector store scale with use", "Cache only with identity or authorization scope, tenant, document version, and permission version in the key; invalidate on revocation or avoid caching sensitive answers", "Use a smaller model where evaluation shows it is good enough"],
+      "security": ["Enforce filters server-side from trusted identity; restrict direct Knowledge Base access so clients cannot bypass the application authorization layer. Fail closed when entitlements are missing.", "Guardrails can filter PII and denied topics; they are not authorization or document access control. Bedrock Knowledge Base Guardrails do not apply to retrieved references, so references need separate permission checks", "Verify model-specific terms, retention mode, invocation logs, and regional or cross-Region inference configuration; do not promise all data stays in the customer account or source Region"],
       "cost": ["Cost per question is mostly tokens: keep retrieved context tight", "Pick the smallest model that passes the evaluation set"],
       "tradeoff": "A larger model answers better but costs more per question. I would build an evaluation set first, try the smallest model, and only move up when it fails, the same reasoning as my ModelScope study.",
       "failure_modes": [
         { "failure": "Confident wrong answer", "mitigation": "Require citations; grounding checks; say \"I don't know\" when retrieval is weak" },
         { "failure": "Stale documents", "mitigation": "Scheduled or event-driven sync from S3" },
-        { "failure": "User sees a document they should not", "mitigation": "Permission metadata filters at retrieval time, tested before launch" }
+        { "failure": "User sees a document they should not", "mitigation": "Server-side entitlement filters, source-link authorization, adversarial cross-user tests, cache isolation, and immediate revocation handling" }
       ],
       "followups": ["How do you evaluate answer quality before launch?", "RAG or fine-tuning, and why?", "How do you handle a question that needs live data from a system?"],
       "diagram": "flowchart LR\n  DOC[\"S3 docs\"] --> KB[\"Bedrock Knowledge Base\"] --> VS[\"Vector store\"]\n  EMP[\"Employee\"] --> AUTH[\"Cognito / Identity Center\"] --> API[\"API Gateway + Lambda\"]\n  API --> KB\n  API --> LLM[\"Bedrock model + Guardrails\"]\n  VS --> LLM"
@@ -187,23 +187,23 @@
       },
       "components": [
         { "name": "Route 53 failover routing + health checks", "role": "Moves traffic to the healthy Region" },
-        { "name": "Aurora Global Database", "role": "Cross-Region replication with low lag; promote the secondary on failover" },
-        { "name": "DynamoDB global tables", "role": "Multi-Region idempotency keys and session data" },
-        { "name": "Application stack in both Regions", "role": "Warm standby or active/active, built with IaC" },
+        { "name": "Aurora Global Database", "role": "Single primary writer with asynchronous cross-Region replication; explicitly promote a secondary during controlled failover" },
+        { "name": "Aurora payment ledger + payment-provider idempotency", "role": "Unique request key in the writer transaction; stable provider key across retries; reconcile ambiguous outcomes" },
+        { "name": "Application stack in both Regions", "role": "Warm standby built with IaC; active application tiers may still depend on a single database writer" },
         { "name": "AWS Backup", "role": "Point-in-time backups, cross-Region copies" }
       ],
-      "flow": ["Pick the DR tier from RPO and RTO: payments usually need warm standby or active/active.", "Primary Region serves traffic; Aurora Global Database replicates to the secondary.", "Health checks fail, Route 53 shifts traffic, the secondary Aurora cluster is promoted.", "Idempotency keys stop a retried payment from charging twice."],
-      "scale": ["Warm standby runs small and scales up on failover", "Active/active doubles capacity cost but removes the scale-up step"],
+      "flow": ["Agree business RPO and RTO, then test a warm-standby design; do not infer a guaranteed recovery time from the tier name.", "Primary Region serves traffic; Aurora Global Database replicates to the secondary.", "A failover runbook fences the old writer, assesses replication lag and data-loss approval, promotes the secondary, and switches traffic. DNS caches and client connections affect recovery.", "Use the same payment-provider idempotency key across retries; atomically record request state in the single-writer ledger. Reconcile unknown provider outcomes before retrying. Eventually consistent global tables alone cannot provide globally atomic payment deduplication."],
+      "scale": ["Warm standby runs small and scales up on failover", "Active application tiers reduce scale-up work but add capacity and consistency costs; Aurora Global Database still has one primary writer"],
       "security": ["KMS keys in both Regions", "Same IAM and guardrails deployed by IaC in both"],
       "cost": ["Each tier up the DR ladder costs more: match it to the business RPO and RTO, not to fear"],
-      "tradeoff": "Active/active gives near-zero RTO but makes writes harder (conflicts, double processing). For payments I would start with warm standby plus idempotency and move to active/active only if the RTO demands it.",
+      "tradeoff": "Warm standby costs less than fully active capacity but needs promotion and scale-up. I would measure recovery in drills, fence the old writer, and reconcile the ledger with the provider. Active application tiers do not make Aurora Global Database multi-writer or guarantee zero downtime.",
       "failure_modes": [
         { "failure": "Failover never tested", "mitigation": "Scheduled game days that actually fail over" },
         { "failure": "Replication lag loses recent payments", "mitigation": "Monitor lag against RPO; reconcile after failover" },
-        { "failure": "Split brain: both Regions accept writes", "mitigation": "Single writer with explicit promotion, or conflict-safe idempotent design" }
+        { "failure": "Split brain: both Regions accept writes", "mitigation": "Fence the old writer before promotion; one authority accepts payment writes, using stable provider keys and reconciliation" }
       ],
       "followups": ["What RPO and RTO would you propose, and how do you prove them?", "How do you fail back?", "What does this cost compared with today?"],
-      "diagram": "flowchart LR\n  U[\"Clients\"] --> R53[\"Route 53 failover\"]\n  R53 --> P[\"Primary Region app\"]\n  R53 -. \"on failure\" .-> S[\"Secondary Region app\"]\n  P --> AP[\"Aurora primary\"]\n  S --> AS[\"Aurora secondary\"]\n  AP -- \"Global Database replication\" --> AS\n  P --> DG[\"DynamoDB global table\"]\n  S --> DG"
+      "diagram": "flowchart LR\n  U[\"Clients\"] --> R53[\"Route 53 failover\"]\n  R53 --> P[\"Primary Region app\"]\n  R53 -. \"on failure\" .-> S[\"Secondary Region app\"]\n  P --> AP[\"Aurora primary\"]\n  S --> AS[\"Aurora secondary\"]\n  AP -- \"Global Database replication\" --> AS\n  P --> PP[\"Payment provider: stable idempotency key\"]\n  S --> PP"
     }
   ]
 }

@@ -1,6 +1,7 @@
 // Leadership Principles page: rules, 60-second pitch, numbers quiz, LP map, STAR bank with LP chips, gap stories.
 (function () {
   const { el, load, ui, store, setReadout } = { ...window.Prep, store: window.Prep.store };
+  const confirmed = text => ui.fill(String(text).replace(/\[confirm:/g, '[fill: confirm:'));
   const STAR = [['s', 'S'], ['t', 'T'], ['a', 'A'], ['r', 'R']];
   const STORY_SECONDS = 90;
   let showStory = () => {};
@@ -8,7 +9,7 @@
   function starBlock(story) {
     return el('div', { class: 'star' }, STAR.map(([key, letter]) => el('div', { class: 'star-row' },
       el('span', { class: 'star-key', 'aria-hidden': 'true' }, letter),
-      Array.isArray(story[key]) ? ui.list(story[key]) : el('p', {}, ui.fill(story[key])))));
+      Array.isArray(story[key]) ? el('ul', { class: 'list' }, story[key].map(text => el('li', {}, confirmed(text)))) : el('p', {}, confirmed(story[key])))));
   }
 
   const storyLink = (story) => el('a', { href: `#story-${story.id}`, onclick: (e) => { e.preventDefault(); showStory(story.id); } }, `${story.code} ${story.title}`);
@@ -28,8 +29,8 @@
       el('p', { class: 'section-intro' }, `${words} words: about ${Math.round(words / 2.5)} seconds at a calm 150 words a minute. Say it with the timer, then write your own version below.`),
       el('div', { class: 'card pitch' },
         el('div', { class: 'row' }, t.node),
-        el('div', {}, pitch.beats.map((b) => el('div', { class: 'pitch-beat' }, el('span', { class: 'label' }, b.label), el('p', {}, ui.fill(b.text))))),
-        el('p', { class: 'pitch-close' }, pitch.closing_line),
+        el('div', {}, pitch.beats.map((b) => el('div', { class: 'pitch-beat' }, el('span', { class: 'label' }, b.label), el('p', {}, confirmed(b.text))))),
+        el('p', { class: 'pitch-close' }, confirmed(pitch.closing_line)),
         ui.notesBox('pitch', 'Your pitch, in your own words')));
   }
 
@@ -64,16 +65,18 @@
       el('div', { class: 'item-body' },
         el('div', { class: 'row' }, story.lps.map((id) => el('span', { class: 'chip chip-gold' }, lpName(id)))),
         story.note ? el('p', { class: 'notice' }, story.note) : null,
+        el('p', { class: 'muted' }, story.evidence_note),
+        el('a', { href: `review.html#review-${story.id}` }, 'Read evidence and delivery review'),
         el('div', { class: 'row' }, el('span', { class: 'label' }, `${STORY_SECONDS}-second rehearsal`), timer.node),
         el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Open with'), el('p', { class: 'answer-short' }, story.headline)),
         starBlock(story),
-        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Close with'), el('p', { class: 'resume-line' }, ui.fill(story.lesson))),
+        el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Close with'), el('p', { class: 'resume-line' }, confirmed(story.lesson))),
         facts.length ? el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Numbers to say'), el('div', { class: 'row' }, facts.map((f) => el('span', { class: 'chip chip-gold' }, f)))) : null,
-        fold('SA twist and the AWS version',
+        fold('SA framing and a proposed AWS design',
           el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'SA twist'), el('p', {}, story.twist)),
           el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'If they ask how you would build it on AWS'), el('p', {}, story.aws))),
         fold(`Probes to rehearse (${story.probes.length})`,
-          el('div', { class: 'item-list' }, story.probes.map((p) => el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, p.q), el('p', {}, ui.fill(p.a)))))),
+          el('div', { class: 'item-list' }, story.probes.map((p) => el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, p.q), el('p', {}, confirmed(p.a)))))),
         el('div', { class: 'row' }, ui.confidence(`story-${story.id}`)),
         ui.notesBox(`story-${story.id}`, 'Your version, in your words')));
   }
@@ -119,10 +122,10 @@
     const rehearse = () => ui.rehearse(ui.shuffle(shown).map((s) => ({
       kicker: s.lps.map(lpName).join(' · '),
       front: () => el('span', {}, `${s.code}. ${s.title}`),
-      back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.headline), starBlock(s), el('p', { class: 'muted' }, ui.fill(s.lesson))),
+      back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.headline), starBlock(s), el('p', { class: 'muted' }, confirmed(s.lesson))),
     })), 'Rehearse stories');
     return ui.section('stories', 'STAR bank', `${data.stories.length} stories`, el('span', {}, 'The ', el('em', {}, 'STAR'), ' bank'),
-      el('p', { class: 'section-intro' }, 'Filter by principle, open a story, start the timer, and say it before you read it. Orange "fill" marks are specifics only you know.'),
+      el('p', { class: 'section-intro' }, 'Filter by principle, open a story, start the timer, and say it before you read it. Confirmation prompts identify personal details you must supply from real experience. Open the evidence review before treating a draft as ready.'),
       el('div', { class: 'row lp-chips', role: 'group', 'aria-label': 'Filter by Leadership Principle' }, chips),
       bar,
       el('div', { class: 'row', style: { marginBottom: '1rem' } }, el('button', { class: 'btn btn-gold', type: 'button', onclick: rehearse }, 'Rehearse shown stories')),
@@ -131,8 +134,8 @@
 
   function gapsSection(data) {
     const lpName = (id) => data.lps.find((lp) => lp.id === id).name;
-    return ui.section('gaps', 'Gap stories', 'Write before Oct 28', el('span', {}, 'Close the ', el('em', {}, 'gaps')),
-      el('p', { class: 'section-intro' }, 'These come up in almost every Amazon loop. Use real events only; drafts save in this browser.'),
+    return ui.section('gaps', 'Gap stories', 'Before your interview', el('span', {}, 'Close the ', el('em', {}, 'gaps')),
+      el('p', { class: 'section-intro' }, 'Prepare these from real events; the supplied material does not establish them yet. Drafts save in this browser.'),
       el('div', { class: 'comp-grid' }, data.gaps.map((g) => el('div', { class: 'comp is-gap' },
         el('div', { class: 'row' }, el('p', { class: 'h3' }, g.name), el('span', { class: 'chip chip-red' }, 'Gap')),
         el('div', { class: 'row' }, g.lps.map((id) => el('span', { class: 'chip' }, lpName(id)))),

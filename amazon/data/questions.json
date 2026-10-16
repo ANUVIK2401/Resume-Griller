@@ -1,74 +1,312 @@
 {
   "$schema": "./schema/questions.schema.json",
   "status_options": [
-    { "id": "new", "label": "New" },
-    { "id": "shaky", "label": "Shaky" },
-    { "id": "known", "label": "Known" }
+    {
+      "id": "new",
+      "label": "New"
+    },
+    {
+      "id": "shaky",
+      "label": "Shaky"
+    },
+    {
+      "id": "known",
+      "label": "Known"
+    }
   ],
   "openers": [
-    { "id": "about-you", "q": "Tell me about yourself.", "outline": ["Use the 60-second pitch on the Leadership Principles page.", "Oracle for close to 3 years, 37,000+ tenants, MTTR 94 to 26 minutes.", "Forward deployed at MSRcosmos: customer-facing, 12 entities, 3 days to 5.5 hours.", "Close: the person between a customer's problem and the right architecture."] },
-    { "id": "why-aws", "q": "Why AWS?", "outline": ["You have run infrastructure at scale and built on three clouds; AWS is where most customers start and where the broadest set of services lives.", "You want to learn from customers at the scale of AWSI's enterprise accounts.", "Name one specific thing you would like to work on, such as generative AI on Bedrock for regulated customers."] },
-    { "id": "why-sa", "q": "Why Solutions Architect and not SDE?", "outline": ["The part of MSRcosmos you liked most was customer-facing: turning an audit constraint into a design.", "An SA is measured by customer outcomes, which is how you already judged your Oracle work (MTTR is a customer outcome).", "You still want to stay technical: building proofs of concept and going deep when a customer needs it."] },
-    { "id": "why-awsi", "q": "Why AWSI and strategic accounts?", "outline": ["Large, often regulated enterprises: the scale and constraints you worked with at Oracle.", "Complex migrations and multi-account setups are where your ERP and observability stories apply directly."] },
-    { "id": "fav-lp", "q": "Which Leadership Principle resonates most with you?", "outline": ["Pick Customer Obsession or Dive Deep, and attach a story within one sentence.", "Customer Obsession plus S1: the human-review step existed because the customer's auditors needed to trust every record."] }
+    {
+      "id": "about-you",
+      "q": "Tell me about yourself.",
+      "outline": [
+        "Use the 60-second pitch on the Leadership Principles page.",
+        "Oracle, July 2022 to January 2025 (about 2.5 years): 37,000+ tenants, MTTR 94 to 26 minutes.",
+        "Forward deployed at MSRcosmos: customer-facing, 12 entities, 3 days to 5.5 hours.",
+        "Candidate confirmation: if this reflects your motivation, close on connecting customer problems to architecture decisions."
+      ]
+    },
+    {
+      "id": "why-aws",
+      "q": "Why AWS?",
+      "outline": [
+        "Connect your verified infrastructure and customer-facing work to AWS: explain why its service choices and Well-Architected approach interest you.",
+        "Explain what you want to learn from this team's customers; confirm the actual team and account scope with the recruiter.",
+        "Name one specific thing you would like to work on, such as generative AI on Bedrock for regulated customers."
+      ]
+    },
+    {
+      "id": "why-sa",
+      "q": "Why Solutions Architect and not SDE?",
+      "outline": [
+        "Candidate confirmation: identify your genuine reason for choosing SA. If customer-facing work motivates you, use your verified MSRcosmos migration and human-review routing experience as evidence.",
+        "Connect the role to a measurable customer outcome such as Oracle MTTR; explain your own contribution without assuming this was your personal motivation.",
+        "If accurate, explain how technical depth, proof-of-concept work, and customer communication fit your career goals. Supply a concrete example."
+      ]
+    },
+    {
+      "id": "why-awsi",
+      "q": "Why AWSI - ETP Solutions Architect?",
+      "outline": [
+        "The recruiter confirms the AWSI - ETP Solutions Architect full-time role. Explain your genuine motivation for that role; the email does not establish strategic-account scope or a specialty.",
+        "Connect your migration and operations experience to designing solutions for customer challenges. Choose one supported example and explain the customer outcome and your contribution.",
+        "Explain how you would partner with sales while grounding recommendations in customer requirements, technical evidence, and measurable success.",
+        "Practise the same recommendation for an engineer and an executive: design choices and failure modes for the engineer; business impact, risk, and next step for the executive."
+      ]
+    },
+    {
+      "id": "fav-lp",
+      "q": "Which Leadership Principle resonates most with you?",
+      "outline": [
+        "Choose the principle that genuinely resonates with you, confirm your reason, and attach a verified example within one sentence.",
+        "Possible evidence: S1 human-review routing. Confirm the actual customer need and why you chose that safeguard; do not infer auditor requirements from the presence of a review step."
+      ]
+    }
   ],
   "lp_questions": [
-    { "id": "co-above", "lp": "customer-obsession", "q": "Tell me about a time you went above and beyond for a customer." },
-    { "id": "co-no", "lp": "customer-obsession", "q": "Tell me about a time you had to say no to a customer." },
-    { "id": "own-outside", "lp": "ownership", "q": "Tell me about a time you took on something outside your role." },
-    { "id": "own-nobody", "lp": "ownership", "q": "Tell me about a problem nobody owned that you fixed." },
-    { "id": "is-simplify", "lp": "invent-and-simplify", "q": "Tell me about a time you simplified a complex process." },
-    { "id": "rl-incomplete", "lp": "are-right-a-lot", "q": "Tell me about a decision you made with incomplete data." },
-    { "id": "rl-wrong", "lp": "are-right-a-lot", "q": "Tell me about a time your judgment was wrong." },
-    { "id": "lc-fast", "lp": "learn-and-be-curious", "q": "How did you learn a new technology fast?" },
-    { "id": "lc-recent", "lp": "learn-and-be-curious", "q": "What have you learned recently outside work?" },
-    { "id": "hs-refuse", "lp": "highest-standards", "q": "Tell me about a time you refused to ship something that was not good enough." },
-    { "id": "tb-bold", "lp": "think-big", "q": "Tell me about a time you proposed a bold direction." },
-    { "id": "ba-quick", "lp": "bias-for-action", "q": "Tell me about a decision you made quickly with a calculated risk." },
-    { "id": "fr-less", "lp": "frugality", "q": "Tell me about a time you achieved more with less." },
-    { "id": "et-feedback", "lp": "earn-trust", "q": "Tell me about a time you received tough feedback." },
-    { "id": "et-skeptic", "lp": "earn-trust", "q": "Tell me about a time you built trust with a skeptical stakeholder." },
-    { "id": "dd-details", "lp": "dive-deep", "q": "Tell me about a problem you only solved by going into the details." },
-    { "id": "dd-when", "lp": "dive-deep", "q": "How do you know when to dive deep?" },
-    { "id": "hb-manager", "lp": "have-backbone", "q": "Tell me about a time you disagreed with your manager or a customer." },
-    { "id": "dr-impact", "lp": "deliver-results", "q": "What is the biggest impact you have had?" },
-    { "id": "dr-missed", "lp": "deliver-results", "q": "Tell me about a time you missed a deadline." },
-    { "id": "hd-grow", "lp": "hire-and-develop", "q": "Tell me about a time you helped someone grow." },
-    { "id": "be-team", "lp": "best-employer", "q": "Tell me about a time you made work better for the people around you." },
-    { "id": "br-impact", "lp": "broad-responsibility", "q": "Tell me about a time you considered the wider impact of something you built." }
+    {
+      "id": "co-above",
+      "lp": "customer-obsession",
+      "q": "Tell me about a time you went above and beyond for a customer."
+    },
+    {
+      "id": "co-no",
+      "lp": "customer-obsession",
+      "q": "Tell me about a time you had to say no to a customer."
+    },
+    {
+      "id": "own-outside",
+      "lp": "ownership",
+      "q": "Tell me about a time you took on something outside your role."
+    },
+    {
+      "id": "own-nobody",
+      "lp": "ownership",
+      "q": "Tell me about a problem nobody owned that you fixed."
+    },
+    {
+      "id": "is-simplify",
+      "lp": "invent-and-simplify",
+      "q": "Tell me about a time you simplified a complex process."
+    },
+    {
+      "id": "rl-incomplete",
+      "lp": "are-right-a-lot",
+      "q": "Tell me about a decision you made with incomplete data."
+    },
+    {
+      "id": "rl-wrong",
+      "lp": "are-right-a-lot",
+      "q": "Tell me about a time your judgment was wrong."
+    },
+    {
+      "id": "lc-fast",
+      "lp": "learn-and-be-curious",
+      "q": "How did you learn a new technology fast?"
+    },
+    {
+      "id": "lc-recent",
+      "lp": "learn-and-be-curious",
+      "q": "What have you learned recently outside work?"
+    },
+    {
+      "id": "hs-refuse",
+      "lp": "highest-standards",
+      "q": "Tell me about a time you refused to ship something that was not good enough."
+    },
+    {
+      "id": "tb-bold",
+      "lp": "think-big",
+      "q": "Tell me about a time you proposed a bold direction."
+    },
+    {
+      "id": "ba-quick",
+      "lp": "bias-for-action",
+      "q": "Tell me about a decision you made quickly with a calculated risk."
+    },
+    {
+      "id": "fr-less",
+      "lp": "frugality",
+      "q": "Tell me about a time you achieved more with less."
+    },
+    {
+      "id": "et-feedback",
+      "lp": "earn-trust",
+      "q": "Tell me about a time you received tough feedback."
+    },
+    {
+      "id": "et-skeptic",
+      "lp": "earn-trust",
+      "q": "Tell me about a time you built trust with a skeptical stakeholder."
+    },
+    {
+      "id": "dd-details",
+      "lp": "dive-deep",
+      "q": "Tell me about a problem you only solved by going into the details."
+    },
+    {
+      "id": "dd-when",
+      "lp": "dive-deep",
+      "q": "How do you know when to dive deep?"
+    },
+    {
+      "id": "hb-manager",
+      "lp": "have-backbone",
+      "q": "Tell me about a time you disagreed with your manager or a customer."
+    },
+    {
+      "id": "dr-impact",
+      "lp": "deliver-results",
+      "q": "What is the biggest impact you have had?"
+    },
+    {
+      "id": "dr-missed",
+      "lp": "deliver-results",
+      "q": "Tell me about a time you missed a deadline."
+    },
+    {
+      "id": "hd-grow",
+      "lp": "hire-and-develop",
+      "q": "Tell me about a time you helped someone grow."
+    },
+    {
+      "id": "be-team",
+      "lp": "best-employer",
+      "q": "Tell me about a time you made work better for the people around you."
+    },
+    {
+      "id": "br-impact",
+      "lp": "broad-responsibility",
+      "q": "Tell me about a time you considered the wider impact of something you built."
+    }
   ],
   "rapid_fire": [
-    { "id": "rf-region-az", "q": "Region vs AZ vs edge location?", "a": "A Region is a geographic area with multiple isolated AZs. An AZ is one or more data centers with independent power and networking. An edge location is a CloudFront and Route 53 point of presence near users for caching and DNS." },
-    { "id": "rf-ha-web", "q": "How do you make a web app highly available on AWS?", "a": "Auto Scaling group across at least 2 AZs behind an ALB, Multi-AZ RDS or Aurora, state kept out of instances (ElastiCache, S3), and Route 53 health checks. For a Region failure, add a DR tier." },
-    { "id": "rf-sg-nacl", "q": "Security group vs NACL?", "a": "Security groups are stateful, attach to instances or network interfaces, and only allow. NACLs are stateless, attach to subnets, have ordered allow and deny rules, so return traffic must be allowed explicitly." },
-    { "id": "rf-subnets", "q": "Public vs private subnet? What does a NAT Gateway do?", "a": "A public subnet's route table points to an Internet Gateway; a private one does not. A NAT Gateway in a public subnet lets private instances make outbound connections without accepting inbound ones." },
-    { "id": "rf-alb-nlb", "q": "ALB vs NLB? When API Gateway?", "a": "ALB is layer 7: HTTP routing by path, host, header. NLB is layer 4: TCP and UDP, static IPs, very high throughput, low latency. API Gateway when you want a managed API front door with auth, throttling, and usage plans, often in front of Lambda." },
-    { "id": "rf-s3-classes", "q": "S3 storage classes and lifecycle. How do you make S3 cheaper?", "a": "Standard for hot data, Intelligent-Tiering when access is unknown, Standard-IA and One Zone-IA for infrequent access, Glacier tiers for archive. Lifecycle rules move or expire objects; also expire old versions and incomplete multipart uploads." },
-    { "id": "rf-ebs-efs-s3", "q": "EBS vs EFS vs S3?", "a": "EBS is block storage for one instance in one AZ, for boot volumes and databases. EFS is a shared NFS file system across instances and AZs. S3 is object storage over HTTP for data lakes, backups, and static assets." },
-    { "id": "rf-multiaz-replica", "q": "RDS Multi-AZ vs read replica?", "a": "Multi-AZ is for availability: a synchronous standby in another AZ with automatic failover. Read replicas are for read scaling: asynchronous copies you can query, even cross-Region, promoted manually. (The newer Multi-AZ DB cluster option also has readable standbys.)" },
-    { "id": "rf-dynamo-rds", "q": "DynamoDB vs RDS? What is a hot partition?", "a": "DynamoDB for known access patterns at any scale with fast key lookups and no joins; RDS for joins, ad hoc queries, and multi-table transactions. A hot partition is too much traffic on one partition key; fix it with a higher-cardinality key or write sharding." },
-    { "id": "rf-lambda", "q": "Lambda limits and cold starts. When not to use Lambda?", "a": "15-minute max runtime, up to 10 GB memory, payload limits. Cold starts add latency for new environments; reduce with provisioned concurrency or SnapStart. Avoid it for long jobs, steady very high throughput, or GPU work." },
-    { "id": "rf-ecs-eks", "q": "ECS vs EKS vs Fargate?", "a": "ECS is AWS's simpler orchestrator; EKS is managed Kubernetes for teams already on it or needing portability. Fargate is serverless compute for either, with no nodes to manage." },
-    { "id": "rf-messaging", "q": "SQS vs SNS vs EventBridge vs Kinesis?", "a": "SQS is a queue to decouple and buffer. SNS pushes one message to many subscribers. EventBridge routes events by content rules, including SaaS and AWS events and schedules. Kinesis is an ordered, replayable stream for real-time analytics with many consumers." },
-    { "id": "rf-iam", "q": "IAM role vs user? What is least privilege?", "a": "A user has long-term credentials; a role is assumed and gives temporary credentials, preferred for apps and federated people. Least privilege means granting only the actions and resources needed, then trimming with IAM Access Analyzer." },
-    { "id": "rf-shared", "q": "What is the shared responsibility model?", "a": "AWS secures the cloud: facilities, hardware, network, hypervisor. The customer secures what is in it: data, IAM, encryption, network rules, OS patches on EC2. The line moves up as services get more managed." },
-    { "id": "rf-encryption", "q": "Encryption at rest vs in transit? What does KMS do?", "a": "At rest means stored data is encrypted, with keys in KMS. In transit means TLS between clients and services, with ACM certificates. KMS manages keys, logs every use in CloudTrail, and key policies control who can use them." },
-    { "id": "rf-rpo-rto", "q": "RPO vs RTO, and the four DR strategies?", "a": "RPO is how much data loss you accept; RTO is how long you can be down. Cheapest to fastest: backup and restore, pilot light, warm standby, multi-site active/active." },
-    { "id": "rf-pillars", "q": "Name the 6 Well-Architected pillars.", "a": "Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability." },
-    { "id": "rf-7rs", "q": "Name the 7 Rs of migration.", "a": "Retire, Retain, Rehost, Relocate, Repurchase, Replatform, Refactor. Your ERP story is a Repurchase with a data migration." },
-    { "id": "rf-cw-ct-config", "q": "CloudWatch vs CloudTrail vs Config?", "a": "CloudWatch is performance: metrics, logs, alarms. CloudTrail is audit: who called which API, when. Config is configuration history and compliance rules for each resource." },
-    { "id": "rf-bill", "q": "How would you reduce a customer's AWS bill?", "a": "Find the drivers in Cost Explorer first. Then right-size, delete idle resources, Savings Plans for baseline, Spot for interruptible work, S3 lifecycle and Intelligent-Tiering, Graviton, and gateway endpoints instead of NAT for S3 traffic." },
-    { "id": "rf-url", "q": "What happens when you type a URL into a browser?", "a": "DNS resolves the name, the browser opens TCP and TLS connections, often to a CDN edge, and sends an HTTP request. A cache hit returns at the edge; a miss goes through a load balancer to an app server, which may hit a cache and database, and the response comes back to render." },
-    { "id": "rf-tcp-udp", "q": "TCP vs UDP, and common HTTP status codes?", "a": "TCP is connection-oriented, ordered, and retransmits; UDP is connectionless and low latency (DNS, video). 200 OK, 201 Created, 301 and 302 redirects, 304 Not Modified, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 429 Too Many Requests, 500, 502, 503, 504 server-side errors." },
-    { "id": "rf-bedrock-rag", "q": "What is Bedrock? How would you build RAG on AWS?", "a": "Bedrock is a managed API to foundation models with Knowledge Bases, Agents, Guardrails, and evaluation. RAG: documents in S3, a Knowledge Base chunks and embeds them into a vector store such as OpenSearch Serverless, retrieves the best chunks per question, and the model answers with citations." },
-    { "id": "rf-model-size", "q": "How do you choose between a large and a small model for a customer?", "a": "Start from the task and an evaluation set, not the model. Try the smallest model that passes, compare cost per request and latency, and move up only when quality fails. ModelScope is your evidence: INT4 kept MMLU within a point at 62% less memory." }
+    {
+      "id": "rf-region-az",
+      "q": "Region vs AZ vs edge location?",
+      "a": "A Region is a geographic area with multiple isolated AZs. An AZ is one or more data centers with independent power and networking. An edge location is a CloudFront and Route 53 point of presence near users for caching and DNS."
+    },
+    {
+      "id": "rf-ha-web",
+      "q": "How do you make a web app highly available on AWS?",
+      "a": "Auto Scaling group across at least 2 AZs behind an ALB, Multi-AZ RDS or Aurora, state kept out of instances (ElastiCache, S3), and Route 53 health checks. For a Region failure, add a DR tier."
+    },
+    {
+      "id": "rf-sg-nacl",
+      "q": "Security group vs NACL?",
+      "a": "Security groups are stateful, attach to instances or network interfaces, and only allow. NACLs are stateless, attach to subnets, have ordered allow and deny rules, so return traffic must be allowed explicitly."
+    },
+    {
+      "id": "rf-subnets",
+      "q": "Public vs private subnet? What does a NAT Gateway do?",
+      "a": "A public subnet's route table points to an Internet Gateway; a private one does not. A NAT Gateway in a public subnet lets private instances make outbound connections without accepting inbound ones."
+    },
+    {
+      "id": "rf-alb-nlb",
+      "q": "ALB vs NLB? When API Gateway?",
+      "a": "ALB is layer 7: HTTP routing by path, host, header. NLB is layer 4: TCP and UDP, static IPs, very high throughput, low latency. API Gateway when you want a managed API front door with auth, throttling, and usage plans, often in front of Lambda."
+    },
+    {
+      "id": "rf-s3-classes",
+      "q": "S3 storage classes and lifecycle. How do you make S3 cheaper?",
+      "a": "Standard for hot data, Intelligent-Tiering when access is unknown, Standard-IA and One Zone-IA for infrequent access, Glacier tiers for archive. Lifecycle rules move or expire objects; also expire old versions and incomplete multipart uploads."
+    },
+    {
+      "id": "rf-ebs-efs-s3",
+      "q": "EBS vs EFS vs S3?",
+      "a": "EBS is block storage for one instance in one AZ, for boot volumes and databases. EFS is a shared NFS file system across instances and AZs. S3 is object storage over HTTP for data lakes, backups, and static assets."
+    },
+    {
+      "id": "rf-multiaz-replica",
+      "q": "RDS Multi-AZ vs read replica?",
+      "a": "Specify the deployment: Multi-AZ DB instance has one synchronous non-readable standby for failover. Multi-AZ DB cluster has a writer and two readable standbys in three AZs for supported MySQL/PostgreSQL versions. Separate read replicas generally replicate asynchronously for read scaling; promotion and replication support depend on engine."
+    },
+    {
+      "id": "rf-dynamo-rds",
+      "q": "DynamoDB vs RDS? What is a hot partition?",
+      "a": "DynamoDB for known access patterns at any scale with fast key lookups and no joins; RDS for joins, ad hoc queries, and multi-table transactions. A hot partition is too much traffic on one partition key; fix it with a higher-cardinality key or write sharding."
+    },
+    {
+      "id": "rf-lambda",
+      "q": "Lambda limits and cold starts. When not to use Lambda?",
+      "a": "15-minute max runtime, up to 10 GB memory, payload limits. Cold starts add latency for new environments; reduce with provisioned concurrency or SnapStart. Avoid it for long jobs, steady very high throughput, or GPU work."
+    },
+    {
+      "id": "rf-ecs-eks",
+      "q": "ECS vs EKS vs Fargate?",
+      "a": "ECS is AWS's simpler orchestrator; EKS is managed Kubernetes for teams already on it or needing portability. Fargate is serverless compute for either, with no nodes to manage."
+    },
+    {
+      "id": "rf-messaging",
+      "q": "SQS vs SNS vs EventBridge vs Kinesis?",
+      "a": "SQS is a queue to decouple and buffer. SNS pushes one message to many subscribers. EventBridge routes events by content rules, including SaaS and AWS events and schedules. Kinesis is an ordered, replayable stream for real-time analytics with many consumers."
+    },
+    {
+      "id": "rf-iam",
+      "q": "IAM role vs user? What is least privilege?",
+      "a": "A user has long-term credentials; a role is assumed and gives temporary credentials, preferred for apps and federated people. Least privilege means granting only the actions and resources needed, then trimming with IAM Access Analyzer."
+    },
+    {
+      "id": "rf-shared",
+      "q": "What is the shared responsibility model?",
+      "a": "AWS secures the cloud: facilities, hardware, network, hypervisor. The customer secures what is in it: data, IAM, encryption, network rules, OS patches on EC2. The line moves up as services get more managed."
+    },
+    {
+      "id": "rf-encryption",
+      "q": "Encryption at rest vs in transit? What does KMS do?",
+      "a": "At rest means stored data is encrypted, with keys in KMS. In transit means TLS between clients and services, with ACM certificates. KMS manages keys, logs every use in CloudTrail, and key policies control who can use them."
+    },
+    {
+      "id": "rf-rpo-rto",
+      "q": "RPO vs RTO, and the four DR strategies?",
+      "a": "RPO is how much data loss you accept; RTO is how long you can be down. Cheapest to fastest: backup and restore, pilot light, warm standby, multi-site active/active."
+    },
+    {
+      "id": "rf-pillars",
+      "q": "Name the 6 Well-Architected pillars.",
+      "a": "Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability."
+    },
+    {
+      "id": "rf-7rs",
+      "q": "Name the 7 Rs of migration.",
+      "a": "Retire, Retain, Rehost, Relocate, Repurchase, Replatform, Refactor. Replacing an ERP with SaaS is Repurchase; describe your ERP project using only verified details."
+    },
+    {
+      "id": "rf-cw-ct-config",
+      "q": "CloudWatch vs CloudTrail vs Config?",
+      "a": "CloudWatch is performance: metrics, logs, alarms. CloudTrail is audit: who called which API, when. Config is configuration history and compliance rules for each resource."
+    },
+    {
+      "id": "rf-bill",
+      "q": "How would you reduce a customer's AWS bill?",
+      "a": "Find the drivers in Cost Explorer first. Then right-size, delete idle resources, Savings Plans for baseline, Spot for interruptible work, S3 lifecycle and Intelligent-Tiering, Graviton, and gateway endpoints instead of NAT for S3 traffic."
+    },
+    {
+      "id": "rf-url",
+      "q": "What happens when you type a URL into a browser?",
+      "a": "DNS resolves the name, the browser opens TCP and TLS connections, often to a CDN edge, and sends an HTTP request. A cache hit returns at the edge; a miss goes through a load balancer to an app server, which may hit a cache and database, and the response comes back to render."
+    },
+    {
+      "id": "rf-tcp-udp",
+      "q": "TCP vs UDP, and common HTTP status codes?",
+      "a": "TCP is connection-oriented, ordered, and retransmits; UDP is connectionless and low latency (DNS, video). 200 OK, 201 Created, 301 and 302 redirects, 304 Not Modified, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 429 Too Many Requests, 500, 502, 503, 504 server-side errors."
+    },
+    {
+      "id": "rf-bedrock-rag",
+      "q": "What is Bedrock? How would you build RAG on AWS?",
+      "a": "Bedrock is a managed API to foundation models with Knowledge Bases, Agents, Guardrails, and evaluation. RAG: documents in S3, a Knowledge Base chunks and embeds them into a vector store such as OpenSearch Serverless, retrieves chunks with server-side authorization derived from trusted identity, and the model answers with citations. Guardrails do not enforce document permissions; scope caches to authorization and verify inference routing and retention."
+    },
+    {
+      "id": "rf-model-size",
+      "q": "How do you choose between a large and a small model for a customer?",
+      "a": "Start from the task and an evaluation set, not the model. Try the smallest model that passes, compare cost per request and latency, and move up only when quality fails. ModelScope is your evidence: INT4 kept MMLU within a point at 62% less memory."
+    }
   ],
   "roleplay_rules": [
     "Ask before proposing: business goal, current setup, constraints, timeline, budget, compliance.",
     "Restate the problem in their words.",
     "Propose 1 or 2 options, each with a tradeoff and a cost direction.",
     "Match the audience: a CFO hears cost and risk; engineers hear services and design.",
-    "Never overpromise. If unsure: \"I'll confirm with the service team and follow up by Friday.\"",
+    "Never overpromise. If unsure: \"I will verify the documented behavior and agree a realistic follow-up time with you.\"",
     "Close with next steps: a proof of concept, a Well-Architected review, or a follow-up meeting."
   ],
   "roleplays": [
@@ -77,10 +315,22 @@
       "title": "Retail CTO: site goes down on peak days",
       "audience": "CTO",
       "opening": "I'm the CTO of a retailer. Our site goes down on peak days. What should we do?",
-      "discovery": ["What happens when it goes down: slow pages, errors, checkout failures?", "Where does it run today, and what is the peak compared with a normal day?", "Which peaks are known in advance?", "What does an hour of downtime cost you?", "Any constraints: budget, team size, timeline to the next peak?"],
+      "discovery": [
+        "What happens when it goes down: slow pages, errors, checkout failures?",
+        "Where does it run today, and what is the peak compared with a normal day?",
+        "Which peaks are known in advance?",
+        "What does an hour of downtime cost you?",
+        "Any constraints: budget, team size, timeline to the next peak?"
+      ],
       "options": [
-        { "name": "Quick win before the next peak", "tradeoff": "CloudFront in front, Auto Scaling with scheduled pre-warming, read replicas. Fast to ship, does not fix deeper bottlenecks." },
-        { "name": "Re-architect the hot path", "tradeoff": "Cache sessions, queue order processing, move to Aurora. More durable fix, takes longer and needs testing." }
+        {
+          "name": "Quick win before the next peak",
+          "tradeoff": "CloudFront in front, Auto Scaling with scheduled pre-warming, read replicas. Fast to ship, does not fix deeper bottlenecks."
+        },
+        {
+          "name": "Re-architect the hot path",
+          "tradeoff": "Cache sessions, queue order processing, move to Aurora. More durable fix, takes longer and needs testing."
+        }
       ],
       "close": "Propose a load test against a copy of their stack this month, then a Well-Architected review focused on Reliability."
     },
@@ -89,10 +339,19 @@
       "title": "CFO: explain containers and why they matter",
       "audience": "CFO",
       "opening": "My engineers keep asking for budget for containers. Explain it to me and tell me why I should care.",
-      "discovery": ["What problem are you hoping to solve: cost, speed of releases, reliability?", "How do you track infrastructure spend today?"],
+      "discovery": [
+        "What problem are you hoping to solve: cost, speed of releases, reliability?",
+        "How do you track infrastructure spend today?"
+      ],
       "options": [
-        { "name": "Plain explanation", "tradeoff": "A container is a standard shipping box for software: it runs the same everywhere, so more apps share each server and releases are faster. Upfront migration cost, lower run cost and less risk per release." },
-        { "name": "Start small", "tradeoff": "Move one service first and measure cost per transaction and release frequency before committing the budget." }
+        {
+          "name": "Plain explanation",
+          "tradeoff": "A container is a standard shipping box for software: it runs the same everywhere, so more apps share each server and releases are faster. Upfront migration cost, lower run cost and less risk per release."
+        },
+        {
+          "name": "Start small",
+          "tradeoff": "Move one service first and measure cost per transaction and release frequency before committing the budget."
+        }
       ],
       "close": "Offer a one-page cost comparison after a small pilot, with numbers they can check."
     },
@@ -101,10 +360,21 @@
       "title": "Bank: wants a GenAI assistant but fears data leaks",
       "audience": "Head of digital, with security in the room",
       "opening": "We want a GenAI assistant for our support agents, but our CISO is worried customer data will leak into a model.",
-      "discovery": ["Which data would the assistant need to see?", "Which regulations apply, and where must data stay?", "Who approves new AI use cases internally?", "How would you judge the assistant is good enough?"],
+      "discovery": [
+        "Which data would the assistant need to see?",
+        "Which regulations apply, and where must data stay?",
+        "Who approves new AI use cases internally?",
+        "How would you judge the assistant is good enough?"
+      ],
       "options": [
-        { "name": "Bedrock with RAG", "tradeoff": "Data stays in their account and Region and is not used to train base models; Guardrails redact PII; Knowledge Base over approved docs only. Lower risk, limited to document questions." },
-        { "name": "Agent with tools", "tradeoff": "Can look up account data through scoped Lambda tools. More useful, more to secure and evaluate." }
+        {
+          "name": "Bedrock with RAG",
+          "tradeoff": "Verify model terms and retention settings, invocation logging, and cross-Region inference routing against residency needs. Use approved documents with server-side entitlement filters; Guardrails are content filters, not authorization. Lower initial scope, with measurable privacy and answer-quality tests."
+        },
+        {
+          "name": "Agent with tools",
+          "tradeoff": "Can look up account data through scoped Lambda tools. More useful, more to secure and evaluate."
+        }
       ],
       "close": "Propose a proof of concept on non-sensitive documents with an evaluation set the CISO helps define. This mirrors the human review in your S1 story."
     },
@@ -113,10 +383,20 @@
       "title": "Manufacturer: data center lease ends in 9 months",
       "audience": "VP of IT",
       "opening": "Our data center lease ends in 9 months. We have 200 servers including our ERP. Can we be on AWS in time?",
-      "discovery": ["Which systems are critical, and which might be retired?", "How much downtime can the ERP take at cutover?", "What skills does your team have on AWS today?"],
+      "discovery": [
+        "Which systems are critical, and which might be retired?",
+        "How much downtime can the ERP take at cutover?",
+        "What skills does your team have on AWS today?"
+      ],
       "options": [
-        { "name": "Rehost first, modernize later", "tradeoff": "Fastest path to the deadline with Application Migration Service; keeps today's inefficiencies for now." },
-        { "name": "Mixed 7 Rs per workload", "tradeoff": "Retire and repurchase where possible, rehost the rest. More planning up front, lower long-term cost." }
+        {
+          "name": "Rehost first, modernize later",
+          "tradeoff": "Fastest path to the deadline with Application Migration Service; keeps today's inefficiencies for now."
+        },
+        {
+          "name": "Mixed 7 Rs per workload",
+          "tradeoff": "Retire and repurchase where possible, rehost the rest. More planning up front, lower long-term cost."
+        }
       ],
       "close": "Offer a discovery assessment and a wave plan, with the ERP in a later wave once the landing zone is proven."
     },
@@ -125,10 +405,20 @@
       "title": "Startup founder: our AWS bill doubled",
       "audience": "Founder",
       "opening": "Our AWS bill doubled last month and I don't know why. Help.",
-      "discovery": ["Which services grew, per Cost Explorer?", "Did anything launch or change last month?", "Are resources tagged by team or environment?"],
+      "discovery": [
+        "Which services grew, per Cost Explorer?",
+        "Did anything launch or change last month?",
+        "Are resources tagged by team or environment?"
+      ],
       "options": [
-        { "name": "Stop the bleeding", "tradeoff": "Find the top drivers, delete idle resources, set Budgets alerts. Fast, but does not prevent the next surprise." },
-        { "name": "Build cost habits", "tradeoff": "Tagging, right-sizing with Compute Optimizer, Savings Plans for baseline. Takes a few weeks, lasting savings." }
+        {
+          "name": "Stop the bleeding",
+          "tradeoff": "Find the top drivers, delete idle resources, set Budgets alerts. Fast, but does not prevent the next surprise."
+        },
+        {
+          "name": "Build cost habits",
+          "tradeoff": "Tagging, right-sizing with Compute Optimizer, Savings Plans for baseline. Takes a few weeks, lasting savings."
+        }
       ],
       "close": "Agree to review Cost Explorer together this week and set a budget alert today."
     },
@@ -137,19 +427,66 @@
       "title": "Healthcare startup: is AWS safe for patient data?",
       "audience": "CTO of a small health startup",
       "opening": "We handle patient records. Can we even use AWS, and what do we have to do?",
-      "discovery": ["What data do you store, and who accesses it?", "Have you signed a Business Associate Addendum (BAA)?", "What does your security team look like today?"],
+      "discovery": [
+        "What data do you store, and who accesses it?",
+        "Have you signed a Business Associate Addendum (BAA)?",
+        "What does your security team look like today?"
+      ],
       "options": [
-        { "name": "Shared responsibility explained", "tradeoff": "AWS secures the infrastructure and offers HIPAA-eligible services under a BAA; you configure access, encryption, and logging correctly. Clear, but they must own their part." },
-        { "name": "Guardrailed starting point", "tradeoff": "Control Tower landing zone, KMS everywhere, CloudTrail, Config rules, GuardDuty. More setup, much easier audits." }
+        {
+          "name": "Shared responsibility explained",
+          "tradeoff": "AWS secures the infrastructure and offers HIPAA-eligible services under a BAA; you configure access, encryption, and logging correctly. Clear, but they must own their part."
+        },
+        {
+          "name": "Guardrailed starting point",
+          "tradeoff": "Control Tower landing zone, KMS everywhere, CloudTrail, Config rules, GuardDuty. More setup, much easier audits."
+        }
       ],
       "close": "Offer a security-focused architecture review and point them to HIPAA-eligible services only."
+    },
+    {
+      "id": "rp-sales-partner",
+      "title": "Partner with sales on a financial migration recommendation",
+      "audience": "Sales colleague, customer engineer, and finance executive",
+      "opening": "The customer wants a migration commitment before we have tested their data and downtime constraints. Sales needs a credible next step. How would you help?",
+      "discovery": [
+        "Which customer outcome defines success: reconciliation effort, processing time, accuracy, or availability?",
+        "What are the cutover window, data dependencies, approval process, and rollback criteria?",
+        "What evidence do the customer engineer and finance executive each need before committing?"
+      ],
+      "options": [
+        {
+          "name": "Evidence-based pilot",
+          "tradeoff": "Agree a representative synthetic or approved-data pilot with the customer and sales colleague. Define success criteria, validation owners, cost drivers, and a review date. A pilot adds discovery time but tests the riskiest assumptions."
+        },
+        {
+          "name": "Full migration commitment now",
+          "tradeoff": "A faster commercial commitment carries untested correctness and downtime risk. Explain what is unknown and propose conditions for a responsible commitment; do not imply guarantees from a diagram."
+        }
+      ],
+      "close": "To the engineer: explain validation, retry handling, reconciliation, cutover, and rollback. To the executive: explain the customer outcome, remaining risk, and pilot decision. Align with sales on a documented next step; measure the value delivered to the customer."
     }
   ],
   "ask": [
-    { "q": "What does a strong ETP graduate look like after the first 6 months?", "why": "Shows you are thinking about ramp-up and tells you the real bar." },
-    { "q": "How are customer accounts assigned after the program?", "why": "Shows interest in the customer side of the role." },
-    { "q": "What share of customer conversations right now involve generative AI on Bedrock?", "why": "Connects to your agent work and shows you follow the market." },
-    { "q": "How do SAs in AWSI split time between customer work and building reusable assets?", "why": "Signals you want to scale your impact, not just answer tickets." },
-    { "q": "What is one thing new SAs underestimate?", "why": "Easy for them to answer honestly; good conversation." }
+    {
+      "q": "What outcomes distinguish a strong Solutions Architect in the first 6 months?",
+      "why": "Shows you are thinking about ramp-up and tells you the real bar."
+    },
+    {
+      "q": "How are customer accounts assigned, and how does a new SA build customer context?",
+      "why": "Shows interest in the customer side of the role."
+    },
+    {
+      "q": "What share of customer conversations right now involve generative AI on Bedrock?",
+      "why": "Connects to your agent work and shows you follow the market."
+    },
+    {
+      "q": "How do SAs on this team split time between customer work and building reusable assets?",
+      "why": "Signals you want to scale your impact, not just answer tickets."
+    },
+    {
+      "q": "What is one thing new SAs underestimate?",
+      "why": "Easy for them to answer honestly; good conversation."
+    }
   ]
 }

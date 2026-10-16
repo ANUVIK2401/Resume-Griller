@@ -59,22 +59,76 @@ test('scoreRound counts ticked checks and names each miss by check and question'
   assert.ok(result.missed.includes('star-3'));
 });
 
-test('daysUntil and dayState use local calendar days', () => {
-  const now = new Date(2026, 9, 15, 23, 30);
+test('technical mock answers use architecture criteria instead of personal STAR', () => {
+  const criteria = practice.rubricFor('design');
+  assert.equal(criteria.length, 5);
+  assert.ok(!criteria.some((c) => ['star', 'metric', 'i-not-we'].includes(c.id)));
+  assert.deepEqual(practice.scoreRound([{ kind: 'design' }], [criteria.map((c) => c.id)]), { score: 5, total: 5, missed: [] });
+  assert.equal(practice.rubricFor('lp'), practice.RUBRIC);
+});
+
+test('date logic uses Pacific calendar days and rejects impossible dates', () => {
+  const now = new Date('2026-10-16T06:30:00Z'); // October 15 in Pacific time.
   assert.equal(practice.daysUntil('2026-10-28T09:00', now), 13);
   assert.equal(practice.daysUntil('2026-10-16T00:10', now), 1);
+  assert.equal(practice.daysUntil('', now), null);
+  assert.equal(practice.daysUntil('2026-02-30T09:00', now), null);
   assert.equal(practice.dayState('2026-10-14', now), 'past');
   assert.equal(practice.dayState('2026-10-15', now), 'today');
   assert.equal(practice.dayState('2026-10-16', now), 'future');
+  assert.equal(practice.validPlanDate('2028-02-29'), true);
+  assert.equal(practice.validPlanDate('2026-02-29'), false);
+  assert.equal(practice.validPlanDate('2026-13-01'), false);
+  assert.equal(practice.validPlanDate('bad'), false);
 });
 
-test('the daily plan is consecutive and ends on the interview day', () => {
-  const dates = loop.plan.map((d) => d.date);
-  for (let i = 1; i < dates.length; i += 1) {
-    const gap = (new Date(`${dates[i]}T12:00`) - new Date(`${dates[i - 1]}T12:00`)) / 86400000;
-    assert.equal(gap, 1, `${dates[i - 1]} to ${dates[i]}`);
+test('the two-week schedule can be moved without mutating source data', () => {
+  const before = JSON.stringify(loop.plan);
+  const days = practice.schedulePlan(loop.plan, '2026-12-25');
+  assert.equal(days.length, 14);
+  assert.equal(days[0].date, '2026-12-25');
+  assert.equal(days.at(-1).date, '2027-01-07');
+  assert.equal(days[0].id, loop.plan[0].id);
+  assert.equal(JSON.stringify(loop.plan), before);
+  assert.throws(() => practice.schedulePlan(loop.plan, '2026-02-30'));
+});
+
+test('the plan defaults to fourteen days, with no invented interview details', () => {
+  assert.equal(loop.plan_start, '2026-10-15');
+  assert.equal(loop.plan.length, 14);
+  assert.equal(loop.event.date, '');
+  assert.equal(loop.event.confirmed, false);
+  assert.ok(loop.stages.every((s) => s.default_status === 'not_started' && !s.default_date));
+  assert.ok(!loop.plan.some((day) => /interview day/i.test(day.focus)));
+  assert.ok(loop.stages.every((stage) => stage.format === 'Preparation scenario'));
+  assert.deepEqual(loop.plan.map((d) => d.date), practice.schedulePlan(loop.plan, loop.plan_start).map((d) => d.date));
+  for (const day of loop.plan) {
+    assert.equal(day.tasks.reduce((sum, t) => sum + t.minutes, 0), 180, day.id);
+    assert.equal(day.tasks.filter((t) => t.minimum).reduce((sum, t) => sum + t.minutes, 0), 90, day.id);
+    assert.ok(day.deliverable && day.readiness_gate, day.id);
   }
-  assert.equal(dates.at(-1), loop.event.date.slice(0, 10));
+});
+
+test('recruiting context separates established assessment facts from tentative interview details', () => {
+  const context = loop.recruiting_context;
+  assert.equal(context.assessment.status, 'passed');
+  assert.equal(context.assessment.completed_date, '2026-10-14');
+  assert.match(context.assessment.source, /user.*recruiter/i);
+  assert.equal(context.hold.status, 'tentative');
+  assert.equal(context.hold.weekday, 'Wednesday');
+  assert.match(context.interview_conditions, /in.person.*USC.*if selected/i);
+  assert.match(context.timing_conflict, /October 27.*October 28/);
+  assert.match(context.timing_conflict, /Tuesday.*Wednesday/);
+  assert.match(context.timing_conflict, /CST.*local/);
+  assert.ok(context.pending.some((item) => /time zone/i.test(item)));
+  assert.match(context.role.locations, /Dallas.*Seattle/);
+  assert.match(context.role.locations, /six months/i);
+  assert.deepEqual(context.role.cohort_starts, ['2027-01-04', '2027-07-06']);
+  assert.match(context.role.cohort_note, /choice.*unknown/i);
+  assert.match(context.role.success, /customer.*impact/i);
+  assert.match(context.role.success, /sales quotas/i);
+  assert.equal(loop.event.date, '');
+  assert.equal(loop.event.confirmed, false);
 });
 
 // The progress store runs in a sandbox with an in-memory localStorage.
@@ -85,6 +139,99 @@ function storeContext() {
   vm.runInNewContext(readFileSync(new URL('../js/storage.js', import.meta.url), 'utf8'), context);
   return { store: window.Prep.store, shared };
 }
+
+// Minimal DOM harness: exercise saved settings and schedule rerender without a browser.
+function homeContext(store, initialTime = '2026-10-15T19:00:00Z') {
+  let currentTime = initialTime;
+  const timers = [];
+  class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [currentTime])); } }
+  const timedPractice = { ...practice, dayState: (date) => practice.dayState(date, new ClockDate()), daysUntil: (date) => practice.daysUntil(date, new ClockDate()) };
+  const el = (tag, props = {}, ...children) => {
+    const node = { tag, ...props, children: children.flat(Infinity).filter((x) => x !== null && x !== undefined),
+      dataset: {}, handlers: {}, validity: { valid: true }, style: { setProperty() {} },
+      addEventListener(name, fn) { this.handlers[name] = fn; },
+      replaceChildren(...next) { this.children = next.flat(Infinity).filter((x) => x !== null && x !== undefined); },
+      setCustomValidity(message) { this.validationMessage = message; }, reportValidity() {},
+      querySelector(selector) { return flatten(this).find((n) => n.tag === selector); },
+    };
+    Object.defineProperty(node, 'firstChild', { get: () => node.children[0] });
+    return node;
+  };
+  const ui = {
+    section: (id, toc, eyebrow, title, ...children) => el('section', { id }, title, children),
+    checkbox: (id, text) => el('label', {}, el('input', { type: 'checkbox', checked: store.get('checks', id, false) }), text),
+    list: (items) => el('ul', {}, items),
+  };
+  const window = { Prep: { el, ui, store, practice: timedPractice, pages: {}, load: async (name) => json(name), setReadout() {} } };
+  vm.runInNewContext(readFileSync(new URL('../js/render-home.js', import.meta.url), 'utf8'), { window, Date: ClockDate, Intl, setInterval: (run, interval) => { timers.push({ run, interval }); return timers.length; } });
+  return { main: el('main'), home: window.Prep.pages.home, timers, advance: (time) => { currentTime = time; } };
+}
+function flatten(node) {
+  if (!node || typeof node !== 'object') return [];
+  return [node, ...(node.children || []).flatMap(flatten)];
+}
+const visibleText = (node) => typeof node === 'object' && node !== null ? (node.children || []).map(visibleText).join(' ') : String(node);
+
+test('home rerenders and persists a moved plan independently of interview date', async () => {
+  const { store } = storeContext();
+  const view = homeContext(store);
+  await view.home({ main: view.main, loop });
+  let nodes = flatten(view.main);
+  assert.equal(nodes.filter((n) => n.class?.startsWith('plan-day')).length, 14);
+  const start = nodes.find((n) => n['aria-label'] === '14-day study plan start date');
+  assert.equal(start.value, '2026-10-15');
+  start.value = '2027-03-07';
+  start.handlers.change();
+  assert.equal(store.get('notes', 'plan-start-date'), '2027-03-07');
+  assert.ok(visibleText(view.main).includes('Mar 20, 2027'));
+  const interview = nodes.find((n) => n.type === 'datetime-local');
+  interview.value = '2027-03-30T09:30';
+  interview.handlers.change();
+  assert.equal(store.get('notes', 'plan-start-date'), '2027-03-07');
+  assert.ok(visibleText(view.main).includes('2027-03-30 at 09:30 Pacific Time'));
+  assert.ok(visibleText(view.main).includes('does not move the study plan'));
+  const nextVisit = homeContext(store);
+  await nextVisit.home({ main: nextVisit.main, loop });
+  nodes = flatten(nextVisit.main);
+  assert.equal(nodes.find((n) => n.type === 'date').value, '2027-03-07');
+  assert.ok(visibleText(nextVisit.main).includes('Mar 20, 2027'));
+  const invalid = nodes.find((n) => n.type === 'date');
+  invalid.value = '2027-02-30';
+  invalid.handlers.change();
+  assert.equal(store.get('notes', 'plan-start-date'), '2027-03-07');
+  assert.ok(invalid.validationMessage);
+});
+
+test('home shows sourced recruiting context before scheduling controls', async () => {
+  const view = homeContext(storeContext().store);
+  await view.home({ main: view.main, loop });
+  const text = visibleText(view.main);
+  assert.ok(text.includes('Online assessment passed'));
+  assert.ok(text.includes('Tentative Wednesday hold'));
+  assert.ok(text.includes('Exact date, start time, and time zone'));
+  assert.ok(text.indexOf('Online assessment passed') < text.indexOf('Interview date and time (Pacific Time)'));
+  assert.ok(text.includes('2027-01-04') && text.includes('2027-07-06'));
+});
+
+test('home refreshes across Pacific midnight without rebuilding the plan each minute', async () => {
+  const { store } = storeContext();
+  store.set('loop', 'interview-event', { date: '2026-10-17T09:00' });
+  const view = homeContext(store, '2026-10-16T06:59:00Z');
+  await view.home({ main: view.main, loop });
+  const day = (id) => flatten(view.main).find((n) => n.id === id);
+  const initialDay = day('day-d01');
+  assert.ok(initialDay.class.includes('plan-today'));
+  assert.ok(visibleText(view.main).includes('2 days'));
+  assert.equal(view.timers.length, 2);
+  assert.ok(view.timers.every((timer) => timer.interval === 60000));
+  view.timers.forEach((timer) => timer.run());
+  assert.equal(day('day-d01'), initialDay, 'same-day timer preserves checkbox DOM and focus');
+  view.advance('2026-10-16T07:01:00Z');
+  view.timers.forEach((timer) => timer.run());
+  assert.ok(day('day-d01').class.includes('plan-past'));
+  assert.ok(day('day-d02').class.includes('plan-today'));
+  assert.ok(visibleText(view.main).includes('Tomorrow'));
+});
 
 test('mock and tech results round trip through export and import', async () => {
   const { store, shared } = storeContext();

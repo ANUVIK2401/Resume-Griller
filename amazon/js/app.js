@@ -141,7 +141,7 @@
         wordmark(),
         el('button', { class: 'icon-btn sidebar-close', type: 'button', 'aria-label': 'Close navigation', onclick: () => setNavOpen(false) }, icon('close'))),
       el('p', { class: 'sidebar-meta' }, `${loop.req.company} · ${loop.req.id}`),
-      el('a', { class: 'sidebar-back', href: '../index.html' }, '← All interviews'),
+      el('a', { class: 'sidebar-back', href: '../index.html' }, '← Prep home'),
       el('nav', { class: 'side-nav', 'aria-label': 'Sections' },
         el('p', { class: 'side-label' }, 'Sections'),
         el('ul', {}, site.pages.map((p) => el('li', {},

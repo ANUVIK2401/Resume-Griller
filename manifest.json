@@ -1,15 +1,25 @@
 {
-  "name": "Interview OS",
-  "short_name": "Interview OS",
-  "description": "Resume STAR stories, technical Q&A, and behavioral prep in one dashboard",
+  "name": "Amazon Solutions Architect Prep",
+  "short_name": "AWS SA Prep",
+  "description": "Two-week AWS architecture, Amazon Leadership Principles, resume and STAR practice",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#232f3e",
+  "theme_color": "#232f3e",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

@@ -12,9 +12,11 @@ export function render(behavioral, profile) {
   const lpName = (id) => behavioral.lps.find((lp) => lp.id === id).name;
   const ref = (id) => (id ? `${story(id).code} ${story(id).title}` : '**GAP**');
   const lines = [
-    '# Amazon AWSI ETP Solutions Architect: STAR Story Bank',
+    '# Amazon Solutions Architect: STAR Story Bank',
     '',
     'Generated from `data/behavioral.json` by `scripts/stories_md.mjs`. Edit the JSON, then rerun the script.',
+    '',
+    'Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REVIEW.md](RESUME-STAR-REVIEW.md) or [the interactive review](review.html). Resume claims have not been independently verified. AWS mappings are proposed designs.',
     '',
     '## How to answer',
     '',
@@ -38,6 +40,8 @@ export function render(behavioral, profile) {
       '',
       `**LPs:** ${s.lps.map(lpName).join(', ')}${s.ongoing ? '. Ongoing work: say "building", not "built".' : ''}${s.note ? ` ${s.note}` : ''}`,
       '',
+      `**Evidence boundary:** ${s.evidence_note}`,
+      '',
       `**Open with:** ${s.headline}`,
       '',
       `- **S:** ${s.s}`,
@@ -50,7 +54,7 @@ export function render(behavioral, profile) {
       '',
       `**SA twist:** ${s.twist}`,
       '',
-      `**On AWS:** ${s.aws}`,
+      `**Proposed AWS design:** ${s.aws}`,
       '',
       '**Probes:**',
       '',

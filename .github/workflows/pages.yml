@@ -36,6 +36,8 @@ jobs:
           node salesforce/scripts/test_experiences.mjs
           node amazon/scripts/check.mjs
           node amazon/scripts/test_practice.mjs
+          node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs
+          node amazon/scripts/test_integration.mjs
       - name: Verify coding reference solutions
         env:
           PYTHONDONTWRITEBYTECODE: '1'
@@ -43,6 +45,19 @@ jobs:
           python3 salesforce/scripts/test_solutions.py
           python3 salesforce/scripts/test_rate_limiter.py
           python3 salesforce/scripts/test_lld_regressions.py
+      - name: Install isolated browser test dependencies
+        run: |
+          mkdir -p "$RUNNER_TEMP/amazon-e2e"
+          npm install --prefix "$RUNNER_TEMP/amazon-e2e" --no-save --package-lock=false playwright@1.62.1
+          node "$RUNNER_TEMP/amazon-e2e/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Verify Amazon prep in a real browser
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/amazon-e2e/node_modules/playwright/index.mjs
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 > "$RUNNER_TEMP/amazon-http.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          node amazon/scripts/test_browser.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

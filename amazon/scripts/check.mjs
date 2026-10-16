@@ -1,7 +1,7 @@
 // Content guard. Run before every commit: node amazon/scripts/check.mjs
 // Fails on: invalid JSON, schema violations, em/en dashes anywhere, duplicate ids,
 // broken story/LP cross references, candidate metrics missing from profile.json,
-// and Oracle tenure written as anything but "close to 3 years".
+// and source-aligned employment chronology.
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createRequire } from 'node:module';
@@ -169,22 +169,11 @@ for (const [where, text] of spoken) {
   for (const n of numbersIn(String(text).replace(/\[fill:[^\]]*\]/g, ''))) if (!known.has(n)) fail(where, `metric "${n}" is not in profile.json`);
 }
 
-// 8. Oracle tenure is "close to 3 years", everywhere. Other resume rules carry over.
-const TENURE = /\b(?<!close to )(?:\d+(?:\.\d+)?\+?|one|two|three|four|five)(?: and a half)? years\b/i;
-const RULES = [
-  [TENURE, 'Oracle tenure is "close to 3 years"'],
-  [/\bJul(y)? 2022\b/, 'exact Oracle dates belong in legal_dates only'],
-  [/Sports Analytics(?![^.]*volunteer)[^.]*\b(intern|internship|job|employed)\b/i, 'Sports Analytics is volunteer research'],
-];
-function pathStrings(node, path, out = []) {
-  if (typeof node === 'string') out.push([path, node]);
-  else if (node && typeof node === 'object') {
-    for (const [k, v] of Object.entries(node)) if (k !== 'legal_dates' && k !== '$schema') pathStrings(v, `${path}.${k}`, out);
-  }
-  return out;
-}
-for (const [name, json] of Object.entries(data)) {
-  for (const [path, text] of pathStrings(json, name)) for (const [re, why] of RULES) if (re.test(text)) fail(path, why);
+// 8. Resume chronology is source-aligned; do not force unsupported employment labels.
+const experience = Object.fromEntries((profile.experience || []).map(item => [item.id, item]));
+for (const [id, expected] of Object.entries({ oracle: ['2022-07', '2025-01'], msrcosmos: ['2026-05', '2026-08'] })) {
+  const dates = experience[id]?.legal_dates;
+  if (dates?.start !== expected[0] || dates?.end !== expected[1]) fail(`profile.experience.${id}`, 'dates differ from the reviewed resume');
 }
 
 // 9. Every quiz number is answerable.

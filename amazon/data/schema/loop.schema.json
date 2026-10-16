@@ -1,57 +1,378 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "loop.schema.json",
-  "title": "Amazon loop: rounds, the day-by-day plan, logistics. UI edits to status and dates override the defaults in localStorage.",
+  "title": "Amazon SA preparation plan, practice scenarios, and user-entered interview details.",
   "type": "object",
-  "required": ["req", "event", "status_options", "stages", "plan", "logistics"],
+  "required": [
+    "req",
+    "event",
+    "status_options",
+    "stages",
+    "plan",
+    "logistics",
+    "plan_start",
+    "plan_note",
+    "recruiting_context"
+  ],
   "properties": {
     "req": {
-      "type": "object", "required": ["id", "title", "company"],
-      "properties": { "id": { "type": "string" }, "title": { "$ref": "common.schema.json#/$defs/text" }, "company": { "type": "string" }, "source": { "type": "string" } }
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "company"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "company": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
     },
     "event": {
-      "type": "object", "required": ["date", "confirmed", "note"],
-      "properties": { "date": { "type": "string", "description": "ISO local datetime of the on-campus loop" }, "confirmed": { "type": "boolean" }, "location": { "type": "string" }, "note": { "$ref": "common.schema.json#/$defs/text" } }
+      "type": "object",
+      "required": [
+        "date",
+        "confirmed",
+        "note"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "pattern": "^(|[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2})$",
+          "description": "Blank until user enters an interview date/time in Pacific Time."
+        },
+        "confirmed": {
+          "type": "boolean"
+        },
+        "location": {
+          "type": "string"
+        },
+        "note": {
+          "$ref": "common.schema.json#/$defs/text"
+        }
+      }
     },
-    "structure_note": { "$ref": "common.schema.json#/$defs/text" },
-    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"], "properties": { "id": { "$ref": "#/$defs/status" }, "label": { "type": "string" } } } },
+    "structure_note": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "status_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/status"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "stages": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "order", "title", "format", "default_status", "lead_stories", "prep_pages", "checklist"],
+        "required": [
+          "id",
+          "order",
+          "title",
+          "format",
+          "default_status",
+          "lead_stories",
+          "prep_pages",
+          "checklist"
+        ],
         "properties": {
-          "id": { "$ref": "common.schema.json#/$defs/id" },
-          "order": { "type": "integer", "minimum": 1 },
-          "title": { "$ref": "common.schema.json#/$defs/text" },
-          "format": { "$ref": "common.schema.json#/$defs/text" },
-          "duration_min": { "type": ["integer", "null"] },
-          "location": { "type": "string" },
-          "default_status": { "$ref": "#/$defs/status" },
-          "default_date": { "type": ["string", "null"] },
-          "note": { "type": "string" },
-          "lead_stories": { "type": "array", "items": { "type": "string", "description": "behavioral.stories[].id" } },
-          "prep_pages": { "type": "array", "items": { "type": "string", "description": "site.pages[].id" } },
-          "checklist": { "$ref": "#/$defs/checks" }
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "format": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "duration_min": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "location": {
+            "type": "string"
+          },
+          "default_status": {
+            "$ref": "#/$defs/status"
+          },
+          "default_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "lead_stories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "behavioral.stories[].id"
+            }
+          },
+          "prep_pages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "site.pages[].id"
+            }
+          },
+          "checklist": {
+            "$ref": "#/$defs/checks"
+          }
         }
       }
     },
     "plan": {
       "type": "array",
       "items": {
-        "type": "object", "required": ["id", "date", "focus", "tasks"],
+        "type": "object",
+        "required": [
+          "id",
+          "date",
+          "focus",
+          "tasks",
+          "deliverable",
+          "readiness_gate"
+        ],
         "properties": {
-          "id": { "$ref": "common.schema.json#/$defs/id" },
-          "date": { "type": "string", "format": "date" },
-          "focus": { "$ref": "common.schema.json#/$defs/text" },
-          "tasks": { "type": "array", "items": { "type": "object", "required": ["id", "text"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "text": { "$ref": "common.schema.json#/$defs/text" }, "page": { "type": "string", "description": "site.pages[].id" } } } }
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "focus": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "text",
+                "minutes",
+                "minimum"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "text": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "page": {
+                  "type": "string",
+                  "description": "site.pages[].id"
+                },
+                "minutes": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "minimum": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "deliverable": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "readiness_gate": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
         }
       }
     },
-    "logistics": { "$ref": "common.schema.json#/$defs/textList" }
+    "logistics": {
+      "$ref": "common.schema.json#/$defs/textList"
+    },
+    "plan_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "plan_note": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "recruiting_context": {
+      "type": "object",
+      "required": [
+        "source",
+        "assessment",
+        "hold",
+        "interview_conditions",
+        "pending",
+        "timing_conflict",
+        "role",
+        "plan_relationship"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "assessment": {
+          "type": "object",
+          "required": [
+            "status",
+            "completed_date",
+            "title",
+            "detail",
+            "source"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "passed"
+              ]
+            },
+            "completed_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "title": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "detail": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "source": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "additionalProperties": false
+        },
+        "hold": {
+          "type": "object",
+          "required": [
+            "status",
+            "weekday",
+            "title",
+            "detail"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "tentative"
+              ]
+            },
+            "weekday": {
+              "enum": [
+                "Wednesday"
+              ]
+            },
+            "title": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "detail": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "additionalProperties": false
+        },
+        "interview_conditions": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "pending": {
+          "$ref": "common.schema.json#/$defs/textList"
+        },
+        "timing_conflict": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "role": {
+          "type": "object",
+          "required": [
+            "locations",
+            "cohort_starts",
+            "cohort_note",
+            "focus",
+            "success"
+          ],
+          "properties": {
+            "locations": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "cohort_starts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "cohort_note": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "focus": {
+              "$ref": "common.schema.json#/$defs/textList"
+            },
+            "success": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "additionalProperties": false
+        },
+        "plan_relationship": {
+          "$ref": "common.schema.json#/$defs/text"
+        }
+      },
+      "additionalProperties": false
+    }
   },
   "$defs": {
-    "status": { "enum": ["not_started", "scheduled", "done", "passed"] },
-    "checks": { "type": "array", "items": { "type": "object", "required": ["id", "text"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "text": { "$ref": "common.schema.json#/$defs/text" } } } }
+    "status": {
+      "enum": [
+        "not_started",
+        "scheduled",
+        "done",
+        "passed"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "text": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    }
   }
 }

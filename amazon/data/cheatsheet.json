@@ -1,0 +1,889 @@
+{
+  "verified_on": "2026-10-15",
+  "purpose": "Two-week Amazon Solutions Architect rehearsal: explain the customer decision, tradeoff, failure mode and validation before naming more services.",
+  "experience_boundary": "Your OCI and Databricks work is actual experience only where supported by your resume and confirmed details. Every AWS architecture below is a hypothetical translation or practice design, not evidence you deployed it. Say: In my OCI work I did X; on AWS I would evaluate Y because Z. A completed lab is a lab, not production AWS experience.",
+  "answer_frame": [
+    "Clarify the customer outcome, workload shape, existing estate and constraints.",
+    "State measurable requirements: throughput, p95/p99 latency, availability, RPO/RTO, compliance and budget.",
+    "Draw the simplest viable data flow; explain why each component earns its place.",
+    "Compare one credible alternative and make the cost, reliability and operational tradeoff explicit.",
+    "Walk through a failure, detection, recovery and validation experiment; agree the next customer step."
+  ],
+  "priorities": [
+    {
+      "id": "P0",
+      "name": "Must explain without notes",
+      "when": "Days 1-7, then daily retrieval practice. Master these before expanding breadth."
+    },
+    {
+      "id": "P1",
+      "name": "Working fluency",
+      "when": "Days 6-11. Tie these to a customer scenario and one failure drill."
+    },
+    {
+      "id": "P2",
+      "name": "Targeted awareness",
+      "when": "Days 10-12, only after P0 is fluent. Deepen if the job description or recruiter emphasizes it."
+    }
+  ],
+  "lab_policy": "Labs are optional and are not executed by this preparation site. Prefer the offline exercise if time or billing access is limited. Use a dedicated sandbox, MFA and temporary credentials. Estimate current regional charges first, use synthetic data and a short timer, and inspect every resource after cleanup. AWS Budgets alerts are not a hard spending cap; billing and notifications can lag. No lab requires NAT gateways, paid database instances, EKS clusters, provisioned concurrency, OpenSearch domains or live Bedrock calls.",
+  "sources": [
+    {
+      "id": "vpc",
+      "title": "VPC internet gateway",
+      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html"
+    },
+    {
+      "id": "nat",
+      "title": "NAT gateway",
+      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html"
+    },
+    {
+      "id": "sg",
+      "title": "Security groups",
+      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html"
+    },
+    {
+      "id": "nacl",
+      "title": "Network ACLs",
+      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"
+    },
+    {
+      "id": "endpoint",
+      "title": "Gateway endpoints",
+      "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html"
+    },
+    {
+      "id": "iam",
+      "title": "IAM policy evaluation",
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html"
+    },
+    {
+      "id": "compute",
+      "title": "Fargate or Lambda decision guide",
+      "url": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/fargate-or-lambda.html"
+    },
+    {
+      "id": "elb",
+      "title": "Elastic Load Balancing",
+      "url": "https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html"
+    },
+    {
+      "id": "storage",
+      "title": "Storage decision guide",
+      "url": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/choosing-aws-storage-service.html"
+    },
+    {
+      "id": "s3",
+      "title": "Amazon S3 overview",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"
+    },
+    {
+      "id": "db",
+      "title": "Aurora and DynamoDB comparison",
+      "url": "https://aws.amazon.com/compare/aurora-and-dynamodb/"
+    },
+    {
+      "id": "rds",
+      "title": "RDS Multi-AZ DB instance deployments",
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html"
+    },
+    {
+      "id": "replica",
+      "title": "RDS FAQs and read replicas",
+      "url": "https://aws.amazon.com/rds/faqs/"
+    },
+    {
+      "id": "messaging",
+      "title": "SQS, SNS and EventBridge decision guide",
+      "url": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/sns-or-sqs-or-eventbridge.html"
+    },
+    {
+      "id": "visibility",
+      "title": "SQS visibility timeout",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html"
+    },
+    {
+      "id": "duplicates",
+      "title": "SQS at-least-once delivery",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html"
+    },
+    {
+      "id": "stream",
+      "title": "Kinesis Data Streams concepts",
+      "url": "https://docs.aws.amazon.com/streams/latest/dev/key-concepts.html"
+    },
+    {
+      "id": "dr",
+      "title": "Disaster recovery options",
+      "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+    },
+    {
+      "id": "ops",
+      "title": "Management and governance services",
+      "url": "https://docs.aws.amazon.com/whitepapers/latest/aws-overview/management-governance.html"
+    },
+    {
+      "id": "cost",
+      "title": "Cost Optimization pillar",
+      "url": "https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/welcome.html"
+    },
+    {
+      "id": "budget",
+      "title": "AWS Budgets and billing delays",
+      "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"
+    },
+    {
+      "id": "migration",
+      "title": "Migration decision guide",
+      "url": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/migration-on-aws-how-to-choose.html"
+    },
+    {
+      "id": "bedrock",
+      "title": "Bedrock data protection",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html"
+    },
+    {
+      "id": "rag",
+      "title": "Bedrock Knowledge Bases",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html"
+    },
+    {
+      "id": "guardrails",
+      "title": "Bedrock Guardrails",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html"
+    },
+    {
+      "id": "analytics",
+      "title": "AWS analytics decision guide",
+      "url": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/analytics-on-aws-how-to-choose.html"
+    },
+    {
+      "id": "versioning",
+      "title": "S3 Versioning",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+    },
+    {
+      "id": "delete-bucket",
+      "title": "Deleting an S3 bucket",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/delete-bucket.html"
+    },
+    {
+      "id": "hybrid",
+      "title": "VPC connectivity options",
+      "url": "https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/introduction.html"
+    },
+    {
+      "id": "kms",
+      "title": "AWS KMS",
+      "url": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html"
+    },
+    {
+      "id": "secrets",
+      "title": "AWS Secrets Manager",
+      "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+    },
+    {
+      "id": "parameters",
+      "title": "Systems Manager Parameter Store",
+      "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html"
+    },
+    {
+      "id": "waf",
+      "title": "AWS WAF and Shield",
+      "url": "https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html"
+    },
+    {
+      "id": "cdn",
+      "title": "Amazon CloudFront",
+      "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
+    },
+    {
+      "id": "cache",
+      "title": "Amazon ElastiCache",
+      "url": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html"
+    },
+    {
+      "id": "eks",
+      "title": "Amazon EKS",
+      "url": "https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html"
+    }
+  ],
+  "topics": [
+    {
+      "id": "vpc",
+      "priority": "P0",
+      "domain": "networking",
+      "name": "VPC, subnets, routes, IGW and NAT",
+      "decision": "Trace DNS, route table, security controls and return traffic. A public subnet has an internet-gateway route; an IPv4 instance also needs a public address for direct internet access.",
+      "tradeoff": "Use public ingress with private application/data tiers. NAT supplies outbound IPv4 connectivity, with a cost and availability design to justify.",
+      "failure": "A private subnet does not automatically have internet access. Check routes, NAT connectivity, DNS and security rules separately.",
+      "say": "I would draw the complete packet path and isolate the first failed hop before changing firewall rules.",
+      "probe": "Can the private worker download a package, and what happens if its egress path fails?",
+      "sources": [
+        "vpc",
+        "nat"
+      ]
+    },
+    {
+      "id": "network-controls",
+      "priority": "P0",
+      "domain": "security",
+      "name": "Security groups, NACLs and private endpoints",
+      "decision": "Security groups are stateful allow controls on associated resources; NACLs are stateless subnet controls with allow and deny rules.",
+      "tradeoff": "Use security groups as the main workload boundary; add subnet controls for a specific requirement. Endpoints solve service connectivity, not all authorization.",
+      "failure": "A restrictive NACL can block return traffic. A private endpoint policy can still deny a request allowed by a role.",
+      "say": "I would allow the application security group to reach the database port and test both the route and permissions.",
+      "probe": "Why can a TCP connection fail even when the destination security group allows it?",
+      "sources": [
+        "sg",
+        "nacl",
+        "endpoint"
+      ]
+    },
+    {
+      "id": "iam",
+      "priority": "P0",
+      "domain": "security",
+      "name": "IAM roles, least privilege and Organizations",
+      "decision": "Use temporary role credentials, workload identities and narrowly scoped actions/resources. Applicable explicit denies override allows; trust policy and permissions answer different questions.",
+      "tradeoff": "SCPs set an organization permission ceiling; they do not grant access. Identity, resource, key, boundary and organization policies interact.",
+      "failure": "An AdministratorAccess policy does not bypass an applicable explicit deny. Cross-account access also needs the correct trust/resource side.",
+      "say": "I would identify the principal, action, resource and request conditions, then evaluate the applicable policies.",
+      "probe": "Why does an assumed role still receive AccessDenied?",
+      "sources": [
+        "iam"
+      ]
+    },
+    {
+      "id": "compute",
+      "priority": "P0",
+      "domain": "compute",
+      "name": "EC2, Lambda and ECS on Fargate",
+      "decision": "Use EC2 for host control, Lambda for suitable event-driven functions, ECS on Fargate for managed container processes.",
+      "tradeoff": "Compare startup latency, invocation/runtime constraints, sustained utilization, dependencies and team ownership. Serverless still needs scaling and cost controls.",
+      "failure": "Unbounded compute scaling can overload a database or downstream API. Set concurrency/backpressure and test realistic bursts.",
+      "say": "For this workload I would compare a function against a container using its execution shape and operational constraints.",
+      "probe": "What changes if the job becomes continuous or latency-sensitive?",
+      "sources": [
+        "compute"
+      ]
+    },
+    {
+      "id": "ingress",
+      "priority": "P0",
+      "domain": "networking",
+      "name": "ALB, NLB, API Gateway and CloudFront",
+      "decision": "ALB fits HTTP application routing; NLB fits transport-layer load balancing. Discuss API management and edge caching as separate needs.",
+      "tradeoff": "Pick ingress from protocol, authentication, caching and latency requirements. Avoid stacking services without a customer benefit.",
+      "failure": "Healthy load balancer targets can still fail customer requests if a dependency is unhealthy; test meaningful health checks.",
+      "say": "I would first ask whether this is a web application, a managed public API or a TCP service.",
+      "probe": "Where does TLS terminate and which component owns authentication?",
+      "sources": [
+        "elb"
+      ]
+    },
+    {
+      "id": "storage",
+      "priority": "P0",
+      "domain": "storage",
+      "name": "S3, EBS and EFS",
+      "decision": "Choose S3 for objects, EBS for block storage attached to compute and EFS for shared file access. Start with the access protocol.",
+      "tradeoff": "Compare sharing, latency, durability/recovery, lifecycle and access cost. S3 is not a drop-in POSIX filesystem.",
+      "failure": "A volume or mounted path is not a backup strategy. Test restore and permissions rather than relying on the storage label.",
+      "say": "I would ask whether the application needs object APIs, a block device or shared file semantics.",
+      "probe": "How would you move an application that requires a shared filesystem?",
+      "sources": [
+        "storage"
+      ]
+    },
+    {
+      "id": "s3",
+      "priority": "P0",
+      "domain": "storage",
+      "name": "S3 access, consistency, lifecycle and recovery",
+      "decision": "S3 provides strong consistency for object PUT/DELETE and subsequent reads. Keep buckets private and grant only required access.",
+      "tradeoff": "Separate storage durability from versioning, retention and recovery needs. Lifecycle choices trade retrieval behavior and cost against access patterns.",
+      "failure": "A valid but unwanted overwrite or delete requires recovery controls; strong consistency does not undo application mistakes.",
+      "say": "I would validate access boundaries and rehearse restoring the required object version.",
+      "probe": "Does strong consistency remove the need for versioning or backups?",
+      "sources": [
+        "s3"
+      ]
+    },
+    {
+      "id": "database",
+      "priority": "P0",
+      "domain": "database",
+      "name": "RDS/Aurora versus DynamoDB",
+      "decision": "Use relational engines for relational transactions and query flexibility; consider DynamoDB for designed key-value/document access patterns.",
+      "tradeoff": "For DynamoDB, explain partition/access-pattern design. For relational systems, explain connections, indexing and query/load behavior.",
+      "failure": "A hot key or inefficient query can defeat capacity planning. Test skewed traffic and realistic queries.",
+      "say": "I would choose the data model from the reads, writes, transactions and consistency requirements.",
+      "probe": "What new access pattern would cause you to reconsider this choice?",
+      "sources": [
+        "db"
+      ]
+    },
+    {
+      "id": "rds-ha",
+      "priority": "P0",
+      "domain": "database",
+      "name": "Multi-AZ, read replicas and backups",
+      "decision": "An RDS Multi-AZ DB instance standby serves failover, not reads. Read replicas address read scaling; backups address recovery.",
+      "tradeoff": "Distinguish DB instance deployments from Multi-AZ DB clusters and Aurora. Replica lag and failover behavior depend on the chosen topology.",
+      "failure": "An application must reconnect after failover; a read replica may return stale data. Neither feature replaces tested backups.",
+      "say": "I would clarify whether the customer needs availability, read throughput or recovery before proposing replication.",
+      "probe": "Can we serve reports from the standby, and what changes with a Multi-AZ DB cluster?",
+      "sources": [
+        "rds",
+        "replica"
+      ]
+    },
+    {
+      "id": "queue",
+      "priority": "P0",
+      "domain": "messaging",
+      "name": "SQS, retries, DLQs and idempotency",
+      "decision": "Use SQS to buffer work and decouple consumers. Receive hides a message; delete after successful processing.",
+      "tradeoff": "Tune visibility to processing time and retries; a longer timeout delays recovery. DLQs need alarms, investigation and controlled redrive.",
+      "failure": "The worker can commit a side effect then crash before deletion. Use a durable idempotency strategy for business effects.",
+      "say": "I would make duplicate delivery safe and monitor queue age alongside the dead-letter queue.",
+      "probe": "What happens if a payment succeeds but the worker crashes before acknowledging?",
+      "sources": [
+        "visibility",
+        "duplicates"
+      ]
+    },
+    {
+      "id": "reliability",
+      "priority": "P0",
+      "domain": "reliability",
+      "name": "Availability, RPO/RTO and disaster recovery",
+      "decision": "Start with tolerable data loss (RPO) and restoration time (RTO). Multi-AZ addresses zonal resilience; regional DR is a separate decision.",
+      "tradeoff": "Compare backup/restore, pilot light, warm standby and active/active against recovery objectives and complexity.",
+      "failure": "Replication can propagate corruption; failover also needs data, identity, routing and dependency readiness.",
+      "say": "I would agree the recovery objectives, then prove them with a measured restore or failover drill.",
+      "probe": "What fails during a regional outage, and how do you prevent split-brain writes?",
+      "sources": [
+        "dr"
+      ]
+    },
+    {
+      "id": "cost",
+      "priority": "P0",
+      "domain": "cost",
+      "name": "Unit economics, right-sizing and cost controls",
+      "decision": "Estimate cost per customer transaction or workload unit using measured demand, service usage and data movement.",
+      "tradeoff": "Reduce waste before committing spend. Compare managed-service labor savings with runtime, storage, request, logging and transfer costs.",
+      "failure": "A cheaper compute rate can be outweighed by idle capacity or transfer. A budget alert does not instantly stop spend.",
+      "say": "I would baseline usage and cost, make one change, and validate performance plus unit cost.",
+      "probe": "Which assumptions dominate the estimate and how will we validate them?",
+      "sources": [
+        "cost",
+        "budget"
+      ]
+    },
+    {
+      "id": "encryption",
+      "priority": "P0",
+      "domain": "security",
+      "name": "KMS, Secrets Manager and encryption boundaries",
+      "decision": "KMS manages cryptographic keys; Secrets Manager handles secret storage/retrieval and rotation. Use TLS in transit plus the required at-rest controls.",
+      "tradeoff": "Compare managed versus customer-managed keys from audit, separation of duties and lifecycle requirements. Encryption is distinct from authorization.",
+      "failure": "A role may read a resource but lack decrypt permission; a rotated credential can break clients that never refresh it.",
+      "say": "I would trace both data access and key access and rehearse credential rotation with the application owner.",
+      "probe": "Why can an application read encrypted data yesterday but receive a decryption error today?",
+      "sources": [
+        "kms",
+        "secrets",
+        "iam"
+      ]
+    },
+    {
+      "id": "events",
+      "priority": "P1",
+      "domain": "messaging",
+      "name": "SNS, EventBridge, Kinesis and Step Functions",
+      "decision": "SNS supports fanout; EventBridge routes events by rules; Kinesis retains a stream for consumers/replay; Step Functions models workflow coordination.",
+      "tradeoff": "Choose work queue, pub/sub, event routing, stream or orchestration from semantics. Persistence/replay features are configuration- and service-specific.",
+      "failure": "A routing service does not eliminate downstream retries or duplicates. Ordering is scoped, never assume global ordering.",
+      "say": "I would separate the need to distribute an event from the need to buffer work and coordinate a workflow.",
+      "probe": "Can independent consumers replay history, and who tracks a multi-step business process?",
+      "sources": [
+        "messaging",
+        "stream"
+      ]
+    },
+    {
+      "id": "observability",
+      "priority": "P1",
+      "domain": "reliability",
+      "name": "CloudWatch, CloudTrail, Config and runbooks",
+      "decision": "CloudWatch supports operational telemetry; CloudTrail records account/API activity; Config tracks resource configuration/compliance.",
+      "tradeoff": "Use customer-facing SLOs plus dependency metrics. Audit logs and operational logs answer different questions.",
+      "failure": "High CPU alone does not identify the customer impact. Correlate request IDs, latency, errors and recent changes.",
+      "say": "I would start from the customer symptom, compare against the baseline and follow the failing dependency.",
+      "probe": "Which evidence tells you who changed a resource versus why requests are slow?",
+      "sources": [
+        "ops"
+      ]
+    },
+    {
+      "id": "migration",
+      "priority": "P1",
+      "domain": "migration",
+      "name": "Migration strategy, DMS and DataSync",
+      "decision": "Assess dependencies and choose a migration strategy before tools. Evaluate DMS for supported database migration/CDC and DataSync for supported data transfer.",
+      "tradeoff": "Rehosting can reduce initial change; replatforming/refactoring may improve operations but increases testing and delivery risk.",
+      "failure": "A copy completing does not prove a cutover works. Reconcile data, test dependencies and define rollback plus write ownership.",
+      "say": "I would propose a representative pilot with success criteria, cutover rehearsal and an explicit rollback trigger.",
+      "probe": "What if the source continues receiving writes during migration?",
+      "sources": [
+        "migration"
+      ]
+    },
+    {
+      "id": "genai",
+      "priority": "P1",
+      "domain": "genai",
+      "name": "Bedrock, RAG, evaluation and guardrails",
+      "decision": "For a knowledge assistant, evaluate retrieval-grounded generation with Bedrock and Knowledge Bases against the customer task.",
+      "tradeoff": "Evaluate retrieval quality, groundedness, latency and cost on a representative test set. RAG and fine-tuning solve different needs.",
+      "failure": "Retrieved text may carry prompt injection or stale content. Enforce authorization before retrieval and treat model output as untrusted.",
+      "say": "I would build an evaluation set, test retrieval and citations, and define escalation for uncertain answers.",
+      "probe": "How will you prevent one tenant from retrieving another tenant's documents?",
+      "sources": [
+        "rag",
+        "guardrails"
+      ]
+    },
+    {
+      "id": "ai-data",
+      "priority": "P1",
+      "domain": "security",
+      "name": "GenAI data handling and shared responsibility",
+      "decision": "For standard Bedrock model inference, AWS documentation describes isolation from model providers. Review the exact model, feature and data path before promising data handling.",
+      "tradeoff": "Application logs, knowledge stores, tool calls and external integrations have their own permissions and retention choices.",
+      "failure": "A secure model endpoint does not stop sensitive prompts being written to an application log or sent to an external tool.",
+      "say": "I would inventory where prompts, retrieved content, outputs and logs travel and apply the customer's data policy.",
+      "probe": "Which components can retain customer content and who can read it?",
+      "sources": [
+        "bedrock"
+      ]
+    },
+    {
+      "id": "edge",
+      "priority": "P1",
+      "domain": "networking",
+      "name": "CloudFront, WAF and protected origins",
+      "decision": "CloudFront distributes content through edge locations; WAF applies HTTP/HTTPS request rules to supported protected resources.",
+      "tradeoff": "Choose cache keys and freshness deliberately; evaluate WAF rules with observed traffic. Edge protection complements origin and application controls.",
+      "failure": "Caching personalized content with an unsafe cache key can disclose data. A public alternate origin path can bypass intended controls.",
+      "say": "I would define cacheable content and test isolation, freshness and the origin access path.",
+      "probe": "What would you cache, and how would you avoid returning one user's content to another?",
+      "sources": [
+        "cdn",
+        "waf"
+      ]
+    },
+    {
+      "id": "cache",
+      "priority": "P1",
+      "domain": "database",
+      "name": "ElastiCache and cache-aside",
+      "decision": "Evaluate an in-memory cache for measured hot reads or suitable ephemeral data; retain a clear source of truth.",
+      "tradeoff": "Define TTL, invalidation, eviction and acceptable staleness. A cache adds operational and consistency decisions even when managed.",
+      "failure": "A cold cache or synchronized expiry can stampede the database. Use bounded concurrency and a controlled refill plan.",
+      "say": "I would prove that caching improves the hot path and test how the database behaves when the cache disappears.",
+      "probe": "Which reads may be stale, and what happens when the cache is empty?",
+      "sources": [
+        "cache"
+      ]
+    },
+    {
+      "id": "analytics",
+      "priority": "P1",
+      "domain": "storage",
+      "name": "Glue, Athena, Redshift and data governance",
+      "decision": "Evaluate Glue for catalog/ETL, Athena for querying S3 data, and Redshift for warehouse analytics using the actual workload.",
+      "tradeoff": "Compare data freshness, query concurrency, file layout, performance and governance. Keep the AWS version of Databricks work explicitly hypothetical.",
+      "failure": "A successful ETL run can publish wrong data. Validate schemas, quality and reconciliation before downstream consumption.",
+      "say": "I would benchmark representative queries and establish data-quality gates before choosing the platform.",
+      "probe": "Which customer requirement favors a warehouse over ad hoc lake queries?",
+      "sources": [
+        "analytics"
+      ]
+    },
+    {
+      "id": "advanced",
+      "priority": "P2",
+      "domain": "networking",
+      "name": "Hybrid connectivity and network scale",
+      "decision": "Know the questions for VPN, Direct Connect, peering, Transit Gateway and private service access: bandwidth, resilience, routing and overlapping address space.",
+      "tradeoff": "Treat dedicated connectivity and encryption as separate requirements. Compare topology and operations before adding network hubs.",
+      "failure": "An apparently redundant design can share a failure dependency. Validate routes and the actual failover path.",
+      "say": "I would document connectivity assumptions and test a single-link failure with the networking team.",
+      "probe": "Which dependency remains common to both connectivity paths?",
+      "sources": [
+        "hybrid",
+        "endpoint"
+      ]
+    },
+    {
+      "id": "kubernetes",
+      "priority": "P2",
+      "domain": "compute",
+      "name": "ECS versus EKS",
+      "decision": "EKS provides managed Kubernetes; evaluate it when Kubernetes APIs, ecosystem or existing skills are a real requirement. ECS offers an AWS-native orchestration path.",
+      "tradeoff": "Compare team expertise, platform operations, portability needs and integration burden before choosing an orchestrator.",
+      "failure": "A managed control plane does not mean application health, networking, permissions and capacity operate themselves.",
+      "say": "I would ask what requires Kubernetes and who will own the platform before selecting EKS.",
+      "probe": "How does the customer benefit from Kubernetes enough to justify its operational model?",
+      "sources": [
+        "eks",
+        "compute"
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "sg-nacl",
+      "title": "Security group vs NACL",
+      "answer": "Stateful resource-level allow rules vs stateless subnet-level allow/deny rules.",
+      "trap": "A NACL needs return-path rules; adding an allow security group does not override a NACL deny.",
+      "sources": [
+        "sg",
+        "nacl"
+      ]
+    },
+    {
+      "id": "igw-nat",
+      "title": "IGW vs NAT gateway",
+      "answer": "IGW is an internet routing component; a public NAT gateway enables outbound IPv4 from private workloads.",
+      "trap": "A public subnet route alone does not give every IPv4 resource internet connectivity.",
+      "sources": [
+        "vpc",
+        "nat"
+      ]
+    },
+    {
+      "id": "endpoint-nat",
+      "title": "Gateway endpoint vs NAT",
+      "answer": "S3/DynamoDB gateway endpoints provide service routes; NAT handles broader outbound internet paths.",
+      "trap": "A gateway endpoint is not generic internet access or a blanket authorization grant.",
+      "sources": [
+        "endpoint",
+        "nat"
+      ]
+    },
+    {
+      "id": "compute-shape",
+      "title": "Lambda vs Fargate",
+      "answer": "Event-driven functions vs container processes: compare execution shape, runtime needs and operations.",
+      "trap": "Serverless does not mean infinite concurrency or zero cost when idle in every configuration.",
+      "sources": [
+        "compute"
+      ]
+    },
+    {
+      "id": "alb-nlb",
+      "title": "ALB vs NLB",
+      "answer": "Choose application-layer HTTP routing vs transport-layer balancing from the protocol requirement.",
+      "trap": "A load balancer is not the same as an API-management or edge-cache product.",
+      "sources": [
+        "elb"
+      ]
+    },
+    {
+      "id": "object-file-block",
+      "title": "S3 vs EFS vs EBS",
+      "answer": "Object APIs vs shared files vs block devices.",
+      "trap": "Do not choose storage only by capacity or treat S3 as POSIX.",
+      "sources": [
+        "storage"
+      ]
+    },
+    {
+      "id": "ha-scale",
+      "title": "Multi-AZ vs read replica",
+      "answer": "For RDS DB instances, synchronous standby supports HA; read replicas support read scaling.",
+      "trap": "A Multi-AZ DB cluster has different read behavior; name the deployment type.",
+      "sources": [
+        "rds",
+        "replica"
+      ]
+    },
+    {
+      "id": "sql-nosql",
+      "title": "Aurora/RDS vs DynamoDB",
+      "answer": "Relational query/transaction needs vs designed key-value/document access patterns.",
+      "trap": "NoSQL does not remove data modeling or automatically solve hot keys.",
+      "sources": [
+        "db"
+      ]
+    },
+    {
+      "id": "sqs-sns",
+      "title": "SQS vs SNS",
+      "answer": "Buffered work for consumers vs pub/sub fanout; SNS to separate SQS queues can combine them.",
+      "trap": "One SQS queue with multiple consumers distributes work, not a copy to each application.",
+      "sources": [
+        "messaging"
+      ]
+    },
+    {
+      "id": "fifo",
+      "title": "Standard vs FIFO queues",
+      "answer": "Standard tolerates duplicates and relaxed order; FIFO adds scoped ordering and deduplication semantics.",
+      "trap": "FIFO does not make external side effects transactional; retries after consumer failure still need idempotency.",
+      "sources": [
+        "visibility",
+        "duplicates"
+      ]
+    },
+    {
+      "id": "stream-events",
+      "title": "EventBridge vs Kinesis",
+      "answer": "Event routing by rules vs a retained stream processed by independent consumers.",
+      "trap": "Ask about ordering, retention and replay rather than calling every event flow streaming.",
+      "sources": [
+        "messaging",
+        "stream"
+      ]
+    },
+    {
+      "id": "ha-dr",
+      "title": "High availability vs DR vs backup",
+      "answer": "Survive a component/zonal failure vs recover from a larger disaster vs restore a recoverable data point.",
+      "trap": "Replication alone does not protect against propagated application corruption.",
+      "sources": [
+        "dr"
+      ]
+    },
+    {
+      "id": "ops-audit",
+      "title": "CloudWatch vs CloudTrail vs Config",
+      "answer": "Operational telemetry vs account/API activity vs configuration/compliance state.",
+      "trap": "A log of who changed a setting is different from request tracing and application latency.",
+      "sources": [
+        "ops"
+      ]
+    },
+    {
+      "id": "rag-tune",
+      "title": "RAG vs fine-tuning",
+      "answer": "Retrieve relevant knowledge at inference vs adjust model behavior using training examples.",
+      "trap": "RAG still requires authorization, document quality and evaluation; citations can be wrong.",
+      "sources": [
+        "rag",
+        "guardrails"
+      ]
+    },
+    {
+      "id": "secrets-config",
+      "title": "Secrets Manager vs Parameter Store",
+      "answer": "Purpose-built secret lifecycle and rotation vs centralized named configuration, including encrypted SecureString values.",
+      "trap": "Encryption alone does not supply a rotation workflow. Choose from secret lifecycle and configuration needs.",
+      "sources": [
+        "secrets",
+        "parameters"
+      ]
+    },
+    {
+      "id": "waf-sg",
+      "title": "WAF vs security groups",
+      "answer": "HTTP request inspection/rules vs stateful network allow controls for associated resources.",
+      "trap": "WAF rules do not replace authentication, authorization, patched code or origin network boundaries.",
+      "sources": [
+        "waf",
+        "sg"
+      ]
+    }
+  ],
+  "walkthroughs": [
+    {
+      "id": "web",
+      "name": "Customer web application",
+      "customer": "A retailer needs an application that handles promotions without losing orders.",
+      "discovery": [
+        "What is peak traffic, acceptable checkout latency and the business impact of failure?",
+        "Which transactions require consistency, and what are the RPO/RTO targets?",
+        "What team operates it, what must remain on premises, and what is the budget?"
+      ],
+      "flow": [
+        "Browser to DNS/edge layer; use an ALB for HTTP application routing where appropriate.",
+        "Application containers on ECS/Fargate across AZs, with private data access and scoped workload roles.",
+        "Use relational storage for order transactions if the model requires it; publish asynchronous work through a reliable handoff to SQS."
+      ],
+      "tradeoff": "Compare containers with a serverless API. Add caches only for a measured read problem and define invalidation. A database outbox can help avoid a commit/publish gap.",
+      "challenge": "The database fails over during checkout: explain reconnects, bounded retries and an idempotent order request without charging twice.",
+      "validation": "Measure checkout success and tail latency during burst and failover tests; verify order reconciliation and recovery objectives.",
+      "sources": [
+        "compute",
+        "elb",
+        "db",
+        "rds",
+        "visibility",
+        "dr"
+      ]
+    },
+    {
+      "id": "data",
+      "name": "Customer data platform",
+      "customer": "A customer has batch files and growing analytics demand; relate this to Databricks only as a hypothetical AWS design.",
+      "discovery": [
+        "What are volume, freshness, schema and data-quality expectations?",
+        "Which datasets contain sensitive fields, and who may query them?",
+        "Is this batch analytics, transaction processing or real-time decisioning?"
+      ],
+      "flow": [
+        "Land immutable source objects in private S3 storage with recovery and retention controls.",
+        "Evaluate Glue/Spark processing for transformations and a catalog/governance layer suited to the customer.",
+        "Evaluate Athena for ad hoc S3 queries or Redshift for a warehouse workload; choose from query concurrency and performance needs."
+      ],
+      "tradeoff": "A managed lake pattern and a warehouse have different operational and performance tradeoffs. Benchmark the representative queries rather than claiming one is always cheaper.",
+      "challenge": "A batch is delivered twice and late: show idempotent partition processing, quality gates and how consumers discover corrected data.",
+      "validation": "Replay a small synthetic dataset; compare row counts, quality checks, freshness and cost per successful pipeline run.",
+      "sources": [
+        "s3",
+        "storage",
+        "cost",
+        "analytics"
+      ]
+    },
+    {
+      "id": "migrate",
+      "name": "Customer Oracle migration",
+      "customer": "A customer wants to reduce infrastructure management while preserving business continuity.",
+      "discovery": [
+        "Which Oracle features, licensing obligations and application dependencies must remain compatible?",
+        "How much downtime and data loss are acceptable, and can the application change?",
+        "What makes rollback possible after the target starts accepting writes?"
+      ],
+      "flow": [
+        "Assess compatibility and select rehost, replatform or refactor for the workload.",
+        "Pilot a supported target and migration tool; evaluate DMS replication with validation where suitable.",
+        "Rehearse cutover: drain/coordinate writes, verify replication and reconciliation, switch the application, observe and make a deliberate rollback decision."
+      ],
+      "tradeoff": "Preserving the engine can reduce change; moving engines can require schema and application changes. Migration replication does not perform every conversion automatically.",
+      "challenge": "Replication lag rises before cutover: delay the switch, protect source write ownership and use agreed go/no-go criteria.",
+      "validation": "Prove representative transaction behavior, data reconciliation, cutover time and recovery in a rehearsal.",
+      "sources": [
+        "migration",
+        "db",
+        "dr"
+      ]
+    },
+    {
+      "id": "assistant",
+      "name": "Customer document assistant",
+      "customer": "A company wants answers from its internal documents with traceable evidence.",
+      "discovery": [
+        "Who can see which documents, and is multi-tenant isolation required?",
+        "What are answer-quality, latency and cost goals, and when should it refuse or escalate?",
+        "Where may source content, prompts, embeddings and logs be stored?"
+      ],
+      "flow": [
+        "Authenticate the user; map identity to authorized document scopes before retrieval.",
+        "Store approved source documents, chunk/index with an evaluated retrieval pipeline or Bedrock Knowledge Bases.",
+        "Invoke an approved model with retrieved context; validate output, show source evidence and record safe operational metrics."
+      ],
+      "tradeoff": "Compare a retrieval approach with a simpler keyword search before adding generation. Model selection follows measured quality, latency, data controls and cost.",
+      "challenge": "A retrieved document says to reveal secrets: treat it as untrusted data, maintain policy boundaries and test adversarial examples.",
+      "validation": "Evaluate held-out questions, unsupported answers, cross-tenant access attempts, stale documents and a budgeted latency/cost sample.",
+      "sources": [
+        "rag",
+        "bedrock",
+        "guardrails"
+      ]
+    }
+  ],
+  "labs": [
+    {
+      "id": "packet",
+      "name": "Packet-path and IAM tabletop",
+      "minutes": 35,
+      "cost_gate": "Default is offline: no AWS charges. If inspecting an existing sandbox, use read-only access and create nothing.",
+      "steps": [
+        "Draw public ingress, private compute and private database subnets; annotate request and response paths.",
+        "Remove a route, then a security-group rule, then an IAM allow; explain which symptom each produces.",
+        "Write the least-privilege actions/resources for a worker reading one bucket prefix and consuming one queue."
+      ],
+      "offline": "Use a local diagram and a policy JSON sketch. Explain explicit-deny and role-trust cases aloud; no account required.",
+      "cleanup": [
+        "Discard any temporary local diagram containing account identifiers.",
+        "If you inspected a sandbox, sign out and verify you created no resources."
+      ],
+      "sources": [
+        "vpc",
+        "sg",
+        "iam"
+      ]
+    },
+    {
+      "id": "queue-retry",
+      "name": "Optional SQS receive/retry/delete",
+      "minutes": 40,
+      "cost_gate": "Requests can incur charges. Check current SQS regional pricing and account billing first; use a sandbox and a few synthetic messages only.",
+      "steps": [
+        "Create one standard queue with a short, deliberate visibility timeout; record its name and Region.",
+        "Send one synthetic message, receive without deleting, then wait for visibility expiry and receive again.",
+        "Delete with the latest receipt handle and explain why business side effects need durable idempotency."
+      ],
+      "offline": "Simulate a queue using a local list and draw the visible/in-flight/deleted timeline, including a crash after processing.",
+      "cleanup": [
+        "Delete the queue and any manually created test queues or DLQs.",
+        "Check the selected Region for remaining resources; review billing again after usage is processed."
+      ],
+      "sources": [
+        "visibility",
+        "duplicates",
+        "budget"
+      ]
+    },
+    {
+      "id": "s3-recovery",
+      "name": "Optional private S3 recovery rehearsal",
+      "minutes": 40,
+      "cost_gate": "Storage, requests and versions can incur charges. Use tiny synthetic text files; check current regional charges and do not enable paid add-ons.",
+      "steps": [
+        "Create one private test bucket with public access blocked; enable versioning for this rehearsal.",
+        "Upload a tiny text object, overwrite it, and verify you can retrieve the previous version using its version ID.",
+        "Explain IAM scope, a delete marker and why versioning is distinct from an immutable backup policy."
+      ],
+      "offline": "Create two local file versions and a restore manifest, then describe the S3 permissions and recovery steps on paper.",
+      "cleanup": [
+        "Remove every object version and delete marker, then delete the bucket; ordinary object deletion is insufficient in a versioned bucket.",
+        "Delete any additional resources you created and inspect billing after usage is processed."
+      ],
+      "sources": [
+        "s3",
+        "budget",
+        "versioning",
+        "delete-bucket"
+      ]
+    },
+    {
+      "id": "rag-eval",
+      "name": "Offline retrieval and GenAI evaluation",
+      "minutes": 45,
+      "cost_gate": "Default is offline with no model API calls or cloud charges. Live Bedrock/vector-store exercises are outside this lab.",
+      "steps": [
+        "Write five synthetic source paragraphs and ten questions, including unanswerable and unauthorized cases.",
+        "For each question choose allowed evidence and draft the expected answer or escalation; add one prompt-injection paragraph.",
+        "Score evidence relevance, unsupported claims, permission leakage and refusal quality; explain what you would measure in a future pilot."
+      ],
+      "offline": "The entire exercise uses local text and a spreadsheet or paper scorecard. No real customer documents or hosted model required.",
+      "cleanup": [
+        "Delete synthetic test material when no longer useful.",
+        "Verify you created no cloud model, index or knowledge-base resources."
+      ],
+      "sources": [
+        "rag",
+        "guardrails",
+        "bedrock"
+      ]
+    }
+  ]
+}

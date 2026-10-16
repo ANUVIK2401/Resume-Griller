@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review.schema.json",
+  "title": "Evidence-aware resume and STAR review",
+  "type": "object",
+  "required": [
+    "reviewed_on",
+    "title",
+    "summary",
+    "resume_source",
+    "evidence_policy",
+    "privacy",
+    "guidance",
+    "guidance_sources",
+    "readiness_options",
+    "discrepancies",
+    "stories",
+    "gaps",
+    "delivery_drills",
+    "sources",
+    "role_context"
+  ],
+  "properties": {
+    "reviewed_on": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "title": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "summary": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "resume_source": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "evidence_policy": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "privacy": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "guidance": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "guidance_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      }
+    },
+    "readiness_options": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "label": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "discrepancies": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "resume",
+          "previous",
+          "action"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "resume": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "previous": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "action": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "stories": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "story_id",
+          "code",
+          "title",
+          "episode_id",
+          "readiness",
+          "evidence_status",
+          "evidence",
+          "strengths",
+          "missing",
+          "assessment",
+          "probes",
+          "delivery",
+          "draft"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "story_id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "code": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "episode_id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "evidence_status": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "draft": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "readiness": {
+            "enum": [
+              "needs-confirmation",
+              "needs-outcome",
+              "overlapping-angle"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "strengths": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "missing": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "probes": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "delivery": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          },
+          "assessment": {
+            "type": "object",
+            "required": [
+              "stakes",
+              "ownership",
+              "decision",
+              "tradeoff",
+              "measurement"
+            ],
+            "properties": {
+              "stakes": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "ownership": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "decision": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "tradeoff": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "measurement": {
+                "$ref": "common.schema.json#/$defs/text"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "why",
+          "prompts"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "why": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "prompts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "delivery_drills": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "steps"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "url": {
+            "$ref": "common.schema.json#/$defs/url"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "role_context": {
+      "type": "object",
+      "required": [
+        "role",
+        "source",
+        "responsibilities",
+        "success"
+      ],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "responsibilities": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string"
+          }
+        },
+        "success": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

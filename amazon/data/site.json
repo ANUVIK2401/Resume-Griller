@@ -1,15 +1,24 @@
 {
   "$schema": "./schema/site.schema.json",
-  "title": "AWS SA prep",
+  "title": "AWSI - ETP Solutions Architect prep",
   "pages": [
     {
       "id": "home",
       "href": "index.html",
-      "label": "Loop",
-      "prompt": "AWSI EMERGING TALENT, SOLUTIONS ARCHITECT",
-      "title": "Amazon SA",
-      "accent": "loop",
-      "lede": "Thirteen days to the on-campus loop. One plan per day, a checklist per round, and a countdown that keeps you honest."
+      "label": "Two-week plan",
+      "prompt": "AWSI - ETP SOLUTIONS ARCHITECT",
+      "title": "Your next",
+      "accent": "two weeks",
+      "lede": "OA passed; Wednesday hold is tentative. Prepare customer solutions, AWS tradeoffs, and communication from engineers to executives. Exact interview date, time zone, and format still need confirmation."
+    },
+    {
+      "id": "review",
+      "href": "review.html",
+      "label": "Resume & story review",
+      "prompt": "EVIDENCE, OWNERSHIP, ARTICULATION",
+      "title": "Make your stories",
+      "accent": "credible",
+      "lede": "A resume-based assessment of every STAR story: what works, what needs evidence, and how to explain your decisions clearly."
     },
     {
       "id": "behavioral",
@@ -18,7 +27,16 @@
       "prompt": "~/prep/lp --rehearse",
       "title": "Stories and",
       "accent": "principles",
-      "lede": "A 60-second pitch, twelve STAR stories mapped to all 16 Leadership Principles, and the three gaps to close before the loop."
+      "lede": "A concise pitch, twelve STAR drafts, Leadership Principle mapping, and honest gaps. Confirm personal details before rehearsing them as facts."
+    },
+    {
+      "id": "cheatsheet",
+      "href": "cheatsheet.html",
+      "label": "AWS cheat sheet",
+      "prompt": "PRIORITIES, DECISIONS, TRADEOFFS",
+      "title": "AWS decisions",
+      "accent": "that matter",
+      "lede": "A prioritized two-week guide: core services, common comparison traps, customer scenarios, and practice drills."
     },
     {
       "id": "aws",
@@ -27,7 +45,7 @@
       "prompt": "~/prep/aws --flashcards",
       "title": "AWS in",
       "accent": "one line each",
-      "lede": "Every service you might draw, what it is, when to pick it, and when not to. Then the frameworks every SA quotes."
+      "lede": "Reference glossary and flashcards. Start with the prioritized cheat sheet, then look up services as needed."
     },
     {
       "id": "design",

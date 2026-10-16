@@ -1,46 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Interview OS">
-  <title>Interview OS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#232f3e">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'">
+  <title>Amazon Solutions Architect | Interview prep</title>
+  <link rel="icon" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="amazon/css/styles.css">
+  <link rel="stylesheet" href="amazon/css/landing.css">
+  <script src="amazon/js/theme.js"></script>
 </head>
-<body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark">◆</span>
-        <span class="brand-name">Interview OS</span>
-      </div>
-
-      <div class="search-wrap">
-        <input type="search" id="search-box" placeholder="Search questions, answers, tags…" autocomplete="off">
-      </div>
-
-      <div class="stats" id="stats-bar"></div>
-
-      <a class="module-btn" href="google-prep.html" style="text-decoration: none;">Google Prep</a>
-      <a class="module-btn" href="salesforce/index.html" style="text-decoration: none;">Salesforce Prep</a>
-      <a class="module-btn" href="amazon/index.html" style="text-decoration: none;">Amazon SA Prep</a>
-    </header>
-
-    <nav class="module-nav" id="module-nav" aria-label="Modules"></nav>
-
-    <div class="filter-row" id="filter-row"></div>
-
-    <main class="board" id="board"></main>
-  </div>
-
-  <script src="data/star-bank.js"></script>
-  <script src="data/technical-bank.js"></script>
-  <script src="data/behavioral-bank.js"></script>
-  <script src="app.js"></script>
+<body class="prep-landing">
+  <a class="skip" href="#main">Skip to content</a>
+  <main id="main" class="landing-wrap">
+    <p class="label">Anuvik Thota · AWSI - ETP interview preparation</p>
+    <h1>Amazon Solutions Architect<span>Two weeks. Clear decisions. Credible stories.</span></h1>
+    <p class="landing-lede">Practice explaining a customer problem, choosing an architecture, and defending the tradeoffs. Build on your ERP migration, Oracle operations, and applied AI experience. Practise partnering with sales and explaining the same recommendation to engineers and executives.</p>
+    <a class="btn btn-gold" href="amazon/index.html">Open my two-week plan →</a>
+    <div class="landing-grid">
+      <a class="card stack" href="amazon/review.html"><p class="label">01 · Evidence</p><h2>Resume & STAR review</h2><p>Strengthen every story with ownership, decisions, measurement, and a clear lesson.</p></a>
+      <a class="card stack" href="amazon/cheatsheet.html"><p class="label">02 · Architecture</p><h2>AWS cheat sheet</h2><p>Prioritize core services, compare options, and rehearse customer scenarios.</p></a>
+      <a class="card stack" href="amazon/mock.html"><p class="label">03 · Delivery</p><h2>Practice a mock</h2><p>Rehearse Leadership Principles and technical questions, then review your answer.</p></a>
+    </div>
+    <p class="muted">Your confirmed interview format takes priority over these practice scenarios. Drafts and progress save in this browser; export a backup from the prep sidebar.</p>
+    <nav class="landing-archive" aria-label="Other preparation resources"><a href="general-prep.html">General interview bank</a><a href="salesforce/index.html">Salesforce archive</a><a href="google-prep.html">Google archive</a></nav>
+  </main>
 </body>
 </html>

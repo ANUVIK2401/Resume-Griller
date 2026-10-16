@@ -1,102 +1,22 @@
-# Interview OS
+# AWSI - ETP Solutions Architect interview prep
 
-A command-center dashboard for interview prep: resume STAR stories, technical
-Q&A, and behavioral questions, all searchable and filterable by tag. Built to
-keep growing — add content by editing a data file and pushing.
+A two-week preparation workspace for Anuvik Thota: AWS service choices, customer architecture conversations, resume deep dives, and Amazon Leadership Principle stories.
 
-**Stack:** pure HTML/CSS/JS. No frameworks, no build step.
+Open the root landing page, then the [two-week plan](amazon/index.html), [resume and STAR review](amazon/review.html), or [AWS cheat sheet](amazon/cheatsheet.html). The full module and checks are documented in [amazon/README.md](amazon/README.md).
 
-## Live site
-
-**https://anuvik2401.github.io/Resume-Griller/**
-
-Deploys automatically via GitHub Actions on every push to `main`.
-
-## Structure
-
-| File | Purpose |
-|------|---------|
-| `index.html` | Page shell |
-| `styles.css` | White, cobalt and gold theme (Bodoni Moda + Manrope), shared by every page |
-| `app.js` | Rendering, search, filtering, module switching |
-| `data/star-bank.js` | Resume bullets → STAR answers, tagged by role/competency |
-| `data/technical-bank.js` | Technical Q&A grouped by category (agents, SQL, DevOps, ML, system design, etc.) |
-| `data/behavioral-bank.js` | Common behavioral questions mapped to competencies, linked to matching STAR stories |
-| `google-prep.html` | Standalone Google prep page (Round 1 format card + Googleyness competencies) |
-| `google-prep.js` | Rendering for the Google prep page |
-| `data/google-prep-bank.js` | Googleyness competencies with Google definitions, sample questions, and tags linking to STAR stories |
-| `salesforce/` | Salesforce MTS prep, one page per section: `index.html` (loop tracker), `behavioral.html`, `ai.html`, `hld.html` (system design), `dsa.html` (Salesforce-tagged problem sheet), `lld.html`. Content in `salesforce/data/*.json`; see `salesforce/README.md`. Progress saves per browser with export and import. |
-
-## Adding content
-
-Everything is data-driven — add an object to the relevant array in `data/`,
-push, and it shows up automatically (tags, filters, and counts all derive
-from the data).
-
-**`star-bank.js`** — one entry per resume bullet:
-```js
-{
-  role: "Company · Title",
-  bullet: "The exact resume line.",
-  situation: "...", task: "...", action: "...", result: "...",
-  tags: ["agents", "impact"]   // used for search + filter chips
-}
+```sh
+python3 -m http.server 8000
+# http://localhost:8000/
 ```
 
-**`technical-bank.js`** — one entry per question:
-```js
-{
-  category: "System Design",   // groups questions in the UI
-  question: "...",
-  answer: "...",               // concise, direct — no filler
-  tags: ["system-design", "reliability"]
-}
-```
+Pure HTML/CSS/JS, JSON content, no production dependencies. Progress, mock history, and drafts save in the browser and can be exported. The recruiter email confirms AWSI - ETP and a passed OA, with a tentative Wednesday hold. Exact interview date, time zone, and loop format still require confirmation; practice scenarios are not a prediction of the actual interview.
 
-**`behavioral-bank.js`** — one entry per competency question:
-```js
-{
-  competency: "Ownership",
-  question: "...",
-  guidance: "What a strong answer should hit.",
-  linkedTags: ["ownership"]     // matches tags in star-bank.js to suggest stories
-}
-```
+Portable references:
 
-**`google-prep-bank.js`** — one entry per Googleyness competency:
-```js
-{
-  competency: "Ownership / Bias for Action",
-  googleDefinition: "What Google evaluates for this competency.",
-  questions: [
-    {
-      question: "...",
-      star: { s: "Situation", t: "Task", a: "Action", r: "Result" },
-      followUps: ["Likely interviewer probe", "..."]
-    }
-  ],
-  linkedTags: ["ownership"]     // matches tags in star-bank.js to pull stories inline
-}
-```
+- [AWS cheat sheet](amazon/AWS-CHEATSHEET.md)
+- [Resume and STAR assessment](amazon/RESUME-STAR-REVIEW.md)
+- [STAR story bank](amazon/stories.md)
 
-```bash
-git add data/technical-bank.js
-git commit -m "content: add distributed systems questions"
-git push       # Pages redeploys in ~1 min
-```
+The older general bank remains at [general-prep.html](general-prep.html). Google and Salesforce preparation remain available as archived modules. Their data is independent of the reviewed Amazon profile.
 
-## Using it
-
-- **Search** (top bar) matches across question/answer/role/tags for whichever
-  module is active.
-- **Module tabs** switch between Resume · STAR, Technical, and Behavioral.
-- **Filter chips** narrow to a tag within the current module; click again to clear.
-- **Cards expand in place** — click to reveal the full answer, click again to
-  collapse. Any answer text is editable directly (click into it) so you can
-  refine wording as you rehearse, though edits aren't persisted — treat the
-  data files as the source of truth.
-
-## Mac / iPad
-
-Just open the Pages URL — no login, no local state to sync. On iPad: Safari
-→ Share → **Add to Home Screen** for an app-like icon.
+The existing GitHub Pages workflow deploys pushes to main after validation. Local edits do not update the live site until pushed.

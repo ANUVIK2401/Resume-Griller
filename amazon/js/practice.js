@@ -10,6 +10,15 @@
     { id: 'tradeoff', label: 'Named a tradeoff or the alternative I rejected' },
   ];
 
+  const TECH_RUBRIC = [
+    { id: 'requirements', label: 'Clarified the customer requirements and constraints' },
+    { id: 'choice', label: 'Justified the choice and discussed an alternative' },
+    { id: 'recovery', label: 'Explained a failure mode and recovery approach' },
+    { id: 'security', label: 'Addressed identity, access, and data security' },
+    { id: 'cost-next', label: 'Covered cost drivers and a practical next step' },
+  ];
+  const rubricFor = (kind) => ['tech', 'design'].includes(kind) ? TECH_RUBRIC : RUBRIC;
+
   const pick = (list, rng) => list[Math.floor(rng() * list.length)];
 
   // Primary and backup story for an LP, plus the gap story still to write.
@@ -39,29 +48,45 @@
 
   // checks: { [questionIndex]: Set or array of rubric ids ticked }
   function scoreRound(round, checks) {
-    const total = round.length * RUBRIC.length;
+    const total = round.reduce((sum, item) => sum + rubricFor(item.kind).length, 0);
     const missed = [];
     round.forEach((item, i) => {
       const ticked = new Set(checks[i] || []);
-      RUBRIC.forEach((r) => { if (!ticked.has(r.id)) missed.push(`${r.id}-${i + 1}`); });
+      rubricFor(item.kind).forEach((r) => { if (!ticked.has(r.id)) missed.push(`${r.id}-${i + 1}`); });
     });
     return { score: total - missed.length, total, missed };
   }
 
-  // Whole days from now until the start of the target day, in local time.
-  function daysUntil(iso, now = new Date()) {
-    const target = new Date(iso);
-    const startOf = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-    return Math.round((startOf(target) - startOf(now)) / 86400000);
+  const PACIFIC = 'America/Los_Angeles';
+  const calendarDay = (now) => new Intl.DateTimeFormat('en-CA', {
+    timeZone: PACIFIC, year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(now);
+
+  function validPlanDate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const parsed = new Date(`${value}T12:00:00Z`);
+    return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
   }
 
-  // "YYYY-MM-DD" compared with today's local date.
+  // Date-only arithmetic avoids DST shifts and the browser's local time zone.
+  function daysUntil(iso, now = new Date()) {
+    const day = typeof iso === 'string' ? iso.slice(0, 10) : '';
+    if (!validPlanDate(day)) return null;
+    return Math.round((Date.parse(`${day}T12:00:00Z`) - Date.parse(`${calendarDay(now)}T12:00:00Z`)) / 86400000);
+  }
+
   function dayState(date, now = new Date()) {
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const today = calendarDay(now);
     return date < today ? 'past' : date === today ? 'today' : 'future';
   }
 
-  const api = { RUBRIC, suggestStories, pickMockRound, scoreRound, daysUntil, dayState };
+  function schedulePlan(plan, start) {
+    if (!validPlanDate(start)) throw new Error('Choose a valid plan start date.');
+    const epoch = Date.parse(`${start}T12:00:00Z`);
+    return plan.map((day, index) => ({ ...day, date: new Date(epoch + index * 86400000).toISOString().slice(0, 10) }));
+  }
+
+  const api = { RUBRIC, rubricFor, suggestStories, pickMockRound, scoreRound, daysUntil, dayState, validPlanDate, schedulePlan };
   if (typeof module !== 'undefined') { module.exports = api; return; }
   root.Prep = root.Prep || {};
   root.Prep.practice = api;

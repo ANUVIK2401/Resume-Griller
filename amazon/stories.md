@@ -1,27 +1,30 @@
-# Amazon AWSI ETP Solutions Architect: STAR Story Bank
+# Amazon Solutions Architect: STAR Story Bank
 
 Generated from `data/behavioral.json` by `scripts/stories_md.mjs`. Edit the JSON, then rerun the script.
 
+Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REVIEW.md](RESUME-STAR-REVIEW.md) or [the interactive review](review.html). Resume claims have not been independently verified. AWS mappings are proposed designs.
+
 ## How to answer
 
-- Open with the headline: the result in one sentence, then the story.
-- 60 to 90 seconds per story. One decision you owned, one number, then stop and let them probe.
-- Say "I", not "we". Credit the team in one clause, then say what you did.
-- Every action gets a because: the decision and why you made it.
-- End on the result and one lesson. Oracle tenure is spoken as "close to 3 years".
-- Do not reuse one story more than twice across the whole loop.
+- Answer the question directly, then give a specific Situation, Task, Action, and Result. Amazon recommends STAR; these rehearsal timings are practice choices, not interview rules.
+- Practise a 90-second core answer, then expand for follow-up questions. Spend most of the answer on your own decisions and actions.
+- Use I for your contribution and credit collaborators accurately. Never replace an unknown team boundary with sole ownership.
+- Explain one choice, the alternative, and why you chose it. Mark unverified personal details [confirm: ...] until you can substantiate them.
+- Use resume metrics with their baseline, measurement window, and limitations. Oracle dates are Jul 2022 to Jan 2025, approximately two and a half years.
+- Build breadth across distinct episodes. S7 is another angle on S1; team adoption alone does not establish mentoring, disagreement, or failure.
+- The user-supplied recruiter screenshot identifies the full-time AWSI-ETP Solutions Architect role: design AWS solutions for customer challenges, collaborate with sales, and adapt communication from technical experts to executives. Frame success as positive customer impact; confirm personal experience before implying you have done each responsibility.
 
 ## 60-second pitch
 
-**Who.** I'm Anuvik, finishing my MS in computer science at USC in December. Before USC I spent close to 3 years at Oracle as a Software Engineer II on NSX, running observability and incident response for 37,000+ enterprise tenants.
+**Who.** I'm Anuvik, an MS computer science student at USC, graduating in December 2026. At Oracle from July 2022 to January 2025, I worked on observability, incident diagnostics, and Kubernetes for enterprise services.
 
-**Proof.** The work I'm proudest of there: real-time API diagnostics that cut P1 MTTR from 94 to 26 minutes, because on-call engineers started with a likely root cause instead of a blank screen.
+**Proof.** One project instrumented real-time API diagnostics and helped reduce P1 MTTR from 94 to 26 minutes by giving on-call engineers root-cause tags and runbook context.
 
-**Customer.** This summer at MSRcosmos I was forward deployed with a client moving financial records from Sage X3 to Sage Intacct across 12 entities, each on its own cloud. I built a multi-agent system with a human review step, and turnaround went from 3 days to 5.5 hours.
+**Customer.** At MSRcosmos, I worked on multi-agent ERP migration with human review across 12 client entities. The reported turnaround went from 3 days to 5.5 hours.
 
-**Why SA.** That was my favorite work: sitting with the customer, understanding an audit constraint, and designing around it. That is the Solutions Architect job, and I want to do it at AWS scale.
+**Why SA.** Proposed motivation: I want to apply my operational and AI engineering experience to customer challenges in the AWSI-ETP Solutions Architect role: compare AWS designs, collaborate with sales on customer context, and make the recommendation clear to engineers and executives. [confirm: your authentic motivation and why AWS]
 
-> I want to be the person between a customer's problem and the right architecture.
+> Proposed close: I want to be measured by the positive impact the architecture has for the customer. [confirm: phrase this in your own words and support it with a real example]
 
 ## Leadership Principle map
 
@@ -35,10 +38,10 @@ Generated from `data/behavioral.json` by `scripts/stories_md.mjs`. Edit the JSON
 | Hire and Develop the Best | S4 CLI validation toolchain adopted by 4 teams | **GAP** |
 | Insist on the Highest Standards | S1 Multi-agent ERP migration with human-in-the-loop | S6 Kubernetes autoscaling on custom metrics |
 | Think Big | S9 PacSun executive intelligence app | S2 P1 MTTR from 94 to 26 minutes |
-| Bias for Action | S2 P1 MTTR from 94 to 26 minutes | S8 DQN training stall, 40% faster runs |
+| Bias for Action | S2 P1 MTTR from 94 to 26 minutes | S8 DQN training stall, 40% shorter runs |
 | Frugality | S11 ModelScope quantization study | S5 NetSuite search latency down 30% |
 | Earn Trust | S1 Multi-agent ERP migration with human-in-the-loop | S4 CLI validation toolchain adopted by 4 teams |
-| Dive Deep | S5 NetSuite search latency down 30% | S8 DQN training stall, 40% faster runs |
+| Dive Deep | S5 NetSuite search latency down 30% | S8 DQN training stall, 40% shorter runs |
 | Have Backbone; Disagree and Commit | **GAP** | **GAP** |
 | Deliver Results | S2 P1 MTTR from 94 to 26 minutes | S12 Nightly Databricks feed |
 | Strive to be Earth's Best Employer | S4 CLI validation toolchain adopted by 4 teams | S3 SLO alerting, 41% fewer false pages |
@@ -48,303 +51,331 @@ Generated from `data/behavioral.json` by `scripts/stories_md.mjs`. Edit the JSON
 
 **LPs:** Customer Obsession, Ownership, Earn Trust, Insist on the Highest Standards, Success and Scale Bring Broad Responsibility
 
-**Open with:** I automated a client's financial data migration across 12 entities and cut turnaround from 3 days to 5.5 hours, without letting a single record through unchecked.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
 
-- **S:** At MSRcosmos, a client was moving 10,000+ GL, AP, and AR records from Sage X3 to Sage Intacct across 12 entities, each on its own cloud. Reconciliation was manual, took about 3 days per cycle, and one wrong figure would surface in an audit.
-- **T:** I was the sole engineer on it. My job was to automate reconciliation while keeping every decision auditable for the client's finance team.
+**Open with:** I built human-review routing for an ERP migration across 12 entities; reported turnaround fell from 3 days to 5.5 hours.
+
+- **S:** At MSRcosmos, the migration moved 10,000+ GL/AP/AR records from Sage X3 to Sage Intacct across 12 client entities. [confirm: who was affected by reconciliation delays and the actual business deadline]
+- **T:** My work included the multi-agent migration and human-review layer. [confirm: my exact ownership, collaborators, and customer acceptance criteria]
 - **A:**
-  - I chose LangGraph on the Claude API over a single prompt chain because it gives explicit state and checkpoints, so every agent decision left an audit trail the finance team could inspect.
-  - I added field-level reconciliation checks and a confidence score per record. Above the threshold a record auto-approves; below it, it goes to a human reviewer through Sage REST APIs and MCP tool calls. That kept people on the risky records instead of all of them.
-  - I containerized it with Docker so the same image ran on AWS, Azure, and GCP, because each entity lived on a different cloud.
+  - I used the Claude API and LangGraph for the multi-agent workflow. [confirm: the alternatives considered and why this design fit the requirement]
+  - I designed confidence-based routing over Sage REST APIs and MCP tool calling, with records above a threshold auto-approved and other cases routed for review. [confirm: independent checks, threshold validation, and reviewer permissions]
+  - I containerized the application with Docker for cloud-agnostic deployment on AWS, Azure, and GCP. [confirm: services I personally deployed and how isolation worked]
 - **R:** Manual reconciliation dropped 68%, 83% of records auto-approved, and turnaround went from 3 days to 5.5 hours.
 
-**Close with:** The client trusted the automation because it knew when not to decide. I now design the human escalation path first, then the automation.
+**Close with:** A useful design lesson to discuss: choose the automation boundary deliberately. [confirm: the lesson I actually learned and what I changed afterward]
 
-**SA twist:** This is the SA job in miniature: understand a customer's business constraint (audit compliance), design around it, and earn trust by keeping a human in the loop.
+**SA twist:** For engineers, explain confidence routing, independent validation, and safe replay. For executives, explain the reported turnaround from 3 days to 5.5 hours and the reviewer decision boundary. Confirm the measurement and stakeholder acceptance; do not claim audit compliance or zero errors.
 
-**On AWS:** Bedrock running Claude for the agents, Step Functions for state, retries, and the human-review wait (task token), S3 for staging, Lambda functions as tools, DynamoDB for the audit trail.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Bedrock running Claude for the agents, Step Functions Standard for state, retries, and the human-review wait (task token), S3 for staging, Lambda functions as tools, DynamoDB for the audit trail.
 
 **Probes:**
 
-- *How did you set the confidence threshold?* [fill: how you chose it, for example precision on a hand-labeled sample]. The principle: start conservative and lower it only when reviewers stop correcting auto-approved records.
-- *What happened when the model was confidently wrong?* The field-level checks run regardless of confidence, so a confident answer that fails a check still goes to a human. [fill: a real example if you have one]
-- *What did it cost per record?* [fill: tokens or dollars per record if you measured it]. If you did not measure it, say so, then explain how: tokens per call times calls per record, against reviewer minutes saved.
-- *How would you build it on AWS only?* Bedrock for the model, Step Functions for the workflow with a task-token wait for review, S3 for staging, Lambda tools, DynamoDB for decisions and audit, CloudWatch for monitoring.
+- *How did you set the confidence threshold?* [confirm: how you chose it, for example precision on a hand-labeled sample]. The principle: start conservative and lower it only when reviewers stop correcting auto-approved records.
+- *What happened when the model was confidently wrong?* [confirm: actual independent checks and a real confidently wrong output, if one occurred]. For a proposed design, validate invariant fields independently and route exceptions to review; confidence alone is insufficient.
+- *What did it cost per record?* [confirm: tokens or dollars per record if you measured it]. If you did not measure it, say so, then explain how: tokens per call times calls per record, against reviewer minutes saved.
+- *How would you build it on AWS only?* Proposed design: a supported Claude model on Bedrock, Step Functions Standard with a task-token callback for review, S3 staging, Lambda tools, DynamoDB decisions, and CloudWatch monitoring. Validate authorization, idempotency, timeout behavior, and model accuracy.
 
 ## S2. P1 MTTR from 94 to 26 minutes (Oracle)
 
 **LPs:** Deliver Results, Bias for Action, Ownership, Think Big
 
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
 **Open with:** I cut P1 incident resolution at Oracle from 94 to 26 minutes by giving on-call engineers a likely root cause the moment they were paged.
 
-- **S:** At Oracle, NSX served 37,000+ enterprise tenants. During P1 incidents, on-call engineers searched event streams across 1M+ endpoints by hand before they could start fixing anything, and P1s averaged 94 minutes to resolve.
-- **T:** I took ownership of cutting the time from page to diagnosis.
+- **S:** At Oracle, NSX observability covered 37,000+ enterprise tenants, and my real-time API diagnostics work covered 1M+ endpoints. P1 MTTR was 94 minutes. [confirm: one representative incident and the affected user workflow]
+- **T:** I instrumented diagnostics to help on-call engineers identify likely root causes. [confirm: my scope and what other engineers owned]
 - **A:**
-  - I instrumented real-time API diagnostics on the high-throughput event streams, so the evidence was already collected when the page fired.
-  - I auto-tagged likely root causes on 400 and 500 series failures, because those failures are where tenant impact shows up first.
-  - I attached runbook context to every tag, so the engineer started with a likely cause and a next step instead of a blank screen.
+  - I instrumented real-time API diagnostics on high-throughput event streams.
+  - I added root-cause tagging for 400/500-series failures and runbook context for on-call engineers. [confirm: the actual signal logic and how tags were validated]
+  - [confirm: a specific diagnostic alternative, the tradeoff, and how the change was rolled out]
 - **R:** P1 MTTR fell from 94 to 26 minutes, a 72% cut, for a platform serving 37,000+ tenants.
 
 **Close with:** The fix was not a faster engineer; it was better context in the first minute of the page. I now ask what the on-call person sees first.
 
-**SA twist:** Faster recovery is a customer outcome. Every minute of a P1 is a customer down.
+**SA twist:** For engineers, explain the actual event signals, tag logic, false diagnoses, and rollout. For executives, explain recovery from 94 to 26 minutes and the affected customer workflow. Confirm the measurement and impact; a P1 does not establish every customer was down.
 
-**On AWS:** CloudWatch Logs Insights and metric filters, X-Ray traces, EventBridge rules to tag and route, Systems Manager Automation runbooks attached to alarms.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: CloudWatch Logs Insights and metric filters, X-Ray traces, EventBridge rules to tag and route, Systems Manager Automation runbooks attached to alarms.
 
 **Probes:**
 
-- *Which signals drove the tags?* [fill: the fields you keyed on, for example status code, endpoint, tenant, recent deploy]
-- *Rules or a model?* [fill: rules, a model, or both]. Rules first is a defensible answer: explainable to on-call, cheap, and easy to correct.
-- *How was MTTR measured, and over what window?* [fill: source and window, for example the incident tracker over N months before and after]
-- *What did you get wrong first?* [fill: a real first mistake and what you changed]
+- *Which signals drove the tags?* [confirm: the fields you keyed on, for example status code, endpoint, tenant, recent deploy]
+- *Rules or a model?* [confirm: rules, a model, or both]. Rules first is a defensible answer: explainable to on-call, cheap, and easy to correct.
+- *How was MTTR measured, and over what window?* [confirm: source and window, for example the incident tracker over N months before and after]
+- *What did you get wrong first?* [confirm: a real first mistake and what you changed]
 
 ## S3. SLO alerting, 41% fewer false pages (Oracle)
 
 **LPs:** Are Right, A Lot, Strive to be Earth's Best Employer
 
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
 **Open with:** I cut false-positive pages 41% at Oracle by moving alerting from static thresholds to SLOs.
 
 - **S:** NSX alerting fired on static CPU, memory, and latency thresholds across 37,000+ tenants. On-call was paged for noise, and real problems risked getting lost in it.
-- **T:** I set out to make every page mean real customer impact.
+- **T:** I architected the Prometheus/Grafana observability stack and moved static-threshold alerting toward SLO-based alerting. [confirm: the user-facing indicator and agreed target]
 - **A:**
-  - I rebuilt the Prometheus and Grafana stack around SLOs for CPU, memory, and p99 latency, because an SLO alerts on what users feel, not on a raw number crossing a line.
-  - I shipped 47 dashboards and alert rules so each team could see its service against its own target.
+  - I used CPU, memory, and p99 latency signals in the observability stack. A resource threshold alone is not a user-facing service-level objective. [confirm: the SLI, SLO, and error-budget policy actually used]
+  - I delivered 47 dashboards and alert rules, with a reported 41% reduction in false-positive pages. [confirm: how false positives were classified and checked against missed incidents]
 - **R:** False-positive pages dropped 41%.
 
-**Close with:** Fewer, better alerts beat more coverage. It is the same advice I would give a customer on CloudWatch.
+**Close with:** A useful lesson to explore: reduce noise while preserving incident detection. [confirm: what I learned about that balance]
 
-**SA twist:** It is the same advice you give a customer on CloudWatch: alert on user impact, not raw thresholds.
+**SA twist:** For engineers, explain the actual SLI, target, alert sensitivity, and missed-incident checks. For executives, connect 41% fewer false-positive pages to attention available for real incidents, without claiming measured productivity or customer benefit that was not recorded.
 
-**On AWS:** Amazon Managed Service for Prometheus and Amazon Managed Grafana, CloudWatch Application Signals SLOs, composite alarms to cut noise.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Amazon Managed Service for Prometheus and Amazon Managed Grafana, CloudWatch Application Signals SLOs, composite alarms to cut noise.
 
 **Probes:**
 
-- *How did you pick the targets?* [fill: how the SLO targets were chosen and who agreed to them]
-- *How did you handle cardinality across 37,000+ tenants?* [fill: how you avoided a per-tenant label explosion, for example aggregating by tier or region]
-- *Did you use burn-rate alerting?* [fill: yes or no]. The idea: page on a fast burn of the error budget, open a ticket on a slow burn.
+- *How did you pick the targets?* [confirm: how the SLO targets were chosen and who agreed to them]
+- *How did you handle cardinality across 37,000+ tenants?* [confirm: how you avoided a per-tenant label explosion, for example aggregating by tier or region]
+- *Did you use burn-rate alerting?* [confirm: yes or no]. The idea: page on a fast burn of the error budget, open a ticket on a slow burn.
 
 ## S4. CLI validation toolchain adopted by 4 teams (Oracle)
 
 **LPs:** Invent and Simplify, Earn Trust, Hire and Develop the Best, Strive to be Earth's Best Employer
 
-**Open with:** With no authority over other teams, I got 4 teams to adopt a validation toolchain that took failed deploys from 11% to 4%.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
 
-- **S:** At Oracle, each NSX team validated builds its own way, so config errors slipped into production.
-- **T:** As a Software Engineer II with no authority over the other teams, I wanted one pre-deployment check that everyone would actually use.
+**Open with:** I shipped a Jenkins CLI validation toolchain adopted by 4 teams; failed deploys fell from 11% to 4%.
+
+- **S:** At Oracle, configuration errors could reach production. [confirm: one real example and how it affected engineers or customers]
+- **T:** I shipped scripted pre-deployment validation in Jenkins CI/CD. [confirm: my design responsibility and how adoption decisions were made]
 - **A:**
-  - I built a CLI toolchain on Jenkins CI/CD that ran scripted validation before every deploy, so config errors failed in CI instead of in production.
-  - Instead of pushing a mandate, I drove adoption one team at a time, starting by fixing that team's specific pain, because a tool that solves your problem gets adopted on its own.
-  - [fill: one concrete thing you did for a skeptical team, for example a custom check or pairing on their pipeline]
+  - I built a CLI toolchain that ran pre-deployment validation in Jenkins, catching configuration errors in CI.
+  - The toolchain was adopted by 4 engineering teams. [confirm: what I personally did to earn adoption and one actual objection, if there was one]
+  - [confirm: one check, its false-rejection risk, and the mechanism for exceptions or rollback]
 - **R:** 4 teams adopted it, release cycles got 34% shorter, and failed deploys went from 11% to 4%.
 
-**Close with:** Influence without authority starts with the other person's problem, not mine. That is the SA job with customers.
+**Close with:** A useful SA lesson to test against this experience: adoption depends on solving the other team's problem. [confirm: an actual example of that lesson]
 
-**SA twist:** An SA drives adoption with no authority over the customer. Same skill.
+**SA twist:** For engineers, demonstrate one pre-deployment check and its exception policy. For executives, explain failed deploys falling from 11% to 4% and release cycles 34% shorter. Confirm attribution and adoption actions before presenting this as a customer-influence example.
 
-**On AWS:** CodePipeline with a CodeBuild validation stage, cfn-lint and CloudFormation Guard for templates, AWS Config rules for drift.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: CodePipeline with a CodeBuild validation stage, cfn-lint and CloudFormation Guard for templates, AWS Config rules for drift.
 
 **Probes:**
 
-- *Who pushed back, and why?* [fill: the team and their real objection, for example slower builds]
-- *How did you handle team-specific needs?* [fill: per-team config or plugins]
-- *How did you get the other teams onboarded?* [fill: pairing, docs, a demo]. This is also your best seed for a mentoring story.
+- *Who pushed back, and why?* [confirm: the team and their real objection, for example slower builds]
+- *How did you handle team-specific needs?* [confirm: per-team config or plugins]
+- *How did you get the other teams onboarded?* [confirm: pairing, docs, a demo]. This is also your best seed for a mentoring story.
 
 ## S5. NetSuite search latency down 30% (Oracle)
 
 **LPs:** Dive Deep, Frugality
 
-**Open with:** I cut NetSuite search latency 30% by going into the query plans instead of asking for more hardware.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
 
-- **S:** NetSuite search at Oracle was slow at enterprise data volumes, and the easy answer was bigger machines.
-- **T:** I wanted to find the real root cause and fix it without new hardware.
+**Open with:** I reduced NetSuite search P50 page-load latency from 840 ms to 588 ms by changing query plans, indexes, and SQL.
+
+- **S:** NetSuite search operated at enterprise data volumes, with P50 page-load latency of 840 ms. [confirm: which user workflow was slow and how latency was measured]
+- **T:** I worked on query performance. [confirm: my assigned target, ownership, and constraints]
 - **A:**
-  - I profiled the query plans and found full table scans on hot predicates.
-  - I restructured the indexes on those predicates and rewrote the SQL driving the scans, because the cost was in how the data was read, not in how much compute there was.
-- **R:** P50 page load went from 840 ms to 588 ms, a 30% improvement, with no new hardware.
+  - I profiled query plans and identified SQL driving full scans.
+  - I restructured indexes on hot predicates and rewrote the SQL. [confirm: one representative query, why the index fit it, and an alternative considered]
+  - [confirm: write-latency impact, correctness checks, and rollout or rollback steps]
+- **R:** P50 page-load latency went from 840 ms to 588 ms, a 30% reduction. The resume does not establish hardware spend or whether capacity changed.
 
 **Close with:** Measure before you scale. On RDS I would tell a customer the same: fix the query, then the instance.
 
-**SA twist:** Map it to AWS advice: RDS Performance Insights and the right indexes before read replicas or bigger instances.
+**SA twist:** For engineers, explain one query plan, index choice, write cost, and rollout. For executives, explain median search page load falling from 840 ms to 588 ms and ask which user workflow matters. Do not invent hardware savings or increased revenue.
 
-**On AWS:** RDS or Aurora with Performance Insights and EXPLAIN plans; indexes first, then read replicas or ElastiCache, a bigger instance last.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: RDS or Aurora with CloudWatch Database Insights and EXPLAIN plans; indexes first, then read replicas or ElastiCache, a bigger instance last. See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Database-Insights.html; verify engine and Region support.
 
 **Probes:**
 
-- *How did you find the hot predicates?* [fill: the tool or query log you used]
-- *Did the new indexes slow writes?* Every index costs write time and storage. [fill: how you checked insert and update latency afterward]
-- *How did you test safely?* [fill: staging copy, canary, or rollback plan]
+- *How did you find the hot predicates?* [confirm: the tool or query log you used]
+- *Did the new indexes slow writes?* Every index costs write time and storage. [confirm: how you checked insert and update latency afterward]
+- *How did you test safely?* [confirm: staging copy, canary, or rollback plan]
 
 ## S6. Kubernetes autoscaling on custom metrics (Oracle)
 
 **LPs:** Insist on the Highest Standards, Are Right, A Lot
 
-**Open with:** I held p99 latency SLOs at 2x peak load by autoscaling on the metric that tracks latency, not CPU alone.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
+**Open with:** I used custom Prometheus metrics for Kubernetes autoscaling on OCI and held p99 SLOs at 2x peak load.
 
 - **S:** NSX services on OCI had to survive release surges, and scaling on CPU alone did not track what users felt.
-- **T:** I containerized the services and owned how they scaled.
+- **T:** My work included containerizing NSX services and custom-metric horizontal autoscaling. [confirm: the boundaries of my responsibility]
 - **A:**
-  - I containerized NSX services with Docker and Kubernetes.
-  - I drove horizontal autoscaling off custom Prometheus metrics instead of CPU alone, because CPU was not the signal that predicted latency for these services. [fill: the metric you used]
+  - I containerized NSX services on OCI with Docker and Kubernetes.
+  - I drove horizontal autoscaling with custom Prometheus metrics rather than CPU alone. [confirm: metric, target, and evidence it tracked the bottleneck]
+  - [confirm: stabilization, node capacity, readiness, and safe scale-down mechanisms actually implemented]
 - **R:** p99 SLOs held at 2x peak load through release surges.
 
-**Close with:** Scale on the signal your users feel. On AWS that is EKS with HPA on custom metrics.
+**Close with:** A useful lesson to explain: scaling needs a measured signal and capacity to act on it. [confirm: what changed in my own design approach]
 
-**SA twist:** On AWS this is EKS with the Horizontal Pod Autoscaler on custom metrics, or ECS target tracking.
+**SA twist:** For engineers, trace the actual metric through replica demand, node capacity, readiness, and stabilization. For executives, describe holding p99 objectives at 2x peak load, with the test conditions confirmed. Distinguish OCI experience from a proposed EKS or ECS design.
 
-**On AWS:** EKS with HPA on custom metrics (Prometheus adapter or KEDA), Karpenter for nodes; or ECS service auto scaling with target tracking.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: EKS with HPA on custom metrics (Prometheus adapter or KEDA), Karpenter for nodes; or ECS service auto scaling with target tracking.
 
 **Probes:**
 
-- *Which metric, and why not CPU?* [fill: the metric, for example queue depth or in-flight requests]. CPU lags the real bottleneck for I/O-bound services.
-- *How did you handle scale-up lag?* [fill: warm pool, lower threshold, or faster images]
-- *How did you prevent flapping?* A stabilization window and cooldown, and scaling down more slowly than up.
+- *Which metric, and why not CPU?* [confirm: the metric, for example queue depth or in-flight requests]. CPU lags the real bottleneck for I/O-bound services.
+- *How did you handle scale-up lag?* [confirm: warm pool, lower threshold, or faster images]
+- *How did you prevent flapping?* [confirm: actual stabilization and cooldown settings]. For a proposed design, tune stabilization and scale-down behavior against the workload and failure budget.
 
 ## S7. Ramping up on LangGraph and MCP fast (MSRcosmos)
 
-**LPs:** Learn and Be Curious
+**LPs:** Learn and Be Curious Same underlying ERP episode as S1. The resume names the tools but does not establish learning speed, reading source, a prototype sequence, or sole ownership.
 
-**Open with:** I learned LangGraph and MCP on the job and shipped a production system for a real client in one summer.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
 
-- **S:** I joined MSRcosmos as a forward-deployed intern on a stack I had never used in production: LangGraph and MCP tool calling.
-- **T:** Ship a working system for a real client in one summer, with no time for a slow ramp-up.
+**Open with:** The MSRcosmos ERP system used LangGraph and MCP; the learning story still needs my actual learning sequence.
+
+- **S:** At MSRcosmos, I worked with the Claude API, LangGraph, and MCP tool calling on the ERP migration in S1. [confirm: what was new to me at the time]
+- **T:** [confirm: the actual learning gap, delivery deadline, and what I needed to demonstrate]
 - **A:**
-  - I built small prototypes first to learn by breaking things, and read the LangGraph source for checkpointing, because the client's audit needs depended on it.
-  - I translated the client's ERP rules into agent task specs and wired Sage REST APIs through MCP tools.
-- **R:** That system cut the client's manual reconciliation 68% (S1).
+  - The shipped work used LangGraph and Sage REST APIs with MCP tool calling.
+  - [confirm: the first prototype I built, the documentation or source I consulted, and a failed assumption]
+  - [confirm: how I tested understanding before making the approach part of the migration]
+- **R:** The same ERP system in S1 reported 68% less manual reconciliation. This is not a separate customer success or independently measured learning outcome.
 
-**Close with:** My method for any new tool: prototype, read the source where it matters, then build for the real constraint. It is how I would learn a new AWS service.
+**Close with:** [confirm: the learning method I actually used and how I reused it afterward]
 
-**SA twist:** SAs learn a new customer's domain and a new AWS service every quarter.
+**SA twist:** For engineers, describe a real learning experiment and how it changed the implementation. For executives, explain why learning reduced delivery uncertainty only if you can substantiate that connection. This is another angle on S1, not a separate customer result.
 
-**On AWS:** Same pattern for a new AWS service: read the quotas and pricing pages, build a small hands-on prototype, then learn its failure modes.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Same pattern for a new AWS service: read the quotas and pricing pages, build a small hands-on prototype, then learn its failure modes.
 
 **Probes:**
 
 - *How do you learn a new AWS service quickly?* Quotas and pricing first, then a small hands-on build, then the failure modes and the Well-Architected guidance for it.
-- *What have you learned recently outside work?* [fill: something real and recent]
+- *What have you learned recently outside work?* [confirm: something real and recent]
 
-## S8. DQN training stall, 40% faster runs (USC Sports Analytics)
+## S8. DQN training stall, 40% shorter runs (USC Sports Analytics)
 
-**LPs:** Dive Deep, Bias for Action Say "volunteer research" if asked about the role.
+**LPs:** Dive Deep, Bias for Action The PDF lists AI/ML Research Intern, Sports Analytics. Earlier site data said volunteer research; confirm the official role classification before using it on forms.
 
-**Open with:** I made each training run 40% faster by profiling instead of guessing, which let me test more ideas per day.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
 
-- **S:** In volunteer research at USC, my DQN for NFL fourth-down calls trained over 420K plays and took 52 minutes per run, which capped how many ideas I could test.
+**Open with:** I shortened DQN training runs from 52 to 31 minutes by vectorizing replay-buffer sampling and removing a data-loader stall.
+
+- **S:** In USC sports analytics research, I prototyped a DQN for NFL fourth-down calls over 420K plays. Per-run training took 52 minutes. [confirm: the experimental constraint and profiling evidence]
 - **T:** Make each experiment cheaper so I could iterate faster.
 - **A:**
-  - I profiled the training loop to see where the time actually went.
-  - I vectorized replay-buffer sampling and removed a data-loader stall, because those two spots were where the run was waiting, not computing.
-- **R:** Runs went from 52 to 31 minutes, 40% faster, and agreement with EPA-optimal calls rose from 68% to 74% on held-out 2024 drives.
+  - I vectorized replay-buffer sampling and removed a data-loader stall. [confirm: the profiler or timing evidence that isolated these bottlenecks]
+  - [confirm: how I checked the optimized run preserved the intended training behavior]
+- **R:** Per-run training time fell from 52 to 31 minutes, about a 40% reduction in runtime. Agreement with EPA-optimal calls rose separately from 68% to 74% on held-out 2024 drives; do not claim the runtime change caused that gain.
 
 **Close with:** Profile before you buy compute. It is right-sizing before scaling out.
 
-**SA twist:** Profile before you buy: the same advice as right-sizing before scaling out.
+**SA twist:** For engineers, explain sampling vectorization, the loader stall, and equivalent-workload checks. For executives, explain runs shortening from 52 to 31 minutes without claiming measured cost savings. Keep the separate quality change and research context explicit.
 
-**On AWS:** SageMaker AI training jobs with Profiler and Debugger; Spot training for cheaper runs.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: SageMaker AI training jobs with Profiler and Debugger; Spot training for cheaper runs.
 
 **Probes:**
 
-- *How did you find the stall?* [fill: the profiler and what it showed]
-- *Did the speedup change results?* [fill: how you confirmed the faster loop trained the same model]
+- *How did you find the stall?* [confirm: the profiler and what it showed]
+- *Did the speedup change results?* [confirm: how you confirmed the faster loop trained the same model]
 
 ## S9. PacSun executive intelligence app (USC Annenberg)
 
 **LPs:** Customer Obsession, Think Big. Ongoing work: say "building", not "built".
 
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
 **Open with:** I am building a multi-agent app that gives PacSun executives one ranked, owner-tagged view of what needs their attention.
 
-- **S:** PacSun executives had no single ranked view of operational issues; the answers lived across internal systems.
-- **T:** Build something an executive would actually open, not another dashboard.
+- **S:** At USC Annenberg, I am building a retail intelligence app on Claude Enterprise for PacSun executives, using MCP connectors to internal systems. [confirm: the stakeholder problem and actual discovery conversation]
+- **T:** My work brings live context into an owner-tagged view, briefs, and meeting proposals. [confirm: what I own and what stage the work has reached]
 - **A:**
-  - I am building a multi-agent app on Claude Enterprise with MCP connectors into internal systems, so agents pull live context instead of stale exports.
-  - Agents rank operational issues by urgency and owner into one view, then draft CEO briefs and meeting agendas, because executives need the decision and the owner first.
-  - [fill: how a brief is checked before it reaches an executive]
-- **R:** Ongoing. [fill: what is live today]
+  - I am wiring MCP connectors so agents can pull live context and rank operational issues into an owner-tagged view.
+  - I engineered a scheduling workflow that proposes CEO meeting slots and agendas. [confirm: the evaluation and human approval mechanism]
+  - [confirm: what is live, connector authorization, source citation, and review before an executive receives a brief]
+- **R:** Ongoing; the resume does not give a measured adoption or business outcome. [confirm: current milestone, stakeholder feedback, and a dated evaluation result if available]
 
 **Close with:** [fill: what you learned about writing for executives]
 
-**SA twist:** This mirrors the SA skill of communicating complex ideas to executives.
+**SA twist:** For engineers, explain connector permissions, source attribution, ranking evaluation, and approval. For executives, explain which decision the owner-tagged view supports. State what is live and what remains a prototype; measured adoption or business impact is not yet supplied.
 
-**On AWS:** Bedrock Agents with action groups (Lambda) in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Bedrock Agents with action groups (Lambda) in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.
 
 **Probes:**
 
-- *How do agents get live data safely?* Through connectors that each expose a small set of tools into one system, with access scoped to what the agent needs.
-- *How do you stop a wrong brief from reaching the CEO?* Every claim should cite its source. [fill: your review step]
-- *Why several agents instead of one?* Separate jobs: gather, rank, write. Each is easier to test and fix alone.
+- *What is live and who has used it?* [confirm: deployed or prototype components, actual users, and dated feedback; do not infer executive adoption]
+- *What prevents unsafe or incorrect actions?* [confirm: actual connector permissions, source attribution, review gates, and scheduling approval]
+- *Why several agents?* [confirm: the evaluated alternative and evidence that the added orchestration helped]
 
 ## S10. Human-in-the-loop annotation pipeline (USC AI Trust Lab)
 
 **LPs:** Invent and Simplify, Success and Scale Bring Broad Responsibility. Ongoing work: say "building", not "built".
 
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
 **Open with:** I built an annotation pipeline where an LLM labels sensitive caseworker notes and routes the uncertain ones to human experts.
 
-- **S:** The AI Trust Lab needed caseworker notes labeled consistently, and the notes are sensitive.
-- **T:** Label at scale without letting the model make the hard calls alone.
+- **S:** At USC AI Trust Lab, I built a rubric-based pipeline for caseworker-note annotation on Llama 3.3 70B. [confirm: the data handling requirements and annotation problem]
+- **T:** The pipeline labels notes, scores confidence, and routes low-confidence cases to experts. [confirm: the role of the rubric and my specific responsibility]
 - **A:**
-  - I built a rubric-based annotation pipeline on Llama 3.3 70B that labels each note and scores its confidence, because a rubric makes labels consistent and checkable.
-  - Low-confidence cases route to domain experts for human review.
-  - Separately, I benchmarked 6 frontier LLMs on Veracity across 8 trust pillars.
-- **R:** [fill: share of notes routed to experts, or agreement with expert labels, if measured]
+  - I built the rubric-based annotation pipeline using Llama 3.3 70B.
+  - I routed low-confidence cases to domain experts for human review. [confirm: how confidence was calibrated and how expert feedback was incorporated]
+  - [confirm: access control, redaction, and evaluation procedures actually implemented]
+- **R:** The resume establishes pipeline functionality, but no expert-agreement rate, throughput, or business outcome. [confirm: a dated pilot result or accepted milestone; if unmeasured, say so]
 
-**Close with:** Responsible AI is a design choice: decide up front where the model must not decide alone.
+**Close with:** A useful lesson to explore: model confidence needs external validation and a clear human escalation path. [confirm: what this project actually taught me]
 
-**SA twist:** Responsible AI is a common customer question on Bedrock: Guardrails, model evaluation, and human review.
+**SA twist:** For engineers, explain rubric evaluation, confidence calibration, expert review, and actual data controls. For executives, describe the boundary of model decision-making and what evidence is still needed. Do not claim measured accuracy or reviewer savings without a result.
 
-**On AWS:** Bedrock or SageMaker AI for the model, Bedrock Guardrails, Bedrock model evaluation, Amazon A2I for human review.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: choose a supported model on Bedrock or deploy a compatible model with SageMaker AI, evaluate on expert-labeled cases, and implement an authenticated human-review workflow with Step Functions Standard callbacks. Add explicit permissions and retention controls; guardrails do not validate factual accuracy. Callback pattern: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html.
 
 **Probes:**
 
-- *How did you design the rubric?* [fill: who wrote it and how it was tested]
-- *How do you know the labels are good?* [fill: expert agreement on a sample, if measured]
+- *How did you design the rubric?* [confirm: who wrote it and how it was tested]
+- *How do you know the labels are good?* [confirm: expert agreement on a sample, if measured]
 
 ## S11. ModelScope quantization study (ModelScope)
 
 **LPs:** Are Right, A Lot, Frugality, Learn and Be Curious
 
-**Open with:** I showed with data that INT4 cut model memory 62% with quality within a point, and that INT8 was never the right choice.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
+**Open with:** In my T4 benchmark, INT4 used 2299 MB and sustained 13.7 tok/s with MMLU within a point of baseline.
 
 - **S:** I wanted evidence, not folklore, on quantization tradeoffs for small models.
-- **T:** Find the cheapest configuration that keeps quality.
+- **T:** Measure quality, latency, throughput, and peak memory for the tested configurations. [confirm: workload, model-specific results, and quality constraint]
 - **A:**
   - I benchmarked Llama-3.2-3B and Gemma-2-2B across 8 quantization configs (FP16, INT8, INT4, NF4) on a T4 GPU.
   - I profiled latency, throughput, and peak memory, then ran a Pareto sweep, because a single metric hides the tradeoff.
-- **R:** INT4 landed at 2299 MB, 62% below FP16, at 13.7 tok/s with MMLU within a point. INT8 was strictly dominated: 53% more memory and 2.1x lower throughput.
+- **R:** The resume reports INT4 at 2299 MB, 62% below FP16, with 13.7 tok/s and MMLU within a point of baseline. It also reports INT8 dominated with 53% more memory and 2.1x lower throughput. [confirm: which configuration was the comparator, model, batch size, and throughput definition]; this result is limited to the measured setup.
 
 **Close with:** When a customer asks which model or instance, they get a benchmark, not a guess.
 
-**SA twist:** Customer cost advice: right-size the model and instance before scaling out.
+**SA twist:** For engineers, explain the exact model, workload, measurement method, comparator, and quality constraint. For executives, describe the tested resource-versus-quality choice and the need for customer-specific evaluation. No production cost saving or universal precision recommendation is established.
 
-**On AWS:** Inferentia or G instances for inference, smaller models on Bedrock, SageMaker AI endpoints sized from a benchmark, not a guess.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Inferentia or G instances for inference, smaller models on Bedrock, SageMaker AI endpoints sized from a benchmark, not a guess.
 
 **Probes:**
 
-- *Why was INT8 slower?* [fill: your explanation from the profiling]
+- *Why was INT8 slower?* [confirm: your explanation from the profiling]
 - *Would you ship INT4 to a customer?* Only after running their own evaluation set; one benchmark is evidence, not a guarantee.
 
 ## S12. Nightly Databricks feed (MSRcosmos)
 
 **LPs:** Deliver Results, Frugality
 
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+
 **Open with:** I automated the nightly data feed behind the ERP agents across three clouds and held a full refresh at 22 minutes.
 
 - **S:** The ERP agents needed fresh financial data from workspaces on AWS, Azure, and GCP every night.
-- **T:** Automate the feed and keep the refresh inside the nightly window.
+- **T:** I automated the nightly feed for the agents. [confirm: the freshness target and what failures or delays meant for downstream users]
 - **A:**
-  - I automated the nightly Databricks feed across the three workspaces.
-  - PySpark jobs staged 17 financial tables and 4.2M rows into Delta Lake, with partition pruning and incremental merges, because rewriting only changed rows keeps cost tied to change, not table size.
-- **R:** Full refresh held at 22 minutes.
+  - I automated the nightly Databricks feed across AWS, Azure, and GCP workspaces, staging 17 tables and 4.2M rows into Delta Lake with PySpark.
+  - I used partition pruning and incremental merges. [confirm: the merge key, update and delete semantics, and how partition selection worked]
+  - [confirm: scheduling, retries, watermarks, late data, and reconciliation checks actually implemented]
+- **R:** The resume reports a 22-minute full refresh. [confirm: whether that figure describes a full scan or an incremental run, dataset snapshot, compute size, and measurement window]
 
-**Close with:** Incremental beats full reload as data grows.
+**Close with:** A useful design lesson to explain: choose incremental processing only after defining correctness and recovery semantics. [confirm: what I learned on this pipeline]
 
-**SA twist:** Same pipeline on AWS: Glue or EMR into S3 with Iceberg tables, queried by Athena.
+**SA twist:** For engineers, explain merge keys, deletes, late arrivals, correctness, and the meaning of full refresh. For executives, explain the 22-minute reported refresh in relation to the customer freshness requirement once confirmed. Native AWS equivalents remain proposed designs.
 
-**On AWS:** Glue or EMR jobs into S3 with Apache Iceberg tables, Athena for queries, Step Functions or MWAA for scheduling.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Glue or EMR jobs into S3 with Apache Iceberg tables, Athena for queries, Step Functions or MWAA for scheduling.
 
 **Probes:**
 
 - *Why incremental merges?* Only changed rows are rewritten, so the job scales with change volume, not table size.
-- *What if a source workspace is late?* [fill: how the job handled a late or failed source]
+- *What if a source workspace is late?* [confirm: how the job handled a late or failed source]
 
 ## Gap stories: write these from real events
 
