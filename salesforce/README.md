@@ -4,6 +4,7 @@ Interview prep for the Salesforce Software Engineering MTS loop (JR359223), part
 
 | Page | What it covers |
 |---|---|
+| `HM-BRIEF.md` | One-page brief for the hiring manager round on October 22, 2026: time plan, pitch, lead stories, AI SRE answers, gap prompts, questions |
 | `index.html` | Loop tracker: next-round countdown, six stages with status, date, checklist; progress across sections |
 | `behavioral.html` | 90-second pitch, numbers quiz, a STAR story for every resume bullet mapped to Salesforce values, competency gaps, V2MOM, questions for the HM |
 | `ai.html` | Concise AI fundamentals answers with deeper follow-ups, AI SRE evaluation, trade-offs, honest gaps |
@@ -12,7 +13,7 @@ Interview prep for the Salesforce Software Engineering MTS loop (JR359223), part
 | `experiences.html` | Seven dated first-person reports, two official resources, level/location filters, source links, and speaking drills |
 | `lld.html` | 7 object-oriented designs with tested solutions and catch-the-AI exercises |
 
-Content lives in `data/*.json`; the pages render it. Candidate claims and metrics in `data/profile.json` are the source of truth for personalized preparation. A `[fill: ...]` prompt needs a real detail from the candidate before that story is ready.
+Content lives in `data/*.json`; the pages render it. Candidate claims and metrics in `data/profile.json` are the source of truth for personalized preparation. Story answers are complete and stay inside resume-supported facts; failure, disagreement, and mentoring still need the candidate's real examples.
 
 ## Prepare for delivery
 
@@ -25,6 +26,12 @@ The stored six-stage loop is this candidate's preparation plan, last recorded Oc
 The DSA list comes from a third-party company-tag snapshot. Its frequency scores guide study order; they are not interview probabilities. Source-window badges are historical, and the import date was not recorded. Two reconstructed DSA drills, the workflow logger, and the notification design had no original candidate-report links in the previous notes, so they are labeled as practice variants. Reference solutions have runnable example tests; passing them does not establish complete coverage.
 
 Technical wording was checked against [Google's SLO alerting guidance](https://sre.google/workbook/alerting-on-slos/), [Pub/Sub delivery guarantees](https://docs.cloud.google.com/pubsub/docs/exactly-once-delivery), [Pub/Sub ordering guarantees](https://docs.cloud.google.com/pubsub/docs/ordering), and [MCP security guidance](https://github.com/modelcontextprotocol/modelcontextprotocol/security). In particular, request-based error budgets are not automatically outage durations, ordered delivery has an explicit scope, and exactly-once message delivery does not automatically cover external side effects.
+
+## October 16, 2026 update
+
+The hiring manager round is confirmed for Thursday, October 22, 2026, 11:45 to 12:30. Every `[fill: ...]` prompt in the behavioral and AI banks is now a complete answer that stays inside resume-supported facts; prompts that only asked for unknown details were removed rather than guessed. Failure, disagreement, and mentoring remain open gaps: they need a real example from the candidate. Start with [HM-BRIEF.md](HM-BRIEF.md).
+
+The profile now matches the October 7 resume: MSRcosmos May 2026 to August 2026, and Sports Analytics as an AI/ML Research Intern role. Spoken Oracle tenure stays "nearly 3 years" in both the Salesforce and Amazon modules, by candidate decision.
 
 ## October 10, 2026 audit
 

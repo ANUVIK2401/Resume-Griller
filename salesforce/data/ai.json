@@ -197,7 +197,7 @@
           "a": "Outputs can get repetitive or stuck. Sampling several candidates and voting (self-consistency) can beat a single greedy answer on reasoning tasks."
         }
       ],
-      "tie": "For the Trust Lab annotation pipeline, consistent labels matter more than variety. [fill: the sampling settings you used]"
+      "tie": "For the Trust Lab annotation pipeline, consistent labels matter more than variety, so low-randomness decoding is the right default."
     },
     {
       "id": "llm-kv-cache",
@@ -275,7 +275,7 @@
       "followups": [
         {
           "q": "Why was INT8 slower in your test?",
-          "a": "[fill: your profiling explanation]. A common cause is INT8 paths that dequantize at runtime without fast kernels on that GPU."
+          "a": "On a T4 without fast INT8 paths, INT8 kernels can dequantize at runtime, which costs throughput. That matches the measured result: INT8 was strictly dominated by INT4."
         }
       ],
       "tie": "ModelScope: 8 configs, INT4 at 2299 MB and 62% below FP16, INT8 strictly dominated."
@@ -520,7 +520,7 @@
       "followups": [
         {
           "q": "Have you used them?",
-          "a": "[fill: your actual exposure]. I have built the same ideas by hand: automated scoring at the Trust Lab and rubric-based labeling with confidence routing."
+          "a": "I have built the same ideas by hand: automated scoring at the Trust Lab and rubric-based labeling with confidence routing."
         }
       ],
       "tie": "See the honest gaps card for how to frame this."
@@ -630,25 +630,25 @@
       "id": "gap-gcp",
       "gap": "GCP depth",
       "framing": "My production depth is OCI, plus AWS, Azure, and GCP Databricks workspaces at MSRcosmos. Kubernetes experience transfers to GKE, and PromQL transfers to managed Prometheus. Pub/Sub can serve the messaging role, but its delivery, ordering, and operations differ from Kafka; I would learn those differences explicitly.",
-      "plan": "Use the GCP mapping table in every design. [fill: one hands-on GCP step before the onsite, for example a GKE plus Managed Prometheus lab]"
+      "plan": "Use the GCP mapping table in every design and say plainly that my production cloud depth is OCI and Kubernetes."
     },
     {
       "id": "gap-rag",
       "gap": "Production RAG at scale",
       "framing": "My confirmed experience is connecting agents to live data and building evaluation tooling. I would distinguish that from operating a large-scale RAG service. I know where it breaks: chunking, freshness, access control, and recall under filters.",
-      "plan": "[fill: a small hybrid-search build over a public doc set with recall at k measured]"
+      "plan": "Explain hybrid search and recall at k from first principles; do not claim a build that has not happened."
     },
     {
       "id": "gap-dspy",
       "gap": "DSPy and RAGAS hands-on",
       "framing": "I built the same ideas by hand: automated scoring across 6 models and rubric-based labeling with confidence routing.",
-      "plan": "[fill: run RAGAS on a small RAG demo so you can speak from use]"
+      "plan": "Speak to evaluation from the Trust Lab scoring work; name RAGAS as a tool, not as something used."
     },
     {
       "id": "gap-mesh",
       "gap": "Service mesh",
       "framing": "I ran Kubernetes services with custom-metric autoscaling at Oracle but did not operate a mesh. I know what it adds: mTLS between services, retries, traffic splitting for canaries, and per-hop telemetry.",
-      "plan": "[fill: read the Istio traffic management docs, or name what you already know]"
+      "plan": "Name what service meshes solve, traffic shifting, retries, mTLS, and say it is not production experience."
     },
     {
       "id": "gap-reports",

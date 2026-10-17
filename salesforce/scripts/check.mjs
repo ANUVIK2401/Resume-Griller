@@ -94,8 +94,8 @@ function strings(node, path, out = []) {
 const RULES = [
   [/\b(?<!nearly )(3|three) years\b/i, 'Oracle tenure is "nearly 3 years"'],
   [/\bJul(y)? 2022\b/, 'exact Oracle dates belong in legal_dates only'],
-  [/\bMay 2026\b/, 'MSRcosmos started Jun 2026'],
-  [/Sports Analytics(?![^.]*volunteer)[^.]*\b(intern|internship|job|employed)\b/i, 'Sports Analytics is volunteer research'],
+  [/\bJun(e)? 2026\b/, 'MSRcosmos started May 2026'],
+  [/\bvolunteer\b/i, 'Sports Analytics was an AI/ML Research Intern role'],
 ];
 for (const [name, json] of Object.entries(data)) {
   // Candidate resume rules do not apply to other candidates' dated reports.

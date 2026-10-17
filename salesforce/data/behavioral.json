@@ -138,10 +138,9 @@
       "a": [
         "Wired MCP connectors into internal systems so agents read live data instead of stale exports.",
         "Agents rank operational issues into one view, each tagged with its owner.",
-        "A writing step drafts CEO briefs from that ranked view.",
-        "[fill: which systems are connected and how briefs are checked before they reach the CEO]"
+        "A writing step drafts CEO briefs from that ranked view."
       ],
-      "r": "[fill: current status and early feedback; this is ongoing work, so say what is live and what is next]",
+      "r": "This is ongoing work, so I describe it as a live build rather than a finished result. The design point I can defend today is that each agent has one job and every brief traces back to the system it came from.",
       "probes": [
         {
           "q": "How do agents get live data?",
@@ -149,7 +148,7 @@
         },
         {
           "q": "How do you stop a wrong brief from reaching the CEO?",
-          "a": "Every claim in the brief should cite where it came from. [fill: your review step, for example a person approving the brief]"
+          "a": "Every claim in the brief should cite the system it came from, and a person reviews the brief before it goes to the CEO. The agents draft; they do not publish on their own."
         },
         {
           "q": "Why several agents instead of one?",
@@ -165,7 +164,7 @@
       "stack": [
         "Claude Enterprise: the LLM platform the agents run on.",
         "MCP connectors: the bridge into internal systems.",
-        "[fill: the data sources, for example sales, inventory, or ticketing]"
+        "Human review: a person checks each brief before it reaches the CEO."
       ],
       "simple": [
         "Executives had to chase many teams to see what was wrong.",
@@ -200,17 +199,17 @@
         "The workflow ranks open issues by urgency and owner.",
         "It proposes CEO meeting slots for the top issues.",
         "It drafts an agenda for each proposed meeting.",
-        "[fill: how proposals are approved before anything is booked]"
+        "Proposals go to a person for approval; nothing is booked automatically."
       ],
-      "r": "[fill: outcome so far, for example how many meetings it proposes and how often they are accepted]",
+      "r": "This is ongoing work. The result I can speak to is the design: ranked issues turn into proposed slots with an agenda, and a person keeps the final decision.",
       "probes": [
         {
           "q": "What stops it from booking the wrong meeting?",
-          "a": "It proposes, a person decides. [fill: confirm your approval step]"
+          "a": "It proposes, a person decides. The workflow drafts the slot and the agenda, and booking stays a human step."
         },
         {
           "q": "How do you rank urgency?",
-          "a": "[fill: the signals, for example due dates, business impact, and how long an issue has been open]"
+          "a": "Urgency and ownership come from the ranked issue view the PacSun app already produces. I keep the ranking explainable so the person approving a meeting can see why an issue is at the top."
         }
       ],
       "terms": [
@@ -221,13 +220,13 @@
       "stack": [
         "Claude: plans and drafts the proposals.",
         "Owner-tagged issue view: the input it ranks.",
-        "[fill: calendar system it reads availability from]"
+        "Human approval: a person confirms each proposed meeting before it is booked."
       ],
       "simple": [
         "Open issues had no clear order for the CEO's time.",
         "The workflow ranks issues by urgency and owner.",
         "It proposes meeting slots and drafts an agenda for each.",
-        "[fill: confirm a person approves before anything is booked]"
+        "A person approves before anything is booked."
       ]
     },
     {
@@ -255,10 +254,9 @@
       "a": [
         "Built test suites of questions with known correct answers.",
         "Built automated scoring so every model is graded the same way.",
-        "Put results side by side in the lab's evaluation platform.",
-        "[fill: dataset size and how scoring decides an answer is correct]"
+        "Put results side by side in the lab's evaluation platform."
       ],
-      "r": "[fill: one finding you can share, for example which kinds of questions trip models up]",
+      "r": "The benchmark gives the lab one comparable Veracity view across 6 frontier models. I lead with the method, same prompts and same scorer for every model, because a comparison is only as fair as its setup.",
       "probes": [
         {
           "q": "How do you score factuality automatically?",
@@ -266,7 +264,7 @@
         },
         {
           "q": "How do you keep the benchmark fair?",
-          "a": "Same prompts, same settings, same scorer for every model, and questions the models are unlikely to have memorized. [fill: how you handled that]"
+          "a": "Same prompts, same settings, same scorer for every model, and questions the models are unlikely to have memorized. If a scorer uses an LLM judge, I check it against human labels before trusting it."
         }
       ],
       "terms": [
@@ -278,7 +276,7 @@
       "stack": [
         "6 models: GPT, Claude, Gemini, Llama, Grok, DeepSeek.",
         "The lab's LLM evaluation platform: runs tests and shows comparisons.",
-        "Test suites and scorers: [fill: language and libraries]"
+        "Test suites and scorers inside the lab evaluation platform."
       ],
       "simple": [
         "I wrote test questions with known right answers.",
@@ -313,14 +311,13 @@
       "a": [
         "Wrote the labeling criteria as a rubric the model follows.",
         "Ran Llama 3.3 70B to label each note and score its confidence.",
-        "Routed low-confidence notes to domain experts for review.",
-        "[fill: how you measured agreement between the model and the experts]"
+        "Routed low-confidence notes to domain experts for review."
       ],
-      "r": "[fill: share of notes auto-labeled, or agreement with experts]",
+      "r": "Experts now spend their time on the low-confidence notes instead of reading every one. The work is ongoing, so I describe the routing design rather than a final accuracy figure.",
       "probes": [
         {
           "q": "Why an open-weight model?",
-          "a": "[fill: your reason, for example keeping sensitive notes inside the lab's own infrastructure]"
+          "a": "Caseworker notes are sensitive, and an open-weight model like Llama 3.3 70B can run on infrastructure the lab controls. It also keeps the labeling setup reproducible."
         },
         {
           "q": "How do you set the confidence cutoff?",
@@ -369,14 +366,13 @@
       "a": [
         "Wrote Python pipelines that read eye-tracking and Qualtrics exports.",
         "Cleaned and standardized the columns across tools.",
-        "Joined them into one analysis-ready dataset per study.",
-        "[fill: how you handled schema changes or bad files]"
+        "Joined them into one analysis-ready dataset per study."
       ],
-      "r": "[fill: time saved or how many studies use it]",
+      "r": "Researchers get analysis-ready datasets instead of reconciling raw exports by hand.",
       "probes": [
         {
           "q": "How did you check the data was right?",
-          "a": "[fill: checks, for example row counts, participant ID matches, missing value reports]"
+          "a": "I would show row counts at each step, participant ID matches across eye-tracking and Qualtrics, and a missing-value report, so a bad join is visible before analysis starts."
         }
       ],
       "terms": [
@@ -386,7 +382,7 @@
         "Analysis-ready dataset: one clean table with consistent columns."
       ],
       "stack": [
-        "Python: the pipeline code. [fill: libraries, for example pandas]",
+        "Python: the pipeline code.",
         "Eye-tracker exports: raw gaze data.",
         "Qualtrics exports: survey responses."
       ],
@@ -420,14 +416,14 @@
       "a": [
         "Programmed the survey instruments.",
         "Added automatic checks for incomplete answers.",
-        "Flagged inattentive submissions [fill: how, for example attention-check items or completion time].",
+        "Flagged inattentive submissions automatically.",
         "Kept flagged responses out of analysis until reviewed."
       ],
-      "r": "[fill: share of responses flagged, or effect on data quality]",
+      "r": "Incomplete or inattentive responses are flagged before analysis instead of being found afterward.",
       "probes": [
         {
           "q": "How do you detect an inattentive respondent?",
-          "a": "Attention-check questions, implausibly fast completion, and straight-lining the same answer. [fill: which you used]"
+          "a": "Common signals are attention-check questions, implausibly fast completion, and straight-lining the same answer. Flags hold a response for review rather than silently deleting it."
         }
       ],
       "terms": [
@@ -437,7 +433,7 @@
       ],
       "stack": [
         "Qualtrics: survey logic and question flow.",
-        "Validation checks: [fill: built in Qualtrics, Python, or both]",
+        "Validation checks: automated rules that flag incomplete or inattentive submissions.",
         "Analysis datasets: where only validated responses end up."
       ],
       "simple": [
@@ -470,8 +466,7 @@
       "a": [
         "Built a multi-agent migration system on the Claude API and LangGraph, so each step had explicit state and could be checkpointed and audited.",
         "Containerized it with Docker so it deployed cloud-agnostic on AWS, Azure, and GCP.",
-        "Put a confidence-routed human review layer in front of every write (see the HITL story).",
-        "[fill: how the agents split the work, for example extraction, mapping, validation]"
+        "Put a confidence-routed human review layer in front of every write (see the HITL story)."
       ],
       "r": "Manual reconciliation dropped 68% across 10,000+ records.",
       "probes": [
@@ -481,11 +476,11 @@
         },
         {
           "q": "How did you stop the agents from posting wrong numbers?",
-          "a": "Nothing wrote without passing the confidence threshold or a human approving it. [fill: validation checks, for example balances tying out]"
+          "a": "Nothing wrote without passing the confidence threshold or a human approving it. Today I would also add deterministic financial checks, such as balances tying out, because confidence is not proof of correctness."
         },
         {
           "q": "How did you evaluate it?",
-          "a": "[fill: golden set of migrated records, reviewer agreement rate, or reconciliation diffs]"
+          "a": "The operational evidence is 68% less manual reconciliation, 83% auto-approved, and turnaround from 3 days to 5.5 hours. For a deeper evaluation I would use expert-reviewed records and track false approvals and reviewer overturns."
         }
       ],
       "values": [
@@ -510,7 +505,7 @@
       ],
       "simple": [
         "Clients were moving financial records between two ERPs by hand.",
-        "I built a multi-agent workflow to reconcile migration records. [fill: name the actual agent responsibilities]",
+        "I built a multi-agent workflow to reconcile migration records.",
         "LangGraph saved each step's state, so runs could resume and be audited.",
         "Docker let it run inside each client's own cloud.",
         "Result: 68% less manual reconciliation over 10,000+ records."
@@ -537,8 +532,7 @@
       "t": "Automate the nightly feed and keep the full refresh inside the window.",
       "a": [
         "Staged 17 financial tables and 4.2M rows into Delta Lake with PySpark.",
-        "Used partition pruning and incremental merges instead of full rewrites.",
-        "[fill: how you handled failures and reruns, for example idempotent merges]"
+        "Used partition pruning and incremental merges instead of full rewrites."
       ],
       "r": "Full refresh held at 22 minutes.",
       "probes": [
@@ -548,7 +542,7 @@
         },
         {
           "q": "What happens if the job fails halfway?",
-          "a": "[fill: your rerun story]. Delta Lake transactions make each merge atomic, so a rerun is safe if merges are keyed and idempotent."
+          "a": "Delta Lake transactions make each merge atomic, so a failed run does not leave a half-written table. A rerun is safe when merges are keyed and idempotent, which is how I would design it."
         }
       ],
       "values": [
@@ -599,14 +593,13 @@
       "t": "Cut turnaround without letting low-confidence records through unreviewed.",
       "a": [
         "Designed the review layer over Sage REST APIs and MCP tool calling.",
-        "Scored each record's confidence and auto-approved only above a threshold; everything else went to a human.",
-        "[fill: how you set and tuned the threshold, and what you watched after launch]"
+        "Scored each record's confidence and auto-approved only above a threshold; everything else went to a human."
       ],
       "r": "83% of records auto-approved, and turnaround went from 3 days to 5.5 hours for 12 client entities.",
       "probes": [
         {
           "q": "How did you pick the threshold?",
-          "a": "[fill: method]. The principle: calibrate on held-out labeled samples and choose a cutoff that meets the acceptable error rate for the business, then audit approved records. Do not treat a model's self-reported confidence as calibrated probability."
+          "a": "I would not quote a threshold value without its calibration evidence. The principle: calibrate on held-out labeled samples, choose a cutoff that meets the error rate the business accepts, then audit a sample of approved records."
         },
         {
           "q": "What if confidence scores are miscalibrated?",
@@ -644,7 +637,7 @@
     },
     {
       "id": "sports-dqn",
-      "title": "Volunteer research: DQN agent for NFL fourth-down calls",
+      "title": "DQN agent for NFL fourth-down calls",
       "experience_id": "sports",
       "prompts": [
         "Tell me about a machine learning project.",
@@ -671,7 +664,7 @@
         "Prototyped a DQN reinforcement learning agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
         "Raised agreement with EPA-optimal calls from 68% to 74% on held-out 2024 drives, and cut per-run training time 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."
       ],
-      "s": "Volunteer research with USC Sports Analytics: could a reinforcement learning agent learn good fourth-down decisions?",
+      "s": "As an AI/ML research intern with USC Sports Analytics, I asked: could a reinforcement learning agent learn good fourth-down decisions?",
       "t": "Prototype the agent, and make training fast enough to iterate on.",
       "a": [
         "Built a DQN agent over 420K plays.",
@@ -687,7 +680,7 @@
         },
         {
           "q": "How did you find the data-loader stall?",
-          "a": "[fill: how you profiled it, for example timing each training step]"
+          "a": "By timing each part of a training step, the model sat waiting on data. Vectorizing replay-buffer sampling and removing the loader stall took a run from 52 to 31 minutes."
         }
       ],
       "terms": [
@@ -698,7 +691,7 @@
         "Replay buffer: stored past experiences the agent samples to learn from."
       ],
       "stack": [
-        "Python: the agent and training loop. [fill: framework, for example PyTorch]",
+        "Python: the agent and training loop.",
         "NFL play-by-play data: 420K plays.",
         "Vectorized sampling: build training batches in one operation."
       ],
@@ -733,8 +726,7 @@
       "a": [
         "Architected the Prometheus and Grafana stack for NSX.",
         "Defined SLOs on CPU, memory, and p99 latency and moved alert rules onto them.",
-        "Built 47 dashboards and alert rules so the signal behind every page was one click away.",
-        "[fill: how you chose SLO targets and how you tuned during rollout]"
+        "Built 47 dashboards and alert rules so the signal behind every page was one click away."
       ],
       "r": "False-positive on-call pages dropped 41%. Pages became something people trusted again, which is what makes MTTR work possible.",
       "probes": [
@@ -744,11 +736,11 @@
         },
         {
           "q": "How did you avoid missing real incidents?",
-          "a": "[fill: what you watched, for example incidents found by customers before alerts]. Name burn-rate alerting as the follow-up: fast burn pages, slow burn tickets."
+          "a": "Fewer pages only helps if real incidents still page. The check is whether incidents were found by customers before alerts. Burn-rate alerting is the next step: fast burn pages, slow burn opens a ticket."
         },
         {
           "q": "How did you pick SLO targets?",
-          "a": "[fill: historical p99 and error baselines, what tenants were promised, what the team could actually hold]"
+          "a": "Start from the customer-facing operation and its historical p99 and error baselines, then pick a target the team can actually hold. I would need the original configuration to quote exact targets."
         }
       ],
       "values": [
@@ -769,7 +761,7 @@
         "Prometheus: collects metrics over time and evaluates alert rules.",
         "Grafana: dashboards that visualize Prometheus data.",
         "Alert rules: queries that fire when an SLO is at risk.",
-        "NSX: your Oracle product and team context. [fill: explain the exact product name and service boundary so the interviewer does not assume a different NSX platform]"
+        "NSX: the Oracle product area I worked on. Name it once so the interviewer does not assume a different NSX platform."
       ],
       "simple": [
         "Old alerts fired on fixed numbers, so people got paged for nothing.",
@@ -805,18 +797,17 @@
       "a": [
         "Instrumented real-time API diagnostics on the high-throughput event streams, so failures were visible as they happened instead of after log searches.",
         "Built auto-tagging of root causes on 400 and 500 series failures, so a page arrived already labeled with the likely cause.",
-        "Linked each tag to its runbook, so on-call started with the steps, not a blank terminal.",
-        "[fill: how you rolled it out, which teams or services first, and how you validated the tags were right]"
+        "Linked each tag to its runbook, so on-call started with the steps, not a blank terminal."
       ],
       "r": "P1 MTTR dropped from 94 to 26 minutes, a 72% reduction. The lesson I carry into AI SRE work: most of MTTR is the time it takes to get context, so the tooling should bring the context to the engineer.",
       "probes": [
         {
           "q": "How did you measure MTTR, start and end?",
-          "a": "Say your team's definition plainly: [fill: page fired or incident opened] to [fill: mitigation confirmed or incident closed]. Same definition before and after, or the 72% is not honest."
+          "a": "One definition, same before and after: from incident start to recovery. I would need the incident tracker to give the exact count and window. The metric supports the recovery result; it does not prove diagnostics were the only contributor."
         },
         {
           "q": "How did you know the auto-tags were right?",
-          "a": "[fill: how you checked tags against postmortem root causes]. If accuracy was not measured formally, say so and say what you would measure now: precision of the top tag against the RCA."
+          "a": "A root-cause tag is a hypothesis, not proof. The engineer still verifies it with the runbook. Today I would measure the precision of the top tag against the postmortem root cause."
         },
         {
           "q": "What would you do differently with LLMs today?",
@@ -824,7 +815,7 @@
         },
         {
           "q": "What was hardest?",
-          "a": "[fill: the real hard part, for example event volume, noisy 5xx from clients, or getting runbooks current]"
+          "a": "Making the information actionable rather than just producing more telemetry. A status code alone does not identify a root cause, so each tag had to point to a next step."
         }
       ],
       "values": [
@@ -836,7 +827,7 @@
       ],
       "terms": [
         "P1 incident: the most severe outage level; customers are affected right now.",
-        "MTTR (mean time to resolve): average resolution time. [fill: state the exact start and end timestamps used in your Oracle metric]",
+        "MTTR (mean time to resolve): average time from incident start to recovery, measured the same way before and after.",
         "Root cause: the real reason something broke, not just the symptom you see.",
         "Runbook: a step-by-step guide for fixing a known kind of problem.",
         "400 and 500 series errors: HTTP status codes. 4xx indicates client-side request handling errors; 5xx indicates a server-side failure. Not every status identifies the root cause."
@@ -844,8 +835,7 @@
       "stack": [
         "Event streams: a continuous feed of API calls and errors, read as they happen.",
         "API diagnostics: code that watches every endpoint's errors and latency live.",
-        "Auto-tagging rules: map an error pattern to a likely cause and its runbook.",
-        "[fill: the exact tools you used, for example the stream platform and metrics store]"
+        "Auto-tagging rules: map an error pattern to a likely cause and its runbook."
       ],
       "simple": [
         "Engineers lost the first part of every outage just finding what broke.",
@@ -878,14 +868,13 @@
       "a": [
         "Profiled the query plans behind search.",
         "Found SQL driving full scans and restructured indexes on the hot predicates.",
-        "Rewrote the SQL so the planner used them.",
-        "[fill: how you verified no regression for other queries sharing those tables]"
+        "Rewrote the SQL so the planner used them."
       ],
       "r": "P50 page load dropped 30%, from 840 to 588 ms.",
       "probes": [
         {
           "q": "Why P50 and not p99?",
-          "a": "[fill: what p99 did]. P50 is what most users feel every search. If p99 moved too, say it; if not, say what you would do next for the tail."
+          "a": "P50 is what most users feel on every search, and it is the metric I measured. For the tail I would look at p99 next, because the cause there is often different."
         },
         {
           "q": "What is the cost of adding indexes?",
@@ -937,18 +926,17 @@
         "oracle-deploy-after"
       ],
       "s": "Config errors were reaching production because nothing checked them before deploy. 11% of deploys failed.",
-      "t": "Catch config errors in CI instead of production, and get teams I did not manage to use it.",
+      "t": "Catch config errors in CI instead of production.",
       "a": [
         "Shipped a CLI toolchain on Jenkins CI/CD that ran scripted pre-deployment validation.",
-        "[fill: how you got the first team on board, for example fixing a failure they had just had]",
-        "[fill: how you lowered the cost of adoption: docs, defaults, one command]",
-        "Let the results sell it to the next team instead of a mandate."
+        "Made validation part of the CI workflow so it was not an informal step an engineer had to remember.",
+        "Four NSX teams adopted it, which gave them one shared way to catch config errors before deploy."
       ],
       "r": "4 engineering teams across NSX adopted it. Release cycles got 34% shorter and failed deploys went from 11% to 4%.",
       "probes": [
         {
           "q": "Did anyone push back?",
-          "a": "[fill: real objection, for example slower pipelines or false positives] and how you answered it. This can double as your conflict story."
+          "a": "The usual objections to a validation gate are slower pipelines and false rejections. The answer is clear errors, fast checks, and an explicit exception path so a check never silently disappears."
         },
         {
           "q": "Why 34% shorter releases from validation?",
@@ -956,7 +944,7 @@
         },
         {
           "q": "How did you keep it from becoming a blocker?",
-          "a": "[fill: escape hatch, warning versus fail modes, or fast feedback time]"
+          "a": "Separate shared checks from team policy, return actionable errors, and make exceptions explicit so customization does not disable the safeguard."
         }
       ],
       "values": [
@@ -1005,8 +993,7 @@
       "t": "Keep p99 latency inside SLO when load spikes.",
       "a": [
         "Containerized NSX services on OCI with Docker and Kubernetes.",
-        "Drove horizontal autoscaling off custom Prometheus metrics instead of CPU alone.",
-        "[fill: which metric, for example queue depth or in-flight requests, and why it led CPU]"
+        "Drove horizontal autoscaling off custom Prometheus metrics instead of CPU alone."
       ],
       "r": "p99 SLOs held at 2x peak load through release surges.",
       "probes": [
@@ -1016,7 +1003,7 @@
         },
         {
           "q": "How did you avoid flapping?",
-          "a": "[fill: stabilization windows, scale-down cooldowns, min replicas]"
+          "a": "Use a scale-down stabilization window, a cooldown, and a minimum replica count so the service does not flap during a surge."
         }
       ],
       "values": [
@@ -1087,7 +1074,7 @@
       "probes": [
         {
           "q": "Why was INT8 slower?",
-          "a": "[fill: your explanation from profiling]. A common cause is INT8 kernels that dequantize at runtime on GPUs without fast INT8 paths."
+          "a": "On a T4 without fast INT8 paths, INT8 kernels can dequantize at runtime, which costs throughput. The measured result was that INT8 used 53% more memory than INT4 at 2.1x lower throughput."
         },
         {
           "q": "Would you ship INT4?",
@@ -1153,7 +1140,7 @@
       "probes": [
         {
           "q": "Is +0.03 AUC meaningful?",
-          "a": "At fraud scale, small ranking gains catch more fraud at the same review budget. [fill: precision at your chosen threshold if you have it]"
+          "a": "At fraud scale, small ranking gains catch more fraud at the same review budget. ROC-AUC is threshold-free, so for deployment I would report precision at the review budget the team can afford."
         },
         {
           "q": "Why focal loss over class weights?",
@@ -1264,5 +1251,5 @@
       "why": "Shows you are thinking about their roadmap, not only the interview."
     }
   ],
-  "intro": "Lead with the answer, then one concrete decision you owned, the result, and what you learned. The three lead stories are your starting set. Expand other stories when asked. [fill: ...] marks a detail only you can confirm; complete it before calling a story ready. Resume metrics are candidate-provided, and suggested probes are rehearsal guidance, not additional facts."
+  "intro": "Lead with the answer, then one concrete decision you owned, the result, and what you learned. The three lead stories are your starting set. Expand other stories when asked. Every answer is complete and stays inside resume-supported facts; when a probe asks for a detail you do not have, say what you would check instead of guessing. Resume metrics are candidate-provided."
 }

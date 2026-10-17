@@ -81,9 +81,9 @@
       "org": "MSRcosmos",
       "role": "AI Forward Deployed SWE Intern",
       "kind": "internship",
-      "dates_display": "Jun 2026 to Aug 2026",
+      "dates_display": "May 2026 to Aug 2026",
       "legal_dates": {
-        "start": "2026-06",
+        "start": "2026-05",
         "end": "2026-08"
       },
       "summary": "Multi-agent ERP migration with human-in-the-loop confidence routing and a Databricks feed.",
@@ -96,14 +96,14 @@
     {
       "id": "sports",
       "org": "USC Sports Analytics",
-      "role": "Volunteer research",
-      "kind": "volunteer research",
+      "role": "AI/ML Research Intern",
+      "kind": "internship",
       "dates_display": "Jun 2025 to Sep 2025",
       "legal_dates": {
         "start": "2025-06",
         "end": "2025-09"
       },
-      "summary": "Volunteer research: DQN reinforcement learning agent for NFL fourth-down calls over 420K plays.",
+      "summary": "AI/ML research internship: DQN reinforcement learning agent for NFL fourth-down calls over 420K plays.",
       "highlights": [
         "DQN agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
         "Agreement with EPA-optimal calls up from 68% to 74% on held-out 2024 drives; per-run training time down 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."

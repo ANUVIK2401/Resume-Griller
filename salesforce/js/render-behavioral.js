@@ -129,7 +129,7 @@
       back: () => el('div', { class: 'stack' }, el('p', { class: 'h3' }, `Story: ${s.title}`), starBlock(s)),
     })), 'Rehearse stories');
     return ui.section('stories', 'STAR bank', `${data.stories.length} stories`, el('span', {}, 'The ', el('em', {}, 'STAR'), ' bank'),
-      el('p', { class: 'section-intro' }, `${data.intro} Gold "fill" marks are specifics only you know; replace them in your notes before the interview.`),
+      el('p', { class: 'section-intro' }, data.intro),
       el('div', { class: 'row', style: { marginBottom: '1rem' } }, el('button', { class: 'btn btn-gold', type: 'button', onclick: rehearse }, 'Rehearse filtered stories'),
         el('button', { class: 'btn', type: 'button', onclick: () => resetStoryFilters() }, 'Clear filters')),
       bar, listBox);

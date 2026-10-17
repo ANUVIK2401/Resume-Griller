@@ -28,8 +28,8 @@
     "date": "2026-10-09"
   },
   "status": {
-    "as_of": "2026-10-09",
-    "summary": "HM interview being scheduled. Candidate-specific six-stage plan, last recorded October 9, 2026; confirm dates and format with the recruiter."
+    "as_of": "2026-10-16",
+    "summary": "Hiring manager interview confirmed for Thursday, October 22, 2026, 11:45 to 12:30 (45 minutes). Later stages remain the candidate-specific plan recorded October 9; confirm their dates and format with the recruiter."
   },
   "status_options": [
     { "id": "not_started", "label": "Not started" },
@@ -47,8 +47,8 @@
       "location": "Remote",
       "interviewer": "Hiring manager",
       "default_status": "scheduled",
-      "default_date": null,
-      "note": "Scheduling is in progress in the stored October 9 update. No interview date has been entered; this is not a confirmed calendar appointment.",
+      "default_date": "2026-10-22T11:45",
+      "note": "Confirmed: Thursday, October 22, 11:45 to 12:30, 45 minutes. Treated as Pacific time; check the invite. Runs during Amazon SA prep, so use the HM brief, not the full bank.",
       "prep_pages": ["behavioral", "ai"],
       "checklist": [
         { "id": "hm-pitch", "text": "Say the 90-second pitch out loud three times, timed" },
