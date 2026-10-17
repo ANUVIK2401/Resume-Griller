@@ -2,18 +2,85 @@
   "$schema": "./schema/designs.schema.json",
   "whiteboard_minutes": 30,
   "status_options": [
-    { "id": "todo", "label": "To do" },
-    { "id": "attempted", "label": "Attempted" },
-    { "id": "ready", "label": "Ready" }
+    {
+      "id": "todo",
+      "label": "To do"
+    },
+    {
+      "id": "attempted",
+      "label": "Attempted"
+    },
+    {
+      "id": "ready",
+      "label": "Ready"
+    }
   ],
   "framework": [
-    { "id": "clarify", "step": "Clarify requirements and constraints", "minutes": 4, "prompts": ["Who are the users, and how many? Peak versus average traffic?", "What data, how much, how sensitive? Any compliance (PCI, HIPAA, residency)?", "Budget, timeline, and the team's skills. What does success look like?"] },
-    { "id": "simple", "step": "Draw the simple version", "minutes": 5, "prompts": ["One box per tier, request path left to right.", "Say what each box does in one sentence."] },
-    { "id": "scale", "step": "Scale it", "minutes": 6, "prompts": ["Where is the first bottleneck? Stateless tiers scale out; state moves to managed stores.", "Caching (CloudFront, ElastiCache), queues to absorb spikes, read replicas."] },
-    { "id": "reliable", "step": "Make it reliable", "minutes": 5, "prompts": ["Multi-AZ everywhere it matters. What happens when each box dies?", "Retries with backoff, dead-letter queues, health checks, a DR tier tied to RPO and RTO."] },
-    { "id": "secure", "step": "Secure it", "minutes": 4, "prompts": ["Private subnets, least-privilege roles, encryption at rest (KMS) and in transit (TLS).", "WAF at the edge, CloudTrail for audit, secrets in Secrets Manager."] },
-    { "id": "cost", "step": "Cost it", "minutes": 4, "prompts": ["What drives the bill? Right-size, Savings Plans for baseline, Spot or serverless for spikes.", "Lifecycle rules for storage; state a rough cost direction, not a fake exact number."] },
-    { "id": "tradeoff", "step": "State one tradeoff", "minutes": 2, "prompts": ["\"I chose X over Y because Z; I would revisit if W.\"", "Close with the next step: a proof of concept or a Well-Architected review."], "differentiator": true }
+    {
+      "id": "clarify",
+      "step": "Clarify requirements and constraints",
+      "minutes": 4,
+      "prompts": [
+        "Who are the users, and how many? Peak versus average traffic?",
+        "What data, how much, how sensitive? Any compliance (PCI, HIPAA, residency)?",
+        "Budget, timeline, and the team's skills. What does success look like?"
+      ]
+    },
+    {
+      "id": "simple",
+      "step": "Draw the simple version",
+      "minutes": 5,
+      "prompts": [
+        "One box per tier, request path left to right.",
+        "Say what each box does in one sentence."
+      ]
+    },
+    {
+      "id": "scale",
+      "step": "Scale it",
+      "minutes": 6,
+      "prompts": [
+        "Where is the first bottleneck? Stateless tiers scale out; state moves to managed stores.",
+        "Caching (CloudFront, ElastiCache), queues to absorb spikes, read replicas."
+      ]
+    },
+    {
+      "id": "reliable",
+      "step": "Make it reliable",
+      "minutes": 5,
+      "prompts": [
+        "Multi-AZ everywhere it matters. What happens when each box dies?",
+        "Retries with backoff, dead-letter queues, health checks, a DR tier tied to RPO and RTO."
+      ]
+    },
+    {
+      "id": "secure",
+      "step": "Secure it",
+      "minutes": 4,
+      "prompts": [
+        "Private subnets, least-privilege roles, encryption at rest (KMS) and in transit (TLS).",
+        "WAF at the edge, CloudTrail for audit, secrets in Secrets Manager."
+      ]
+    },
+    {
+      "id": "cost",
+      "step": "Cost it",
+      "minutes": 4,
+      "prompts": [
+        "What drives the bill? Right-size, Savings Plans for baseline, Spot or serverless for spikes.",
+        "Lifecycle rules for storage; state a rough cost direction, not a fake exact number."
+      ]
+    },
+    {
+      "id": "tradeoff",
+      "step": "State one tradeoff",
+      "minutes": 2,
+      "prompts": [
+        "\"I chose X over Y because Z; I would revisit if W.\"",
+        "Close with the next step: a proof of concept or a Well-Architected review."
+      ],
+      "differentiator": true
+    }
   ],
   "designs": [
     {
@@ -21,173 +88,1466 @@
       "title": "3-tier web app for a retailer with Black Friday spikes",
       "prompt": "A retailer's site slows down and sometimes fails on peak days like Black Friday. Design an AWS architecture that stays fast and up.",
       "story": "k8s-autoscaling",
-      "clarifying": ["How big is the spike versus a normal day, and is the date known in advance?", "Is the slowness in the web tier, the database, or checkout?", "Global or US-only users? Any PCI scope for payments?"],
-      "requirements": { "functional": ["Browse catalog, search, cart, checkout", "Product images and static assets"], "non_functional": ["Survive a known, many-times-normal spike", "Checkout must not lose orders", "Page loads fast for users across the country"] },
-      "components": [
-        { "name": "Route 53", "role": "DNS with health checks" },
-        { "name": "CloudFront + WAF", "role": "Caches images and pages at the edge, blocks bots" },
-        { "name": "S3", "role": "Product images and static assets" },
-        { "name": "ALB", "role": "Spreads traffic across AZs" },
-        { "name": "Auto Scaling group across 2+ AZs", "role": "Stateless web and app servers" },
-        { "name": "ElastiCache", "role": "Hot catalog reads and a session cache; durable carts remain in a database" },
-        { "name": "Aurora Multi-AZ + read replicas", "role": "Orders and catalog; replicas serve reads" },
-        { "name": "SQS", "role": "Buffers order processing so checkout accepts orders even when downstream is slow" }
+      "clarifying": [
+        "How big is the spike versus a normal day, and is the date known in advance?",
+        "Is the slowness in the web tier, the database, or checkout?",
+        "Global or US-only users? Any PCI scope for payments?"
       ],
-      "flow": ["User resolves the domain in Route 53 and hits CloudFront; cached images and pages return from the edge.", "Cache misses go to the ALB, then to app servers in an Auto Scaling group across 2 AZs.", "App servers read sessions and hot catalog data from ElastiCache, the rest from Aurora read replicas.", "Checkout commits the order and an outbox event in the same Aurora transaction. An outbox publisher retries delivery to SQS; idempotent workers track processed event IDs before fulfillment."],
-      "scale": ["Scheduled scaling to pre-warm before the known peak, plus target tracking on request count", "Cache aggressively at CloudFront and ElastiCache so the database sees a fraction of traffic", "Queue order fulfillment so spikes do not hit downstream systems directly"],
-      "security": ["WAF rate limits and bot control at CloudFront", "App and database in private subnets", "Use a tokenizing payment provider to reduce PCI scope; confirm remaining scope with the compliance owner"],
-      "cost": ["Savings Plans for the baseline fleet, On-Demand or Spot for the peak", "Scale back down after the event"],
+      "requirements": {
+        "functional": [
+          "Browse catalog, search, cart, checkout",
+          "Product images and static assets"
+        ],
+        "non_functional": [
+          "Survive a known, many-times-normal spike",
+          "Checkout must not lose orders",
+          "Page loads fast for users across the country"
+        ]
+      },
+      "components": [
+        {
+          "name": "Route 53",
+          "role": "DNS with health checks"
+        },
+        {
+          "name": "CloudFront + WAF",
+          "role": "Caches images and pages at the edge, blocks bots"
+        },
+        {
+          "name": "S3",
+          "role": "Product images and static assets"
+        },
+        {
+          "name": "ALB",
+          "role": "Spreads traffic across AZs"
+        },
+        {
+          "name": "Auto Scaling group across 2+ AZs",
+          "role": "Stateless web and app servers"
+        },
+        {
+          "name": "ElastiCache",
+          "role": "Hot catalog reads and a session cache; durable carts remain in a database"
+        },
+        {
+          "name": "Aurora Multi-AZ + read replicas",
+          "role": "Orders and catalog; replicas serve reads"
+        },
+        {
+          "name": "SQS",
+          "role": "Buffers order processing so checkout accepts orders even when downstream is slow"
+        }
+      ],
+      "flow": [
+        "User resolves the domain in Route 53 and hits CloudFront; cached images and pages return from the edge.",
+        "Cache misses go to the ALB, then to app servers in an Auto Scaling group across 2 AZs.",
+        "App servers read sessions and hot catalog data from ElastiCache, the rest from Aurora read replicas.",
+        "Checkout commits the order and an outbox event in the same Aurora transaction. An outbox publisher retries delivery to SQS; idempotent workers track processed event IDs before fulfillment."
+      ],
+      "scale": [
+        "Scheduled scaling to pre-warm before the known peak, plus target tracking on request count",
+        "Cache aggressively at CloudFront and ElastiCache so the database sees a fraction of traffic",
+        "Queue order fulfillment so spikes do not hit downstream systems directly"
+      ],
+      "security": [
+        "WAF rate limits and bot control at CloudFront",
+        "App and database in private subnets",
+        "Use a tokenizing payment provider to reduce PCI scope; confirm remaining scope with the compliance owner"
+      ],
+      "cost": [
+        "Savings Plans for the baseline fleet, On-Demand or Spot for the peak",
+        "Scale back down after the event"
+      ],
       "tradeoff": "Pre-warming with scheduled scaling costs money before the peak, but reactive scaling alone can lag a sudden spike. For a known date I pay for headroom; I would revisit if the spike were unpredictable.",
       "failure_modes": [
-        { "failure": "One AZ goes down", "mitigation": "ALB routes to healthy AZs; Aurora fails over to its standby" },
-        { "failure": "Database overloaded by reads", "mitigation": "Cache hits plus read replicas; protect writes" },
-        { "failure": "Fulfillment system slow", "mitigation": "SQS buffers orders; dead-letter queue catches poison messages" }
+        {
+          "failure": "One AZ goes down",
+          "mitigation": "ALB routes to healthy AZs; Aurora fails over to its standby"
+        },
+        {
+          "failure": "Database overloaded by reads",
+          "mitigation": "Cache hits plus read replicas; protect writes"
+        },
+        {
+          "failure": "Fulfillment system slow",
+          "mitigation": "SQS buffers orders; dead-letter queue catches poison messages"
+        }
       ],
-      "followups": ["How would you test this before Black Friday?", "What if traffic is 10x what they predicted?", "How do you keep sessions if an instance dies?"],
-      "diagram": "flowchart LR\n  U[\"Users\"] --> R53[\"Route 53\"] --> CF[\"CloudFront + WAF\"]\n  CF --> S3[\"S3 assets\"]\n  CF --> ALB[\"ALB\"] --> ASG[\"App servers, ASG over 2 AZs\"]\n  ASG --> EC[\"ElastiCache\"]\n  ASG --> AUR[\"Aurora Multi-AZ + replicas\"]\n  AUR --> OB[\"Transactional outbox publisher\"] --> Q[\"SQS orders\"] --> W[\"Idempotent fulfillment workers\"]"
+      "followups": [
+        "How would you test this before Black Friday?",
+        "What if traffic is 10x what they predicted?",
+        "How do you keep sessions if an instance dies?"
+      ],
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "groups": [
+          {
+            "label": "AWS Region",
+            "kind": "region",
+            "from": [
+              2,
+              0
+            ],
+            "to": [
+              4,
+              2
+            ]
+          },
+          {
+            "label": "Private subnets",
+            "kind": "private",
+            "from": [
+              3,
+              0
+            ],
+            "to": [
+              4,
+              1
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "users",
+            "label": "Users",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "r53",
+            "label": "Route 53",
+            "cat": "edge",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "cf",
+            "label": "CloudFront + WAF",
+            "cat": "edge",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "s3",
+            "label": "S3",
+            "sub": "images, assets",
+            "cat": "storage",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "alb",
+            "label": "ALB",
+            "cat": "edge",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "app",
+            "label": "App servers",
+            "sub": "ASG over 2 AZs",
+            "cat": "compute",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "cache",
+            "label": "ElastiCache",
+            "sub": "sessions, catalog",
+            "cat": "database",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "db",
+            "label": "Aurora",
+            "sub": "Multi-AZ, replicas",
+            "cat": "database",
+            "at": [
+              4,
+              1
+            ]
+          },
+          {
+            "id": "ob",
+            "label": "Outbox publisher",
+            "cat": "compute",
+            "at": [
+              4,
+              2
+            ]
+          },
+          {
+            "id": "q",
+            "label": "SQS orders",
+            "cat": "integration",
+            "at": [
+              3,
+              2
+            ]
+          },
+          {
+            "id": "w",
+            "label": "Fulfillment",
+            "sub": "idempotent workers",
+            "cat": "compute",
+            "at": [
+              2,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "users",
+            "to": "r53",
+            "label": "DNS",
+            "step": 1
+          },
+          {
+            "from": "users",
+            "to": "cf",
+            "label": "HTTPS",
+            "step": 1
+          },
+          {
+            "from": "cf",
+            "to": "s3",
+            "label": "cached",
+            "step": 1
+          },
+          {
+            "from": "cf",
+            "to": "alb",
+            "label": "miss",
+            "step": 2
+          },
+          {
+            "from": "alb",
+            "to": "app",
+            "label": "route",
+            "step": 2
+          },
+          {
+            "from": "app",
+            "to": "cache",
+            "label": "hot reads",
+            "step": 3
+          },
+          {
+            "from": "app",
+            "to": "db",
+            "label": "SQL",
+            "step": 3
+          },
+          {
+            "from": "db",
+            "to": "ob",
+            "label": "outbox",
+            "step": 4
+          },
+          {
+            "from": "ob",
+            "to": "q",
+            "label": "publish",
+            "step": 4
+          },
+          {
+            "from": "q",
+            "to": "w",
+            "label": "consume",
+            "step": 4
+          }
+        ]
+      }
     },
     {
       "id": "erp-migration",
       "title": "Migrate an on-prem ERP and financial system to AWS",
       "prompt": "A mid-size company runs its ERP and financial reporting on premises. Their data center lease ends in a year. Plan the move to AWS.",
       "story": "erp-hitl",
-      "clarifying": ["Which workloads, how many, and how coupled are they?", "Audit and compliance rules on financial data? Allowed downtime at cutover?", "Is the ERP vendor offering a SaaS version?"],
-      "requirements": { "functional": ["Every ERP workload moved or retired", "Financial reports reconcile before and after"], "non_functional": ["No data loss at cutover", "Audit trail preserved", "Rollback possible until sign-off"] },
-      "components": [
-        { "name": "AWS Transform / supported discovery tools", "role": "Inventory servers and dependencies; Application Discovery Service is closed to new customers, so confirm current tool availability" },
-        { "name": "Control Tower", "role": "Multi-account landing zone with guardrails and central logging" },
-        { "name": "Application Migration Service", "role": "Rehost servers that stay as they are" },
-        { "name": "DMS + Schema Conversion", "role": "Database migration with change data capture" },
-        { "name": "RDS or Aurora", "role": "Target managed database" },
-        { "name": "Direct Connect or Site-to-Site VPN", "role": "Hybrid network during the transition" },
-        { "name": "S3 + Athena", "role": "Archive and reconciliation queries" }
+      "clarifying": [
+        "Which workloads, how many, and how coupled are they?",
+        "Audit and compliance rules on financial data? Allowed downtime at cutover?",
+        "Is the ERP vendor offering a SaaS version?"
       ],
-      "flow": ["Discover: inventory every workload and map dependencies.", "Decide a 7 R per workload: retire, retain, rehost, relocate, repurchase, replatform, refactor.", "Build the landing zone with Control Tower; connect on-prem with VPN, then Direct Connect.", "Replicate databases with DMS change data capture; run parallel reconciliation reports.", "Rehearse cutover: stop or coordinate source writes, confirm replication catch-up and reconciliation, then switch one authoritative write path. Before accepting target writes, define how rollback will preserve them through supported reverse replication or reconciliation; do not blindly switch DNS back."],
-      "scale": ["Migrate in waves so the team learns on low-risk workloads first", "Automate repeatable steps for later waves"],
-      "security": ["Separate accounts for prod, non-prod, logging, security", "KMS encryption, CloudTrail organization trail, least-privilege roles"],
-      "cost": ["Retire unused workloads first; they are pure savings", "Right-size after a few weeks of real usage, then commit to Savings Plans"],
+      "requirements": {
+        "functional": [
+          "Every ERP workload moved or retired",
+          "Financial reports reconcile before and after"
+        ],
+        "non_functional": [
+          "No data loss at cutover",
+          "Audit trail preserved",
+          "Rollback possible until sign-off"
+        ]
+      },
+      "components": [
+        {
+          "name": "AWS Transform / supported discovery tools",
+          "role": "Inventory servers and dependencies; Application Discovery Service is closed to new customers, so confirm current tool availability"
+        },
+        {
+          "name": "Control Tower",
+          "role": "Multi-account landing zone with guardrails and central logging"
+        },
+        {
+          "name": "Application Migration Service",
+          "role": "Rehost servers that stay as they are"
+        },
+        {
+          "name": "DMS + Schema Conversion",
+          "role": "Database migration with change data capture"
+        },
+        {
+          "name": "RDS or Aurora",
+          "role": "Target managed database"
+        },
+        {
+          "name": "Direct Connect or Site-to-Site VPN",
+          "role": "Hybrid network during the transition"
+        },
+        {
+          "name": "S3 + Athena",
+          "role": "Archive and reconciliation queries"
+        }
+      ],
+      "flow": [
+        "Discover: inventory every workload and map dependencies.",
+        "Decide a 7 R per workload: retire, retain, rehost, relocate, repurchase, replatform, refactor.",
+        "Build the landing zone with Control Tower; connect on-prem with VPN, then Direct Connect.",
+        "Replicate databases with DMS change data capture; run parallel reconciliation reports.",
+        "Rehearse cutover: stop or coordinate source writes, confirm replication catch-up and reconciliation, then switch one authoritative write path. Before accepting target writes, define how rollback will preserve them through supported reverse replication or reconciliation; do not blindly switch DNS back."
+      ],
+      "scale": [
+        "Migrate in waves so the team learns on low-risk workloads first",
+        "Automate repeatable steps for later waves"
+      ],
+      "security": [
+        "Separate accounts for prod, non-prod, logging, security",
+        "KMS encryption, CloudTrail organization trail, least-privilege roles"
+      ],
+      "cost": [
+        "Retire unused workloads first; they are pure savings",
+        "Right-size after a few weeks of real usage, then commit to Savings Plans"
+      ],
       "tradeoff": "Rehost gets out of the data center fastest; replatform or repurchase saves more long term. I would rehost what blocks the exit date and modernize the rest after the move.",
       "failure_modes": [
-        { "failure": "Data drift between source and target", "mitigation": "DMS change data capture where supported plus automated reconciliation reports; use the actual S1 validation method only if confirmed" },
-        { "failure": "Hidden dependency breaks after cutover", "mitigation": "Dependency mapping up front, wave planning, rollback plan" },
-        { "failure": "Cutover runs over the window", "mitigation": "Rehearse the cutover; define go and no-go criteria" },
-        { "failure": "Rollback discards writes accepted on the target", "mitigation": "Fence target writes and reconcile or reverse-replicate them using a tested plan before resuming source writes; define the point of no automatic rollback." }
+        {
+          "failure": "Data drift between source and target",
+          "mitigation": "DMS change data capture where supported plus automated reconciliation reports; use the actual S1 validation method only if confirmed"
+        },
+        {
+          "failure": "Hidden dependency breaks after cutover",
+          "mitigation": "Dependency mapping up front, wave planning, rollback plan"
+        },
+        {
+          "failure": "Cutover runs over the window",
+          "mitigation": "Rehearse the cutover; define go and no-go criteria"
+        },
+        {
+          "failure": "Rollback discards writes accepted on the target",
+          "mitigation": "Fence target writes and reconcile or reverse-replicate them using a tested plan before resuming source writes; define the point of no automatic rollback."
+        }
       ],
-      "followups": ["Which 7 R would you pick for the ERP itself, and why?", "How do you prove the books still balance?", "What does rollback look like?"],
-      "diagram": "flowchart LR\n  ON[\"On-prem ERP + DB\"] -- \"VPN / Direct Connect\" --> LZ[\"Landing zone, Control Tower\"]\n  ON --> MGN[\"Application Migration Service\"] --> EC2[\"Rehosted servers\"]\n  ON --> DMS[\"DMS with CDC\"] --> RDS[\"RDS / Aurora\"]\n  RDS --> REC[\"Reconciliation reports, S3 + Athena\"]\n  LZ --> EC2\n  LZ --> RDS"
+      "followups": [
+        "Which 7 R would you pick for the ERP itself, and why?",
+        "How do you prove the books still balance?",
+        "What does rollback look like?"
+      ],
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "groups": [
+          {
+            "label": "Corporate data center",
+            "kind": "onprem",
+            "from": [
+              0,
+              0
+            ],
+            "to": [
+              0,
+              2
+            ]
+          },
+          {
+            "label": "AWS landing zone",
+            "kind": "region",
+            "from": [
+              2,
+              0
+            ],
+            "to": [
+              4,
+              2
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "onprem",
+            "label": "On-prem ERP",
+            "sub": "app servers, DB",
+            "cat": "external",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "vpn",
+            "label": "VPN, then DX",
+            "sub": "hybrid link",
+            "cat": "edge",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "hub",
+            "label": "Landing zone",
+            "sub": "Control Tower",
+            "cat": "mgmt",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "mgn",
+            "label": "MGN",
+            "sub": "server replication",
+            "cat": "compute",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "ec2",
+            "label": "Rehosted EC2",
+            "cat": "compute",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "dms",
+            "label": "DMS",
+            "sub": "full load + CDC",
+            "cat": "database",
+            "at": [
+              2,
+              2
+            ]
+          },
+          {
+            "id": "rds",
+            "label": "RDS or Aurora",
+            "cat": "database",
+            "at": [
+              3,
+              2
+            ]
+          },
+          {
+            "id": "rec",
+            "label": "Reconciliation",
+            "sub": "S3 + Athena",
+            "cat": "analytics",
+            "at": [
+              4,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "onprem",
+            "to": "vpn",
+            "label": "link",
+            "step": 3
+          },
+          {
+            "from": "vpn",
+            "to": "hub",
+            "label": "routes",
+            "step": 3
+          },
+          {
+            "from": "onprem",
+            "to": "mgn",
+            "label": "replicate",
+            "step": 4,
+            "route": "vh"
+          },
+          {
+            "from": "onprem",
+            "to": "dms",
+            "label": "CDC",
+            "step": 4,
+            "route": "vh"
+          },
+          {
+            "from": "mgn",
+            "to": "ec2",
+            "label": "launch",
+            "step": 4
+          },
+          {
+            "from": "dms",
+            "to": "rds",
+            "label": "apply",
+            "step": 4
+          },
+          {
+            "from": "rds",
+            "to": "rec",
+            "label": "reports",
+            "step": 4
+          }
+        ],
+        "focus": [
+          [
+            "onprem"
+          ],
+          [
+            "onprem",
+            "ec2",
+            "rds"
+          ],
+          [],
+          [],
+          [
+            "onprem",
+            "rds",
+            "ec2"
+          ]
+        ]
+      }
     },
     {
       "id": "doc-pipeline",
       "title": "Serverless document processing pipeline",
       "prompt": "An insurance company receives thousands of claim documents a day as PDFs. Extract the data, summarize each claim, and route uncertain ones to a person.",
       "story": "erp-hitl",
-      "clarifying": ["Volume per day and peak per hour? Document types and quality?", "How fast must a claim be processed? What accuracy is acceptable?", "PII and retention rules?"],
-      "requirements": { "functional": ["Upload documents", "Extract fields and tables", "Summarize", "Human review for low confidence", "Searchable results"], "non_functional": ["Scales with bursts", "No document lost", "PII protected", "Pay per document, not per idle server"] },
-      "components": [
-        { "name": "S3", "role": "Upload bucket, triggers processing" },
-        { "name": "EventBridge", "role": "Routes the object-created event" },
-        { "name": "Step Functions", "role": "Orchestrates steps with retries" },
-        { "name": "Textract", "role": "Extracts text, forms, tables" },
-        { "name": "Bedrock", "role": "Summarizes and classifies the claim" },
-        { "name": "A2I or a task-token review queue", "role": "Human review below the confidence threshold" },
-        { "name": "DynamoDB", "role": "Results and status per document" }
+      "clarifying": [
+        "Volume per day and peak per hour? Document types and quality?",
+        "How fast must a claim be processed? What accuracy is acceptable?",
+        "PII and retention rules?"
       ],
-      "flow": ["A document lands in S3; EventBridge starts a Step Functions execution.", "Textract extracts fields; Bedrock summarizes. Compute a calibrated review score from extraction confidence, schema and reconciliation checks, and a labeled evaluation set; model self-confidence alone is insufficient.", "Above the threshold, results go straight to DynamoDB.", "Below it, the workflow pauses for a human reviewer, then writes the corrected result."],
-      "scale": ["Managed steps scale within quotas; cap concurrency, monitor throttling, and provide backpressure", "Use Textract asynchronous APIs for multi-page documents", "Queue in front of Bedrock calls if model quotas are the limit"],
-      "security": ["S3 encryption with KMS, block public access", "Macie can discover sensitive S3 data; Guardrails can filter or mask detected PII but are not a complete DLP or authorization boundary", "Least-privilege role per step"],
-      "cost": ["Pay per document and per token; no idle servers", "Lifecycle old documents to Glacier"],
+      "requirements": {
+        "functional": [
+          "Upload documents",
+          "Extract fields and tables",
+          "Summarize",
+          "Human review for low confidence",
+          "Searchable results"
+        ],
+        "non_functional": [
+          "Scales with bursts",
+          "No document lost",
+          "PII protected",
+          "Pay per document, not per idle server"
+        ]
+      },
+      "components": [
+        {
+          "name": "S3",
+          "role": "Upload bucket, triggers processing"
+        },
+        {
+          "name": "EventBridge",
+          "role": "Routes the object-created event"
+        },
+        {
+          "name": "Step Functions",
+          "role": "Orchestrates steps with retries"
+        },
+        {
+          "name": "Textract",
+          "role": "Extracts text, forms, tables"
+        },
+        {
+          "name": "Bedrock",
+          "role": "Summarizes and classifies the claim"
+        },
+        {
+          "name": "A2I or a task-token review queue",
+          "role": "Human review below the confidence threshold"
+        },
+        {
+          "name": "DynamoDB",
+          "role": "Results and status per document"
+        }
+      ],
+      "flow": [
+        "A document lands in S3; EventBridge starts a Step Functions execution.",
+        "Textract extracts fields; Bedrock summarizes. Compute a calibrated review score from extraction confidence, schema and reconciliation checks, and a labeled evaluation set; model self-confidence alone is insufficient.",
+        "Above the threshold, results go straight to DynamoDB.",
+        "Below it, the workflow pauses for a human reviewer, then writes the corrected result."
+      ],
+      "scale": [
+        "Managed steps scale within quotas; cap concurrency, monitor throttling, and provide backpressure",
+        "Use Textract asynchronous APIs for multi-page documents",
+        "Queue in front of Bedrock calls if model quotas are the limit"
+      ],
+      "security": [
+        "S3 encryption with KMS, block public access",
+        "Macie can discover sensitive S3 data; Guardrails can filter or mask detected PII but are not a complete DLP or authorization boundary",
+        "Least-privilege role per step"
+      ],
+      "cost": [
+        "Pay per document and per token; no idle servers",
+        "Lifecycle old documents to Glacier"
+      ],
       "tradeoff": "A lower review threshold reduces review cost but can increase incorrect automatic approvals. Start with conservative thresholds, then adjust using labeled accuracy, financial reconciliation, and reviewer corrections. This is a hypothetical AWS design; use S1 only for experience you can verify.",
       "failure_modes": [
-        { "failure": "Textract or Bedrock throttles", "mitigation": "Step Functions retries with backoff; request quota increases ahead of time" },
-        { "failure": "Bad or unreadable scan", "mitigation": "Route to human review instead of guessing" },
-        { "failure": "Duplicate events", "mitigation": "Idempotency key per document in DynamoDB" }
+        {
+          "failure": "Textract or Bedrock throttles",
+          "mitigation": "Step Functions retries with backoff; request quota increases ahead of time"
+        },
+        {
+          "failure": "Bad or unreadable scan",
+          "mitigation": "Route to human review instead of guessing"
+        },
+        {
+          "failure": "Duplicate events",
+          "mitigation": "Idempotency key per document in DynamoDB"
+        }
       ],
-      "followups": ["How do you measure extraction accuracy?", "What happens at 10x volume?", "How do you keep PII out of model logs?"],
-      "diagram": "flowchart LR\n  UP[\"Upload\"] --> S3[\"S3\"] --> EB[\"EventBridge\"] --> SF[\"Step Functions\"]\n  SF --> TX[\"Textract\"]\n  SF --> BR[\"Summary + calibrated checks\"]\n  BR -- \"high\" --> DDB[\"DynamoDB results\"]\n  BR -- \"low\" --> HR[\"Human review\"] --> DDB"
+      "followups": [
+        "How do you measure extraction accuracy?",
+        "What happens at 10x volume?",
+        "How do you keep PII out of model logs?"
+      ],
+      "diagram": {
+        "cols": 6,
+        "rows": 3,
+        "nodes": [
+          {
+            "id": "up",
+            "label": "Upload",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "s3",
+            "label": "S3",
+            "sub": "documents",
+            "cat": "storage",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "eb",
+            "label": "EventBridge",
+            "cat": "integration",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "sf",
+            "label": "Step Functions",
+            "cat": "integration",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "tx",
+            "label": "Textract",
+            "sub": "extract fields",
+            "cat": "ml",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "br",
+            "label": "Bedrock",
+            "sub": "summary",
+            "cat": "ml",
+            "at": [
+              3,
+              2
+            ]
+          },
+          {
+            "id": "score",
+            "label": "Review score",
+            "sub": "calibrated checks",
+            "cat": "compute",
+            "at": [
+              4,
+              1
+            ]
+          },
+          {
+            "id": "ddb",
+            "label": "DynamoDB",
+            "sub": "results",
+            "cat": "database",
+            "at": [
+              5,
+              1
+            ]
+          },
+          {
+            "id": "hr",
+            "label": "Human review",
+            "sub": "task token wait",
+            "cat": "client",
+            "at": [
+              4,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "up",
+            "to": "s3",
+            "label": "upload",
+            "step": 1
+          },
+          {
+            "from": "s3",
+            "to": "eb",
+            "label": "event",
+            "step": 1
+          },
+          {
+            "from": "eb",
+            "to": "sf",
+            "label": "start",
+            "step": 1
+          },
+          {
+            "from": "sf",
+            "to": "tx",
+            "label": "extract",
+            "step": 2
+          },
+          {
+            "from": "sf",
+            "to": "br",
+            "label": "summary",
+            "step": 2
+          },
+          {
+            "from": "sf",
+            "to": "score",
+            "label": "score",
+            "step": 2
+          },
+          {
+            "from": "score",
+            "to": "ddb",
+            "label": "high",
+            "step": 3
+          },
+          {
+            "from": "score",
+            "to": "hr",
+            "label": "low",
+            "step": 4
+          },
+          {
+            "from": "hr",
+            "to": "ddb",
+            "label": "corrected",
+            "step": 4
+          }
+        ]
+      }
     },
     {
       "id": "rag-chatbot",
       "title": "GenAI chatbot over company docs (RAG)",
       "prompt": "A company wants an internal assistant that answers employee questions from its policies and wikis, with sources. Design it on AWS.",
       "story": "pacsun-exec",
-      "clarifying": ["How many documents, where do they live, how often do they change?", "Who may see which documents? Any data that must never reach the model?", "How will we know answers are good enough to launch?"],
-      "requirements": { "functional": ["Ask questions in natural language", "Answers cite sources", "Respect document permissions"], "non_functional": ["Low hallucination rate on an evaluation set", "Only authenticated employees", "Reasonable cost per question"] },
-      "components": [
-        { "name": "S3", "role": "Source documents" },
-        { "name": "Bedrock Knowledge Base", "role": "Chunking, embeddings, retrieval" },
-        { "name": "Vector store (OpenSearch Serverless)", "role": "Stores embeddings for similarity search" },
-        { "name": "Bedrock model + Guardrails", "role": "Generates grounded answers; filters PII and off-topic requests" },
-        { "name": "API Gateway + Lambda", "role": "Chat API" },
-        { "name": "Cognito or Identity Center", "role": "Employee sign-in" }
+      "clarifying": [
+        "How many documents, where do they live, how often do they change?",
+        "Who may see which documents? Any data that must never reach the model?",
+        "How will we know answers are good enough to launch?"
       ],
-      "flow": ["Documents in S3 sync into the Knowledge Base, which chunks and embeds them into the vector store.", "An employee signs in and asks a question through API Gateway and Lambda.", "Lambda derives document entitlements from trusted authenticated identity server-side and enforces metadata filters on every retrieval. Never accept tenant IDs or permission filters supplied by the client as authority.", "The model answers from those chunks with citations; Guardrails check input and output."],
-      "scale": ["Serverless API and vector store scale with use", "Cache only with identity or authorization scope, tenant, document version, and permission version in the key; invalidate on revocation or avoid caching sensitive answers", "Use a smaller model where evaluation shows it is good enough"],
-      "security": ["Enforce filters server-side from trusted identity; restrict direct Knowledge Base access so clients cannot bypass the application authorization layer. Fail closed when entitlements are missing.", "Guardrails can filter PII and denied topics; they are not authorization or document access control. Bedrock Knowledge Base Guardrails do not apply to retrieved references, so references need separate permission checks", "Verify model-specific terms, retention mode, invocation logs, and regional or cross-Region inference configuration; do not promise all data stays in the customer account or source Region"],
-      "cost": ["Cost per question is mostly tokens: keep retrieved context tight", "Pick the smallest model that passes the evaluation set"],
+      "requirements": {
+        "functional": [
+          "Ask questions in natural language",
+          "Answers cite sources",
+          "Respect document permissions"
+        ],
+        "non_functional": [
+          "Low hallucination rate on an evaluation set",
+          "Only authenticated employees",
+          "Reasonable cost per question"
+        ]
+      },
+      "components": [
+        {
+          "name": "S3",
+          "role": "Source documents"
+        },
+        {
+          "name": "Bedrock Knowledge Base",
+          "role": "Chunking, embeddings, retrieval"
+        },
+        {
+          "name": "Vector store (OpenSearch Serverless)",
+          "role": "Stores embeddings for similarity search"
+        },
+        {
+          "name": "Bedrock model + Guardrails",
+          "role": "Generates grounded answers; filters PII and off-topic requests"
+        },
+        {
+          "name": "API Gateway + Lambda",
+          "role": "Chat API"
+        },
+        {
+          "name": "Cognito or Identity Center",
+          "role": "Employee sign-in"
+        }
+      ],
+      "flow": [
+        "Documents in S3 sync into the Knowledge Base, which chunks and embeds them into the vector store.",
+        "An employee signs in and asks a question through API Gateway and Lambda.",
+        "Lambda derives document entitlements from trusted authenticated identity server-side and enforces metadata filters on every retrieval. Never accept tenant IDs or permission filters supplied by the client as authority.",
+        "The model answers from those chunks with citations; Guardrails check input and output."
+      ],
+      "scale": [
+        "Serverless API and vector store scale with use",
+        "Cache only with identity or authorization scope, tenant, document version, and permission version in the key; invalidate on revocation or avoid caching sensitive answers",
+        "Use a smaller model where evaluation shows it is good enough"
+      ],
+      "security": [
+        "Enforce filters server-side from trusted identity; restrict direct Knowledge Base access so clients cannot bypass the application authorization layer. Fail closed when entitlements are missing.",
+        "Guardrails can filter PII and denied topics; they are not authorization or document access control. Bedrock Knowledge Base Guardrails do not apply to retrieved references, so references need separate permission checks",
+        "Verify model-specific terms, retention mode, invocation logs, and regional or cross-Region inference configuration; do not promise all data stays in the customer account or source Region"
+      ],
+      "cost": [
+        "Cost per question is mostly tokens: keep retrieved context tight",
+        "Pick the smallest model that passes the evaluation set"
+      ],
       "tradeoff": "A larger model answers better but costs more per question. I would build an evaluation set first, try the smallest model, and only move up when it fails, the same reasoning as my ModelScope study.",
       "failure_modes": [
-        { "failure": "Confident wrong answer", "mitigation": "Require citations; grounding checks; say \"I don't know\" when retrieval is weak" },
-        { "failure": "Stale documents", "mitigation": "Scheduled or event-driven sync from S3" },
-        { "failure": "User sees a document they should not", "mitigation": "Server-side entitlement filters, source-link authorization, adversarial cross-user tests, cache isolation, and immediate revocation handling" }
+        {
+          "failure": "Confident wrong answer",
+          "mitigation": "Require citations; grounding checks; say \"I don't know\" when retrieval is weak"
+        },
+        {
+          "failure": "Stale documents",
+          "mitigation": "Scheduled or event-driven sync from S3"
+        },
+        {
+          "failure": "User sees a document they should not",
+          "mitigation": "Server-side entitlement filters, source-link authorization, adversarial cross-user tests, cache isolation, and immediate revocation handling"
+        }
       ],
-      "followups": ["How do you evaluate answer quality before launch?", "RAG or fine-tuning, and why?", "How do you handle a question that needs live data from a system?"],
-      "diagram": "flowchart LR\n  DOC[\"S3 docs\"] --> KB[\"Bedrock Knowledge Base\"] --> VS[\"Vector store\"]\n  EMP[\"Employee\"] --> AUTH[\"Cognito / Identity Center\"] --> API[\"API Gateway + Lambda\"]\n  API --> KB\n  API --> LLM[\"Bedrock model + Guardrails\"]\n  VS --> LLM"
+      "followups": [
+        "How do you evaluate answer quality before launch?",
+        "RAG or fine-tuning, and why?",
+        "How do you handle a question that needs live data from a system?"
+      ],
+      "diagram": {
+        "cols": 4,
+        "rows": 2,
+        "nodes": [
+          {
+            "id": "docs",
+            "label": "S3 docs",
+            "cat": "storage",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "kb",
+            "label": "Knowledge Base",
+            "sub": "chunk, embed",
+            "cat": "ml",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "vs",
+            "label": "Vector store",
+            "sub": "filtered search",
+            "cat": "database",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "emp",
+            "label": "Employee",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "idp",
+            "label": "Identity Center",
+            "sub": "or Cognito",
+            "cat": "security",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "api",
+            "label": "API GW + Lambda",
+            "sub": "entitlements",
+            "cat": "compute",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "llm",
+            "label": "Bedrock model",
+            "sub": "Guardrails, cites",
+            "cat": "ml",
+            "at": [
+              3,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "docs",
+            "to": "kb",
+            "label": "sync",
+            "step": 1
+          },
+          {
+            "from": "kb",
+            "to": "vs",
+            "label": "embed",
+            "step": 1
+          },
+          {
+            "from": "emp",
+            "to": "idp",
+            "label": "sign in",
+            "step": 2
+          },
+          {
+            "from": "idp",
+            "to": "api",
+            "label": "token",
+            "step": 2
+          },
+          {
+            "from": "api",
+            "to": "kb",
+            "label": "retrieve",
+            "step": 3
+          },
+          {
+            "from": "api",
+            "to": "llm",
+            "label": "prompt",
+            "step": 4
+          }
+        ]
+      }
     },
     {
       "id": "clickstream",
       "title": "Real-time clickstream analytics",
       "prompt": "A media company wants to see what users click in near real time and analyze history for trends. Design the pipeline.",
       "story": "databricks-feed",
-      "clarifying": ["Events per second at peak? How fresh must dashboards be: seconds or minutes?", "How long to keep raw history?", "Who queries it and how often?"],
-      "requirements": { "functional": ["Collect click events from web and apps", "Near real-time dashboard", "Historical queries"], "non_functional": ["Handles bursts without losing events", "Cheap long-term storage", "Schema can evolve"] },
-      "components": [
-        { "name": "Kinesis Data Streams", "role": "Ingests events, ordered per shard, replayable" },
-        { "name": "Data Firehose", "role": "Batches and writes events to S3 in Parquet" },
-        { "name": "S3", "role": "Data lake, partitioned by date" },
-        { "name": "Glue", "role": "Data Catalog and ETL" },
-        { "name": "Athena", "role": "SQL on the lake" },
-        { "name": "QuickSight", "role": "Dashboards" }
+      "clarifying": [
+        "Events per second at peak? How fresh must dashboards be: seconds or minutes?",
+        "How long to keep raw history?",
+        "Who queries it and how often?"
       ],
-      "flow": ["Apps send events to Kinesis Data Streams.", "A real-time consumer updates live metrics; Firehose batches the same stream into S3 as Parquet.", "Glue catalogs the data; Athena queries it; QuickSight shows dashboards."],
-      "scale": ["Add shards or use on-demand capacity mode", "Partition S3 by date and use columnar Parquet so Athena scans less"],
-      "security": ["Encrypt streams and buckets with KMS", "Lake Formation for column-level access to user data"],
-      "cost": ["Athena charges per data scanned: partitions and Parquet cut it", "Lifecycle raw data to cheaper tiers"],
+      "requirements": {
+        "functional": [
+          "Collect click events from web and apps",
+          "Near real-time dashboard",
+          "Historical queries"
+        ],
+        "non_functional": [
+          "Handles bursts without losing events",
+          "Cheap long-term storage",
+          "Schema can evolve"
+        ]
+      },
+      "components": [
+        {
+          "name": "Kinesis Data Streams",
+          "role": "Ingests events, ordered per shard, replayable"
+        },
+        {
+          "name": "Data Firehose",
+          "role": "Batches and writes events to S3 in Parquet"
+        },
+        {
+          "name": "S3",
+          "role": "Data lake, partitioned by date"
+        },
+        {
+          "name": "Glue",
+          "role": "Data Catalog and ETL"
+        },
+        {
+          "name": "Athena",
+          "role": "SQL on the lake"
+        },
+        {
+          "name": "QuickSight",
+          "role": "Dashboards"
+        }
+      ],
+      "flow": [
+        "Apps send events to Kinesis Data Streams.",
+        "A real-time consumer updates live metrics; Firehose batches the same stream into S3 as Parquet.",
+        "Glue catalogs the data; Athena queries it; QuickSight shows dashboards."
+      ],
+      "scale": [
+        "Add shards or use on-demand capacity mode",
+        "Partition S3 by date and use columnar Parquet so Athena scans less"
+      ],
+      "security": [
+        "Encrypt streams and buckets with KMS",
+        "Lake Formation for column-level access to user data"
+      ],
+      "cost": [
+        "Athena charges per data scanned: partitions and Parquet cut it",
+        "Lifecycle raw data to cheaper tiers"
+      ],
       "tradeoff": "Firehose delivery latency depends on destination, buffering, transforms and partitioning. Supported zero-buffering configurations can deliver within seconds, while dynamic partitioning does not support zero buffering. Use a stream consumer when processing semantics or tighter latency require it; measure end-to-end freshness.",
       "failure_modes": [
-        { "failure": "Hot shard from one popular key", "mitigation": "Better partition key or random suffix" },
-        { "failure": "Bad event schema", "mitigation": "Validate at ingest; send bad records to an error prefix" },
-        { "failure": "Consumer falls behind", "mitigation": "Monitor iterator age; scale consumers" },
-        { "failure": "Duplicate or late events inflate metrics", "mitigation": "Use stable event IDs, define deduplication scope and event-time windows, and publish corrections for late arrivals; a random partition suffix can change per-key ordering." }
+        {
+          "failure": "Hot shard from one popular key",
+          "mitigation": "Better partition key or random suffix"
+        },
+        {
+          "failure": "Bad event schema",
+          "mitigation": "Validate at ingest; send bad records to an error prefix"
+        },
+        {
+          "failure": "Consumer falls behind",
+          "mitigation": "Monitor iterator age; scale consumers"
+        },
+        {
+          "failure": "Duplicate or late events inflate metrics",
+          "mitigation": "Use stable event IDs, define deduplication scope and event-time windows, and publish corrections for late arrivals; a random partition suffix can change per-key ordering."
+        }
       ],
-      "followups": ["Kinesis or MSK, and why?", "How do you handle late-arriving events?", "What would you change at 10x volume?"],
-      "diagram": "flowchart LR\n  APP[\"Web and apps\"] --> KDS[\"Kinesis Data Streams\"]\n  KDS --> RT[\"Real-time consumer\"] --> DASH[\"Live metrics\"]\n  KDS --> FH[\"Data Firehose\"] --> S3[\"S3 Parquet lake\"]\n  S3 --> GL[\"Glue Catalog\"] --> ATH[\"Athena\"] --> QS[\"QuickSight\"]"
+      "followups": [
+        "Kinesis or MSK, and why?",
+        "How do you handle late-arriving events?",
+        "What would you change at 10x volume?"
+      ],
+      "diagram": {
+        "cols": 5,
+        "rows": 2,
+        "nodes": [
+          {
+            "id": "apps",
+            "label": "Web and apps",
+            "cat": "client",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "kds",
+            "label": "Kinesis Streams",
+            "sub": "ordered, replay",
+            "cat": "analytics",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "rt",
+            "label": "Consumer",
+            "sub": "Lambda or Flink",
+            "cat": "compute",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "live",
+            "label": "Live metrics",
+            "cat": "analytics",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "fh",
+            "label": "Data Firehose",
+            "sub": "batch to Parquet",
+            "cat": "analytics",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "s3",
+            "label": "S3 data lake",
+            "cat": "storage",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "glue",
+            "label": "Glue Catalog",
+            "cat": "analytics",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "ath",
+            "label": "Athena",
+            "sub": "QuickSight on top",
+            "cat": "analytics",
+            "at": [
+              4,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "apps",
+            "to": "kds",
+            "label": "events",
+            "step": 1
+          },
+          {
+            "from": "kds",
+            "to": "rt",
+            "label": "read",
+            "step": 2
+          },
+          {
+            "from": "rt",
+            "to": "live",
+            "label": "update",
+            "step": 2
+          },
+          {
+            "from": "kds",
+            "to": "fh",
+            "label": "deliver",
+            "step": 2
+          },
+          {
+            "from": "fh",
+            "to": "s3",
+            "label": "Parquet",
+            "step": 2
+          },
+          {
+            "from": "s3",
+            "to": "glue",
+            "label": "catalog",
+            "step": 3
+          },
+          {
+            "from": "glue",
+            "to": "ath",
+            "label": "query",
+            "step": 3
+          }
+        ]
+      }
     },
     {
       "id": "multi-region-dr",
       "title": "Multi-region DR for a payments app",
       "prompt": "A payments company runs in one Region. Regulators and customers want it to survive a full Region outage. Design the DR approach.",
       "story": "p1-mttr",
-      "clarifying": ["What RPO and RTO does the business need, in minutes?", "Which flows must survive: payments only, or reporting too?", "Any data residency rules that limit which Regions?"],
-      "requirements": { "functional": ["Accept and record payments", "Fail over to a second Region"], "non_functional": ["Explicit RPO and RTO", "No double-charging", "Tested failover"] },
-      "components": [
-        { "name": "Route 53 failover routing + health checks", "role": "Moves traffic to the healthy Region" },
-        { "name": "Aurora Global Database", "role": "Single primary writer with asynchronous cross-Region replication; explicitly promote a secondary during controlled failover" },
-        { "name": "Aurora payment ledger + payment-provider idempotency", "role": "Unique request key in the writer transaction; stable provider key across retries; reconcile ambiguous outcomes" },
-        { "name": "Application stack in both Regions", "role": "Warm standby built with IaC; active application tiers may still depend on a single database writer" },
-        { "name": "AWS Backup", "role": "Point-in-time backups, cross-Region copies" }
+      "clarifying": [
+        "What RPO and RTO does the business need, in minutes?",
+        "Which flows must survive: payments only, or reporting too?",
+        "Any data residency rules that limit which Regions?"
       ],
-      "flow": ["Agree business RPO and RTO, then test a warm-standby design; do not infer a guaranteed recovery time from the tier name.", "Primary Region serves traffic; Aurora Global Database replicates to the secondary.", "A failover runbook fences the old writer, assesses replication lag and data-loss approval, promotes the secondary, and switches traffic. DNS caches and client connections affect recovery.", "Use the same payment-provider idempotency key across retries; atomically record request state in the single-writer ledger. Reconcile unknown provider outcomes before retrying. Eventually consistent global tables alone cannot provide globally atomic payment deduplication."],
-      "scale": ["Warm standby runs small and scales up on failover", "Active application tiers reduce scale-up work but add capacity and consistency costs; Aurora Global Database still has one primary writer"],
-      "security": ["KMS keys in both Regions", "Same IAM and guardrails deployed by IaC in both"],
-      "cost": ["Each tier up the DR ladder costs more: match it to the business RPO and RTO, not to fear"],
+      "requirements": {
+        "functional": [
+          "Accept and record payments",
+          "Fail over to a second Region"
+        ],
+        "non_functional": [
+          "Explicit RPO and RTO",
+          "No double-charging",
+          "Tested failover"
+        ]
+      },
+      "components": [
+        {
+          "name": "Route 53 failover routing + health checks",
+          "role": "Moves traffic to the healthy Region"
+        },
+        {
+          "name": "Aurora Global Database",
+          "role": "Single primary writer with asynchronous cross-Region replication; explicitly promote a secondary during controlled failover"
+        },
+        {
+          "name": "Aurora payment ledger + payment-provider idempotency",
+          "role": "Unique request key in the writer transaction; stable provider key across retries; reconcile ambiguous outcomes"
+        },
+        {
+          "name": "Application stack in both Regions",
+          "role": "Warm standby built with IaC; active application tiers may still depend on a single database writer"
+        },
+        {
+          "name": "AWS Backup",
+          "role": "Point-in-time backups, cross-Region copies"
+        }
+      ],
+      "flow": [
+        "Agree business RPO and RTO, then test a warm-standby design; do not infer a guaranteed recovery time from the tier name.",
+        "Primary Region serves traffic; Aurora Global Database replicates to the secondary.",
+        "A failover runbook fences the old writer, assesses replication lag and data-loss approval, promotes the secondary, and switches traffic. DNS caches and client connections affect recovery.",
+        "Use the same payment-provider idempotency key across retries; atomically record request state in the single-writer ledger. Reconcile unknown provider outcomes before retrying. Eventually consistent global tables alone cannot provide globally atomic payment deduplication."
+      ],
+      "scale": [
+        "Warm standby runs small and scales up on failover",
+        "Active application tiers reduce scale-up work but add capacity and consistency costs; Aurora Global Database still has one primary writer"
+      ],
+      "security": [
+        "KMS keys in both Regions",
+        "Same IAM and guardrails deployed by IaC in both"
+      ],
+      "cost": [
+        "Each tier up the DR ladder costs more: match it to the business RPO and RTO, not to fear"
+      ],
       "tradeoff": "Warm standby costs less than fully active capacity but needs promotion and scale-up. I would measure recovery in drills, fence the old writer, and reconcile the ledger with the provider. Active application tiers do not make Aurora Global Database multi-writer or guarantee zero downtime.",
       "failure_modes": [
-        { "failure": "Failover never tested", "mitigation": "Scheduled game days that actually fail over" },
-        { "failure": "Replication lag loses recent payments", "mitigation": "Monitor lag against RPO; reconcile after failover" },
-        { "failure": "Split brain: both Regions accept writes", "mitigation": "Fence the old writer before promotion; one authority accepts payment writes, using stable provider keys and reconciliation" }
+        {
+          "failure": "Failover never tested",
+          "mitigation": "Scheduled game days that actually fail over"
+        },
+        {
+          "failure": "Replication lag loses recent payments",
+          "mitigation": "Monitor lag against RPO; reconcile after failover"
+        },
+        {
+          "failure": "Split brain: both Regions accept writes",
+          "mitigation": "Fence the old writer before promotion; one authority accepts payment writes, using stable provider keys and reconciliation"
+        }
       ],
-      "followups": ["What RPO and RTO would you propose, and how do you prove them?", "How do you fail back?", "What does this cost compared with today?"],
-      "diagram": "flowchart LR\n  U[\"Clients\"] --> R53[\"Route 53 failover\"]\n  R53 --> P[\"Primary Region app\"]\n  R53 -. \"on failure\" .-> S[\"Secondary Region app\"]\n  P --> AP[\"Aurora primary\"]\n  S --> AS[\"Aurora secondary\"]\n  AP -- \"Global Database replication\" --> AS\n  P --> PP[\"Payment provider: stable idempotency key\"]\n  S --> PP"
+      "followups": [
+        "What RPO and RTO would you propose, and how do you prove them?",
+        "How do you fail back?",
+        "What does this cost compared with today?"
+      ],
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "groups": [
+          {
+            "label": "Primary Region",
+            "kind": "region",
+            "from": [
+              2,
+              0
+            ],
+            "to": [
+              3,
+              0
+            ]
+          },
+          {
+            "label": "Secondary Region",
+            "kind": "region",
+            "from": [
+              2,
+              2
+            ],
+            "to": [
+              3,
+              2
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "clients",
+            "label": "Clients",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "r53",
+            "label": "Route 53",
+            "sub": "failover routing",
+            "cat": "edge",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "papp",
+            "label": "Primary app",
+            "cat": "compute",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "pdb",
+            "label": "Aurora writer",
+            "cat": "database",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "sapp",
+            "label": "Standby app",
+            "sub": "warm standby",
+            "cat": "compute",
+            "at": [
+              2,
+              2
+            ]
+          },
+          {
+            "id": "sdb",
+            "label": "Aurora replica",
+            "sub": "Global Database",
+            "cat": "database",
+            "at": [
+              3,
+              2
+            ]
+          },
+          {
+            "id": "pay",
+            "label": "Payment provider",
+            "cat": "external",
+            "at": [
+              4,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "clients",
+            "to": "r53",
+            "label": "DNS",
+            "step": 2
+          },
+          {
+            "from": "r53",
+            "to": "papp",
+            "label": "normal",
+            "step": 2
+          },
+          {
+            "from": "papp",
+            "to": "pdb",
+            "label": "writes",
+            "step": 2
+          },
+          {
+            "from": "pdb",
+            "to": "sdb",
+            "label": "replicate",
+            "step": 2
+          },
+          {
+            "from": "r53",
+            "to": "sapp",
+            "label": "failover",
+            "step": 3,
+            "dashed": true
+          },
+          {
+            "from": "sapp",
+            "to": "sdb",
+            "label": "promoted",
+            "step": 3
+          },
+          {
+            "from": "papp",
+            "to": "pay",
+            "label": "charge",
+            "step": 4,
+            "route": "vh"
+          },
+          {
+            "from": "sapp",
+            "to": "pay",
+            "step": 4,
+            "route": "vh"
+          }
+        ],
+        "focus": [
+          [
+            "papp",
+            "sapp"
+          ],
+          [],
+          [],
+          [
+            "pay"
+          ]
+        ]
+      }
     }
   ]
 }

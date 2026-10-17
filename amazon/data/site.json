@@ -39,6 +39,15 @@
       "lede": "A prioritized two-week guide: core services, common comparison traps, customer scenarios, and practice drills."
     },
     {
+      "id": "architecture",
+      "href": "architecture.html",
+      "label": "AWS architectures",
+      "prompt": "REQUIREMENTS, DIAGRAMS, TRADEOFFS",
+      "title": "Architectures you",
+      "accent": "can draw",
+      "lede": "Eight reference architectures you can trace step by step, a requirement-to-service guide, service comparisons, and the checklist to close every design."
+    },
+    {
       "id": "aws",
       "href": "aws.html",
       "label": "AWS glossary",

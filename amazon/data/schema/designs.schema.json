@@ -28,7 +28,7 @@
           "tradeoff": { "$ref": "common.schema.json#/$defs/text" },
           "failure_modes": { "type": "array", "items": { "type": "object", "required": ["failure", "mitigation"] } },
           "followups": { "$ref": "common.schema.json#/$defs/textList" },
-          "diagram": { "$ref": "common.schema.json#/$defs/mermaid" }
+          "diagram": { "$ref": "common.schema.json#/$defs/diagram" }
         }
       }
     }

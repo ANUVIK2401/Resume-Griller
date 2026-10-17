@@ -11,7 +11,7 @@
 ---
 
 ## A. Openers (have crisp answers)
-1. **Tell me about yourself (60 sec).** Oracle, July 2022 to January 2025 (about 2.5 years), 37,000+ tenants, MTTR 94 to 26 min. Then forward-deployed at MSRcosmos: customer-facing, 12 entities on 3 clouds, 3 days to 5.5 hours. Candidate confirmation: close with your genuine motivation for connecting customer problems to architecture decisions.
+1. **Tell me about yourself (60 sec).** Oracle, nearly 3 years, 37,000+ tenants, MTTR 94 to 26 min. Then forward-deployed at MSRcosmos: customer-facing, 12 entities on 3 clouds, 3 days to 5.5 hours. Candidate confirmation: close with your genuine motivation for connecting customer problems to architecture decisions.
 2. **Why AWS? Why Solutions Architect and not SDE?** State your genuine reason for choosing SA. If customer-facing work motivates you, support it with your verified MSRcosmos migration and human-review routing experience. Explain the actual customer need and your contribution without assuming auditor requirements or a personal preference.
 3. **Why AWSI - ETP Solutions Architect?** The role is confirmed in the supplied recruiter email. Connect a supported migration or reliability example to customer outcomes, collaboration with sales, and communication to engineers and executives. Supply your own genuine motivation; account segment and specialty remain unspecified.
 4. **Which LP resonates most?** Choose the principle you actually connect with and explain why, using verified actions. For S1 human-review routing, confirm the customer need that drove the safeguard.

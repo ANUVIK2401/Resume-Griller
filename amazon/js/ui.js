@@ -231,54 +231,10 @@
 
   const list = (items, cls = 'list') => el('ul', { class: cls }, items.map((t) => el('li', {}, fill(t))));
 
-  // Mermaid colors read from the palette; squid-ink nodes and orange lines work on both themes.
-  let mermaidReady = false;
-  let diagramSeq = 0;
-  function initMermaid() {
-    if (mermaidReady || !window.mermaid) return Boolean(window.mermaid);
-    window.mermaid.initialize({
-      startOnLoad: false,
-      securityLevel: 'strict',
-      theme: 'base',
-      fontFamily: 'Aptos, Segoe UI, system-ui, sans-serif',
-      flowchart: { htmlLabels: false, curve: 'basis' }, // SVG text: sized correctly regardless of page CSS
-      themeVariables: {
-        primaryColor: '#33445A', primaryTextColor: '#FFFFFF', primaryBorderColor: '#FF9900',
-        lineColor: '#FF9900', secondaryColor: '#232F3E', tertiaryColor: '#FFD08A',
-        textColor: '#232F3E', edgeLabelBackground: '#FFD08A', fontSize: '14px',
-      },
-    });
-    mermaidReady = true;
-    return true;
-  }
-
-  // Mermaid returns sanitized SVG (securityLevel strict) built from our own data files.
-  async function drawDiagram(box, source) {
-    if (!initMermaid()) {
-      box.replaceChildren(el('p', { class: 'muted' }, 'Diagram library failed to load. Source:'), codeBlock(source, 'mermaid'));
-      return;
-    }
-    try {
-      await document.fonts.ready; // measure with the real font
-      diagramSeq += 1;
-      const { svg } = await window.mermaid.render(`mmd-${diagramSeq}`, source);
-      box.innerHTML = svg;
-    } catch (err) {
-      box.replaceChildren(el('p', { class: 'notice is-error' }, `Diagram error: ${err.message}`), codeBlock(source, 'mermaid'));
-    }
-  }
-
   const table = (headers, rows) => el('div', { class: 'table-wrap' }, el('table', { class: 'table' },
     el('thead', {}, el('tr', {}, headers.map((h) => el('th', { scope: 'col' }, h)))),
     el('tbody', {}, rows.map((r) => el('tr', {}, r.map((c) => el('td', {}, c)))))));
 
 
-  // Rendered lazily; works on any page that loads mermaid from the CDN.
-  function diagram(source, label) {
-    const box = el('div', { class: 'mermaid-box', role: 'img', 'aria-label': label }, el('p', { class: 'muted' }, 'Rendering diagram...'));
-    drawDiagram(box, source);
-    return box;
-  }
-
-  window.Prep.ui = { section, fill, table, diagram, statusSelect, notesBox, confidence, checkbox, codeBlock, filterBar, timer, rehearse, shuffle, list };
+  window.Prep.ui = { section, fill, table, statusSelect, notesBox, confidence, checkbox, codeBlock, filterBar, timer, rehearse, shuffle, list };
 })();

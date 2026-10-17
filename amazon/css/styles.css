@@ -526,10 +526,6 @@ table.table { width: 100%; border-collapse: collapse; font-size: var(--text-sm);
 .step::before { counter-increment: step; content: counter(step); font: italic 700 1.75rem/1 var(--font-serif); color: var(--gold); text-align: center; }
 .step.is-diff { box-shadow: var(--shadow-lift); }
 .step-min { font: 500 var(--text-xs)/1.6 var(--font-mono); color: var(--ink-muted); white-space: nowrap; }
-.mermaid-box { padding: 1rem; border-radius: var(--radius); background: var(--surface-card); border: 1px solid var(--line); overflow-x: auto; }
-.mermaid-box svg { margin-inline: auto; height: auto; }
-.mermaid-box .label { font: inherit; letter-spacing: normal; text-transform: none; color: inherit; } /* mermaid reuses .label */
-.mermaid-box .edgeLabel text, .mermaid-box .edgeLabel tspan { fill: #232F3E !important; font-weight: 600; } /* beats mermaid's id-scoped style */
 
 @media (max-width: 640px) {
   details.item > summary { grid-template-columns: minmax(0, 1fr); }
@@ -653,3 +649,6 @@ details.fold[open] > summary { border-bottom: 1px solid var(--line); }
 }
 
 .speaking-script { font-size: var(--text-lg); line-height: 1.7; max-width: 72ch; }
+
+/* Touch screens: no grey flash on tap; focus and pressed states carry the feedback. */
+button, a, summary, select, input { -webkit-tap-highlight-color: transparent; }

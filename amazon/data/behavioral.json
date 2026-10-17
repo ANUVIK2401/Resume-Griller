@@ -28,7 +28,7 @@
     "beats": [
       {
         "label": "Who",
-        "text": "I'm Anuvik, an MS computer science student at USC graduating in December 2026. From July 2022 to January 2025, I worked at Oracle on observability, incident diagnostics, and Kubernetes for enterprise services."
+        "text": "I'm Anuvik, an MS computer science student at USC graduating in December 2026. I spent nearly 3 years at Oracle working on observability, incident diagnostics, and Kubernetes for enterprise services."
       },
       {
         "label": "Proof",
@@ -274,7 +274,7 @@
           "a": "I would use a supported Claude model on Bedrock, S3 for staging, and Step Functions Standard to coordinate processing and wait for human review through a callback. Lambda could expose the tools, DynamoDB could store workflow decisions, and CloudWatch would monitor the system. I would design permissions, idempotency, timeouts, and financial validation before choosing an auto-approval policy."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "p1-mttr",
@@ -325,7 +325,7 @@
           "a": "A root-cause tag is a hypothesis, not proof. The engineer needs supporting evidence and runbook context so they can verify it and continue investigating if it is wrong. For a new system, I would evaluate incorrect tags, missing tags, and time to a useful action, rather than optimize only the number of failures labeled."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "slo-alerting",
@@ -368,7 +368,7 @@
           "a": "The implementation moved toward SLO-based alerting and reduced false-positive pages by 41%. I would need the original alert configuration to describe the exact burn-rate policy. For a new design, I would consider multi-window burn-rate alerts to distinguish rapid error-budget consumption from slower degradation, then test whether the alerts produce an actionable response."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "cli-toolchain",
@@ -413,7 +413,7 @@
           "a": "The failed-deployment rate went from 11% to 4%, a decrease of 7 percentage points. That is different from saying a 7% relative reduction. Four teams adopted the toolchain, and release cycles became 34% shorter. Those are separate measures of adoption, deployment reliability, and delivery time; none by itself demonstrates mentoring or a particular persuasion tactic."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "netsuite-latency",
@@ -456,7 +456,7 @@
           "a": "My implementation work was query-plan profiling, index restructuring, and SQL changes. For a production rollout, I would verify result correctness on representative data, compare read and write behavior, inspect tail latency, and check locking implications for the database engine. I would also define how to revert the query or index change before exposing the full workload."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "k8s-autoscaling",
@@ -497,7 +497,7 @@
           "a": "I would not quote stabilization settings without the actual autoscaler configuration. In a new design, I would use a stable workload signal, tune the observation and stabilization periods, and scale down conservatively. I would test oscillating demand and dependency limits, because rapid replica changes can create instability rather than solve it."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "learn-langgraph",
@@ -534,7 +534,7 @@
         }
       ],
       "note": "Same ERP episode as S1, told from the orchestration angle. Do not count it as a separate customer engagement or a documented rapid-learning timeline.",
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "dqn-stall",
@@ -577,7 +577,7 @@
           "a": "Runtime fell from 52 to 31 minutes, about 40% less time per run. Separately, agreement with EPA-optimal calls increased from 68% to 74%, a gain of 6 percentage points. I do not attribute the quality gain to faster data handling. To verify an optimization preserves training behavior, I would compare sampling semantics, training curves, and held-out results under controlled conditions."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "pacsun-exec",
@@ -617,7 +617,7 @@
           "a": "The application brings together context gathering, issue ranking, brief drafting, and meeting proposals. Those responsibilities provide a useful way to reason about the workflow. I would still compare the orchestration with a simpler implementation, because more agents also add latency, cost, and coordination failures. The design needs evidence that the extra complexity helps."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "trust-hitl",
@@ -653,7 +653,7 @@
           "a": "The implemented workflow scores confidence and routes lower-confidence cases to domain experts. That provides a review path; it is not by itself an accuracy result. I would evaluate expert agreement on a labeled sample, inspect disagreements by category, and also sample high-confidence outputs so confident mistakes are not invisible."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "modelscope",
@@ -695,7 +695,7 @@
           "a": "I would treat this benchmark as a candidate configuration, then evaluate the customer workload. I would measure task quality, memory, throughput, latency, and operational constraints on the intended hardware. Staying within a point on MMLU is useful evidence, but it does not establish that the customer application will meet its quality requirements."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     },
     {
       "id": "databricks-feed",
@@ -738,7 +738,7 @@
           "a": "The 22-minute result is the full-refresh measure. Partition pruning describes reducing reads, while incremental merges describe how changes are applied. They are not interchangeable runtime measures. Before comparing that result with an incremental run, I would match the input snapshot, rows changed, compute size, and definition of when the refresh begins and ends."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
     }
   ]
 }

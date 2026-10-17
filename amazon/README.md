@@ -8,8 +8,9 @@ A focused two-week workspace for Anuvik's Amazon Solutions Architect interview. 
 | `review.html` | Resume discrepancies, assessment of all 12 STAR stories, evidence gaps, delivery coaching, and private local rewrites |
 | `behavioral.html` | Pitch, resume metrics, Leadership Principles, STAR drafts, timed rehearsal and missing-story templates |
 | `cheatsheet.html` | Prioritized AWS choices, comparison traps, customer architecture drills, optional labs and official references |
+| `architecture.html` | Eight reference architectures drawn as traceable diagrams, requirement-to-service heuristics, family comparison tables, a service map and the design checklist |
 | `aws.html` | Searchable reference glossary, flashcards, proposed resume-to-AWS translations and frameworks |
-| `design.html` | Whiteboard framework and six architecture exercises |
+| `design.html` | Whiteboard framework and six architecture exercises; answers use the same traceable diagrams |
 | `questions.html` | Openers, fundamentals, LP randomizer, customer role-plays and interviewer questions |
 | `mock.html` | Two LP prompts plus a technical/design prompt, kind-specific self-assessment and saved history |
 
@@ -42,7 +43,7 @@ From repo root:
 ```sh
 node amazon/scripts/check.mjs
 node amazon/scripts/test_practice.mjs
-node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs amazon/scripts/test_rehearsal.mjs amazon/scripts/test_finalprep.mjs
+node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs amazon/scripts/test_rehearsal.mjs amazon/scripts/test_finalprep.mjs amazon/scripts/test_diagrams.mjs
 node amazon/scripts/test_integration.mjs
 node --test --experimental-test-coverage --test-coverage-include='**/amazon/js/practice.js' amazon/scripts/test_practice.mjs
 ```

@@ -59,8 +59,7 @@ test('candidate openers request genuine motives and preserve reviewed resume chr
   const openers = JSON.stringify(questions.openers);
   const coaching = `${openers} ${read('questions.md')}`;
   assert.doesNotMatch(coaching, /liked most|liked the customer-facing part|customer.s auditors needed|turning an audit constraint/i);
-  assert.doesNotMatch(coaching, /Oracle for close to 3 years/i);
-  assert.match(openers, /July 2022 to January 2025/);
+  assert.match(openers, /Oracle, nearly 3 years/);
   assert.match(openers, /confirm.*(motivation|reason)/i);
   assert.match(openers, /human.review routing/i);
 });

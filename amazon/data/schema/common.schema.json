@@ -3,13 +3,189 @@
   "$id": "common.schema.json",
   "title": "Shared definitions",
   "$defs": {
-    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable kebab-case id. Progress in localStorage is keyed by it, so never rename one that has progress." },
-    "text": { "type": "string", "minLength": 1, "not": { "pattern": "[\u2013\u2014]" }, "description": "Copy. No em or en dashes." },
-    "textList": { "type": "array", "items": { "$ref": "#/$defs/text" } },
-    "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
-    "difficulty": { "enum": ["easy", "medium", "hard"] },
-    "mermaid": { "type": "string", "description": "Mermaid source, rendered client side." },
-    "code": { "type": "string", "description": "Source code, shown verbatim." },
-    "url": { "type": "string", "format": "uri" }
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Stable kebab-case id. Progress in localStorage is keyed by it, so never rename one that has progress."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "pattern": "[\u2013\u2014]"
+      },
+      "description": "Copy. No em or en dashes."
+    },
+    "textList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "difficulty": {
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
+    "code": {
+      "type": "string",
+      "description": "Source code, shown verbatim."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "cat": {
+      "enum": [
+        "client",
+        "edge",
+        "compute",
+        "container",
+        "storage",
+        "database",
+        "security",
+        "integration",
+        "analytics",
+        "ml",
+        "mgmt",
+        "iot",
+        "media",
+        "external"
+      ]
+    },
+    "diagram": {
+      "type": "object",
+      "description": "Grid architecture diagram drawn by js/diagram.js.",
+      "required": [
+        "cols",
+        "rows",
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "cols": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "kind",
+              "from",
+              "to"
+            ],
+            "properties": {
+              "label": {
+                "$ref": "#/$defs/text"
+              },
+              "kind": {
+                "enum": [
+                  "region",
+                  "vpc",
+                  "az",
+                  "public",
+                  "private",
+                  "edge",
+                  "onprem",
+                  "generic"
+                ]
+              },
+              "from": {
+                "type": "array"
+              },
+              "to": {
+                "type": "array"
+              }
+            }
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "cat",
+              "at"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "label": {
+                "$ref": "#/$defs/text"
+              },
+              "sub": {
+                "$ref": "#/$defs/text"
+              },
+              "cat": {
+                "$ref": "#/$defs/cat"
+              },
+              "at": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to"
+            ],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "label": {
+                "$ref": "#/$defs/text"
+              },
+              "step": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "route": {
+                "enum": [
+                  "hv",
+                  "vh"
+                ]
+              },
+              "dashed": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "focus": {
+          "type": "array",
+          "description": "Optional extra nodes to light up for each step, by step index."
+        }
+      }
+    }
   }
 }

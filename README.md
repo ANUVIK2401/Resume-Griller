@@ -18,6 +18,6 @@ Portable references:
 - [Resume and STAR assessment](amazon/RESUME-STAR-REVIEW.md)
 - [STAR story bank](amazon/stories.md)
 
-The older general bank remains at [general-prep.html](general-prep.html). Google and Salesforce preparation remain available as archived modules. Their data is independent of the reviewed Amazon profile.
+The older general bank remains at [general-prep.html](general-prep.html). Salesforce is active: the hiring manager round is October 22, 2026; start with [salesforce/HM-BRIEF.md](salesforce/HM-BRIEF.md). Google preparation remains an archived module.
 
 The existing GitHub Pages workflow deploys pushes to main after validation. Local edits do not update the live site until pushed.

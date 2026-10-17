@@ -1,0 +1,2335 @@
+{
+  "$schema": "./schema/architecture.schema.json",
+  "principle": "Choose services from requirements: latency, throughput, consistency, durability, availability, compliance, operational effort, and cost. Popularity is not a requirement.",
+  "answer_format": "Because the requirement is X, I choose A over B. The request flows through these steps. The main tradeoff is this. I would secure it with that, and validate it by measuring this.",
+  "source_note": "Condensed from your SAA-C03 quick reference and rewritten for speaking practice. Verify current Region availability, quotas, and pricing before a real design.",
+  "families": [
+    {
+      "name": "Global entry and delivery",
+      "cat": "edge",
+      "services": [
+        {
+          "name": "Route 53",
+          "role": "DNS, health checks, routing policies"
+        },
+        {
+          "name": "CloudFront",
+          "role": "Edge cache and CDN"
+        },
+        {
+          "name": "Global Accelerator",
+          "role": "Static anycast IPs, AWS backbone routing"
+        }
+      ]
+    },
+    {
+      "name": "Compute",
+      "cat": "compute",
+      "services": [
+        {
+          "name": "EC2",
+          "role": "Virtual machines"
+        },
+        {
+          "name": "Auto Scaling",
+          "role": "Adds and removes capacity"
+        },
+        {
+          "name": "ELB (ALB, NLB)",
+          "role": "Spreads traffic across targets"
+        },
+        {
+          "name": "Lambda",
+          "role": "Event-driven functions"
+        },
+        {
+          "name": "Elastic Beanstalk",
+          "role": "Managed app deployment"
+        }
+      ]
+    },
+    {
+      "name": "Containers",
+      "cat": "container",
+      "services": [
+        {
+          "name": "ECS",
+          "role": "AWS-native container orchestration"
+        },
+        {
+          "name": "EKS",
+          "role": "Managed Kubernetes control plane"
+        },
+        {
+          "name": "Fargate",
+          "role": "Serverless compute for ECS and EKS"
+        },
+        {
+          "name": "ECR",
+          "role": "Container image registry"
+        }
+      ]
+    },
+    {
+      "name": "Storage",
+      "cat": "storage",
+      "services": [
+        {
+          "name": "S3",
+          "role": "Durable object storage and data lake"
+        },
+        {
+          "name": "EBS",
+          "role": "Block volumes for EC2"
+        },
+        {
+          "name": "EFS",
+          "role": "Shared NFS file system"
+        },
+        {
+          "name": "FSx",
+          "role": "Windows, Lustre, ONTAP, OpenZFS"
+        },
+        {
+          "name": "Storage Gateway",
+          "role": "Hybrid file, volume, tape"
+        },
+        {
+          "name": "Snow Family",
+          "role": "Offline transfer and edge"
+        }
+      ]
+    },
+    {
+      "name": "Databases",
+      "cat": "database",
+      "services": [
+        {
+          "name": "RDS",
+          "role": "Managed relational database"
+        },
+        {
+          "name": "Aurora",
+          "role": "AWS relational engine, MySQL and PostgreSQL compatible"
+        },
+        {
+          "name": "DynamoDB",
+          "role": "Serverless key-value and document"
+        },
+        {
+          "name": "ElastiCache",
+          "role": "In-memory cache"
+        },
+        {
+          "name": "Redshift",
+          "role": "Analytical warehouse"
+        },
+        {
+          "name": "OpenSearch",
+          "role": "Search and log analytics"
+        }
+      ]
+    },
+    {
+      "name": "Network and hybrid",
+      "cat": "edge",
+      "services": [
+        {
+          "name": "VPC, subnets, route tables",
+          "role": "Isolated network and placement"
+        },
+        {
+          "name": "Security groups",
+          "role": "Stateful firewall on resources"
+        },
+        {
+          "name": "Network ACLs",
+          "role": "Stateless subnet filter"
+        },
+        {
+          "name": "NAT gateway",
+          "role": "Outbound IPv4 for private subnets"
+        },
+        {
+          "name": "VPN, Direct Connect",
+          "role": "Hybrid connectivity"
+        },
+        {
+          "name": "PrivateLink",
+          "role": "Private access to services"
+        }
+      ]
+    },
+    {
+      "name": "Identity and security",
+      "cat": "security",
+      "services": [
+        {
+          "name": "IAM",
+          "role": "Identities, policies, roles"
+        },
+        {
+          "name": "IAM Identity Center",
+          "role": "Workforce single sign-on"
+        },
+        {
+          "name": "KMS",
+          "role": "Encryption keys"
+        },
+        {
+          "name": "Secrets Manager",
+          "role": "Stores and rotates secrets"
+        },
+        {
+          "name": "ACM",
+          "role": "TLS certificates"
+        },
+        {
+          "name": "WAF, Shield",
+          "role": "Web filtering, DDoS protection"
+        },
+        {
+          "name": "GuardDuty",
+          "role": "Threat detection"
+        },
+        {
+          "name": "CloudTrail",
+          "role": "API audit trail"
+        }
+      ]
+    },
+    {
+      "name": "Integration and workflow",
+      "cat": "integration",
+      "services": [
+        {
+          "name": "SQS",
+          "role": "Durable queue and buffer"
+        },
+        {
+          "name": "SNS",
+          "role": "Pub/sub fan-out"
+        },
+        {
+          "name": "EventBridge",
+          "role": "Event bus, rules, schedules"
+        },
+        {
+          "name": "Step Functions",
+          "role": "Workflow orchestration"
+        },
+        {
+          "name": "API Gateway",
+          "role": "Managed APIs"
+        },
+        {
+          "name": "Amazon MQ",
+          "role": "Managed ActiveMQ and RabbitMQ"
+        }
+      ]
+    },
+    {
+      "name": "Streaming and analytics",
+      "cat": "analytics",
+      "services": [
+        {
+          "name": "Kinesis Data Streams",
+          "role": "Real-time stream with replay"
+        },
+        {
+          "name": "Data Firehose",
+          "role": "Managed delivery to destinations"
+        },
+        {
+          "name": "Glue",
+          "role": "Catalog and ETL"
+        },
+        {
+          "name": "Athena",
+          "role": "SQL on S3"
+        },
+        {
+          "name": "Lake Formation",
+          "role": "Data lake permissions"
+        },
+        {
+          "name": "EMR",
+          "role": "Spark and Hadoop frameworks"
+        },
+        {
+          "name": "QuickSight",
+          "role": "BI dashboards"
+        }
+      ]
+    },
+    {
+      "name": "AI, ML and media",
+      "cat": "ml",
+      "services": [
+        {
+          "name": "Bedrock",
+          "role": "Foundation-model applications"
+        },
+        {
+          "name": "SageMaker",
+          "role": "Build, train, deploy custom ML"
+        },
+        {
+          "name": "Textract",
+          "role": "Document extraction"
+        },
+        {
+          "name": "Comprehend",
+          "role": "Text analysis"
+        },
+        {
+          "name": "Rekognition",
+          "role": "Image and video analysis"
+        },
+        {
+          "name": "Transcribe, Polly",
+          "role": "Speech to text, text to speech"
+        },
+        {
+          "name": "MediaConvert",
+          "role": "File-based video transcoding"
+        }
+      ]
+    },
+    {
+      "name": "Operations and governance",
+      "cat": "mgmt",
+      "services": [
+        {
+          "name": "CloudWatch",
+          "role": "Metrics, logs, alarms"
+        },
+        {
+          "name": "AWS Config",
+          "role": "Configuration history and rules"
+        },
+        {
+          "name": "Systems Manager",
+          "role": "Fleet operations and runbooks"
+        },
+        {
+          "name": "CloudFormation",
+          "role": "Infrastructure as code"
+        },
+        {
+          "name": "Organizations, Control Tower",
+          "role": "Multi-account governance"
+        },
+        {
+          "name": "AWS Backup",
+          "role": "Central backup policies"
+        }
+      ]
+    }
+  ],
+  "heuristics": [
+    {
+      "need": "Static content for global users",
+      "choose": "S3 + CloudFront"
+    },
+    {
+      "need": "Relational transactions",
+      "choose": "RDS or Aurora"
+    },
+    {
+      "need": "Key-value access at scale",
+      "choose": "DynamoDB"
+    },
+    {
+      "need": "Decouple producers from slow work",
+      "choose": "SQS"
+    },
+    {
+      "need": "One event, many independent consumers",
+      "choose": "SNS + SQS or EventBridge"
+    },
+    {
+      "need": "Ordered, replayable stream",
+      "choose": "Kinesis Data Streams"
+    },
+    {
+      "need": "SQL over files in S3",
+      "choose": "Athena"
+    },
+    {
+      "need": "Containers without managing nodes",
+      "choose": "ECS or EKS on Fargate"
+    },
+    {
+      "need": "Multi-step workflow with retries and waits",
+      "choose": "Step Functions"
+    },
+    {
+      "need": "Who changed what in the account",
+      "choose": "CloudTrail"
+    },
+    {
+      "need": "Generative AI without hosting models",
+      "choose": "Bedrock"
+    },
+    {
+      "need": "Private access to an AWS service",
+      "choose": "VPC endpoint or PrivateLink"
+    }
+  ],
+  "tables": [
+    {
+      "id": "compute",
+      "title": "Compute and hosting",
+      "cat": "compute",
+      "rows": [
+        {
+          "service": "EC2",
+          "use": "You need OS or runtime control, legacy software, custom agents, or special instance types.",
+          "tradeoff": "You patch and manage capacity."
+        },
+        {
+          "service": "Lambda",
+          "use": "Short event or API handlers that scale automatically and bill per request.",
+          "tradeoff": "15-minute limit, concurrency limits, stateless execution, cold starts."
+        },
+        {
+          "service": "ECS",
+          "use": "AWS-native container scheduling with simple AWS integration.",
+          "tradeoff": "AWS-specific orchestration model."
+        },
+        {
+          "service": "EKS",
+          "use": "Kubernetes APIs, ecosystem, or portability is a requirement.",
+          "tradeoff": "More platform and cluster work."
+        },
+        {
+          "service": "Fargate",
+          "use": "Run ECS or EKS tasks without managing worker nodes.",
+          "tradeoff": "Less host control; compare cost for steady, high utilization."
+        },
+        {
+          "service": "Elastic Beanstalk",
+          "use": "Deploy a common web app with little infrastructure setup.",
+          "tradeoff": "Less flexible than your own infrastructure as code."
+        },
+        {
+          "service": "AWS Batch",
+          "use": "Queued, large-scale batch jobs.",
+          "tradeoff": "Built for jobs, not low-latency requests."
+        }
+      ],
+      "rule": "EC2 when control matters, Lambda when the work is event-driven and bounded, ECS for AWS-native containers, EKS when Kubernetes is a requirement."
+    },
+    {
+      "id": "storage",
+      "title": "Storage and transfer",
+      "cat": "storage",
+      "rows": [
+        {
+          "service": "S3",
+          "use": "Objects: static assets, backups, logs, data lakes, media.",
+          "tradeoff": "Not a mounted disk; design keys, lifecycle rules, and bucket policies."
+        },
+        {
+          "service": "EBS",
+          "use": "Low-latency block storage for one EC2 instance: boot and data volumes.",
+          "tradeoff": "Lives in one AZ; plan snapshots for recovery."
+        },
+        {
+          "service": "EFS",
+          "use": "Shared NFS file system for many Linux clients.",
+          "tradeoff": "Network file latency and cost; not a block volume."
+        },
+        {
+          "service": "FSx",
+          "use": "Managed Windows (SMB), Lustre, NetApp ONTAP, or OpenZFS.",
+          "tradeoff": "Pick by protocol, performance, and app compatibility."
+        },
+        {
+          "service": "Storage Gateway",
+          "use": "On-premises apps reach AWS storage as file, volume, or tape.",
+          "tradeoff": "Hybrid operations and cache sizing still matter."
+        },
+        {
+          "service": "DataSync",
+          "use": "Online bulk transfer between on-premises and AWS storage.",
+          "tradeoff": "Limited by your network bandwidth."
+        },
+        {
+          "service": "Snow Family",
+          "use": "Huge offline transfers or edge compute with poor connectivity.",
+          "tradeoff": "Shipping lead time; not a network."
+        },
+        {
+          "service": "S3 Glacier classes",
+          "use": "Long-term archive at low storage cost.",
+          "tradeoff": "Retrieval time and cost vary by class."
+        }
+      ],
+      "rule": "Object, block, or file is the first decision. For large migrations compare the network, DataSync, and Snow on time and cost."
+    },
+    {
+      "id": "database",
+      "title": "Databases",
+      "cat": "database",
+      "rows": [
+        {
+          "service": "RDS",
+          "use": "Managed relational engines for SQL, transactions, and existing schemas.",
+          "tradeoff": "A Multi-AZ instance standby serves no reads; use read replicas or a cache to scale reads."
+        },
+        {
+          "service": "Aurora",
+          "use": "MySQL or PostgreSQL compatible with faster failover, up to 15 replicas, Global Database.",
+          "tradeoff": "Validate engine compatibility and cost."
+        },
+        {
+          "service": "DynamoDB",
+          "use": "Key-value or document data with predictable low latency at any scale.",
+          "tradeoff": "Model access patterns and keys first; no ad hoc joins."
+        },
+        {
+          "service": "ElastiCache",
+          "use": "Hot reads, sessions, computed results in memory.",
+          "tradeoff": "Invalidation, memory sizing, and app changes."
+        },
+        {
+          "service": "Redshift",
+          "use": "Analytical SQL over large data: warehouse and BI.",
+          "tradeoff": "Not a transactional database."
+        },
+        {
+          "service": "OpenSearch",
+          "use": "Full-text search and log exploration.",
+          "tradeoff": "Index design and cluster operations."
+        },
+        {
+          "service": "Timestream",
+          "use": "Timestamped measurements and time-series queries.",
+          "tradeoff": "Check current options: Timestream for LiveAnalytics closed to new customers in 2025; evaluate Timestream for InfluxDB."
+        }
+      ],
+      "rule": "RDS or Aurora for relational transactions, DynamoDB when access patterns are known, Redshift for analytics, and a cache only when the workload benefits."
+    },
+    {
+      "id": "network",
+      "title": "Networking and edge",
+      "cat": "edge",
+      "rows": [
+        {
+          "service": "VPC and subnets",
+          "use": "Network boundary with public and private placement.",
+          "tradeoff": "Plan CIDRs, routes, AZ spread, and egress."
+        },
+        {
+          "service": "Security groups",
+          "use": "Stateful allow rules on resources.",
+          "tradeoff": "Deny inbound by default; reference other security groups."
+        },
+        {
+          "service": "Network ACLs",
+          "use": "Stateless allow and deny at the subnet.",
+          "tradeoff": "Return traffic needs explicit rules."
+        },
+        {
+          "service": "ALB",
+          "use": "HTTP and HTTPS routing by host and path.",
+          "tradeoff": "Layer 7; the default for web and API traffic."
+        },
+        {
+          "service": "NLB",
+          "use": "Very high throughput TCP, UDP, TLS, and static IPs.",
+          "tradeoff": "Layer 4; less application-aware routing."
+        },
+        {
+          "service": "Route 53",
+          "use": "DNS records, health checks, routing policies.",
+          "tradeoff": "DNS failover is only as good as the target you fail over to."
+        },
+        {
+          "service": "CloudFront",
+          "use": "Cache and accelerate content at the edge.",
+          "tradeoff": "Cache keys, TTLs, invalidation, and origin access control."
+        },
+        {
+          "service": "NAT gateway",
+          "use": "Private instances start outbound IPv4 connections.",
+          "tradeoff": "Not an entry point; one per AZ for resilience; data processing cost."
+        },
+        {
+          "service": "VPN, Direct Connect",
+          "use": "Encrypted tunnel over the internet, or a dedicated private link.",
+          "tradeoff": "Direct Connect is not encrypted by default; add VPN or MACsec."
+        },
+        {
+          "service": "PrivateLink",
+          "use": "Reach a service privately without the public internet.",
+          "tradeoff": "Plan endpoint policies and DNS."
+        }
+      ],
+      "rule": "Typical public web tier: Route 53, CloudFront with WAF, ALB, then app servers in private subnets. Databases stay private."
+    },
+    {
+      "id": "security",
+      "title": "Identity, security and governance",
+      "cat": "security",
+      "rows": [
+        {
+          "service": "IAM roles and policies",
+          "use": "Temporary, scoped permissions for people and workloads.",
+          "tradeoff": "Least privilege; no long-lived keys in code."
+        },
+        {
+          "service": "IAM Identity Center",
+          "use": "Workforce SSO with permission sets across accounts.",
+          "tradeoff": "Centralize people; workloads still use roles."
+        },
+        {
+          "service": "KMS",
+          "use": "Create and control encryption keys.",
+          "tradeoff": "Key policy and IAM policy both decide access."
+        },
+        {
+          "service": "Secrets Manager",
+          "use": "Store, fetch, and rotate credentials.",
+          "tradeoff": "Fetch at runtime; never bake secrets into images."
+        },
+        {
+          "service": "ACM",
+          "use": "Free TLS certificates for integrated services.",
+          "tradeoff": "CloudFront needs the certificate in us-east-1."
+        },
+        {
+          "service": "WAF",
+          "use": "Filter HTTP requests with managed and custom rules.",
+          "tradeoff": "Attach to CloudFront, ALB, or API Gateway."
+        },
+        {
+          "service": "Shield",
+          "use": "DDoS protection; Advanced adds response support.",
+          "tradeoff": "Layer with architecture, WAF, and runbooks."
+        },
+        {
+          "service": "GuardDuty",
+          "use": "Managed threat detection from account telemetry.",
+          "tradeoff": "Findings need triage and automated response."
+        },
+        {
+          "service": "CloudTrail",
+          "use": "Who called which API, when, from where.",
+          "tradeoff": "Organization trail into a locked-down central bucket."
+        },
+        {
+          "service": "AWS Config",
+          "use": "Configuration history and compliance rules.",
+          "tradeoff": "Detects drift; remediation must be wired up."
+        }
+      ],
+      "rule": "IAM roles, private networking, encryption, central logs, and least privilege are defaults, not add-ons."
+    },
+    {
+      "id": "messaging",
+      "title": "Messaging, events and orchestration",
+      "cat": "integration",
+      "rows": [
+        {
+          "service": "SQS",
+          "use": "Durable work queue: consumers poll, spikes are buffered, retries are independent.",
+          "tradeoff": "Standard is at least once; make consumers idempotent and add a DLQ. FIFO adds ordering and a 5-minute dedupe window."
+        },
+        {
+          "service": "SNS",
+          "use": "Push one message to many subscribers.",
+          "tradeoff": "Pair with SQS so each consumer keeps its own backlog."
+        },
+        {
+          "service": "EventBridge",
+          "use": "Route events by pattern or schedule to many targets.",
+          "tradeoff": "Plan retries, DLQ, and archive and replay."
+        },
+        {
+          "service": "Kinesis Data Streams",
+          "use": "High-volume ordered stream with replay within retention.",
+          "tradeoff": "Plan shards and consumer throughput."
+        },
+        {
+          "service": "Data Firehose",
+          "use": "Managed near-real-time delivery to S3, Redshift, OpenSearch.",
+          "tradeoff": "Buffers records; not instant."
+        },
+        {
+          "service": "Step Functions",
+          "use": "Multi-step workflows with retries, branches, and human waits.",
+          "tradeoff": "Keep each task small; the workflow holds state."
+        },
+        {
+          "service": "API Gateway",
+          "use": "Managed REST, HTTP, and WebSocket entry point.",
+          "tradeoff": "Configure auth, throttling, validation, and logging."
+        },
+        {
+          "service": "Amazon MQ",
+          "use": "Apps that already speak ActiveMQ or RabbitMQ.",
+          "tradeoff": "Good for migration; less elastic than SQS and SNS."
+        }
+      ],
+      "rule": "Queue distributes work, topic fans out, event bus routes, stream keeps order and replay, workflow holds state."
+    },
+    {
+      "id": "data",
+      "title": "Data, analytics and AI",
+      "cat": "analytics",
+      "rows": [
+        {
+          "service": "S3 + Glue Data Catalog",
+          "use": "Object lake plus table and schema metadata.",
+          "tradeoff": "Partition and use columnar formats to control scan cost."
+        },
+        {
+          "service": "Athena",
+          "use": "Serverless SQL directly over S3.",
+          "tradeoff": "Pay per byte scanned: Parquet, compression, partitions."
+        },
+        {
+          "service": "Glue ETL",
+          "use": "Scheduled or serverless data preparation.",
+          "tradeoff": "Test transformations and schema changes."
+        },
+        {
+          "service": "Redshift",
+          "use": "Central warehouse for repeated BI queries.",
+          "tradeoff": "Keep analytics off the transactional database."
+        },
+        {
+          "service": "QuickSight",
+          "use": "Dashboards and BI.",
+          "tradeoff": "Serve curated, permissioned datasets."
+        },
+        {
+          "service": "SageMaker",
+          "use": "Build, train, tune, deploy, monitor custom models.",
+          "tradeoff": "Only when you need custom model control."
+        },
+        {
+          "service": "Bedrock",
+          "use": "Generative AI apps on hosted foundation models.",
+          "tradeoff": "Add retrieval, Guardrails, evaluation, and data access controls."
+        },
+        {
+          "service": "Textract, Transcribe, Rekognition",
+          "use": "Task-specific managed AI: documents, speech, images.",
+          "tradeoff": "Prefer these when they meet the requirement."
+        }
+      ],
+      "rule": "Data lake: land raw data in S3, catalog and transform with Glue, query with Athena, and serve curated data through Redshift or QuickSight."
+    },
+    {
+      "id": "resilience",
+      "title": "Resilience, monitoring and IaC",
+      "cat": "mgmt",
+      "rows": [
+        {
+          "service": "Multi-AZ",
+          "use": "High availability across independent AZs.",
+          "tradeoff": "Not regional disaster recovery."
+        },
+        {
+          "service": "Backups and snapshots",
+          "use": "Recover from deletion or corruption.",
+          "tradeoff": "Define retention, immutability, RPO, and test restores."
+        },
+        {
+          "service": "Cross-Region replication",
+          "use": "Copy data to another Region.",
+          "tradeoff": "Replication is not a tested failover plan, and it copies corruption too."
+        },
+        {
+          "service": "Pilot light, warm standby, active-active",
+          "use": "Rising readiness, cost, and complexity.",
+          "tradeoff": "Choose by RTO, RPO, and business impact."
+        },
+        {
+          "service": "CloudWatch",
+          "use": "Metrics, logs, dashboards, alarms.",
+          "tradeoff": "Alert on service-level indicators people can act on."
+        },
+        {
+          "service": "Systems Manager",
+          "use": "Patching, inventory, run commands, automation runbooks.",
+          "tradeoff": "Role-based access and change control."
+        },
+        {
+          "service": "CloudFormation",
+          "use": "Repeatable infrastructure as code.",
+          "tradeoff": "Version templates, review change sets, separate environments."
+        },
+        {
+          "service": "AWS Backup",
+          "use": "Central backup policies across services.",
+          "tradeoff": "Copy across accounts and Regions; rehearse restores."
+        }
+      ],
+      "rule": "Resilience is end to end: compute, data, identity, DNS, secrets, quotas, deployment, and runbooks must all meet the recovery objective."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "ha-web",
+      "title": "Highly available web application",
+      "practice": "retail-3tier",
+      "scenario": "A public web app with variable traffic, private application servers, a relational database, and static assets.",
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "groups": [
+          {
+            "label": "AWS Region",
+            "kind": "region",
+            "from": [
+              2,
+              0
+            ],
+            "to": [
+              4,
+              2
+            ]
+          },
+          {
+            "label": "VPC public subnets",
+            "kind": "public",
+            "from": [
+              2,
+              1
+            ],
+            "to": [
+              2,
+              1
+            ]
+          },
+          {
+            "label": "VPC private subnets, 2+ AZs",
+            "kind": "private",
+            "from": [
+              3,
+              1
+            ],
+            "to": [
+              4,
+              1
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "users",
+            "label": "Users",
+            "sub": "browser, mobile",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "r53",
+            "label": "Route 53",
+            "sub": "DNS, health checks",
+            "cat": "edge",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "cf",
+            "label": "CloudFront + WAF",
+            "cat": "edge",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "s3",
+            "label": "S3",
+            "sub": "static assets",
+            "cat": "storage",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "alb",
+            "label": "ALB",
+            "sub": "HTTPS, path routing",
+            "cat": "edge",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "app",
+            "label": "App tier",
+            "sub": "EC2 ASG or ECS",
+            "cat": "compute",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "db",
+            "label": "RDS or Aurora",
+            "sub": "Multi-AZ",
+            "cat": "database",
+            "at": [
+              4,
+              1
+            ]
+          },
+          {
+            "id": "sm",
+            "label": "Secrets Manager",
+            "sub": "DB credentials",
+            "cat": "security",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "cw",
+            "label": "CloudWatch",
+            "sub": "metrics, alarms",
+            "cat": "mgmt",
+            "at": [
+              3,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "users",
+            "to": "r53",
+            "label": "DNS",
+            "step": 1
+          },
+          {
+            "from": "users",
+            "to": "cf",
+            "label": "HTTPS",
+            "step": 1
+          },
+          {
+            "from": "cf",
+            "to": "s3",
+            "label": "static",
+            "step": 2
+          },
+          {
+            "from": "cf",
+            "to": "alb",
+            "label": "dynamic",
+            "step": 2
+          },
+          {
+            "from": "alb",
+            "to": "app",
+            "label": "route",
+            "step": 3
+          },
+          {
+            "from": "app",
+            "to": "sm",
+            "label": "secret",
+            "step": 4
+          },
+          {
+            "from": "app",
+            "to": "db",
+            "label": "SQL/TLS",
+            "step": 4
+          },
+          {
+            "from": "app",
+            "to": "cw",
+            "label": "metrics",
+            "step": 5
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "Route 53 resolves the hostname; the client connects to CloudFront over HTTPS."
+        },
+        {
+          "text": "CloudFront serves cached static files from S3 and forwards dynamic requests to the ALB. WAF filters bad requests at the edge."
+        },
+        {
+          "text": "The ALB sends traffic to healthy app targets across AZs; Auto Scaling adds or removes capacity."
+        },
+        {
+          "text": "The app uses its IAM role to read database credentials from Secrets Manager, then queries the private database over TLS."
+        },
+        {
+          "text": "CloudWatch metrics, logs, and alarms drive scaling and incident response."
+        }
+      ],
+      "why": [
+        {
+          "decision": "ALB, not NLB",
+          "reason": "HTTP routing by host and path. Use NLB for Layer 4, extreme throughput, or static IPs."
+        },
+        {
+          "decision": "RDS Multi-AZ",
+          "reason": "Fails over automatically. Add read replicas or a cache if reads need to scale."
+        },
+        {
+          "decision": "S3 + CloudFront",
+          "reason": "Static files never touch the app servers."
+        }
+      ],
+      "watch": "Keep the app and database private. Production also needs CI/CD, backups, WAF rules, encryption, health checks, and a tested failover."
+    },
+    {
+      "id": "vod",
+      "title": "Video-on-demand streaming",
+      "scenario": "Accept video uploads, transcode them into streaming formats, store the output durably, and deliver it worldwide with low latency.",
+      "diagram": {
+        "cols": 5,
+        "rows": 2,
+        "nodes": [
+          {
+            "id": "up",
+            "label": "Uploader",
+            "sub": "web, mobile",
+            "cat": "client",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "in",
+            "label": "S3 ingest",
+            "sub": "raw uploads",
+            "cat": "storage",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "q",
+            "label": "EventBridge + SQS",
+            "cat": "integration",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "mc",
+            "label": "MediaConvert",
+            "sub": "HLS, DASH outputs",
+            "cat": "media",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "out",
+            "label": "S3 output",
+            "sub": "segments, manifests",
+            "cat": "storage",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "id": "api",
+            "label": "API + DynamoDB",
+            "sub": "catalog metadata",
+            "cat": "database",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "cf",
+            "label": "CloudFront",
+            "sub": "edge delivery",
+            "cat": "edge",
+            "at": [
+              4,
+              1
+            ]
+          },
+          {
+            "id": "viewer",
+            "label": "Viewer",
+            "sub": "video player",
+            "cat": "client",
+            "at": [
+              3,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "up",
+            "to": "in",
+            "label": "upload",
+            "step": 1
+          },
+          {
+            "from": "up",
+            "to": "api",
+            "label": "metadata",
+            "step": 1
+          },
+          {
+            "from": "in",
+            "to": "q",
+            "label": "event",
+            "step": 2
+          },
+          {
+            "from": "q",
+            "to": "mc",
+            "label": "job",
+            "step": 2
+          },
+          {
+            "from": "mc",
+            "to": "out",
+            "label": "outputs",
+            "step": 3
+          },
+          {
+            "from": "out",
+            "to": "cf",
+            "label": "origin",
+            "step": 4
+          },
+          {
+            "from": "cf",
+            "to": "viewer",
+            "label": "HLS/DASH",
+            "step": 4
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "The client uploads straight to S3 with a presigned URL; the app records metadata through an API."
+        },
+        {
+          "text": "The S3 object-created event goes through EventBridge to SQS, which buffers and retries transcode jobs."
+        },
+        {
+          "text": "MediaConvert writes adaptive-bitrate renditions, manifests, and segments to the output bucket."
+        },
+        {
+          "text": "CloudFront pulls from the private bucket through origin access control and caches segments near viewers."
+        },
+        {
+          "text": "Use IAM roles, encryption, lifecycle rules, and job-failure alarms; signed URLs or cookies for paid content.",
+          "nodes": [
+            "in",
+            "out",
+            "mc"
+          ]
+        }
+      ],
+      "why": [
+        {
+          "decision": "S3, not EFS",
+          "reason": "Durable object storage suits media files and segment delivery."
+        },
+        {
+          "decision": "SQS buffer",
+          "reason": "Absorbs upload bursts and separates upload from transcoding."
+        },
+        {
+          "decision": "CloudFront",
+          "reason": "Lower latency for viewers and far less load on the origin."
+        }
+      ],
+      "watch": "This is on demand. Live streaming needs live ingest and packaging, such as MediaLive and MediaPackage, and different latency choices."
+    },
+    {
+      "id": "iot",
+      "title": "IoT telemetry and alerts",
+      "scenario": "Ingest device telemetry securely, process the stream, store current and historical measurements, and alert on thresholds.",
+      "diagram": {
+        "cols": 5,
+        "rows": 2,
+        "nodes": [
+          {
+            "id": "dev",
+            "label": "IoT devices",
+            "sub": "per-device certs",
+            "cat": "iot",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "core",
+            "label": "AWS IoT Core",
+            "sub": "registry, rules",
+            "cat": "iot",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "kds",
+            "label": "Kinesis Data Streams",
+            "cat": "analytics",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "fn",
+            "label": "Lambda",
+            "sub": "validate, enrich",
+            "cat": "compute",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "ts",
+            "label": "Time-series DB",
+            "sub": "recent readings",
+            "cat": "database",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "id": "arch",
+            "label": "S3 raw archive",
+            "sub": "Glue, Athena later",
+            "cat": "storage",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "fh",
+            "label": "Data Firehose",
+            "sub": "batch delivery",
+            "cat": "analytics",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "sns",
+            "label": "SNS",
+            "sub": "notify operations",
+            "cat": "integration",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "dash",
+            "label": "Dashboards",
+            "sub": "QuickSight or app",
+            "cat": "analytics",
+            "at": [
+              4,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "dev",
+            "to": "core",
+            "label": "MQTT/TLS",
+            "step": 1
+          },
+          {
+            "from": "core",
+            "to": "kds",
+            "label": "rule",
+            "step": 2
+          },
+          {
+            "from": "core",
+            "to": "fh",
+            "label": "rule",
+            "step": 2
+          },
+          {
+            "from": "fh",
+            "to": "arch",
+            "label": "archive",
+            "step": 2
+          },
+          {
+            "from": "kds",
+            "to": "fn",
+            "label": "records",
+            "step": 3
+          },
+          {
+            "from": "fn",
+            "to": "ts",
+            "label": "write",
+            "step": 3
+          },
+          {
+            "from": "fn",
+            "to": "sns",
+            "label": "alert",
+            "step": 3
+          },
+          {
+            "from": "ts",
+            "to": "dash",
+            "label": "query",
+            "step": 4
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "Devices authenticate to AWS IoT Core with X.509 certificates and publish over MQTT with TLS."
+        },
+        {
+          "text": "IoT rules send messages to Kinesis Data Streams for real-time consumers and to Firehose for a durable raw archive in S3."
+        },
+        {
+          "text": "Lambda validates and enriches each record, writes measurements to the time-series store, and publishes threshold alerts to SNS."
+        },
+        {
+          "text": "Dashboards query curated data; the S3 history feeds batch analytics with Glue and Athena.",
+          "nodes": [
+            "arch"
+          ]
+        },
+        {
+          "text": "Apply per-device policies, least privilege, retries with a DLQ, and monitoring.",
+          "nodes": [
+            "core",
+            "fn"
+          ]
+        }
+      ],
+      "why": [
+        {
+          "decision": "IoT Core",
+          "reason": "Device identity, MQTT connectivity, and rules in one service."
+        },
+        {
+          "decision": "Kinesis and Firehose",
+          "reason": "Streams for custom consumers and replay; Firehose for managed delivery."
+        },
+        {
+          "decision": "Time-series store or DynamoDB",
+          "reason": "A time-series database for range queries over time; DynamoDB for current device state by key."
+        }
+      ],
+      "watch": "Define device identity lifecycle, offline buffering, message size and rate, retention, and ordering before sizing the stream. Check current time-series options: Timestream for LiveAnalytics closed to new customers in 2025."
+    },
+    {
+      "id": "genai",
+      "title": "AI and ML inference application",
+      "practice": "rag-chatbot",
+      "scenario": "Expose a model through an authenticated API, optionally ground answers in company documents, and monitor quality and cost.",
+      "diagram": {
+        "cols": 5,
+        "rows": 2,
+        "nodes": [
+          {
+            "id": "client",
+            "label": "Client",
+            "sub": "web or service",
+            "cat": "client",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "apigw",
+            "label": "API Gateway",
+            "sub": "auth, throttling",
+            "cat": "integration",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "fn",
+            "label": "Lambda or ECS",
+            "sub": "business logic",
+            "cat": "compute",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "br",
+            "label": "Bedrock model",
+            "sub": "with Guardrails",
+            "cat": "ml",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "idp",
+            "label": "Cognito",
+            "sub": "user identity",
+            "cat": "security",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "cw",
+            "label": "CloudWatch",
+            "sub": "latency, cost",
+            "cat": "mgmt",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "kb",
+            "label": "Knowledge Bases",
+            "sub": "retrieval",
+            "cat": "ml",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "docs",
+            "label": "S3 documents",
+            "sub": "approved sources",
+            "cat": "storage",
+            "at": [
+              4,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "client",
+            "to": "apigw",
+            "label": "HTTPS",
+            "step": 1
+          },
+          {
+            "from": "apigw",
+            "to": "idp",
+            "label": "verify",
+            "step": 1
+          },
+          {
+            "from": "apigw",
+            "to": "fn",
+            "label": "invoke",
+            "step": 2
+          },
+          {
+            "from": "fn",
+            "to": "kb",
+            "label": "retrieve",
+            "step": 3,
+            "route": "hv"
+          },
+          {
+            "from": "docs",
+            "to": "kb",
+            "label": "sync",
+            "step": 3
+          },
+          {
+            "from": "fn",
+            "to": "br",
+            "label": "prompt",
+            "step": 3
+          },
+          {
+            "from": "fn",
+            "to": "cw",
+            "label": "metrics",
+            "step": 4
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "The client calls API Gateway over HTTPS; a Cognito or IAM authorizer checks identity."
+        },
+        {
+          "text": "Lambda or ECS validates input, applies business rules, and calls the model with a scoped IAM role."
+        },
+        {
+          "text": "For RAG, retrieve only the chunks this user may see, then call Bedrock and return a grounded answer with citations."
+        },
+        {
+          "text": "Store only the request metadata and feedback you need; watch latency, errors, model behavior, and token cost."
+        },
+        {
+          "text": "Redact logs, evaluate outputs, apply Guardrails, and set timeouts and a fallback.",
+          "nodes": [
+            "br",
+            "fn"
+          ]
+        }
+      ],
+      "why": [
+        {
+          "decision": "Bedrock",
+          "reason": "Hosted foundation models, no model servers to run."
+        },
+        {
+          "decision": "SageMaker instead",
+          "reason": "When you train or host a custom model on a managed endpoint."
+        },
+        {
+          "decision": "Lambda or ECS",
+          "reason": "Lambda for short API work; ECS for long-running or streaming responses."
+        }
+      ],
+      "watch": "Managed AI does not remove the need for data authorization, evaluation, prompt-injection defenses, human review of high-impact decisions, and cost controls."
+    },
+    {
+      "id": "containers",
+      "title": "Containers and microservices",
+      "scenario": "Run independently deployable services with controlled ingress, service-to-service calls, image delivery, and observability.",
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "groups": [
+          {
+            "label": "AWS Region",
+            "kind": "region",
+            "from": [
+              1,
+              0
+            ],
+            "to": [
+              4,
+              2
+            ]
+          },
+          {
+            "label": "Public subnets",
+            "kind": "public",
+            "from": [
+              1,
+              1
+            ],
+            "to": [
+              1,
+              1
+            ]
+          },
+          {
+            "label": "Private subnets, 2+ AZs",
+            "kind": "private",
+            "from": [
+              2,
+              1
+            ],
+            "to": [
+              4,
+              2
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "ci",
+            "label": "CI pipeline",
+            "sub": "build, test, scan",
+            "cat": "mgmt",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "ecr",
+            "label": "ECR",
+            "sub": "versioned images",
+            "cat": "container",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "cw",
+            "label": "CloudWatch",
+            "sub": "logs, metrics",
+            "cat": "mgmt",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "id": "clients",
+            "label": "Clients",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "alb",
+            "label": "ALB or API Gateway",
+            "cat": "edge",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "svc",
+            "label": "ECS or EKS",
+            "sub": "Fargate or EC2",
+            "cat": "container",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "bus",
+            "label": "SQS or EventBridge",
+            "cat": "integration",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "worker",
+            "label": "Worker service",
+            "cat": "container",
+            "at": [
+              4,
+              1
+            ]
+          },
+          {
+            "id": "data",
+            "label": "Service data",
+            "sub": "RDS or DynamoDB",
+            "cat": "database",
+            "at": [
+              2,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "ci",
+            "to": "ecr",
+            "label": "push",
+            "step": 1
+          },
+          {
+            "from": "ecr",
+            "to": "svc",
+            "label": "pull",
+            "step": 2
+          },
+          {
+            "from": "clients",
+            "to": "alb",
+            "label": "HTTPS",
+            "step": 3
+          },
+          {
+            "from": "alb",
+            "to": "svc",
+            "label": "route",
+            "step": 3
+          },
+          {
+            "from": "svc",
+            "to": "data",
+            "label": "own data",
+            "step": 4
+          },
+          {
+            "from": "svc",
+            "to": "bus",
+            "label": "async",
+            "step": 4
+          },
+          {
+            "from": "bus",
+            "to": "worker",
+            "label": "consume",
+            "step": 4
+          },
+          {
+            "from": "worker",
+            "to": "cw",
+            "label": "telemetry",
+            "step": 5
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "CI builds and tests the image, then pushes an immutable tag to ECR."
+        },
+        {
+          "text": "ECS or EKS deploys tasks across AZs: Fargate to skip node management, EC2 nodes for more control."
+        },
+        {
+          "text": "The ALB or API Gateway exposes approved routes; services talk privately through internal endpoints and scoped security groups."
+        },
+        {
+          "text": "Each service owns its data. Use APIs for request and response, and SQS or EventBridge for asynchronous work."
+        },
+        {
+          "text": "Health checks, rolling or canary deploys, injected secrets, image scanning, and central logs and metrics.",
+          "nodes": [
+            "svc",
+            "ci"
+          ]
+        }
+      ],
+      "why": [
+        {
+          "decision": "ECS or EKS",
+          "reason": "ECS for AWS-native simplicity; EKS when Kubernetes compatibility is required."
+        },
+        {
+          "decision": "Fargate or EC2",
+          "reason": "Fargate removes node work; EC2 can be cheaper at steady high utilization."
+        },
+        {
+          "decision": "SQS or EventBridge",
+          "reason": "Decoupling stops one slow service from cascading into others."
+        }
+      ],
+      "watch": "Do not make a shared database the integration contract. Define timeouts, retries, idempotency, service ownership, and rollback."
+    },
+    {
+      "id": "dr",
+      "title": "Disaster recovery",
+      "practice": "multi-region-dr",
+      "scenario": "Recover after an AZ or Region failure, within an agreed recovery point objective (RPO) and recovery time objective (RTO).",
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "groups": [
+          {
+            "label": "Primary Region",
+            "kind": "region",
+            "from": [
+              2,
+              0
+            ],
+            "to": [
+              4,
+              0
+            ]
+          },
+          {
+            "label": "DR Region",
+            "kind": "region",
+            "from": [
+              2,
+              2
+            ],
+            "to": [
+              4,
+              2
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "users",
+            "label": "Users",
+            "cat": "client",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "r53",
+            "label": "Route 53",
+            "sub": "failover policy",
+            "cat": "edge",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "app",
+            "label": "App across AZs",
+            "sub": "ALB + app",
+            "cat": "compute",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "db",
+            "label": "Primary database",
+            "cat": "database",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "bk",
+            "label": "AWS Backup",
+            "sub": "protected copies",
+            "cat": "storage",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "id": "dapp",
+            "label": "Standby app",
+            "sub": "pilot light or warm",
+            "cat": "compute",
+            "at": [
+              2,
+              2
+            ]
+          },
+          {
+            "id": "ddb",
+            "label": "Replica database",
+            "cat": "database",
+            "at": [
+              3,
+              2
+            ]
+          },
+          {
+            "id": "run",
+            "label": "Runbook + alarms",
+            "sub": "CloudWatch, SSM",
+            "cat": "mgmt",
+            "at": [
+              4,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "users",
+            "to": "r53",
+            "label": "DNS",
+            "step": 2
+          },
+          {
+            "from": "r53",
+            "to": "app",
+            "label": "normal",
+            "step": 2
+          },
+          {
+            "from": "app",
+            "to": "db",
+            "label": "writes",
+            "step": 2
+          },
+          {
+            "from": "db",
+            "to": "bk",
+            "label": "backup",
+            "step": 2
+          },
+          {
+            "from": "db",
+            "to": "ddb",
+            "label": "replicate",
+            "step": 3
+          },
+          {
+            "from": "run",
+            "to": "ddb",
+            "label": "promote",
+            "step": 4
+          },
+          {
+            "from": "r53",
+            "to": "dapp",
+            "label": "failover",
+            "step": 4,
+            "dashed": true
+          },
+          {
+            "from": "dapp",
+            "to": "ddb",
+            "label": "reads",
+            "step": 3
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "Agree RTO (time to restore) and RPO (acceptable data loss) for each workload with the business.",
+          "nodes": [
+            "users"
+          ]
+        },
+        {
+          "text": "Run the primary across AZs and protect data with backups and supported replication."
+        },
+        {
+          "text": "Keep the DR Region at the chosen readiness: backup and restore, pilot light, warm standby, or active-active."
+        },
+        {
+          "text": "During an incident, check health and data consistency, promote dependencies, then switch traffic with the planned mechanism."
+        },
+        {
+          "text": "Test failover and failback regularly, including IAM, secrets, DNS, certificates, quotas, artifacts, and operator access.",
+          "nodes": [
+            "run",
+            "dapp"
+          ]
+        }
+      ],
+      "why": [
+        {
+          "decision": "Backup and restore",
+          "reason": "Lowest cost, longest recovery."
+        },
+        {
+          "decision": "Pilot light or warm standby",
+          "reason": "Faster recovery for more always-on cost."
+        },
+        {
+          "decision": "Active-active",
+          "reason": "Shortest recovery, highest complexity and data-consistency burden."
+        }
+      ],
+      "watch": "Replication copies corruption and deletes too. Pair it with protected point-in-time backups and a rehearsed runbook."
+    },
+    {
+      "id": "lake",
+      "title": "Data lake and analytics",
+      "practice": "clickstream",
+      "scenario": "Ingest batch and streaming data, catalog and transform it, query it cheaply, and publish trusted reporting datasets.",
+      "diagram": {
+        "cols": 5,
+        "rows": 2,
+        "nodes": [
+          {
+            "id": "src",
+            "label": "Sources",
+            "sub": "apps, DBs, logs",
+            "cat": "client",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "ing",
+            "label": "Stream ingest",
+            "sub": "Kinesis, Firehose",
+            "cat": "analytics",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "raw",
+            "label": "S3 raw zone",
+            "sub": "immutable landing",
+            "cat": "storage",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "id": "glue",
+            "label": "Glue",
+            "sub": "catalog, ETL",
+            "cat": "analytics",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "cur",
+            "label": "S3 curated zone",
+            "sub": "partitioned Parquet",
+            "cat": "storage",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "id": "lf",
+            "label": "Lake Formation",
+            "sub": "table permissions",
+            "cat": "security",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "bi",
+            "label": "QuickSight or Redshift",
+            "cat": "analytics",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "ath",
+            "label": "Athena",
+            "sub": "serverless SQL",
+            "cat": "analytics",
+            "at": [
+              4,
+              1
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "src",
+            "to": "ing",
+            "label": "stream",
+            "step": 1
+          },
+          {
+            "from": "ing",
+            "to": "raw",
+            "label": "deliver",
+            "step": 1
+          },
+          {
+            "from": "raw",
+            "to": "glue",
+            "label": "crawl",
+            "step": 2
+          },
+          {
+            "from": "glue",
+            "to": "cur",
+            "label": "Parquet",
+            "step": 2
+          },
+          {
+            "from": "cur",
+            "to": "ath",
+            "label": "query",
+            "step": 3
+          },
+          {
+            "from": "ath",
+            "to": "bi",
+            "label": "report",
+            "step": 4
+          },
+          {
+            "from": "lf",
+            "to": "raw",
+            "label": "govern",
+            "step": 5
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "Land immutable raw data in S3; streaming sources arrive through Kinesis Data Streams or Firehose."
+        },
+        {
+          "text": "Glue crawlers and ETL jobs build the catalog and curated datasets; the raw zone stays for replay and audit."
+        },
+        {
+          "text": "Parquet or ORC, compression, and partitions cut how many bytes Athena scans."
+        },
+        {
+          "text": "Athena handles ad hoc SQL; Redshift serves repeated warehouse workloads; QuickSight shows dashboards."
+        },
+        {
+          "text": "Lake Formation, IAM, and bucket policies govern access, with central audit logs."
+        }
+      ],
+      "why": [
+        {
+          "decision": "Athena or Redshift",
+          "reason": "Athena for ad hoc SQL on lake files; Redshift for repeated, curated warehouse queries."
+        },
+        {
+          "decision": "Raw and curated zones",
+          "reason": "Keeps source fidelity while giving analysts consistent, fast datasets."
+        },
+        {
+          "decision": "Glue",
+          "reason": "Catalog and transformation, not storage."
+        }
+      ],
+      "watch": "Data quality, schema evolution, PII controls, partition strategy, and ownership matter as much as the services."
+    },
+    {
+      "id": "async",
+      "title": "Asynchronous messaging and event processing",
+      "scenario": "Decouple producers from consumers, absorb bursts, retry failures safely, and broadcast events to independent systems.",
+      "diagram": {
+        "cols": 5,
+        "rows": 3,
+        "nodes": [
+          {
+            "id": "prod",
+            "label": "Producer",
+            "sub": "publishes event",
+            "cat": "compute",
+            "at": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "eb",
+            "label": "EventBridge",
+            "sub": "filter, route",
+            "cat": "integration",
+            "at": [
+              1,
+              1
+            ]
+          },
+          {
+            "id": "sns",
+            "label": "SNS topic",
+            "sub": "fan-out",
+            "cat": "integration",
+            "at": [
+              2,
+              1
+            ]
+          },
+          {
+            "id": "qa",
+            "label": "SQS queue A",
+            "cat": "integration",
+            "at": [
+              3,
+              0
+            ]
+          },
+          {
+            "id": "wa",
+            "label": "Worker A",
+            "sub": "idempotent",
+            "cat": "compute",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "id": "dlq",
+            "label": "DLQ",
+            "sub": "dead-letter queue",
+            "cat": "integration",
+            "at": [
+              3,
+              1
+            ]
+          },
+          {
+            "id": "qb",
+            "label": "SQS queue B",
+            "cat": "integration",
+            "at": [
+              3,
+              2
+            ]
+          },
+          {
+            "id": "wb",
+            "label": "Worker B",
+            "sub": "idempotent",
+            "cat": "compute",
+            "at": [
+              4,
+              2
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "prod",
+            "to": "eb",
+            "label": "event",
+            "step": 1
+          },
+          {
+            "from": "eb",
+            "to": "sns",
+            "label": "rule",
+            "step": 1
+          },
+          {
+            "from": "sns",
+            "to": "qa",
+            "label": "fan-out",
+            "step": 2
+          },
+          {
+            "from": "sns",
+            "to": "qb",
+            "step": 2
+          },
+          {
+            "from": "qa",
+            "to": "wa",
+            "label": "poll",
+            "step": 3
+          },
+          {
+            "from": "qb",
+            "to": "wb",
+            "label": "poll",
+            "step": 3
+          },
+          {
+            "from": "qa",
+            "to": "dlq",
+            "label": "max retries",
+            "step": 4,
+            "dashed": true
+          },
+          {
+            "from": "qb",
+            "to": "dlq",
+            "step": 4,
+            "dashed": true
+          }
+        ]
+      },
+      "steps": [
+        {
+          "text": "The producer emits an event; an EventBridge rule matches it and routes it on."
+        },
+        {
+          "text": "SNS fans out to several SQS queues, so each consumer has its own durable backlog."
+        },
+        {
+          "text": "Workers poll their queue; a failed message reappears after the visibility timeout and is retried."
+        },
+        {
+          "text": "After the maximum receive count, the message moves to the dead-letter queue for diagnosis and controlled redrive."
+        },
+        {
+          "text": "Handlers are idempotent; alarm on queue age, depth, delivery failures, and DLQ count.",
+          "nodes": [
+            "wa",
+            "wb",
+            "dlq"
+          ]
+        }
+      ],
+      "why": [
+        {
+          "decision": "SQS",
+          "reason": "Durable pull-based queue that buffers bursts."
+        },
+        {
+          "decision": "SNS + SQS",
+          "reason": "Fan-out with independent scaling and retries per consumer."
+        },
+        {
+          "decision": "EventBridge",
+          "reason": "Rule-based routing, schedules, and many AWS targets."
+        }
+      ],
+      "watch": "Do not assume exactly-once processing. Design for duplicates, ordering limits, poison messages, and safe replay."
+    }
+  ],
+  "checklist": [
+    {
+      "dimension": "Traffic and performance",
+      "questions": "Peak requests or events per second? Payload size? Latency target? Burst pattern? Global users?"
+    },
+    {
+      "dimension": "Availability and recovery",
+      "questions": "Required uptime? Multi-AZ? Regional DR? Explicit RTO and RPO? Is failover tested?"
+    },
+    {
+      "dimension": "Data",
+      "questions": "Relational or key-value? Access patterns? Consistency? Retention? Backups and point-in-time recovery? Residency?"
+    },
+    {
+      "dimension": "Security",
+      "questions": "Who authenticates? Least-privilege roles? Private subnets? TLS and KMS? Secret rotation? Audit?"
+    },
+    {
+      "dimension": "Integration",
+      "questions": "Synchronous API or asynchronous queue? Fan-out, ordering, replay, retries, DLQ?"
+    },
+    {
+      "dimension": "Operations",
+      "questions": "Metrics, logs, traces, alarms, runbooks, rollback, infrastructure as code?"
+    },
+    {
+      "dimension": "Cost",
+      "questions": "Always on or on demand? Data transfer? Storage tiers? Cache hit rate? Query scan cost?"
+    },
+    {
+      "dimension": "Tradeoffs",
+      "questions": "What did you deliberately not choose, and why? What changes at 10 times the traffic?"
+    }
+  ]
+}

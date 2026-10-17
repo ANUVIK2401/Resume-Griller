@@ -55,7 +55,14 @@ try {
   await page.getByLabel('Date and time confirmed with the recruiter', { exact: true }).check();
   await event.fill('2026-11-16T10:30'); await event.dispatchEvent('change');
   assert.equal(await page.getByLabel('Date and time confirmed with the recruiter', { exact: true }).isChecked(), false);
-  for (const path of ['review', 'behavioral', 'cheatsheet', 'aws', 'design', 'questions', 'mock']) await visit(`amazon/${path}.html`);
+  for (const path of ['review', 'behavioral', 'cheatsheet', 'architecture', 'aws', 'design', 'questions', 'mock']) await visit(`amazon/${path}.html`);
+  await visit('amazon/architecture.html');
+  assert.equal(await page.locator('svg.arch-svg').count(), 8);
+  await page.locator('#pattern-ha-web').getByRole('button', { name: 'Trace the request' }).click();
+  assert.equal(await page.locator('#pattern-ha-web svg.arch-svg.is-tracing').count(), 1);
+  assert.ok(await page.locator('#pattern-ha-web .arch-edge.is-on').count() >= 1);
+  await page.getByRole('tab', { name: 'Databases' }).click();
+  assert.equal(await page.locator('#panel-database').isVisible(), true);
   await visit('amazon/behavioral.html#story-erp-hitl');
   await page.locator('#story-erp-hitl[open]').waitFor();
   assert.doesNotMatch(await page.locator('#story-erp-hitl .star').innerText(), /fill:|confirm:|reported/i);
@@ -125,5 +132,5 @@ try {
     await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/review-desktop.png`, fullPage: false });
   }
   assert.deepEqual(errors, []);
-  console.log('Browser checks passed: 9 routes, movable plan, Pacific date, saved progress, private draft preservation, cheat sheet filters/flashcards, export/import, tailored mock scoring, mobile layout and navigation.');
+  console.log('Browser checks passed: 10 routes, traceable architecture diagrams, movable plan, Pacific date, saved progress, private draft preservation, cheat sheet filters/flashcards, export/import, tailored mock scoring, mobile layout and navigation.');
 } finally { await browser.close(); }

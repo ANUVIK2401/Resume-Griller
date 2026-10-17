@@ -49,7 +49,7 @@ Have real failure, disagreement, and mentoring examples. A success story about t
 | 2026-10-19 | Storage, databases, and S3/S6 reserves | Answer at least four of five database choices with requirement-based reasons and one alternative. |
 | 2026-10-20 | Paper design 2: decoupled workflow | Explain duplicate delivery, recovery from a poisoned message, and the observable customer status. |
 | 2026-10-21 | Customer translation and commercial judgment | Ask before proposing; explain business value without jargon and close with a measurable next step. |
-| 2026-10-22 | Full mock 2 and readiness checkpoint | Target eight of ten justified service choices and four complete core STAR answers. Use extension time for misses, not new breadth. |
+| 2026-10-22 | Full mock 2 and readiness checkpoint, after the 12:30 Salesforce call | Target eight of ten justified service choices and four complete core STAR answers. Use extension time for misses, not new breadth. |
 | 2026-10-23 | Paper design 3: resilience and migration | Justify recovery from business needs and distinguish an available replica from a tested recoverable backup. |
 | 2026-10-24 | Resume deep dive and bounded AI review | Separate actual work from proposed AWS designs; qualify unknown metrics and demonstrate a clear request path. |
 | 2026-10-25 | Full mock 3 and final repairs | Four core stories plus two reserves are defensible; an unseen design includes requirements, security, failure/recovery, scaling, cost, and tradeoffs. |
@@ -65,6 +65,7 @@ October 27: light recall, repair only your weakest points, prepare logistics, an
 - [Daily sprint](index.html#sprint)
 - [STAR answers](behavioral.html#story-erp-hitl)
 - [AWS decisions](cheatsheet.html)
+- [Architecture diagrams](architecture.html)
 - [Paper designs](design.html)
 - [Customer questions](questions.html)
 - [Timed mock](mock.html)

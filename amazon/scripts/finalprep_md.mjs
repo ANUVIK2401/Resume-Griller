@@ -36,7 +36,7 @@ export function render(loop, profile) {
     '## October 27 and interview day', '',
     'October 27: light recall, repair only your weakest points, prepare logistics, and rest. On interview day, use a brief warm-up, listen to the actual question, state assumptions, ask clarifying questions, and explain your decisions. No new-service cram session.', '',
     '## Open the practice tools', '',
-    '- [Daily sprint](index.html#sprint)', '- [STAR answers](behavioral.html#story-erp-hitl)', '- [AWS decisions](cheatsheet.html)', '- [Paper designs](design.html)', '- [Customer questions](questions.html)', '- [Timed mock](mock.html)', '',
+    '- [Daily sprint](index.html#sprint)', '- [STAR answers](behavioral.html#story-erp-hitl)', '- [AWS decisions](cheatsheet.html)', '- [Architecture diagrams](architecture.html)', '- [Paper designs](design.html)', '- [Customer questions](questions.html)', '- [Timed mock](mock.html)', '',
   ].join('\n');
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) {

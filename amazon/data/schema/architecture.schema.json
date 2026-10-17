@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "architecture.schema.json",
+  "title": "AWS architecture patterns",
+  "type": "object",
+  "required": [
+    "principle",
+    "answer_format",
+    "source_note",
+    "families",
+    "heuristics",
+    "tables",
+    "scenarios",
+    "checklist"
+  ],
+  "properties": {
+    "principle": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "answer_format": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "source_note": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "cat",
+          "services"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "cat": {
+            "$ref": "common.schema.json#/$defs/cat"
+          },
+          "services": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "role"
+              ],
+              "properties": {
+                "name": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "role": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "heuristics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "need",
+          "choose"
+        ],
+        "properties": {
+          "need": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "choose": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "tables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "cat",
+          "rows",
+          "rule"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "cat": {
+            "$ref": "common.schema.json#/$defs/cat"
+          },
+          "rule": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "rows": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "service",
+                "use",
+                "tradeoff"
+              ],
+              "properties": {
+                "service": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "use": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "tradeoff": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "scenario",
+          "diagram",
+          "steps",
+          "why",
+          "watch"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "scenario": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "practice": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "diagram": {
+            "$ref": "common.schema.json#/$defs/diagram"
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "text"
+              ],
+              "properties": {
+                "text": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "nodes": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "why": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "decision",
+                "reason"
+              ],
+              "properties": {
+                "decision": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "reason": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          },
+          "watch": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "dimension",
+          "questions"
+        ],
+        "properties": {
+          "dimension": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "questions": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    }
+  }
+}

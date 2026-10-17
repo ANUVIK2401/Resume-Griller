@@ -159,7 +159,7 @@ At MSRcosmos, the ERP agents depended on financial data from Databricks workspac
 ### One story for engineers and executives
 
 - Technical audience: give S1 a 90-second explanation of the financial migration, your ownership, routing decision, rejected alternative, validation, failure recovery, and reported result. Confirm each mechanism rather than borrowing a proposed AWS design as history.
-- Executive audience: give S1 a 30-second version. Proposed wording: I worked on financial migration across 12 entities. The workflow combined automation with human review, and reported turnaround fell from 3 days to 5.5 hours. [confirm: measurement period, your contribution, and the customer decision this supported].
+- Executive audience: give S1 a 30-second version. Proposed wording: I worked on financial migration across 12 entities. The workflow combined automation with human review, and reported turnaround fell from 3 days to 5.5 hours. Before using it, be ready to state the measurement period and your own contribution..
 - As an alternative, use S2: engineers need actual diagnostic signals and false-tag handling; executives need the reported P1 recovery change from 94 to 26 minutes and the affected workflow. Confirm the measurement and customer impact before using either version.
 - Rehearse a handoff to a sales partner: ask what business objective, decision-maker, constraint, and success measure the customer has. This is a proposed role-play, not a claim of prior sales collaboration.
 

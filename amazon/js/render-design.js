@@ -14,14 +14,16 @@
 
   function answer(d, behavioral) {
     const story = d.story && behavioral.stories.find((s) => s.id === d.story);
+    const steps = d.flow.map((text, i) => ({ text, nodes: d.diagram.focus?.[i] || [] }));
+    const figure = window.Prep.arch.figure(d.diagram, steps, `Architecture diagram for ${d.title}`);
     const block = (label, items) => (items?.length ? el('div', { class: 'kv' }, el('p', { class: 'label' }, label), ui.list(items)) : null);
     return el('div', { class: 'stack answer' },
       el('div', { class: 'grid-2' },
         block('Functional requirements', d.requirements.functional),
         block('Non-functional requirements', d.requirements.non_functional)),
-      el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Diagram'), ui.diagram(d.diagram, `Architecture diagram for ${d.title}`)),
+      figure.figure,
+      el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Request flow'), figure.steps),
       el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Components'), table(['Component', 'Role'], d.components.map((c) => [c.name, c.role]))),
-      el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Request flow'), el('ol', { class: 'list' }, d.flow.map((f) => el('li', {}, f)))),
       el('div', { class: 'grid-3' },
         block('Scale', d.scale), block('Security', d.security), block('Cost', d.cost)),
       el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'The tradeoff to say out loud'), el('p', {}, d.tradeoff)),

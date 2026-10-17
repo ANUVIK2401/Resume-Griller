@@ -739,7 +739,7 @@
             "id": "sp01-2",
             "minutes": 40,
             "text": "Draw the network and IAM request path: DNS, TLS, load balancer, private app, database, assumed role, least privilege, and logs.",
-            "page": "aws",
+            "page": "architecture",
             "minimum": true
           },
           {
@@ -792,7 +792,7 @@
             "id": "sp02-3",
             "minutes": 45,
             "text": "Compare EC2, ECS/Fargate, Lambda, ALB, and CloudFront using the design requirements; name one rejected alternative.",
-            "page": "cheatsheet",
+            "page": "architecture",
             "minimum": false
           },
           {
@@ -863,7 +863,7 @@
             "id": "sp04-2",
             "minutes": 45,
             "text": "Choose S3/EBS/EFS and RDS/Aurora/DynamoDB for five access patterns; distinguish durability, backup, high availability, read scaling, and cache.",
-            "page": "cheatsheet",
+            "page": "architecture",
             "minimum": true
           },
           {
@@ -963,7 +963,7 @@
       {
         "id": "sp07",
         "date": "2026-10-22",
-        "focus": "Full mock 2 and readiness checkpoint",
+        "focus": "Full mock 2 and readiness checkpoint, after the 12:30 Salesforce call",
         "deliverable": "A second scored mock, ten decision answers, and a short repair list.",
         "readiness_gate": "Target eight of ten justified service choices and four complete core STAR answers. Use extension time for misses, not new breadth.",
         "full_mock": true,
@@ -1019,7 +1019,7 @@
             "id": "sp08-2",
             "minutes": 45,
             "text": "Explain RTO/RPO, Multi-AZ versus multi-Region, backups, replication, restore drills, and the cost of your recovery choice.",
-            "page": "cheatsheet",
+            "page": "architecture",
             "minimum": true
           },
           {

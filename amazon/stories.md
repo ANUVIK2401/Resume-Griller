@@ -16,7 +16,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## 60-second pitch
 
-**Who.** I'm Anuvik, an MS computer science student at USC graduating in December 2026. From July 2022 to January 2025, I worked at Oracle on observability, incident diagnostics, and Kubernetes for enterprise services.
+**Who.** I'm Anuvik, an MS computer science student at USC graduating in December 2026. I spent nearly 3 years at Oracle working on observability, incident diagnostics, and Kubernetes for enterprise services.
 
 **Proof.** One project reduced P1 MTTR from 94 to 26 minutes by giving on-call engineers diagnostic tags and runbook context.
 
@@ -65,7 +65,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, explain confidence routing, independent validation, and safe replay. For executives, explain the reported turnaround from 3 days to 5.5 hours and the reviewer decision boundary. Confirm the measurement and stakeholder acceptance; do not claim audit compliance or zero errors.
 
@@ -96,7 +96,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, explain the actual event signals, tag logic, false diagnoses, and rollout. For executives, explain recovery from 94 to 26 minutes and the affected customer workflow. Confirm the measurement and impact; a P1 does not establish every customer was down.
 
@@ -127,7 +127,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, explain the actual SLI, target, alert sensitivity, and missed-incident checks. For executives, connect 41% fewer false-positive pages to attention available for real incidents, without claiming measured productivity or customer benefit that was not recorded.
 
@@ -157,7 +157,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, demonstrate one pre-deployment check and its exception policy. For executives, explain failed deploys falling from 11% to 4% and release cycles 34% shorter. Confirm attribution and adoption actions before presenting this as a customer-influence example.
 
@@ -187,7 +187,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, explain one query plan, index choice, write cost, and rollout. For executives, explain median search page load falling from 840 ms to 588 ms and ask which user workflow matters. Do not invent hardware savings or increased revenue.
 
@@ -217,7 +217,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, trace the actual metric through replica demand, node capacity, readiness, and stabilization. For executives, describe holding p99 objectives at 2x peak load, with the test conditions confirmed. Distinguish OCI experience from a proposed EKS or ECS design.
 
@@ -247,7 +247,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **Context:** Same ERP episode as S1, told from the orchestration angle. Do not count it as a separate customer engagement or a documented rapid-learning timeline.
 
@@ -278,7 +278,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **Context:** The PDF lists AI/ML Research Intern, Sports Analytics. Earlier site data said volunteer research; confirm the official role classification before using it on forms.
 
@@ -309,7 +309,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **Status:** Ongoing work; describe implemented capabilities without inventing a business outcome.
 
@@ -341,7 +341,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **Status:** Ongoing work; describe implemented capabilities without inventing a business outcome.
 
@@ -372,7 +372,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, explain the exact model, workload, measurement method, comparator, and quality constraint. For executives, describe the tested resource-versus-quality choice and the need for customer-specific evaluation. No production cost saving or universal precision recommendation is established.
 
@@ -401,7 +401,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ### Preparation notes, separate from the speaking script
 
-**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. Any additional personal detail or lesson marked [confirm: ...] must be checked before rehearsal. See the resume and STAR review.
+**Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
 **SA audience bridge:** For engineers, explain merge keys, deletes, late arrivals, correctness, and the meaning of full refresh. For executives, explain the 22-minute reported refresh in relation to the customer freshness requirement once confirmed. Native AWS equivalents remain proposed designs.
 
