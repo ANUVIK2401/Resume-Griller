@@ -20,4 +20,6 @@ Portable references:
 
 The older general bank remains at [general-prep.html](general-prep.html). Salesforce is active: the hiring manager round is October 22, 2026; start with [salesforce/HM-BRIEF.md](salesforce/HM-BRIEF.md). Google preparation remains an archived module.
 
+Every page shares one interview bar (`shared/switcher.js`): switch between Salesforce and Amazon, see each countdown from the module's `data/loop.json`, and jump between the current module's pages.
+
 The existing GitHub Pages workflow deploys pushes to main after validation. Local edits do not update the live site until pushed.

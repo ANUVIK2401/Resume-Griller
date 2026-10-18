@@ -1,0 +1,60 @@
+/* Interview bar shared by the landing page, Salesforce, and Amazon. Self-contained tokens so it
+   looks the same in both modules; the colour of the underline says which company you are in. */
+:root { --gx-h: 2.75rem; --gx-bg: #0B1119; --gx-ink: #E9EEF5; --gx-muted: #9AA7B8; --gx-line: rgb(255 255 255 / 0.1); --gx-sf: #1B96FF; --gx-aws: #FF9900; }
+
+/* Space is reserved before the script runs, so nothing jumps when the bar appears. */
+body { padding-top: var(--gx-h); }
+html { scroll-padding-top: calc(var(--gx-h) + 4.5rem); }
+
+.gx-bar {
+  position: fixed; inset: 0 0 auto; z-index: 50; height: var(--gx-h);
+  display: flex; align-items: center; gap: 0.25rem; padding-inline: 0.5rem 0.75rem;
+  background: var(--gx-bg); color: var(--gx-ink); border-bottom: 1px solid var(--gx-line);
+  font: 500 0.875rem/1 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.gx-bar a { color: inherit; text-decoration: none; border-radius: 6px; }
+.gx-bar a:focus-visible { outline: 2px solid var(--gx-aws); outline-offset: 2px; }
+
+.gx-home { display: inline-grid; place-items: center; width: 2rem; height: 2rem; margin-right: 0.25rem; flex: none; }
+.gx-mark { font-weight: 800; font-size: 0.75rem; letter-spacing: 0.04em; padding: 0.3rem 0.35rem; border: 1px solid var(--gx-line); border-radius: 6px; }
+.gx-home:hover .gx-mark { border-color: var(--gx-muted); }
+
+.gx-tabs { display: flex; align-items: stretch; height: 100%; flex: none; }
+.gx-tab {
+  position: relative; display: inline-flex; align-items: center; gap: 0.45rem; height: 100%; padding-inline: 0.75rem;
+  color: var(--gx-muted) !important; white-space: nowrap; transition: color 160ms, background 160ms;
+}
+.gx-tab:hover { color: var(--gx-ink) !important; background: rgb(255 255 255 / 0.04); }
+.gx-tab::after { content: ""; position: absolute; inset: auto 0.6rem 0; height: 2px; border-radius: 2px; background: transparent; }
+.gx-salesforce { --gx-c: var(--gx-sf); }
+.gx-amazon { --gx-c: var(--gx-aws); }
+.gx-tab[aria-current] { color: var(--gx-ink) !important; }
+.gx-tab[aria-current]::after { background: var(--gx-c); }
+.gx-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--gx-c); flex: none; }
+.gx-name { font-weight: 700; }
+.gx-when { color: var(--gx-muted); font-weight: 500; }
+.gx-short { display: none; }
+.gx-tab.is-next .gx-when { color: var(--gx-ink); }
+.gx-tab.is-next .gx-dot { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gx-c) 30%, transparent); }
+
+.gx-pages { display: flex; align-items: center; gap: 0.15rem; margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; border-left: 1px solid var(--gx-line); padding-left: 0.5rem; }
+.gx-pages:empty { display: none; }
+.gx-pages::-webkit-scrollbar { display: none; }
+.gx-pages a { padding: 0.45rem 0.6rem; white-space: nowrap; color: var(--gx-muted); transition: color 160ms, background 160ms; }
+.gx-pages a:hover { color: var(--gx-ink); background: rgb(255 255 255 / 0.06); }
+.gx-pages a[aria-current="page"] { color: var(--gx-ink); background: rgb(255 255 255 / 0.1); }
+
+/* Module layouts: the sidebar and the small-screen header sit below the bar. */
+@media (min-width: 1180px) {
+  .sidebar { top: var(--gx-h); height: calc(100vh - var(--gx-h)); height: calc(100dvh - var(--gx-h)); }
+}
+@media (max-width: 1179px) { .topbar { top: var(--gx-h); } }
+
+/* Narrow screens: drop the page links (the module menu has them) and shorten countdowns. */
+@media (max-width: 1100px) { .gx-long { display: none; } .gx-short { display: inline; } }
+@media (max-width: 760px) { .gx-pages { display: none; } }
+@media (max-width: 380px) { .gx-tab { padding-inline: 0.5rem; } .gx-home { display: none; } }
+
+@media (prefers-reduced-motion: reduce) { .gx-tab, .gx-pages a { transition: none; } }
+@media print { .gx-bar { display: none; } body { padding-top: 0; } }

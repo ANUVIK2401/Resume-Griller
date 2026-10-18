@@ -1,3 +1,4 @@
+.prep-landing { display: block; } /* opt out of the module sidebar grid on body */
 .prep-landing { background: var(--navy-deep); color: var(--on-navy); min-height: 100vh; }
 .landing-wrap { max-width: 1160px; margin: auto; padding: clamp(2rem, 7vw, 6rem) var(--gutter); }
 .landing-wrap > .label { color: var(--gold-pale); }

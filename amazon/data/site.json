@@ -9,7 +9,8 @@
       "prompt": "AWSI - ETP SOLUTIONS ARCHITECT",
       "title": "Ready for",
       "accent": "October 28",
-      "lede": "Prepare for a possible on-campus interview on Wednesday, October 28. Start with today's 90-minute essentials, then rehearse stories, AWS decisions, and customer conversations. The date remains tentative; start time and room are unconfirmed."
+      "lede": "Prepare for a possible on-campus interview on Wednesday, October 28. Start with today's 90-minute essentials, then rehearse stories, AWS decisions, and customer conversations. The date remains tentative; start time and room are unconfirmed.",
+      "short": "Sprint"
     },
     {
       "id": "review",
@@ -18,7 +19,8 @@
       "prompt": "EVIDENCE, OWNERSHIP, ARTICULATION",
       "title": "Practise your",
       "accent": "answers",
-      "lede": "Complete speaking scripts, short delivery drills, and optional coaching. Start with ERP migration, incident response, deployment validation, and SQL performance."
+      "lede": "Complete speaking scripts, short delivery drills, and optional coaching. Start with ERP migration, incident response, deployment validation, and SQL performance.",
+      "short": "Scripts"
     },
     {
       "id": "behavioral",
@@ -27,7 +29,8 @@
       "prompt": "~/prep/lp --rehearse",
       "title": "Stories and",
       "accent": "principles",
-      "lede": "A ready-to-speak introduction and twelve complete STAR answers with your resume numbers. Rehearse first; open deeper coaching only when you need it."
+      "lede": "A ready-to-speak introduction and twelve complete STAR answers with your resume numbers. Rehearse first; open deeper coaching only when you need it.",
+      "short": "LPs"
     },
     {
       "id": "cheatsheet",
@@ -36,7 +39,8 @@
       "prompt": "PRIORITIES, DECISIONS, TRADEOFFS",
       "title": "AWS decisions",
       "accent": "that matter",
-      "lede": "A prioritized two-week guide: core services, common comparison traps, customer scenarios, and practice drills."
+      "lede": "A prioritized two-week guide: core services, common comparison traps, customer scenarios, and practice drills.",
+      "short": "Cheat sheet"
     },
     {
       "id": "architecture",
@@ -45,7 +49,8 @@
       "prompt": "REQUIREMENTS, DIAGRAMS, TRADEOFFS",
       "title": "Architectures you",
       "accent": "can draw",
-      "lede": "Eight reference architectures you can trace step by step, a requirement-to-service guide, service comparisons, and the checklist to close every design."
+      "lede": "Eight reference architectures you can trace step by step, a requirement-to-service guide, service comparisons, and the checklist to close every design.",
+      "short": "Architectures"
     },
     {
       "id": "aws",
@@ -54,7 +59,8 @@
       "prompt": "~/prep/aws --flashcards",
       "title": "AWS in",
       "accent": "one line each",
-      "lede": "Reference glossary and flashcards. Start with the prioritized cheat sheet, then look up services as needed."
+      "lede": "Reference glossary and flashcards. Start with the prioritized cheat sheet, then look up services as needed.",
+      "short": "Glossary"
     },
     {
       "id": "design",
@@ -63,7 +69,8 @@
       "prompt": "~/prep/design --whiteboard",
       "title": "Whiteboard",
       "accent": "architectures",
-      "lede": "One framework said out loud, six practice designs with the answer hidden until you have tried."
+      "lede": "One framework said out loud, six practice designs with the answer hidden until you have tried.",
+      "short": "Whiteboard"
     },
     {
       "id": "questions",
@@ -72,7 +79,8 @@
       "prompt": "~/prep/questions --rapid-fire",
       "title": "Questions and",
       "accent": "role-play",
-      "lede": "Openers, a rapid-fire technical quiz, an LP question randomizer, customer role-plays, and what to ask them."
+      "lede": "Openers, a rapid-fire technical quiz, an LP question randomizer, customer role-plays, and what to ask them.",
+      "short": "Questions"
     },
     {
       "id": "mock",
@@ -81,7 +89,8 @@
       "prompt": "~/prep/mock --45min",
       "title": "Mock",
       "accent": "round",
-      "lede": "Two Leadership Principle questions and one technical question under a timer, then an honest self-score."
+      "lede": "Two Leadership Principle questions and one technical question under a timer, then an honest self-score.",
+      "short": "Mock"
     }
   ]
 }
