@@ -67,8 +67,18 @@
         const here = document.body.dataset.page;
         pages.replaceChildren(...site.pages.map((p) => el('a', { href: new URL(`${active.id}/${p.href}`, root).href, 'aria-current': p.id === here ? 'page' : null }, p.short || p.label)));
         pages.querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        markOverflow();
       }).catch(() => {});
     }
+
+    // Tablets: fade whichever edge hides more links, so swiping the bar is discoverable.
+    function markOverflow() {
+      const hidden = pages.scrollWidth - pages.clientWidth;
+      pages.classList.toggle('fade-end', hidden > 1 && pages.scrollLeft < hidden - 1);
+      pages.classList.toggle('fade-start', hidden > 1 && pages.scrollLeft > 1);
+    }
+    pages.addEventListener('scroll', markOverflow, { passive: true });
+    window.addEventListener('resize', markOverflow);
 
     const bar = el('div', { class: 'gx-bar' },
       el('a', { class: 'gx-home', href: new URL('index.html', root).href, 'aria-label': 'All interview prep', title: 'All interview prep' },

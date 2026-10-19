@@ -40,6 +40,9 @@ html { scroll-padding-top: calc(var(--gx-h) + 4.5rem); }
 
 .gx-pages { display: flex; align-items: center; gap: 0.15rem; margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; border-left: 1px solid var(--gx-line); padding-left: 0.5rem; }
 .gx-pages:empty { display: none; }
+.gx-pages.fade-end { mask-image: linear-gradient(90deg, #000 calc(100% - 3rem), transparent); }
+.gx-pages.fade-start { mask-image: linear-gradient(90deg, transparent, #000 3rem); }
+.gx-pages.fade-start.fade-end { mask-image: linear-gradient(90deg, transparent, #000 3rem, #000 calc(100% - 3rem), transparent); }
 .gx-pages::-webkit-scrollbar { display: none; }
 .gx-pages a { padding: 0.45rem 0.6rem; white-space: nowrap; color: var(--gx-muted); transition: color 160ms, background 160ms; }
 .gx-pages a:hover { color: var(--gx-ink); background: rgb(255 255 255 / 0.06); }
