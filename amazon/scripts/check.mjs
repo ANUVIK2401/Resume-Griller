@@ -128,6 +128,7 @@ for (const g of behavioral.gaps || []) refs(`behavioral.gaps.${g.id}.lps`, g.lps
 refs('aws.services.category', (aws.services || []).map((s) => s.category), ids(aws.categories));
 refs('aws.resume_map.story', (aws.resume_map || []).map((r) => r.story), storyIds);
 refs('designs.designs.story', (designs.designs || []).map((d) => d.story), storyIds);
+refs('top.questions.group', (data.top?.questions || []).map((q) => q.group), ids(data.top?.groups));
 refs('questions.lp_questions.lp', (questions.lp_questions || []).map((q) => q.lp), lpIds);
 for (const st of loop.stages || []) {
   refs(`loop.stages.${st.id}.lead_stories`, st.lead_stories || [], storyIds);

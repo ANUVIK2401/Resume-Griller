@@ -3,19 +3,21 @@
   "$id": "aws.schema.json",
   "title": "AWS glossary, frameworks, and resume mapping",
   "type": "object",
-  "required": ["mental_model", "status_options", "categories", "services", "pillars", "seven_rs", "dr_tiers", "shared_responsibility", "resume_map"],
+  "required": ["mental_model", "status_options", "categories", "tiers", "services", "pillars", "seven_rs", "dr_tiers", "shared_responsibility", "resume_map"],
   "properties": {
     "mental_model": { "$ref": "common.schema.json#/$defs/text" },
     "verify_note": { "$ref": "common.schema.json#/$defs/text" },
     "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"] } },
     "categories": { "type": "array", "items": { "type": "object", "required": ["id", "name"], "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "name": { "type": "string" } } } },
+    "tiers": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "object", "required": ["level", "name", "note"], "properties": { "level": { "enum": [1, 2, 3] }, "name": { "$ref": "common.schema.json#/$defs/text" }, "note": { "$ref": "common.schema.json#/$defs/text" } } } },
     "services": {
       "type": "array",
       "items": {
-        "type": "object", "required": ["id", "category", "name", "one_liner", "use_when", "avoid_when"], "additionalProperties": false,
+        "type": "object", "required": ["id", "category", "tier", "name", "one_liner", "use_when", "avoid_when"], "additionalProperties": false,
         "properties": {
           "id": { "$ref": "common.schema.json#/$defs/id" },
           "category": { "type": "string", "description": "categories[].id" },
+          "tier": { "enum": [1, 2, 3], "description": "tiers[].level: 1 must know, 2 follow-up, 3 recognize" },
           "name": { "$ref": "common.schema.json#/$defs/text" },
           "one_liner": { "$ref": "common.schema.json#/$defs/text" },
           "use_when": { "$ref": "common.schema.json#/$defs/text" },

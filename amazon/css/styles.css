@@ -652,3 +652,15 @@ details.fold[open] > summary { border-bottom: 1px solid var(--line); }
 
 /* Touch screens: no grey flash on tap; focus and pressed states carry the feedback. */
 button, a, summary, select, input { -webkit-tap-highlight-color: transparent; }
+
+/* Top questions: model answer, trap, spoken lines */
+.model-answer { margin: 0; padding: 1rem 1.15rem 1rem 2.5rem; display: grid; gap: 0.65rem; line-height: 1.6; border-left: 3px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; background: rgb(255 153 0 / 0.07); }
+.model-answer li::marker { color: var(--accent-ink); font-weight: 700; }
+.trap { margin: 0; padding: 0.75rem 1rem; border-left: 3px solid var(--danger); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background: color-mix(in srgb, var(--danger) 7%, transparent); }
+.trap strong { color: var(--danger); }
+.say { font-style: italic; color: var(--ink-muted); }
+.item-body > a.chip { text-decoration: none; justify-self: start; }
+.item-body > a.chip:hover { border-color: var(--gold); color: var(--ink); }
+/* Glossary tier badge */
+.tier { font: 600 var(--text-xs)/1.4 var(--font-mono); }
+.tier-1 { border-color: rgb(255 153 0 / 0.7); color: var(--accent-ink); background: rgb(255 153 0 / 0.1); }

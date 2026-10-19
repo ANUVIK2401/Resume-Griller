@@ -9,31 +9,34 @@
 
   function termCard(s, data, onStatus) {
     return el('article', { class: 'term card', id: `aws-${s.id}` },
-      el('div', { class: 'term-head' }, el('h3', { class: 'h3' }, s.name), ui.statusSelect(`aws-${s.id}`, data.status_options, onStatus)),
+      el('div', { class: 'term-head' }, el('h3', { class: 'h3' }, s.name),
+        el('span', { class: 'row' }, el('span', { class: `chip tier tier-${s.tier}`, title: data.tiers[s.tier - 1].name }, `Tier ${s.tier}`), ui.statusSelect(`aws-${s.id}`, data.status_options, onStatus))),
       el('p', {}, s.one_liner),
       useAvoid(s));
   }
 
   function glossarySection(data, onStatus) {
     const cards = new Map(data.services.map((s) => [s.id, termCard(s, data, () => { apply(); onStatus(); })]));
-    const groups = data.categories.map((c) => ({ c, grid: el('div', { class: 'term-grid' }), services: data.services.filter((s) => s.category === c.id) }));
+    const groups = data.categories.map((c) => ({ c, grid: el('div', { class: 'term-grid' }), services: data.services.filter((s) => s.category === c.id).sort((a, b) => a.tier - b.tier) }));
     const statusOf = (s) => store.get('status', `aws-${s.id}`, data.status_options[0].id);
-    let filters = { q: '', category: '', status: '' };
+    let filters = { q: '', category: '', status: '', tier: '' };
+    const count = el('p', { class: 'muted', role: 'status', 'aria-live': 'polite' });
     let shown = data.services;
     const apply = (f = filters) => {
       filters = f;
       const keep = (s) => (!f.q || `${s.name} ${s.one_liner} ${s.use_when}`.toLowerCase().includes(f.q))
-        && (!f.category || s.category === f.category) && (!f.status || statusOf(s) === f.status);
+        && (!f.category || s.category === f.category) && (!f.status || statusOf(s) === f.status) && (!f.tier || String(s.tier) === f.tier);
       shown = data.services.filter(keep);
       for (const { grid, services } of groups) {
         const visible = services.filter(keep);
         grid.replaceChildren(...visible.map((s) => cards.get(s.id)));
         grid.closest('section').hidden = visible.length === 0;
       }
+      count.textContent = `${shown.length} of ${data.services.length} terms shown`;
     };
     const bar = ui.filterBar({
       placeholder: 'Search services, e.g. queue, cache, DR',
-      selects: [{ key: 'category', label: 'Any category', options: data.categories.map((c) => ({ id: c.id, label: c.name })) }, { key: 'status', label: 'Any status', options: data.status_options }],
+      selects: [{ key: 'tier', label: 'Any tier', options: data.tiers.map((t) => ({ id: String(t.level), label: t.name })) }, { key: 'category', label: 'Any category', options: data.categories.map((c) => ({ id: c.id, label: c.name })) }, { key: 'status', label: 'Any status', options: data.status_options }],
       onChange: apply,
     });
     // Front: the service. Back: one line plus when to pick it.
@@ -43,14 +46,22 @@
       back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.one_liner), useAvoid(s)),
     })), 'AWS flashcards');
     const intro = el('div', { class: 'card stack' },
-      el('a', { class: 'btn btn-gold', href: 'cheatsheet.html' }, 'Start with the two-week AWS cheat sheet'),
+      el('div', { class: 'row' }, el('a', { class: 'btn btn-gold', href: 'top.html' }, 'Most asked SA questions'),
+        el('a', { class: 'btn', href: 'cheatsheet.html' }, 'Two-week AWS cheat sheet')),
       el('p', { class: 'h3' }, data.mental_model),
       el('p', { class: 'muted' }, `${data.services.length} terms. ${data.verify_note}`),
-      bar,
+      el('ul', { class: 'list' }, data.tiers.map((t) => el('li', {}, el('strong', {}, `${t.name}. `), t.note))),
+      bar, count,
       el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: flashcards }, 'Flashcards for what is shown'),
         el('span', { class: 'muted' }, 'Tip: filter Status to New or Shaky first.')));
     const sections = groups.map(({ c, grid, services }) => ui.section(`cat-${c.id}`, `${c.name} (${services.length})`, 'Category', c.name, grid));
     apply();
+    // Open on tier 1 so the first screen is the must-know set, unless a link targets one term.
+    if (!location.hash.startsWith('#aws-')) {
+      const tierSelect = bar.querySelector('select');
+      tierSelect.value = '1';
+      tierSelect.dispatchEvent(new Event('change'));
+    }
     return [intro, ...sections];
   }
 

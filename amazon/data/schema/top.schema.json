@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "top.schema.json",
+  "title": "Most asked Solutions Architect questions with model answers and handling",
+  "type": "object",
+  "required": ["intro", "status_options", "method", "moves", "groups", "priorities", "questions"],
+  "properties": {
+    "intro": { "$ref": "common.schema.json#/$defs/text" },
+    "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"] } },
+    "method": {
+      "type": "array", "minItems": 7, "maxItems": 7,
+      "items": {
+        "type": "object", "required": ["id", "step", "minutes", "say"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "step": { "$ref": "common.schema.json#/$defs/text" },
+          "minutes": { "$ref": "common.schema.json#/$defs/text" },
+          "say": { "$ref": "common.schema.json#/$defs/text" }
+        }
+      }
+    },
+    "moves": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "situation", "do", "say"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "situation": { "$ref": "common.schema.json#/$defs/text" },
+          "do": { "$ref": "common.schema.json#/$defs/text" },
+          "say": { "$ref": "common.schema.json#/$defs/text" }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "name", "intro"],
+        "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "name": { "$ref": "common.schema.json#/$defs/text" }, "intro": { "$ref": "common.schema.json#/$defs/text" } }
+      }
+    },
+    "priorities": {
+      "type": "array",
+      "items": { "type": "object", "required": ["id", "name"], "properties": { "id": { "enum": ["P0", "P1"] }, "name": { "$ref": "common.schema.json#/$defs/text" } } }
+    },
+    "questions": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["id", "group", "priority", "q", "tests", "answer", "handle", "trap"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "group": { "type": "string", "description": "groups[].id" },
+          "priority": { "enum": ["P0", "P1"] },
+          "q": { "$ref": "common.schema.json#/$defs/text" },
+          "tests": { "$ref": "common.schema.json#/$defs/text" },
+          "ask_first": { "$ref": "common.schema.json#/$defs/textList" },
+          "answer": { "type": "array", "minItems": 2, "items": { "$ref": "common.schema.json#/$defs/text" } },
+          "handle": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/text" } },
+          "followups": {
+            "type": "array",
+            "items": { "type": "object", "required": ["q", "a"], "additionalProperties": false, "properties": { "q": { "$ref": "common.schema.json#/$defs/text" }, "a": { "$ref": "common.schema.json#/$defs/text" } } }
+          },
+          "trap": { "$ref": "common.schema.json#/$defs/text" },
+          "link": {
+            "type": "object", "required": ["href", "label"], "additionalProperties": false,
+            "properties": { "href": { "type": "string", "pattern": "^[a-z-]+\\.html(#[a-z0-9-]+)?$" }, "label": { "$ref": "common.schema.json#/$defs/text" } }
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@
     { page: 'behavioral', list: 'stories', prefix: 'story-', noun: 'stories ready' },
     { page: 'aws', list: 'services', prefix: 'aws-', noun: 'AWS terms known' },
     { page: 'design', data: 'designs', list: 'designs', prefix: 'design-', noun: 'designs ready' },
+    { page: 'top', list: 'questions', prefix: 'top-', noun: 'top questions ready' },
     { page: 'questions', list: 'rapid_fire', prefix: 'q-', noun: 'rapid-fire known' },
   ];
 

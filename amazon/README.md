@@ -5,6 +5,7 @@ A focused two-week workspace for Anuvik's Amazon Solutions Architect interview. 
 | Page | Purpose |
 |---|---|
 | `index.html` | Primary October 16-27 sprint with 90-minute essentials, three mocks, three paper designs, taper and campus checklist; original movable plan retained |
+| `top.html` | Top priority: the 26 most asked SA questions (14 P0) with one-minute model answers, how to handle each live, likely follow-ups and traps, plus the 7-step answer method |
 | `review.html` | Resume discrepancies, assessment of all 12 STAR stories, evidence gaps, delivery coaching, and private local rewrites |
 | `behavioral.html` | Pitch, resume metrics, Leadership Principles, STAR drafts, timed rehearsal and missing-story templates |
 | `cheatsheet.html` | Prioritized AWS choices, comparison traps, customer architecture drills, optional labs and official references |

@@ -1,0 +1,496 @@
+{
+  "$schema": "./schema/top.schema.json",
+  "intro": "The questions Solutions Architect interviewers ask most, each with a model answer you can say in about a minute, how to handle it live, the follow-up they usually ask next, and the trap that costs points. Drill the P0 set daily; open P1 once P0 feels easy.",
+  "status_options": [
+    { "id": "new", "label": "New" },
+    { "id": "shaky", "label": "Shaky" },
+    { "id": "known", "label": "Ready" }
+  ],
+  "method": [
+    { "id": "clarify", "step": "Clarify the requirements", "minutes": "3 to 5 min", "say": "Before I draw anything: who are the users, what is peak traffic, what latency and uptime do you need, what data is involved, any compliance rules, and what is the budget?" },
+    { "id": "simple-path", "step": "Draw the simplest working path", "minutes": "5 min", "say": "Here is the simplest version that works end to end: the user hits this, which calls this, which stores data here." },
+    { "id": "scale", "step": "Scale it", "minutes": "5 min", "say": "To handle the peak, I add caching, auto scaling, and a queue in front of the slow work." },
+    { "id": "resilient", "step": "Make it resilient", "minutes": "4 min", "say": "If an instance dies, Auto Scaling replaces it. If an AZ fails, traffic shifts and the database fails over. For a Region failure, the DR tier depends on your RPO and RTO." },
+    { "id": "secure", "step": "Secure it", "minutes": "4 min", "say": "IAM roles with least privilege, apps and data in private subnets, encryption with KMS and TLS, and WAF at the edge." },
+    { "id": "operate", "step": "Operate and cost it", "minutes": "3 min", "say": "CloudWatch alarms on what users feel, like latency and errors; everything in CloudFormation or CDK; right-size and use Savings Plans for steady load." },
+    { "id": "tradeoff", "step": "Name one tradeoff", "minutes": "1 min", "say": "The main tradeoff I made is this, and I chose it because of your requirement for that. If the requirement changes, I would switch to this alternative." }
+  ],
+  "moves": [
+    { "id": "vague", "situation": "The question is vague", "do": "Ask two or three questions, then state your assumptions out loud and continue. Interviewers grade the questions as much as the design.", "say": "I will assume about a million daily users, mostly in the US, and read heavy. Tell me if any of that is wrong." },
+    { "id": "unknown", "situation": "You do not know a service or a number", "do": "Say so in one sentence, reason from a principle you do know, and say how you would confirm. Never invent a limit.", "say": "I have not used that directly. Based on how similar services work I would expect this, and I would confirm it in the AWS documentation before recommending it." },
+    { "id": "x-or-y", "situation": "An X or Y question", "do": "Give the one-line tell first, then the condition under which the other option wins.", "say": "I would default to X because of this. Y wins when that is true." },
+    { "id": "pushback", "situation": "The interviewer pushes back or adds a constraint", "do": "Treat it as a new requirement, not a sign you failed. Adjust the design and name what it costs.", "say": "Good point. With that constraint I would change this part. The cost is that, which I think is worth it because of your requirement." },
+    { "id": "mistake", "situation": "You notice your own mistake", "do": "Correct it immediately and out loud. Self-correction reads as judgment.", "say": "Let me correct that: the Multi-AZ standby does not serve reads, so for read scale I would add a read replica." },
+    { "id": "experience", "situation": "Asked about your AWS experience", "do": "Describe what you actually built and ran, then map the same pattern to AWS. Do not claim deployments you did not do.", "say": "In production I ran this on a different platform. On AWS I would build the same thing with these services, for this reason." },
+    { "id": "time", "situation": "You are running out of time", "do": "Stop adding boxes. Summarize the design in 30 seconds and list what you would add next.", "say": "To summarize: this path, these failure protections, this security layer. With more time I would add caching here and a DR plan for the second Region." }
+  ],
+  "groups": [
+    { "id": "design", "name": "Design scenarios", "intro": "Open-ended whiteboard prompts. Clarify first, draw the simple path, then scale, protect, and secure it." },
+    { "id": "compare", "name": "X or Y comparisons", "intro": "Most technical questions are a disguised choice. Give the tell, then when the other option wins." },
+    { "id": "concept", "name": "Core concepts", "intro": "Definitions you must give precisely, each with one AWS example." },
+    { "id": "troubleshoot", "name": "Troubleshoot and optimize", "intro": "Show a method: measure first, then fix the bottleneck you found." },
+    { "id": "customer", "name": "Customer conversations", "intro": "Where technical depth meets Leadership Principles. Have a real story ready for each." }
+  ],
+  "priorities": [
+    { "id": "P0", "name": "Top priority: drill daily" },
+    { "id": "P1", "name": "Next: once P0 is easy" }
+  ],
+  "questions": [
+    {
+      "id": "ha-web", "group": "design", "priority": "P0",
+      "q": "Design a highly available, scalable web application on AWS.",
+      "tests": "Whether you start from requirements, know the standard three-tier layout, and can say what fails and how it recovers.",
+      "ask_first": ["Who are the users and where are they? What is peak traffic compared with normal?", "What latency and availability target, for example 99.9 or 99.99 percent?", "Is the data relational? Any compliance or data residency rules?", "Budget and team size: who will operate it?"],
+      "answer": [
+        "Edge: Route 53 for DNS, CloudFront in front for static assets and caching, with WAF attached to block common web attacks.",
+        "App tier: an Application Load Balancer across at least two Availability Zones, with targets in an Auto Scaling group or ECS on Fargate in private subnets. Scale on request count or latency, not only CPU.",
+        "Keep the app stateless: sessions live in ElastiCache or DynamoDB, so any instance can serve any user and scaling in loses nothing.",
+        "Data: Aurora or RDS Multi-AZ in private data subnets for automatic failover; add read replicas or ElastiCache when reads grow.",
+        "Security and operations: IAM roles, Secrets Manager for database credentials, KMS encryption, CloudWatch alarms on latency and 5xx errors, and everything defined in CloudFormation or CDK."
+      ],
+      "handle": ["Spend the first minute on questions, then draw the simplest path from user to data before adding anything.", "Narrate failure: an instance dies and the Auto Scaling group replaces it; an AZ fails and the ALB routes to the other AZ while the database fails over to its standby.", "Close with one tradeoff, for example Fargate over EC2 for less operations at a somewhat higher unit cost."],
+      "followups": [
+        { "q": "What if an entire Region goes down?", "a": "Multi-AZ does not cover that. Pick a DR tier from the RPO and RTO: pilot light or warm standby in a second Region, Aurora Global Database or cross-Region replicas, and Route 53 failover records." },
+        { "q": "The database is the bottleneck. What next?", "a": "Find out whether it is reads or writes. Reads: ElastiCache and read replicas. Writes: tune queries and indexes, scale the instance up, then consider sharding or moving key-value access patterns to DynamoDB." }
+      ],
+      "trap": "Putting the app or database in public subnets, or claiming Multi-AZ scales reads.",
+      "link": { "href": "architecture.html#pattern-ha-web", "label": "Trace the HA web app diagram" }
+    },
+    {
+      "id": "scale-millions", "group": "design", "priority": "P0",
+      "q": "How would you scale an application from a hundred users to ten million?",
+      "tests": "Whether you evolve a design step by step and fix the real bottleneck instead of jumping straight to the final architecture.",
+      "ask_first": ["Read heavy or write heavy?", "Where are the users?", "Which parts are static files and which are dynamic?"],
+      "answer": [
+        "Stage 1, one server: EC2 plus a database. Simple, but one failure takes everything down.",
+        "Stage 2, scale out: an ALB in front, instances in an Auto Scaling group across two or more AZs, and the database on RDS Multi-AZ.",
+        "Stage 3, go stateless: move sessions off the servers into ElastiCache or DynamoDB. Sticky sessions work short term but unbalance load and lose sessions when an instance dies.",
+        "Stage 4, offload reads: ElastiCache for hot data, read replicas for reporting, S3 plus CloudFront for images and static files.",
+        "Stage 5, decouple and specialize: SQS between the web tier and slow background work, DynamoDB for high-scale key-value access, and a second Region only when latency or DR requires it."
+      ],
+      "handle": ["At each stage, say which limit forced the change: single point of failure, then CPU, then session state, then database reads.", "Label any numbers as assumptions.", "Keep one diagram and add to it instead of redrawing."],
+      "followups": [
+        { "q": "Why not start with the final architecture?", "a": "Cost and complexity. Every component adds spend and operations, so I add each one when a measured bottleneck justifies it. That is the Cost Optimization and Operational Excellence pillars in practice." },
+        { "q": "Sticky sessions or a session store?", "a": "A session store. Stickiness ties a user to one instance, so load becomes uneven and a terminated instance logs users out. ElastiCache or DynamoDB keeps instances interchangeable." }
+      ],
+      "trap": "Jumping to microservices and Kubernetes without saying which problem each piece solves.",
+      "link": { "href": "architecture.html#pattern-ha-web", "label": "Start from the HA web app diagram" }
+    },
+    {
+      "id": "dr", "group": "design", "priority": "P0",
+      "q": "A customer needs disaster recovery for a critical application. How do you design it?",
+      "tests": "Whether you anchor on RPO, RTO, and cost instead of defaulting to active-active.",
+      "ask_first": ["How much data can you afford to lose? That is the RPO.", "How long can you be down? That is the RTO.", "What does an hour of downtime cost, and what is the DR budget?", "Is the risk an AZ failure, a Region failure, or corruption and ransomware?"],
+      "answer": [
+        "Multi-AZ inside one Region handles a data center failure. A Region outage needs a second Region; corruption needs backups that replication cannot overwrite.",
+        "Choose the cheapest tier that meets both numbers. Backup and restore: RTO in hours. Pilot light: data replicated and compute off, tens of minutes. Warm standby: a small full copy running, minutes. Active-active: near zero, highest cost.",
+        "Replicate data with Aurora Global Database or cross-Region read replicas, S3 Cross-Region Replication, and AWS Backup copies to another account and Region.",
+        "Recreate infrastructure from CloudFormation or CDK, and switch traffic with Route 53 failover routing and health checks.",
+        "Test it with game days and measure the real RTO, including failback."
+      ],
+      "handle": ["Never name a tier before you have the RPO and RTO. Ask, then pick.", "Justify the tier in money: what downtime costs versus what standby costs."],
+      "followups": [
+        { "q": "Replication is on. Why do you still need backups?", "a": "Replication copies mistakes too. A dropped table or ransomware-encrypted data replicates in seconds. Point-in-time backups, ideally locked with AWS Backup Vault Lock in a separate account, let you go back." },
+        { "q": "RPO 1 hour, RTO 4 hours, low budget. Which tier?", "a": "Pilot light: keep data replicated to the DR Region and start compute from templates during failover. Backup and restore can also fit if a rehearsed restore finishes inside 4 hours." }
+      ],
+      "trap": "Calling Multi-AZ disaster recovery for a Region failure, or choosing active-active without asking what downtime costs.",
+      "link": { "href": "architecture.html#pattern-dr", "label": "Trace the multi-Region DR diagram" }
+    },
+    {
+      "id": "migration", "group": "design", "priority": "P0",
+      "q": "A customer wants to migrate an on-premises application to AWS. Walk me through your approach.",
+      "tests": "Customer discovery, the 7 Rs, risk management, and whether you plan cutover and rollback.",
+      "ask_first": ["Why move now: cost, a data center lease ending, scaling limits, or new capabilities?", "What does the app depend on: databases, file shares, licenses, other systems?", "What downtime window and compliance constraints apply?", "Who will run it afterward, and with what skills?"],
+      "answer": [
+        "Discover first: inventory servers and dependencies, for example with AWS Application Discovery Service and Migration Hub, and agree on success metrics.",
+        "Pick a strategy per workload from the 7 Rs: retire, retain, rehost, relocate, replatform, repurchase, refactor. First waves usually rehost or replatform for speed, then modernize.",
+        "Build the landing zone: Control Tower or Organizations with separate accounts, a VPC design, and Site-to-Site VPN now, adding Direct Connect if bandwidth or consistency requires it.",
+        "Move data: AWS DMS keeps the source database live while it replicates, so cutover is short; DataSync or the Snow Family for large file sets depending on bandwidth.",
+        "Migrate in waves starting with a low-risk app, with a rollback plan for each cutover, then right-size and optimize cost once it runs."
+      ],
+      "handle": ["Lead with the business reason; the R you pick follows from it.", "Bring up risk yourself: pilot wave, rollback plan, parallel run for the database."],
+      "followups": [
+        { "q": "300 TB over a 100 Mbps link?", "a": "That is most of a year online. Ship the bulk with Snowball, then sync the changes online with DataSync or DMS change data capture." },
+        { "q": "Rehost or refactor?", "a": "Rehost when the deadline is fixed, like a lease ending: fast and low risk. Refactor when the app limits the business and there is time and budget. Many customers rehost first, then refactor the parts that matter." }
+      ],
+      "trap": "Proposing to refactor everything into microservices. It is slow and risky; match the strategy to the deadline and the value.",
+      "link": { "href": "aws.html#seven-rs", "label": "Review the 7 Rs" }
+    },
+    {
+      "id": "genai-rag", "group": "design", "priority": "P0",
+      "q": "Design a generative AI assistant that answers employee questions from company documents.",
+      "tests": "Whether you know retrieval-augmented generation on Bedrock and treat security, accuracy, and cost as part of the design.",
+      "ask_first": ["Which documents, how many, and how often do they change?", "Who may see which documents? Permissions must carry through to answers.", "What accuracy is acceptable, and what happens when an answer is wrong?", "How many users and questions per day, for cost?"],
+      "answer": [
+        "Use retrieval-augmented generation instead of training a model: the model answers from retrieved company text, so answers stay current and can cite sources.",
+        "Documents land in S3. Bedrock Knowledge Bases chunks them, creates embeddings, and stores the vectors in OpenSearch Serverless or another supported vector store.",
+        "Users sign in through Cognito or the corporate identity provider. API Gateway and Lambda take the question, retrieve relevant chunks filtered by that user's permissions, and call a Bedrock model.",
+        "Bedrock Guardrails filter harmful content and sensitive data, and every answer cites its source document.",
+        "Measure quality on a test set of real questions, log prompts and answers for review, and control cost by routing simple questions to a smaller model."
+      ],
+      "handle": ["Say why RAG over fine-tuning in one line: fresher data, citations, lower cost.", "Raise permissions and evaluation yourself before the interviewer does."],
+      "followups": [
+        { "q": "RAG or fine-tuning?", "a": "RAG when the problem is knowledge that changes. Fine-tuning when the problem is style, format, or a narrow task the base model does poorly. They can be combined." },
+        { "q": "How do you defend against prompt injection hidden in documents?", "a": "Treat retrieved text as data, not instructions, apply Guardrails, limit which tools the model may call, and keep a human approval step for high-impact actions." }
+      ],
+      "trap": "Proposing to train your own large model, or ignoring document-level access control.",
+      "link": { "href": "architecture.html#pattern-genai", "label": "Trace the RAG diagram" }
+    },
+    {
+      "id": "decouple", "group": "design", "priority": "P0",
+      "q": "Our order system falls over during traffic spikes, and one slow downstream service takes everything down. What do you change?",
+      "tests": "Asynchronous design: queues, fan-out, retries, idempotency, and dead-letter queues.",
+      "answer": [
+        "Put SQS between the API and the processing: the front end accepts the order and returns fast, workers pull at their own pace, and the queue absorbs the spike.",
+        "If several systems need the same event, such as billing, shipping, and email, publish once to SNS or EventBridge and give each consumer its own SQS queue. One slow consumer no longer blocks the others.",
+        "Delivery is at least once, so make workers idempotent, for example by recording processed order IDs in DynamoDB.",
+        "Attach a dead-letter queue for messages that keep failing, and alarm on the age of the oldest message and on DLQ depth.",
+        "Scale workers on queue depth, not CPU. Use FIFO queues only where order truly matters."
+      ],
+      "handle": ["Name the root cause first: tight coupling and synchronous calls. Then the fix.", "Give one metric to watch: age of the oldest message."],
+      "followups": [
+        { "q": "SNS or EventBridge for the fan-out?", "a": "SNS for simple, very high-throughput fan-out. EventBridge when you need routing on event content, many AWS targets, SaaS sources, schedules, or archive and replay." },
+        { "q": "The order must be processed exactly once.", "a": "SQS FIFO deduplicates within its window, but the real protection is an idempotent consumer, because side effects like charging a card must never repeat." }
+      ],
+      "trap": "Treating SNS as a durable work queue. Without SQS behind it, a subscriber that stays down loses messages after retries run out.",
+      "link": { "href": "architecture.html#pattern-async", "label": "Trace the async fan-out diagram" }
+    },
+    {
+      "id": "data-pipeline", "group": "design", "priority": "P1",
+      "q": "Design a pipeline that collects clickstream data in real time and feeds business dashboards.",
+      "tests": "Streaming versus batch, data lake zones, and choosing the right query engine.",
+      "ask_first": ["How fresh must the dashboards be: seconds, minutes, or next day?", "Do you need to reprocess or replay events after a bug fix?", "Does the data contain personal information?"],
+      "answer": [
+        "Ingest with Kinesis Data Streams when you need real-time consumers or replay; use Amazon Data Firehose when you only need to land data in S3.",
+        "Firehose delivers to S3 in near real time, converting to Parquet and partitioning by date.",
+        "Glue crawlers catalog the data, and Glue ETL jobs clean the raw zone into a curated zone.",
+        "Athena for ad-hoc questions, Redshift for heavy repeated dashboards, QuickSight on top.",
+        "Lake Formation controls who sees which tables and columns, which matters for personal data."
+      ],
+      "handle": ["Ask the freshness requirement first; it changes the whole design.", "Keep raw and curated zones separate so you can always reprocess."],
+      "followups": [
+        { "q": "Athena or Redshift?", "a": "Athena for occasional queries, billed per data scanned, no servers. Redshift for frequent complex dashboards that need steady performance." },
+        { "q": "How do you cut Athena cost?", "a": "Columnar Parquet, compression, and partitions, so each query scans fewer bytes." }
+      ],
+      "trap": "Using Firehose when the requirement says replay; Firehose delivers data but does not keep it for replay.",
+      "link": { "href": "architecture.html#pattern-lake", "label": "Trace the data lake diagram" }
+    },
+    {
+      "id": "serverless-mobile", "group": "design", "priority": "P1",
+      "q": "Design a serverless backend for a mobile app where users mostly read data and upload photos.",
+      "tests": "Whether you know the managed serverless building blocks and how authentication and direct uploads fit.",
+      "answer": [
+        "Users sign in with Amazon Cognito; API Gateway verifies the token before any request reaches code.",
+        "API Gateway invokes Lambda, which reads and writes DynamoDB. For heavy reads, add DAX in front of DynamoDB or API Gateway caching for identical responses.",
+        "Photos go straight from the phone to S3 with presigned URLs or Cognito credentials scoped to that user's prefix, so large files never pass through Lambda.",
+        "An S3 event triggers a Lambda that generates thumbnails; CloudFront serves images globally with Origin Access Control so the bucket stays private.",
+        "No servers to patch, pay per request, and it scales down to almost nothing overnight."
+      ],
+      "handle": ["Name each managed service with its one job, one breath each.", "Call out per-user security: tokens at the API and IAM policies scoped to the user's S3 prefix."],
+      "followups": [
+        { "q": "When is serverless the wrong call?", "a": "Steady high utilization where per-request pricing costs more than containers, jobs longer than Lambda's 15 minute limit, or latency-critical paths where cold starts matter." },
+        { "q": "How do you send a welcome email on sign-up?", "a": "DynamoDB Streams on the users table triggers a Lambda that sends through Amazon SES, so the API never waits for the email." }
+      ],
+      "trap": "Routing file uploads through API Gateway and Lambda, which hits payload limits and wastes compute. Use presigned URLs."
+    },
+    {
+      "id": "multiaz-replica", "group": "compare", "priority": "P0",
+      "q": "RDS Multi-AZ versus read replicas?",
+      "tests": "Whether you separate availability from read scaling.",
+      "answer": [
+        "Multi-AZ is for availability: a synchronous standby in another AZ with automatic failover behind the same endpoint. The classic standby does not serve reads.",
+        "Read replicas are for read scale: asynchronous copies with their own endpoints, so they can lag slightly. They can live in another Region and be promoted during DR.",
+        "Production usually uses both: Multi-AZ for the primary, replicas for reporting and read-heavy traffic.",
+        "Aurora and the newer Multi-AZ DB cluster option blur the line: their standbys can also serve reads."
+      ],
+      "handle": ["Open with the tell: Multi-AZ answers availability, replicas answer read scale."],
+      "followups": [
+        { "q": "Reads still overload the database with replicas. Next?", "a": "Cache hot reads with ElastiCache, fix slow queries and indexes, and check whether the access pattern is key-value and belongs in DynamoDB." }
+      ],
+      "trap": "Saying Multi-AZ improves read performance.",
+      "link": { "href": "architecture.html#panel-resilience", "label": "Compare resilience options" }
+    },
+    {
+      "id": "messaging", "group": "compare", "priority": "P0",
+      "q": "SQS versus SNS versus EventBridge versus Kinesis?",
+      "tests": "Whether you choose integration by delivery model: one consumer, many consumers, content routing, or ordered replay.",
+      "answer": [
+        "SQS: a queue. Consumers pull, each message goes to one worker, with retries and a dead-letter queue. Use it to decouple and absorb spikes.",
+        "SNS: pub/sub push. One message goes to every subscriber. Use it for fan-out, usually into SQS queues.",
+        "EventBridge: an event bus that routes by event content, with rules, schedules, SaaS sources, and archive and replay.",
+        "Kinesis Data Streams: an ordered, replayable stream with retention; several consumers read the same data independently. Use it for real-time analytics and clickstream."
+      ],
+      "handle": ["Map each to the question it answers: one worker per job, notify many, route by content, ordered stream with replay."],
+      "followups": [
+        { "q": "Kinesis or SQS for order processing?", "a": "SQS for independent jobs that each need one worker. Kinesis when ordering per key and replay matter, or several consumers must read the same stream." }
+      ],
+      "trap": "Treating them as interchangeable; each has a different delivery and retention model.",
+      "link": { "href": "architecture.html#panel-messaging", "label": "Compare messaging services" }
+    },
+    {
+      "id": "sql-nosql", "group": "compare", "priority": "P0",
+      "q": "When would you choose DynamoDB over RDS or Aurora?",
+      "tests": "Data modeling judgment, not brand preference.",
+      "answer": [
+        "DynamoDB when access patterns are known and key-based, at very large or unpredictable scale, with single-digit millisecond latency and no servers: sessions, carts, device state, user profiles.",
+        "RDS or Aurora when you need joins, transactions across many tables, ad-hoc SQL, or the app already runs on a relational schema.",
+        "With DynamoDB, design the partition key first. A key with few distinct values, like a status flag, creates hot partitions and throttling.",
+        "Many systems use both: relational for orders and billing, DynamoDB for the high-traffic key-value parts."
+      ],
+      "handle": ["Ask how the app queries the data before naming a database. The access pattern decides."],
+      "followups": [
+        { "q": "What is a hot partition and how do you fix it?", "a": "Too much traffic on one partition key value. Choose a high-cardinality key, add a suffix to spread writes, and cache hot reads with DAX." }
+      ],
+      "trap": "Choosing DynamoDB because it scales when the queries need joins and ad-hoc filters.",
+      "link": { "href": "architecture.html#panel-database", "label": "Compare databases" }
+    },
+    {
+      "id": "compute-choice", "group": "compare", "priority": "P0",
+      "q": "EC2, Lambda, or containers: how do you choose compute?",
+      "tests": "Whether the choice follows from how long the work runs, how steady the load is, and how much the team wants to operate.",
+      "answer": [
+        "Lambda for short, event-driven, spiky work: up to 15 minutes per invocation, no servers, pay per request.",
+        "Containers on ECS with Fargate for long-running services with low operations; EKS when the team needs Kubernetes.",
+        "EC2 for full OS control, special hardware like GPUs, licensed software, or steady high utilization where Savings Plans make it cheapest.",
+        "The deciding questions: how long does the work run, how steady is the load, and how much does the team want to operate?"
+      ],
+      "handle": ["Ask duration and load shape first, then answer."],
+      "followups": [
+        { "q": "A job runs 40 minutes every hour. Lambda?", "a": "No, it exceeds the 15 minute limit. Use ECS on Fargate or AWS Batch, or split the work into chunks coordinated by Step Functions." },
+        { "q": "ECS or EKS?", "a": "ECS is simpler and AWS-native. EKS only when Kubernetes itself is a requirement: existing manifests, Helm, portability, or team skills." }
+      ],
+      "trap": "Saying Lambda is always cheapest. At steady high volume, containers or EC2 often cost less.",
+      "link": { "href": "architecture.html#panel-compute", "label": "Compare compute options" }
+    },
+    {
+      "id": "sg-nacl", "group": "compare", "priority": "P1",
+      "q": "Security group versus network ACL?",
+      "tests": "Network security basics and which one you reach for by default.",
+      "answer": [
+        "Security group: a stateful firewall on an instance or network interface, allow rules only. Return traffic is allowed automatically.",
+        "Network ACL: a stateless filter on a subnet with allow and deny rules, evaluated in number order, first match wins. Return traffic needs its own rule, including ephemeral ports.",
+        "Default to security groups and reference other groups: the database allows its port only from the app tier's security group.",
+        "Use NACLs for coarse subnet-wide blocks, such as denying a known bad IP range."
+      ],
+      "handle": ["Lead with the contrast: stateful at the instance versus stateless at the subnet. Then one example."],
+      "followups": [
+        { "q": "You need to block one malicious IP. Which?", "a": "A NACL deny rule, because security groups cannot deny. For HTTP traffic, a WAF IP set on the ALB or CloudFront is often better." }
+      ],
+      "trap": "Saying security groups can deny traffic. They only allow.",
+      "link": { "href": "architecture.html#panel-network", "label": "Compare network controls" }
+    },
+    {
+      "id": "lb-choice", "group": "compare", "priority": "P1",
+      "q": "ALB versus NLB versus API Gateway?",
+      "tests": "OSI layer awareness and matching features to needs.",
+      "answer": [
+        "ALB: layer 7 HTTP and HTTPS, routes by path and host. Web apps, containers, microservices.",
+        "NLB: layer 4 TCP, UDP, and TLS with static IPs, very high throughput and low latency. Non-HTTP protocols or clients that allow-list IPs.",
+        "API Gateway: a managed API front door with authentication, throttling, usage plans, request validation, and direct Lambda integration. Serverless and public APIs.",
+        "The tell: HTTP app on servers, ALB. Fixed IP or non-HTTP, NLB. Serverless or API management, API Gateway."
+      ],
+      "handle": ["Name the layer first; the rest follows."],
+      "followups": [
+        { "q": "Client firewalls need two fixed IPs for TCP traffic.", "a": "NLB with Elastic IPs, or Global Accelerator for static anycast IPs across Regions." }
+      ],
+      "trap": "Choosing an NLB when the requirement needs path-based routing."
+    },
+    {
+      "id": "storage-choice", "group": "compare", "priority": "P1",
+      "q": "S3 versus EBS versus EFS?",
+      "tests": "Storage shape: objects, a disk for one server, or a shared file system.",
+      "answer": [
+        "S3: object storage over an API with 11 nines of durability and practically unlimited size. Backups, media, static sites, data lakes.",
+        "EBS: a block disk attached to one instance in one AZ. Boot volumes and databases on EC2; snapshot it for recovery.",
+        "EFS: a shared NFS file system that many Linux instances across AZs mount at once. Shared content and lift-and-shift apps that expect a file path.",
+        "FSx when you need Windows SMB shares or Lustre for high-performance computing."
+      ],
+      "handle": ["Ask what shape the data is and how many servers need it at once."],
+      "followups": [
+        { "q": "How do you make S3 cheaper?", "a": "Lifecycle rules to move cold data to Infrequent Access and Glacier classes, Intelligent-Tiering when access is unpredictable, and expiring old versions and incomplete multipart uploads." }
+      ],
+      "trap": "Treating S3 as a mounted disk for a database.",
+      "link": { "href": "architecture.html#panel-storage", "label": "Compare storage options" }
+    },
+    {
+      "id": "shared-responsibility", "group": "concept", "priority": "P0",
+      "q": "Explain the shared responsibility model.",
+      "tests": "Security ownership; a very common opener.",
+      "answer": [
+        "AWS secures the cloud itself: data centers, hardware, the global network, and the virtualization layer.",
+        "The customer secures what they put in the cloud: data, identities and IAM, encryption choices, network configuration, and the operating system on EC2.",
+        "The line moves with the service. On EC2 you patch the OS; on Lambda, RDS, or DynamoDB AWS manages more of the stack, so you focus on data and access.",
+        "Example: an S3 bucket left public is a customer misconfiguration, not an AWS failure."
+      ],
+      "handle": ["Give the one-line split, then the EC2 versus managed service contrast."],
+      "followups": [
+        { "q": "Who patches the database engine on RDS?", "a": "AWS applies patches during a maintenance window the customer controls. The customer still owns users, network access, and encryption settings." }
+      ],
+      "trap": "Saying AWS secures your data because it sits in their data center.",
+      "link": { "href": "aws.html#shared", "label": "Review shared responsibility" }
+    },
+    {
+      "id": "secure-account", "group": "concept", "priority": "P0",
+      "q": "How would you secure a customer's AWS environment?",
+      "tests": "Defense in depth across identity, accounts, network, data, and detection.",
+      "answer": [
+        "Identity: lock away the root user, MFA everywhere, IAM Identity Center for people, IAM roles with temporary credentials for workloads, least privilege policies.",
+        "Accounts: AWS Organizations with separate production and development accounts, and service control policies as guardrails.",
+        "Network: apps and data in private subnets, security groups that reference each other, VPC endpoints for private access to S3 and DynamoDB, WAF and Shield at the edge.",
+        "Data: encryption at rest with KMS, TLS in transit, Secrets Manager for credentials, S3 Block Public Access.",
+        "Detection: CloudTrail in all Regions to a locked central bucket, GuardDuty for threats, AWS Config rules for compliance, Security Hub to see it together, and alerts routed to a response process."
+      ],
+      "handle": ["Use the layers as headings so the answer stays structured: identity, accounts, network, data, detection.", "Start with identity, the highest-impact layer."],
+      "followups": [
+        { "q": "A developer's access key leaked on GitHub. What do you do?", "a": "Deactivate the key immediately, check CloudTrail for what it did, remove anything it created, rotate related secrets, and move the workload to IAM roles so long-lived keys are not needed." }
+      ],
+      "trap": "Starting with firewalls. Most cloud incidents come from identity and misconfiguration.",
+      "link": { "href": "architecture.html#panel-security", "label": "Compare security services" }
+    },
+    {
+      "id": "ha-dr-terms", "group": "concept", "priority": "P1",
+      "q": "High availability versus fault tolerance versus disaster recovery? What are RPO and RTO?",
+      "tests": "Precise vocabulary that drives design decisions.",
+      "answer": [
+        "High availability: the system keeps serving with minimal interruption when a component fails, for example Multi-AZ with automatic failover.",
+        "Fault tolerance: users notice no interruption at all, usually because redundant capacity is already running. More expensive.",
+        "Disaster recovery: how you recover from a large event such as a Region outage or data corruption.",
+        "RPO is the most data you can afford to lose, measured in time. RTO is the longest you can be down. Lower numbers cost more."
+      ],
+      "handle": ["Give each definition with one AWS example."],
+      "followups": [
+        { "q": "How do you lower RPO?", "a": "Replicate more often: continuous replication such as Aurora Global Database instead of nightly snapshots." }
+      ],
+      "trap": "Mixing up availability and durability. S3 durability is about not losing objects; availability is about reaching them.",
+      "link": { "href": "aws.html#dr", "label": "Review DR tiers" }
+    },
+    {
+      "id": "well-architected", "group": "concept", "priority": "P1",
+      "q": "What is the AWS Well-Architected Framework, and how would you use it with a customer?",
+      "tests": "Whether you can use the framework as a customer tool, not just recite it.",
+      "answer": [
+        "Six pillars: Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, and Sustainability.",
+        "It is a set of questions and best practices for reviewing a workload, not a checklist you finish once.",
+        "With a customer I run a review against the pillars, find the high-risk issues, and agree on a prioritized improvement plan, often starting with security and reliability.",
+        "The Well-Architected Tool in the console records the review and tracks progress."
+      ],
+      "handle": ["List the pillars quickly, then spend your time on how you would run the review."],
+      "followups": [
+        { "q": "Pillars conflict, for example cost versus reliability. How do you decide?", "a": "The business decides through its requirements: what downtime costs versus what redundancy costs. I lay out the options with numbers and the customer chooses knowing the tradeoffs." }
+      ],
+      "trap": "Listing the pillars without saying what you would do with them.",
+      "link": { "href": "aws.html#pillars", "label": "Review the six pillars" }
+    },
+    {
+      "id": "reduce-cost", "group": "troubleshoot", "priority": "P0",
+      "q": "A customer says their AWS bill is too high. What do you do?",
+      "tests": "Structured, data-first cost thinking and knowledge of purchase options.",
+      "answer": [
+        "Start with visibility: Cost Explorer and cost allocation tags to find the top services and owners. A few line items usually drive most of the bill.",
+        "Remove waste: idle instances, unattached EBS volumes, old snapshots, unused load balancers, and heavy NAT Gateway data processing that a VPC endpoint could replace.",
+        "Right-size with Compute Optimizer, and move to Graviton where the software supports it.",
+        "Commit for steady usage with Savings Plans or Reserved Instances; use Spot for fault-tolerant batch work.",
+        "Tier storage with S3 lifecycle rules and Intelligent-Tiering, then set AWS Budgets alerts so costs do not drift back."
+      ],
+      "handle": ["Order matters: measure, remove waste, right-size, then commit. Committing before right-sizing locks in waste.", "Aim at the top three line items first."],
+      "followups": [
+        { "q": "Savings Plans or Reserved Instances?", "a": "Compute Savings Plans flex across instance families, Regions, Fargate, and Lambda. Reserved Instances fit specific services like RDS or when you need a capacity reservation." }
+      ],
+      "trap": "Recommending three-year commitments before right-sizing."
+    },
+    {
+      "id": "slow-app", "group": "troubleshoot", "priority": "P1",
+      "q": "Users say the application is slow. How do you troubleshoot?",
+      "tests": "Systematic diagnosis instead of guessing.",
+      "answer": [
+        "Clarify: slow for everyone or one Region, every page or one, since when, and what changed? Check recent deployments first.",
+        "Follow the request path with data: CloudWatch metrics on the ALB (target response time, 5xx errors), the app tier (CPU, memory), and the database (CPU, connections, latency).",
+        "Use X-Ray tracing to find which hop adds the time, and RDS Performance Insights to find slow queries.",
+        "Fix the bottleneck you found: add a cache, add an index, scale the tier, or put CloudFront in front for distant users.",
+        "Afterward, alarm on what users feel, such as p99 latency, so you hear about it before they do."
+      ],
+      "handle": ["Say what you would measure before naming any fix."],
+      "followups": [
+        { "q": "Only users in Asia are slow.", "a": "Distance. CloudFront for cacheable content, Global Accelerator for dynamic traffic over the AWS backbone, or a closer Region if data rules allow." }
+      ],
+      "trap": "Jumping to bigger instances without evidence."
+    },
+    {
+      "id": "private-subnet", "group": "troubleshoot", "priority": "P1",
+      "q": "An EC2 instance in a private subnet cannot reach the internet or S3. How do you fix it?",
+      "tests": "VPC fundamentals and layered troubleshooting.",
+      "answer": [
+        "Internet: the private subnet needs a route to a NAT Gateway in a public subnet, and that public subnet routes to an Internet Gateway.",
+        "S3: add a gateway VPC endpoint for S3 to the route table; traffic stays private and avoids NAT data charges.",
+        "Then check each layer in order: route table, security group outbound rules, NACL rules in both directions including ephemeral ports, the instance role's IAM permissions, and the bucket policy.",
+        "VPC Flow Logs show whether packets are accepted or rejected."
+      ],
+      "handle": ["Walk the path outward from the instance: route, firewall, permission."],
+      "followups": [
+        { "q": "Why not just give the instance a public IP?", "a": "It would need an Internet Gateway route, which makes the subnet public and the instance reachable from outside. NAT allows outbound connections only." }
+      ],
+      "trap": "Adding an Internet Gateway route to the private subnet, which makes it public.",
+      "link": { "href": "architecture.html#panel-network", "label": "Compare network building blocks" }
+    },
+    {
+      "id": "who-deleted", "group": "troubleshoot", "priority": "P1",
+      "q": "A production resource was deleted last night. How do you find out who did it and prevent it next time?",
+      "tests": "Knowing CloudWatch, CloudTrail, and Config apart.",
+      "answer": [
+        "CloudTrail records every API call with the identity, time, and source IP. Search for the delete event.",
+        "AWS Config shows the resource's configuration history and what changed before it.",
+        "Prevent: least privilege so few identities can delete production resources, SCPs that deny destructive actions in production accounts, deletion protection on databases and load balancers, and S3 versioning.",
+        "Recover from backups, then hold a blameless post-incident review."
+      ],
+      "handle": ["Use the three questions: is it healthy (CloudWatch), who did it (CloudTrail), what changed (Config)."],
+      "trap": "Saying CloudWatch tells you who made an API call.",
+      "link": { "href": "architecture.html#panel-resilience", "label": "Review operations services" }
+    },
+    {
+      "id": "customer-pushback", "group": "customer", "priority": "P0",
+      "q": "A customer insists on an approach you think is wrong. What do you do?",
+      "tests": "Customer Obsession, Earn Trust, and Have Backbone; Disagree and Commit.",
+      "answer": [
+        "First understand why. There is usually a constraint I have not heard: a skills gap, a contract, a compliance rule, or a deadline.",
+        "Show the tradeoff with evidence in their terms: cost, risk, and failure modes of their approach next to the alternative.",
+        "Offer a small proof of concept or a reversible first step so data decides, not opinion.",
+        "If they still choose their approach and it is not unsafe, document the risks, commit, and help them succeed. If it creates real security or compliance risk, escalate clearly."
+      ],
+      "handle": ["Answer with a real STAR story if you have one; otherwise give the method and offer the closest story.", "Keep the tone collaborative: the goal is the customer's outcome, not winning."],
+      "followups": [
+        { "q": "What if the best answer is not an AWS service?", "a": "Say so. Recommend what serves the customer, including a partner or AWS Marketplace solution. Trust is worth more than one deal." }
+      ],
+      "trap": "Either caving immediately or arguing to win. Both lose trust.",
+      "link": { "href": "behavioral.html", "label": "Pick a matching story" }
+    },
+    {
+      "id": "explain-exec", "group": "customer", "priority": "P1",
+      "q": "How would you explain a technical recommendation to a non-technical executive?",
+      "tests": "Communication range, a core SA skill.",
+      "answer": [
+        "Start with the business outcome and the decision needed, for example cutting downtime risk for checkout at a stated monthly cost.",
+        "Use one analogy if it helps and skip service names unless asked.",
+        "Give two or three options with cost, risk, and time, and your recommendation with the reason.",
+        "End with the next step and how success will be measured."
+      ],
+      "handle": ["Demonstrate it live: explain Multi-AZ in 30 seconds as a second data center that takes over automatically.", "Tie it to a time you translated technical work for a stakeholder."],
+      "followups": [
+        { "q": "Explain the cloud to a CFO.", "a": "You stop buying servers up front and pay for what you use, you can grow or shrink in minutes, and the provider runs the buildings and hardware, so your team spends its time on the product." }
+      ],
+      "trap": "Lecturing in acronyms or leaving out cost and risk."
+    },
+    {
+      "id": "cloud-objections", "group": "customer", "priority": "P1",
+      "q": "A customer worries about security and vendor lock-in if they move to AWS. How do you respond?",
+      "tests": "Handling objections honestly; Earn Trust.",
+      "answer": [
+        "Security: explain shared responsibility, then the controls they keep: keys they control in KMS, audit trails in CloudTrail, compliance reports in AWS Artifact, and data that stays in the Regions they choose.",
+        "Lock-in: acknowledge it is a real tradeoff. Managed services trade some portability for speed and less operations.",
+        "Reduce it where it matters: containers, open-source engines like PostgreSQL on RDS or Aurora, infrastructure as code, and data in open formats like Parquet in S3.",
+        "Decide per workload: differentiating parts can use managed services; parts that must stay portable use open standards."
+      ],
+      "handle": ["Acknowledge the concern before answering it. Never dismiss it."],
+      "trap": "Claiming there is no lock-in at all."
+    }
+  ]
+}

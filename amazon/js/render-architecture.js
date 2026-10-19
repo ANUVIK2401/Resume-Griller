@@ -56,7 +56,8 @@
       e.preventDefault();
       show((to + tabs.length) % tabs.length, true);
     });
-    show(0);
+    // A link to #panel-<id> (from the top questions page) opens that family's tab.
+    show(Math.max(0, data.tables.findIndex((t) => location.hash === `#panel-${t.id}`)));
     return ui.section('compare', 'Compare services', `${data.tables.length} families`, 'Choose between similar services', list, ...panels);
   }
 
