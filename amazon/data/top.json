@@ -1,6 +1,5 @@
 {
   "$schema": "./schema/top.schema.json",
-  "intro": "The questions Solutions Architect interviewers ask most, each with a model answer you can say in about a minute, how to handle it live, the follow-up they usually ask next, and the trap that costs points. Drill the P0 set daily; open P1 once P0 feels easy.",
   "status_options": [
     { "id": "new", "label": "New" },
     { "id": "shaky", "label": "Shaky" },

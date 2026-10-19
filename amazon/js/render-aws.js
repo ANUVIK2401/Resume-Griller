@@ -54,7 +54,7 @@
       bar, count,
       el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: flashcards }, 'Flashcards for what is shown'),
         el('span', { class: 'muted' }, 'Tip: filter Status to New or Shaky first.')));
-    const sections = groups.map(({ c, grid, services }) => ui.section(`cat-${c.id}`, `${c.name} (${services.length})`, 'Category', c.name, grid));
+    const sections = groups.map(({ c, grid, services }) => ui.section(`cat-${c.id}`, c.name, 'Category', c.name, grid));
     apply();
     // Open on tier 1 so the first screen is the must-know set, unless a link targets one term.
     if (!location.hash.startsWith('#aws-')) {

@@ -52,7 +52,8 @@ html { scroll-padding-top: calc(var(--gx-h) + 4.5rem); }
 @media (max-width: 1179px) { .topbar { top: var(--gx-h); } }
 
 /* Narrow screens: drop the page links (the module menu has them) and shorten countdowns. */
-@media (max-width: 1100px) { .gx-long { display: none; } .gx-short { display: inline; } }
+/* Full countdowns only when there is room beside the page links. */
+@media (max-width: 1599px) { .gx-long { display: none; } .gx-short { display: inline; } }
 @media (max-width: 760px) { .gx-pages { display: none; } }
 @media (max-width: 380px) { .gx-tab { padding-inline: 0.5rem; } .gx-home { display: none; } }
 

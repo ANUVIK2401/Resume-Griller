@@ -49,7 +49,7 @@
 
   /* Space and shape */
   --gutter: clamp(1rem, 0.5rem + 2.4vw, 2.5rem);
-  --section: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
+  --section: clamp(2rem, 1.5rem + 2vw, 3.25rem);
   --page-max: 1080px;
   --sidebar-w: 264px;
   --header-h: 4rem;
@@ -135,7 +135,8 @@ p { margin: 0; }
 .btn:disabled, .icon-btn:disabled { cursor: default; opacity: 0.55; }
 .btn:active { transform: translateY(1px); }
 .btn svg { width: 0.9em; height: 0.9em; flex: none; }
-.item-body > .btn { justify-self: start; }
+/* Buttons keep their own width inside grid stacks instead of stretching across the card. */
+.item-body > .btn, .stack > .btn { justify-self: start; }
 .btn-gold {
   border-color: transparent; color: var(--navy);
   background: linear-gradient(180deg, #FFC266 0%, var(--gold) 100%);
@@ -151,7 +152,7 @@ p { margin: 0; }
     radial-gradient(120% 140% at 85% 0%, rgb(255 153 0 / 0.10), transparent 55%),
     linear-gradient(180deg, var(--navy) 0%, var(--navy-raised) 100%);
   border-bottom: 1px solid var(--line-navy-strong);
-  padding-block: clamp(2rem, 1.5rem + 3vw, 3.75rem) clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+  padding-block: clamp(1.25rem, 1rem + 1.5vw, 2.25rem) clamp(1.25rem, 1rem + 1vw, 1.75rem);
   --focus: 0 0 0 2px var(--navy), 0 0 0 4px var(--gold);
 }
 .masthead::after { /* dotted grid, like a terminal bezel */
@@ -164,29 +165,29 @@ p { margin: 0; }
 .prompt { font: 400 var(--text-sm)/1.4 var(--font-mono); color: var(--on-navy-faint); }
 .prompt b { color: var(--gold); font-weight: 400; }
 .masthead h1 {
-  margin-top: 0.75rem;
-  font: 800 var(--text-display)/1 var(--font-sans); letter-spacing: -0.03em;
+  margin-top: 0.5rem;
+  font: 800 clamp(1.9rem, 1.4rem + 1.8vw, 2.9rem)/1.05 var(--font-sans); letter-spacing: -0.025em;
 }
 .masthead h1 em { font-style: normal; color: var(--gold-pale); }
 .masthead h1, .section-title, .h3 { text-wrap: balance; }
-.masthead .lede { margin-top: 1rem; max-width: 58ch; color: var(--on-navy-muted); font-size: var(--text-lg); line-height: 1.55; }
+.masthead .lede { margin-top: 0.6rem; max-width: 68ch; color: var(--on-navy-muted); font-size: var(--text-base); line-height: 1.55; }
 
 /* Progress readout under the masthead title */
-.readout { margin-top: 1.75rem; display: grid; gap: 0.5rem; max-width: 34rem; }
+.readout { margin-top: 1.1rem; display: grid; gap: 0.5rem; max-width: 34rem; }
 .readout-row { display: flex; justify-content: space-between; font: 500 var(--text-xs)/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--on-navy-faint); }
 .readout-row strong { color: var(--gold-pale); font-weight: 500; }
 .meter { height: 6px; border-radius: 999px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
 .meter > span { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(var(--p, 0)); background: linear-gradient(90deg, var(--gold), var(--gold-pale)); transition: transform var(--dur) var(--ease-out); }
 
 /* Reading surface */
-main { padding-block: var(--section); outline: none; }
+main { padding-block: clamp(1.5rem, 1rem + 1.5vw, 2.25rem) var(--section); outline: none; }
 .section + .section { margin-top: var(--section); }
 .eyebrow {
   display: flex; align-items: center; gap: 0.75rem;
   font: 700 var(--text-xs)/1.2 var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-ink);
 }
 .eyebrow::before { content: ""; width: 1.75rem; height: 1px; background: currentColor; }
-.section-title { margin-top: 0.75rem; margin-bottom: 0.35rem; font: 700 clamp(1.75rem, 1.35rem + 1.5vw, 2.6rem)/1.1 var(--font-serif); letter-spacing: -0.02em; }
+.section-title { margin-top: 0.75rem; margin-bottom: 0.35rem; font: 700 clamp(1.5rem, 1.25rem + 1vw, 2.1rem)/1.15 var(--font-serif); letter-spacing: -0.015em; }
 .section-title em { font-style: italic; color: var(--accent-ink); }
 .muted { color: var(--ink-muted); }
 .section > .grid-2, .section > .grid-3, .section > .table-wrap, .section > .item-list { margin-top: 1rem; }
@@ -217,6 +218,7 @@ main { padding-block: var(--section); outline: none; }
 .field:focus-visible { border-color: var(--gold); }
 .field::placeholder { color: var(--ink-muted); opacity: 0.8; }
 .toolbar .field[type="search"] { flex: 1 1 14rem; }
+.stack > .toolbar { margin-bottom: 0; }
 
 kbd {
   display: inline-block; min-width: 1.5em; padding: 0.1em 0.45em; border-radius: 4px; text-align: center;
@@ -274,7 +276,7 @@ body { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
 .side-toc ul { border-left: 1px solid var(--line-navy); margin-left: 0.5rem; }
 .side-toc a {
   display: block; padding: 0.35rem 0.75rem; margin-left: -1px; border-left: 2px solid transparent;
-  font-size: 0.9375rem; line-height: 1.4; text-decoration: none; color: var(--on-navy-muted);
+  font-size: var(--text-sm); line-height: 1.4; text-decoration: none; color: var(--on-navy-muted);
   transition: color var(--dur-fast), border-color var(--dur-fast);
 }
 .side-toc a:hover { color: var(--on-navy); }
@@ -289,6 +291,14 @@ body { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
 }
 .icon-btn:hover { background: rgb(255 255 255 / 0.08); border-color: var(--gold); }
 .icon-btn svg { width: 1rem; height: 1rem; }
+
+/* Desktop: the top bar lists the pages, so the sidebar is only this page's outline.
+   Pages without sections fall back to the page list. */
+@media (min-width: 1180px) {
+  .side-nav, .sidebar-back, .sidebar-meta { display: none; }
+  .sidebar:has(#toc[hidden]) .side-nav { display: block; }
+  .side-toc a { padding-block: 0.45rem; }
+}
 
 @media (max-width: 1179px) {
   body { display: block; }
@@ -345,7 +355,7 @@ mark.fill::before { content: "fill: "; font: 600 0.75em var(--font-mono); }
 .spacer { flex: 1; }
 .h3 { font: 700 var(--text-lg)/1.25 var(--font-sans); letter-spacing: -0.01em; }
 .label { font: 700 var(--text-sm)/1.3 var(--font-sans); color: var(--ink); }
-.section-intro { margin: 0.75rem 0 1.5rem; max-width: 62ch; color: var(--ink-muted); }
+.section-intro { margin: 0.5rem 0 1.25rem; max-width: 66ch; color: var(--ink-muted); line-height: 1.6; }
 
 /* Inverse card: navy in both themes, for cheat sheets and scripts */
 .card-navy { --ink: var(--on-navy); background: linear-gradient(160deg, var(--navy-raised), var(--navy)); color: var(--on-navy); box-shadow: 0 0 0 1px var(--line-navy), 0 20px 40px -24px rgb(22 30 43 / 0.8); --ink-muted: var(--on-navy-muted); --accent-ink: var(--gold-pale); --line: var(--line-navy); --line-strong: var(--line-navy-strong); --surface-sunk: rgb(0 0 0 / 0.25); }
@@ -619,9 +629,11 @@ details.fold[open] > summary { border-bottom: 1px solid var(--line); }
 .fold-body { padding: 1rem; display: grid; gap: 0.85rem; }
 .term-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); margin-top: 1rem; }
 .term { display: grid; gap: 0.6rem; align-content: start; min-width: 0; }
-.term-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.term-head { display: grid; gap: 0.5rem; }
 .term .status { max-width: 9rem; }
-.use-avoid { margin: 0; display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.35rem 0.75rem; font-size: var(--text-sm); }
+/* Label above text: full card width reads faster than a squeezed second column. */
+.use-avoid { margin: 0; display: grid; gap: 0.15rem; font-size: var(--text-sm); line-height: 1.55; }
+.use-avoid dd + dt { margin-top: 0.6rem; }
 .use-avoid dt { font-weight: 700; color: var(--accent-ink); }
 .use-avoid dd { margin: 0; color: var(--ink-muted); }
 .status[data-status="known"] { border-color: color-mix(in srgb, var(--ok) 60%, transparent); color: var(--ok); }
@@ -629,7 +641,6 @@ details.fold[open] > summary { border-bottom: 1px solid var(--line); }
 .rubric { border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin: 0; display: grid; gap: 0.6rem; }
 .rubric legend { padding: 0 0.35rem; max-width: 100%; }
 .randomizer .quiz-q, .mock .quiz-q { max-width: 60ch; }
-@media (max-width: 640px) { .use-avoid { grid-template-columns: minmax(0, 1fr); } }
 /* Navy cards keep signal colors readable; narrow phones keep text size in the sidebar only. */
 .card-navy { --danger: #FFA59C; --ok: #8FE0B5; }
 @media (max-width: 400px) { .topbar .text-size { display: none; } }

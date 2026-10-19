@@ -66,6 +66,7 @@
       fetch(new URL(`${active.id}/data/site.json`, root)).then((r) => r.json()).then((site) => {
         const here = document.body.dataset.page;
         pages.replaceChildren(...site.pages.map((p) => el('a', { href: new URL(`${active.id}/${p.href}`, root).href, 'aria-current': p.id === here ? 'page' : null }, p.short || p.label)));
+        pages.querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       }).catch(() => {});
     }
 

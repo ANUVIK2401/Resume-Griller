@@ -87,7 +87,7 @@
       onChange: apply,
     });
     const intro = el('div', { class: 'card stack', id: 'drill' },
-      el('p', { class: 'h3' }, data.intro), bar, count,
+      bar, count,
       el('div', { class: 'row' },
         el('button', { class: 'btn btn-gold', type: 'button', onclick: () => rehearse(p0, 'Top priority drill') }, `Drill the ${p0.length} P0 questions`),
         el('button', { class: 'btn', type: 'button', onclick: () => rehearse(filterQuestions(data.questions, filters, statusOf), 'Questions shown') }, 'Rehearse what is shown'),

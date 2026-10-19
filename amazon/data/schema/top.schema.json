@@ -3,9 +3,8 @@
   "$id": "top.schema.json",
   "title": "Most asked Solutions Architect questions with model answers and handling",
   "type": "object",
-  "required": ["intro", "status_options", "method", "moves", "groups", "priorities", "questions"],
+  "required": ["status_options", "method", "moves", "groups", "priorities", "questions"],
   "properties": {
-    "intro": { "$ref": "common.schema.json#/$defs/text" },
     "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"] } },
     "method": {
       "type": "array", "minItems": 7, "maxItems": 7,
