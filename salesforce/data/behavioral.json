@@ -664,7 +664,7 @@
         "Prototyped a DQN reinforcement learning agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
         "Raised agreement with EPA-optimal calls from 68% to 74% on held-out 2024 drives, and cut per-run training time 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."
       ],
-      "s": "As an AI/ML research intern with USC Sports Analytics, I asked: could a reinforcement learning agent learn good fourth-down decisions?",
+      "s": "As a volunteer AI/ML researcher with USC Sports Analytics, I asked: could a reinforcement learning agent learn good fourth-down decisions?",
       "t": "Prototype the agent, and make training fast enough to iterate on.",
       "a": [
         "Built a DQN agent over 420K plays.",

@@ -31,7 +31,7 @@ const STAR_BANK = [
     tags: ["agents", "mcp", "ownership", "solo-project", "speed"]
   },
   {
-    role: "USC · AI/ML Research Intern",
+    role: "USC Sports Analytics · Volunteer AI/ML Researcher",
     bullet: "Redesigned the DQN reward structure and state-action representations to compress the RL training cycle from 6+ hours to 10 minutes, unlocking rapid hyperparameter sweeps.",
     situation: "The reinforcement learning research pipeline had a DQN training cycle that took over 6 hours, which made iterating on hyperparameters extremely slow.",
     task: "I needed to speed up training without losing model quality, since the current pace was blocking research velocity.",
@@ -40,7 +40,7 @@ const STAR_BANK = [
     tags: ["ml", "rl", "speed", "deep-dive"]
   },
   {
-    role: "USC · AI/ML Research Intern",
+    role: "USC Sports Analytics · Volunteer AI/ML Researcher",
     bullet: "Profiled worker bottlenecks and restructured a multi-GPU data pipeline, improving agent task completion by 18% over rule-based baselines.",
     situation: "The multi-GPU training pipeline had worker-level bottlenecks that were limiting how well the RL agent could perform against rule-based baselines.",
     task: "I was tasked with diagnosing the bottleneck and improving pipeline throughput to improve agent performance.",
@@ -49,7 +49,7 @@ const STAR_BANK = [
     tags: ["ml", "performance", "profiling", "deep-dive"]
   },
   {
-    role: "USC · AI/ML Research Intern",
+    role: "USC Sports Analytics · Volunteer AI/ML Researcher",
     bullet: "Built a distributed experiment-tracking service with a REST API and SQL-backed telemetry logging concurrent metrics across 5+ parallel GPU runs, eliminating 8+ hours/week of manual log aggregation.",
     situation: "Researchers were running 5+ parallel GPU experiments but had to manually pull and aggregate logs from each run, costing significant time every week.",
     task: "I set out to build a service that could track and log metrics from all concurrent runs automatically.",

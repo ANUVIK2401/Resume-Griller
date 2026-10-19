@@ -12,7 +12,7 @@ const fail = (where, msg) => errors.push(`${where}: ${msg}`);
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
-    if (name.startsWith('.') || name === 'node_modules') return [];
+    if (name.startsWith('.') || name === 'node_modules' || name === 'vendor') return [];
     const path = join(dir, name);
     return statSync(path).isDirectory() ? walk(path) : [path];
   });
@@ -92,10 +92,10 @@ function strings(node, path, out = []) {
   return out;
 }
 const RULES = [
-  [/\b(?<!nearly )(3|three) years\b/i, 'Oracle tenure is "nearly 3 years"'],
+  [/\b(?<!nearly |about )(3|three) years\b|\b(2\.5|two and a half|2 and a half) years\b/i, 'Oracle tenure is "nearly 3 years" or "about 3 years"'],
   [/\bJul(y)? 2022\b/, 'exact Oracle dates belong in legal_dates only'],
-  [/\bJun(e)? 2026\b/, 'MSRcosmos started May 2026'],
-  [/\bvolunteer\b/i, 'Sports Analytics was an AI/ML Research Intern role'],
+  [/\bMay 2026\b/, 'MSRcosmos ran Jun 2026 to Aug 2026'],
+  [/\bresearch intern(ship)?\b/i, 'USC Sports Analytics is volunteer research, not an internship'],
 ];
 for (const [name, json] of Object.entries(data)) {
   // Candidate resume rules do not apply to other candidates' dated reports.
@@ -104,6 +104,14 @@ for (const [name, json] of Object.entries(data)) {
     for (const [re, why] of RULES) if (re.test(text)) fail(path, why);
   }
 }
+
+// 5b. Employment dates match the candidate's confirmed facts.
+const experienceById = Object.fromEntries((profile.experience || []).map((e) => [e.id, e]));
+for (const [id, [start, end]] of Object.entries({ oracle: ['2022-07', '2025-01'], msrcosmos: ['2026-06', '2026-08'] })) {
+  const d = experienceById[id]?.legal_dates;
+  if (d?.start !== start || d?.end !== end) fail(`profile.experience.${id}.legal_dates`, `must be ${start} to ${end}`);
+}
+if (experienceById.sports?.kind !== 'volunteer research') fail('profile.experience.sports.kind', 'USC Sports Analytics is volunteer research');
 
 // 6. Every quiz number is answerable: canonical answer and each accepted spelling score as correct.
 const { isCorrect } = createRequire(import.meta.url)('../js/quiz.js');

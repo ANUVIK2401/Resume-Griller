@@ -10,9 +10,9 @@
 const GOOGLE_INTRO = {
   title: "Tell me about yourself — 60-90 second intro",
   pitch: [
-    "I'm a CS master's student at USC graduating December 2026, and right now I'm an AI forward-deployed SWE intern at MSRcosmos, where as the sole engineer I ship a production LangGraph multi-agent system on AWS that migrates ERP financial data — the pilot cut manual reconciliation effort 70%.",
-    "Before grad school I spent two and a half years at Oracle as a Software Engineer II on NSX cloud infrastructure, and that's where my center of gravity is: observability and reliability at scale. I built the Prometheus and Grafana platform that enforces CPU, memory, and p99 latency SLOs across 37,000+ enterprise tenants — it took P1 mean-time-to-resolution from 90 minutes down to 25 — and I containerized NSX on OCI with Kubernetes autoscaling driven by custom Prometheus metrics, which held p99 SLOs under 2x peak load while cutting infra cost about 25%.",
-    "In between, I did AI/ML research at USC, where I compressed a DQN training cycle from 6+ hours to 10 minutes and built the experiment-tracking service the lab still runs on.",
+    "I'm a CS master's student at USC graduating December 2026, and this summer, June to August 2026, I was an AI forward-deployed SWE intern at MSRcosmos, where I built a production LangGraph multi-agent system on AWS that migrates ERP financial data — the pilot cut manual reconciliation effort 70%.",
+    "Before grad school I spent nearly 3 years at Oracle as a Software Engineer II on NSX cloud infrastructure, and that's where my center of gravity is: observability and reliability at scale. I built the Prometheus and Grafana platform that enforces CPU, memory, and p99 latency SLOs across 37,000+ enterprise tenants — it took P1 mean-time-to-resolution from 90 minutes down to 25 — and I containerized NSX on OCI with Kubernetes autoscaling driven by custom Prometheus metrics, which held p99 SLOs under 2x peak load while cutting infra cost about 25%.",
+    "In between, I did volunteer AI/ML research with USC Sports Analytics, where I compressed a DQN training cycle from 6+ hours to 10 minutes and built the experiment-tracking service the lab still runs on.",
     "The thread through all of it: I like owning production systems end to end — instrumenting them, understanding how they behave under load, and automating the toil away. That's why Google interests me: it's infrastructure at a scale where observability and reliability aren't support work, they're the product."
   ],
   tips: [

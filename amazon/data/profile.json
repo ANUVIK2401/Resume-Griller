@@ -3,7 +3,7 @@
   "name": "Anuvik Thota",
   "location": "Los Angeles, CA",
   "identity": "Engineer with Oracle observability, incident-response, and Kubernetes experience, now building agentic AI systems; preparing to translate those skills into customer architecture discussions.",
-  "availability": "[confirm: actual full-time start availability; graduation is Dec 2026]",
+  "availability": "Graduating December 16, 2026. Planned AWSI ETP cohort start: January 4, 2027.",
   "links": {
     "github": "https://github.com/ANUVIK2401",
     "linkedin": "https://linkedin.com/in/anuvik-thota",
@@ -16,7 +16,7 @@
       "school": "University of Southern California",
       "degree": "M.S. Computer Science",
       "gpa": "3.85",
-      "dates_display": "Jan 2025 to Dec 2026",
+      "dates_display": "Jan 2025 to Dec 16, 2026",
       "coursework": [
         "Artificial Intelligence",
         "Machine Learning",
@@ -81,9 +81,9 @@
       "org": "MSRcosmos",
       "role": "AI Forward Deployed SWE Intern",
       "kind": "internship",
-      "dates_display": "May 2026 to Aug 2026",
+      "dates_display": "Jun 2026 to Aug 2026",
       "legal_dates": {
-        "start": "2026-05",
+        "start": "2026-06",
         "end": "2026-08"
       },
       "summary": "Multi-agent ERP migration with human-in-the-loop confidence routing and a Databricks feed.",
@@ -96,14 +96,14 @@
     {
       "id": "sports",
       "org": "USC Sports Analytics",
-      "role": "AI/ML Research Intern",
-      "kind": "internship",
+      "role": "Volunteer AI/ML Researcher",
+      "kind": "volunteer research",
       "dates_display": "Jun 2025 to Sep 2025",
       "legal_dates": {
         "start": "2025-06",
         "end": "2025-09"
       },
-      "summary": "DQN research for NFL fourth-down calls over 420K plays. PDF title used; earlier site called this volunteer research, so confirm official classification.",
+      "summary": "Volunteer research: DQN reinforcement learning agent for NFL fourth-down calls over 420K plays.",
       "highlights": [
         "DQN agent for NFL fourth-down calls over 420K plays, with reward shaping on expected points added.",
         "Agreement with EPA-optimal calls up from 68% to 74% on held-out 2024 drives; per-run training time down 40% (52 to 31 min) by vectorizing replay-buffer sampling and removing a data-loader stall."
@@ -114,7 +114,7 @@
       "org": "Oracle",
       "role": "Software Engineer II",
       "kind": "full time",
-      "dates_display": "Jul 2022 to Jan 2025",
+      "dates_display": "nearly 3 years",
       "legal_dates": {
         "start": "2022-07",
         "end": "2025-01"
