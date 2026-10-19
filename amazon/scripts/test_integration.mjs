@@ -3,7 +3,7 @@ import { readFileSync, existsSync } from 'node:fs';
 const root = new URL('../../', import.meta.url);
 const read = path => readFileSync(new URL(path, root), 'utf8');
 const site = JSON.parse(read('amazon/data/site.json'));
-for (const id of ['home', 'review', 'behavioral', 'cheatsheet', 'architecture', 'aws', 'design', 'questions', 'mock']) {
+for (const id of ['home', 'review', 'behavioral', 'cheatsheet', 'architecture', 'aws', 'compare', 'design', 'fundamentals', 'questions', 'mock']) {
   const page = site.pages.find(page => page.id === id);
   assert.ok(page, `Missing navigation: ${id}`);
   assert.ok(existsSync(new URL(`amazon/${page.href}`, root)), `Missing page: ${page.href}`);
@@ -16,10 +16,12 @@ for (const id of ['home', 'review', 'behavioral', 'cheatsheet', 'architecture', 
 }
 const landing = read('index.html');
 assert.match(landing, /Amazon Solutions Architect/);
+assert.match(landing, />Amazon SA Prep →</);
+assert.match(landing, />Salesforce Prep →</);
 assert.match(landing, /amazon\/review.html/);
 assert.match(landing, /amazon\/cheatsheet.html/);
 assert.ok(existsSync(new URL('general-prep.html', root)));
 const checker = read('amazon/scripts/check.mjs');
-assert.doesNotMatch(checker, /Sports Analytics is volunteer research/);
-assert.doesNotMatch(checker, /Oracle tenure is "close to 3 years"/);
-console.log('Integration checks passed: 9 navigation routes, local assets, Amazon entry, resume-aligned policy.');
+assert.match(checker, /msrcosmos: \['2026-06', '2026-08'\]/);
+assert.match(checker, /Oracle tenure is "nearly 3 years" or "about 3 years"/);
+console.log('Integration checks passed: 11 navigation routes, local assets, Amazon entry, resume-aligned policy.');

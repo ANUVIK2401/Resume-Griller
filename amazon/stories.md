@@ -280,7 +280,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Evidence boundary:** Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.
 
-**Context:** The PDF lists AI/ML Research Intern, Sports Analytics. Earlier site data said volunteer research; confirm the official role classification before using it on forms.
+**Context:** USC Sports Analytics is volunteer research. Say so plainly; do not call it an internship.
 
 **SA audience bridge:** For engineers, explain sampling vectorization, the loader stall, and equivalent-workload checks. For executives, explain runs shortening from 52 to 31 minutes without claiming measured cost savings. Keep the separate quality change and research context explicit.
 
@@ -421,10 +421,10 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Where to look:** Look at Oracle deploys before the CLI toolchain existed, or an early MSRcosmos agent run that produced a wrong result.
 
-- **S:** What did I own that went wrong, and who felt it?
-- **T:** What was I on the hook for when it broke?
-- **A:** What did I do in the first hour, and what did I change so it could not repeat the same way?
-- **R:** The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse.
+- **S:** [fill: What did I own that went wrong, and who felt it?]
+- **T:** [fill: What was I on the hook for when it broke?]
+- **A:** [fill: What did I do in the first hour, and what did I change so it could not repeat the same way?]
+- **R:** [fill: The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse.]
 
 ### Disagreement (Have Backbone)
 
@@ -432,10 +432,10 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Where to look:** Build from S3 (moving alerts from static thresholds to SLOs) or S4 (a team resisting the CLI validation gate). Use a real disagreement only.
 
-- **S:** Who did I disagree with, about which technical decision?
-- **T:** What was at stake, and who owned the decision?
-- **A:** How did I understand their view first, what data did I bring, and how was it decided?
-- **R:** What shipped. If I lost, how I committed fully anyway. What I learned about disagreeing well.
+- **S:** [fill: Who did I disagree with, about which technical decision?]
+- **T:** [fill: What was at stake, and who owned the decision?]
+- **A:** [fill: How did I understand their view first, what data did I bring, and how was it decided?]
+- **R:** [fill: What shipped. If I lost, how I committed fully anyway. What I learned about disagreeing well.]
 
 ### Mentoring (Hire and Develop)
 
@@ -443,7 +443,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **Where to look:** A new teammate, a lab member, an on-call engineer using your runbooks, or an engineer on one of the 4 teams adopting the CLI toolchain.
 
-- **S:** Who did I help ramp up, and where were they starting from?
-- **T:** What did they need to be able to do, and by when?
-- **A:** How did I teach it: pairing, docs, reviews? One specific thing I did.
-- **R:** What they could do on their own afterward. A concrete outcome.
+- **S:** [fill: Who did I help ramp up, and where were they starting from?]
+- **T:** [fill: What did they need to be able to do, and by when?]
+- **A:** [fill: How did I teach it: pairing, docs, reviews? One specific thing I did.]
+- **R:** [fill: What they could do on their own afterward. A concrete outcome.]

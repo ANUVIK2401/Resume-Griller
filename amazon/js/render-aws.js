@@ -1,31 +1,35 @@
-// AWS glossary page: searchable terms by category, flashcards, resume mapping, pillars, 7 Rs, DR tiers.
+// AWS glossary page: searchable terms by family and tier with full forms, flashcards, acronym list,
+// resume mapping, pillars, 7 Rs, DR tiers.
 (function () {
   const { el, load, ui, store, setReadout } = { ...window.Prep, store: window.Prep.store };
   const { table } = ui;
 
   const useAvoid = (s) => el('dl', { class: 'use-avoid' },
-    el('dt', {}, 'Pick it when'), el('dd', {}, s.use_when),
-    el('dt', {}, 'Avoid when'), el('dd', {}, s.avoid_when));
+    el('dt', {}, 'Pick it when'), el('dd', {}, s.pick_when),
+    el('dt', {}, 'Trap'), el('dd', {}, s.trap));
+  // Only show the full form when it says more than the short name.
+  const fullForm = (s) => (s.full_form.toLowerCase().includes(s.name.toLowerCase()) && s.full_form.length - s.name.length < 8 ? null : el('p', { class: 'full-form' }, s.full_form));
 
   function termCard(s, data, onStatus) {
     return el('article', { class: 'term card', id: `aws-${s.id}` },
       el('div', { class: 'term-head' }, el('h3', { class: 'h3' }, s.name),
         el('span', { class: 'row' }, el('span', { class: `chip tier tier-${s.tier}`, title: data.tiers[s.tier - 1].name }, `Tier ${s.tier}`), ui.statusSelect(`aws-${s.id}`, data.status_options, onStatus))),
-      el('p', {}, s.one_liner),
+      fullForm(s),
+      el('p', {}, s.what),
       useAvoid(s));
   }
 
   function glossarySection(data, onStatus) {
     const cards = new Map(data.services.map((s) => [s.id, termCard(s, data, () => { apply(); onStatus(); })]));
-    const groups = data.categories.map((c) => ({ c, grid: el('div', { class: 'term-grid' }), services: data.services.filter((s) => s.category === c.id).sort((a, b) => a.tier - b.tier) }));
+    const groups = data.families.map((c) => ({ c, grid: el('div', { class: 'term-grid' }), services: data.services.filter((s) => s.family === c.id).sort((a, b) => a.tier - b.tier) }));
     const statusOf = (s) => store.get('status', `aws-${s.id}`, data.status_options[0].id);
-    let filters = { q: '', category: '', status: '', tier: '' };
+    let filters = { q: '', family: '', status: '', tier: '' };
     const count = el('p', { class: 'muted', role: 'status', 'aria-live': 'polite' });
     let shown = data.services;
     const apply = (f = filters) => {
       filters = f;
-      const keep = (s) => (!f.q || `${s.name} ${s.one_liner} ${s.use_when}`.toLowerCase().includes(f.q))
-        && (!f.category || s.category === f.category) && (!f.status || statusOf(s) === f.status) && (!f.tier || String(s.tier) === f.tier);
+      const keep = (s) => (!f.q || `${s.name} ${s.full_form} ${s.what} ${s.pick_when}`.toLowerCase().includes(f.q))
+        && (!f.family || s.family === f.family) && (!f.status || statusOf(s) === f.status) && (!f.tier || String(s.tier) === f.tier);
       shown = data.services.filter(keep);
       for (const { grid, services } of groups) {
         const visible = services.filter(keep);
@@ -36,14 +40,14 @@
     };
     const bar = ui.filterBar({
       placeholder: 'Search services, e.g. queue, cache, DR',
-      selects: [{ key: 'tier', label: 'Any tier', options: data.tiers.map((t) => ({ id: String(t.level), label: t.name })) }, { key: 'category', label: 'Any category', options: data.categories.map((c) => ({ id: c.id, label: c.name })) }, { key: 'status', label: 'Any status', options: data.status_options }],
+      selects: [{ key: 'tier', label: 'Any tier', options: data.tiers.map((t) => ({ id: String(t.level), label: t.name })) }, { key: 'family', label: 'Any family', options: data.families.map((c) => ({ id: c.id, label: c.name })) }, { key: 'status', label: 'Any status', options: data.status_options }],
       onChange: apply,
     });
-    // Front: the service. Back: one line plus when to pick it.
+    // Front: the service. Back: full form, one line, when to pick it, and the trap.
     const flashcards = () => ui.rehearse(ui.shuffle(shown).map((s) => ({
-      kicker: data.categories.find((c) => c.id === s.category).name,
+      kicker: data.families.find((c) => c.id === s.family).name,
       front: () => el('span', {}, s.name),
-      back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, s.one_liner), useAvoid(s)),
+      back: () => el('div', { class: 'stack' }, el('p', { class: 'full-form' }, s.full_form), el('p', { class: 'answer-short' }, s.what), useAvoid(s)),
     })), 'AWS flashcards');
     const intro = el('div', { class: 'card stack' },
       el('div', { class: 'row' }, el('a', { class: 'btn btn-gold', href: 'top.html' }, 'Most asked SA questions'),
@@ -54,7 +58,7 @@
       bar, count,
       el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: flashcards }, 'Flashcards for what is shown'),
         el('span', { class: 'muted' }, 'Tip: filter Status to New or Shaky first.')));
-    const sections = groups.map(({ c, grid, services }) => ui.section(`cat-${c.id}`, c.name, 'Category', c.name, grid));
+    const sections = groups.map(({ c, grid }) => ui.section(`fam-${c.id}`, c.name, 'Family', c.name, grid));
     apply();
     // Open on tier 1 so the first screen is the must-know set, unless a link targets one term.
     if (!location.hash.startsWith('#aws-')) {
@@ -62,7 +66,28 @@
       tierSelect.value = '1';
       tierSelect.dispatchEvent(new Event('change'));
     }
+    // In-page links (acronym table) can target a term the current filters hide: clear them, then jump.
+    window.addEventListener('hashchange', () => {
+      if (!location.hash.startsWith('#aws-')) return;
+      bar.resetFilters();
+      document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    });
     return [intro, ...sections];
+  }
+
+  // Every acronym an SA is expected to expand; drill as flashcards: acronym in front, full form behind.
+  function acronymSection(data) {
+    const service = (id) => data.services.find((s) => s.id === id);
+    const drill = () => ui.rehearse(ui.shuffle(data.acronyms).map((a) => ({
+      kicker: 'Spell it out',
+      front: () => el('span', {}, a.acronym),
+      back: () => el('div', { class: 'stack' }, el('p', { class: 'answer-short' }, a.full_form), a.service ? el('p', {}, service(a.service).what) : null),
+    })), 'Acronym drill');
+    return ui.section('acronyms', 'Acronyms', `${data.acronyms.length} acronyms`, el('span', {}, 'Acronyms, ', el('em', {}, 'spelled out')),
+      el('p', { class: 'section-intro' }, 'Interviewers notice when you say "S3" but cannot say what the S stands for. Drill these until each expansion is automatic.'),
+      el('div', { class: 'row', style: { marginBottom: '1rem' } }, el('button', { class: 'btn btn-gold', type: 'button', onclick: drill }, 'Acronym flashcards')),
+      table(['Acronym', 'Full form', 'Service'], data.acronyms.map((a) => [el('strong', {}, a.acronym), a.full_form,
+        a.service ? el('a', { href: `#aws-${a.service}` }, service(a.service).name) : 'Concept'])));
   }
 
   function resumeSection(data, behavioral) {
@@ -110,6 +135,7 @@
     const updateReadout = () => setReadout('Terms known', data.services.filter((s) => store.get('status', `aws-${s.id}`) === knownId).length, data.services.length);
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
       ...glossarySection(data, updateReadout),
+      acronymSection(data),
       resumeSection(data, behavioral),
       pillarsSection(data),
       migrationSection(data),

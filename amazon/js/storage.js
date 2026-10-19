@@ -28,8 +28,9 @@
       && (value.date === undefined || value.date === null || validWallDate(value.date));
   }
 
-  // kind separates the numbers quiz, the rapid-fire tech quiz, and mock rounds; items lists what was asked.
-  const QUIZ_KINDS = ['numbers', 'tech', 'mock'];
+  // kind separates the numbers quiz, the rapid-fire tech quiz, the fundamentals quiz, and mock rounds;
+  // items lists what was asked.
+  const QUIZ_KINDS = ['numbers', 'tech', 'mock', 'fundamentals'];
   function validQuiz(value) {
     return record(value) && Object.keys(value).every((key) => ['at', 'score', 'total', 'missed', 'kind', 'items'].includes(key))
       && validDate(value.at) && Number.isInteger(value.total) && value.total > 0 && value.total <= 10000

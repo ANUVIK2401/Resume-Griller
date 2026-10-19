@@ -60,9 +60,23 @@ test('mock round has two LP questions on different principles and one technical 
     const lpOf = (id) => questions.lp_questions.find((q) => q.id === id).lp;
     assert.notEqual(lpOf(a.id), lpOf(b.id));
     assert.ok(['tech', 'design'].includes(tech.kind));
-    if (tech.kind === 'tech') assert.ok(questions.rapid_fire.some((q) => q.id === tech.id));
+    if (tech.kind === 'tech') assert.ok(questions.rapid_fire.some((q) => q.id === tech.id) || tech.id.startsWith('fund-'));
     else assert.ok(designs.designs.some((d) => `design-${d.id}` === tech.id));
   }
+});
+
+test('with the fundamentals bank, the technical slot covers all three kinds of question', () => {
+  const fundamentals = json('fundamentals');
+  const kinds = new Set();
+  for (let seed = 1; seed < 300; seed += 1) {
+    const tech = practice.pickMockRound(questions, designs, seeded(seed), fundamentals)[2];
+    if (tech.id.startsWith('fund-')) {
+      assert.equal(tech.kind, 'tech');
+      assert.ok(fundamentals.items.some((f) => `fund-${f.id}` === tech.id));
+      kinds.add('fundamentals');
+    } else kinds.add(tech.kind === 'design' ? 'design' : 'rapid-fire');
+  }
+  assert.deepEqual([...kinds].sort(), ['design', 'fundamentals', 'rapid-fire']);
 });
 
 test('scoreRound counts ticked checks and names each miss by check and question', () => {
@@ -127,7 +141,8 @@ test('the plan defaults to fourteen days, with no invented interview details', (
   assert.equal(loop.event.confirmed, false);
   assert.ok(loop.stages.every((s) => s.default_status === 'not_started' && !s.default_date));
   assert.ok(!loop.plan.some((day) => /interview day/i.test(day.focus)));
-  assert.ok(loop.stages.every((stage) => stage.format === 'Preparation scenario'));
+  assert.ok(loop.stages.every((stage) => stage.format === 'Reported, not confirmed'));
+  assert.match(loop.structure_note, /^Reported, not confirmed\./);
   assert.deepEqual(loop.plan.map((d) => d.date), practice.schedulePlan(loop.plan, loop.plan_start).map((d) => d.date));
   for (const day of loop.plan) {
     assert.equal(day.tasks.reduce((sum, t) => sum + t.minutes, 0), 180, day.id);

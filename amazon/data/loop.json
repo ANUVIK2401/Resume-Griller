@@ -16,7 +16,7 @@
   },
   "plan_start": "2026-10-15",
   "plan_note": "Default: 3 hours per day for 14 days. On a busy day, complete the two Minimum blocks (90 minutes); add the remaining blocks when time permits. Readiness gates are self-assessment targets, not hiring predictions. If a gate is missed, use the next day's extension blocks to repair it.",
-  "structure_note": "These are preparation scenarios for skills relevant to a Solutions Architect role. They do not claim a particular number, sequence, length, or format of Amazon interviews. Confirm your actual process with the recruiter.",
+  "structure_note": "Reported, not confirmed. Public 2025 and 2026 candidate reports for the AWSI ETP Solutions Architect loop describe 3 to 4 interviews of about 1 hour each. Every round reportedly opens with 2 to 3 Leadership Principle questions answered in STAR format. At least one round goes deep on your resume and IT fundamentals, and some candidates also got a whiteboard architecture or a short \"present a project you built\" segment. The recruiter has not confirmed your format; replace this with the real one when you have it.",
   "status_options": [
     {
       "id": "not_started",
@@ -37,114 +37,158 @@
   ],
   "stages": [
     {
-      "id": "practice-stories",
+      "id": "round-lp-resume",
       "order": 1,
-      "title": "Behavioral and resume practice",
-      "format": "Preparation scenario",
-      "duration_min": null,
-      "location": "Choose your practice setting",
+      "title": "Round 1: Leadership Principles and resume deep dive",
+      "format": "Reported, not confirmed",
+      "duration_min": 60,
+      "location": "USC campus (room unconfirmed)",
       "default_status": "not_started",
       "default_date": null,
-      "note": "Practice format only. The assessment is passed, but individual interview rounds, duration, and format are not confirmed. In-person USC interviews are conditional on selection.",
+      "note": "Expect 2 to 3 LP questions, then \"walk me through a project on your resume\" with follow-ups on what you personally built, why, and how you measured it.",
       "lead_stories": [
         "erp-hitl",
         "p1-mttr",
-        "cli-toolchain",
-        "netsuite-latency"
+        "cli-toolchain"
       ],
       "prep_pages": [
         "behavioral",
+        "review",
         "mock"
       ],
       "checklist": [
         {
-          "id": "practice-stories-1",
-          "text": "Reconcile every story claim with the resume and your own evidence; label estimates and missing details."
+          "id": "round-lp-resume-1",
+          "text": "Say the 60-second pitch out loud with the timer, twice."
         },
         {
-          "id": "practice-stories-2",
-          "text": "Record a 60-second introduction and six different two-minute STAR answers with clear personal ownership."
+          "id": "round-lp-resume-2",
+          "text": "Rehearse S1, S2 and S4 in 90 seconds each, then answer two probes per story without notes."
         },
         {
-          "id": "practice-stories-3",
-          "text": "If helpful, privately recall real failure, disagreement, or mentoring examples. Keep missing examples visible and never invent or force a rewrite."
+          "id": "round-lp-resume-3",
+          "text": "For every metric you say, explain the baseline, the time window, and how it was measured."
         },
         {
-          "id": "practice-stories-4",
-          "text": "Answer follow-ups about measurement, alternatives, customer impact, and what you would change."
+          "id": "round-lp-resume-4",
+          "text": "Write the failure story in the gap section; it is the most likely LP question with no story yet."
         }
       ]
     },
     {
-      "id": "practice-architecture",
+      "id": "round-lp-fundamentals",
       "order": 2,
-      "title": "AWS architecture practice",
-      "format": "Preparation scenario",
-      "duration_min": null,
-      "location": "Choose your practice setting",
+      "title": "Round 2: Leadership Principles and IT fundamentals",
+      "format": "Reported, not confirmed",
+      "duration_min": 60,
+      "location": "USC campus (room unconfirmed)",
       "default_status": "not_started",
       "default_date": null,
-      "note": "Use scenarios to practise reasoning, service tradeoffs, and customer requirements. These are not scheduled interview stages.",
-      "lead_stories": [],
-      "prep_pages": [
-        "aws",
-        "design",
-        "questions"
-      ],
-      "checklist": [
-        {
-          "id": "practice-architecture-1",
-          "text": "Draw a secure multi-AZ application and explain the request path, IAM, encryption, logs, and failure handling."
-        },
-        {
-          "id": "practice-architecture-2",
-          "text": "Choose compute, storage, database, and integration services from requirements and explain rejected alternatives."
-        },
-        {
-          "id": "practice-architecture-3",
-          "text": "Explain RTO/RPO, backups versus availability, and cost drivers using a worked scenario."
-        },
-        {
-          "id": "practice-architecture-4",
-          "text": "Complete one unseen design in 30 minutes, including security, scaling, observability, and cost."
-        }
-      ]
-    },
-    {
-      "id": "practice-customer",
-      "order": 3,
-      "title": "Customer communication practice",
-      "format": "Preparation scenario",
-      "duration_min": null,
-      "location": "Choose your practice setting",
-      "default_status": "not_started",
-      "default_date": null,
-      "note": "Practise discovery before recommendations and adapt technical depth to the audience.",
+      "note": "Expect 2 to 3 LP questions, then rapid technical checks: DNS resolution, networking layers, TCP vs UDP, HTTP and TLS, symmetric vs asymmetric encryption, containers vs VMs, SQL vs NoSQL, sharding, stateful vs stateless, and storage types.",
       "lead_stories": [
-        "erp-hitl",
-        "cli-toolchain",
-        "pacsun-exec"
+        "netsuite-latency",
+        "k8s-autoscaling",
+        "slo-alerting"
       ],
       "prep_pages": [
-        "questions",
+        "fundamentals",
+        "compare",
         "behavioral"
       ],
       "checklist": [
         {
-          "id": "practice-customer-1",
-          "text": "Run two customer role-plays: ask about goals, workload, constraints, risk, budget, and success measures."
+          "id": "round-lp-fundamentals-1",
+          "text": "Score 80% or better on the fundamentals quiz, twice, on different days."
         },
         {
-          "id": "practice-customer-2",
-          "text": "Explain one architecture to a business stakeholder in plain language and close with a small next step."
+          "id": "round-lp-fundamentals-2",
+          "text": "Explain \"what happens when you type a URL\" end to end in under 2 minutes."
         },
         {
-          "id": "practice-customer-3",
-          "text": "Prepare two informed questions for interviewers and a concise answer to why Amazon and why Solutions Architect."
+          "id": "round-lp-fundamentals-3",
+          "text": "Go through the look-alike pairs and say the tell for each without reading it."
         },
         {
-          "id": "practice-customer-4",
-          "text": "Confirm actual interview format, date, time zone, and remote or onsite logistics with the recruiter."
+          "id": "round-lp-fundamentals-4",
+          "text": "Write the disagreement story in the gap section (Have Backbone; Disagree and Commit)."
+        }
+      ]
+    },
+    {
+      "id": "round-lp-design",
+      "order": 3,
+      "title": "Round 3: Leadership Principles and whiteboard architecture",
+      "format": "Reported, not confirmed",
+      "duration_min": 60,
+      "location": "USC campus (room unconfirmed)",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "Expect 2 to 3 LP questions, then a customer scenario to design on a whiteboard: clarify requirements, draw the flow, justify each service, and close on a tradeoff.",
+      "lead_stories": [
+        "erp-hitl",
+        "k8s-autoscaling",
+        "databricks-feed"
+      ],
+      "prep_pages": [
+        "design",
+        "architecture",
+        "aws"
+      ],
+      "checklist": [
+        {
+          "id": "round-lp-design-1",
+          "text": "Do 3 practice designs under the 30-minute timer before revealing the answer."
+        },
+        {
+          "id": "round-lp-design-2",
+          "text": "Draw the 3-tier retailer design from memory and narrate the numbered request flow."
+        },
+        {
+          "id": "round-lp-design-3",
+          "text": "Know every tier 1 AWS term, including its full form and its trap."
+        },
+        {
+          "id": "round-lp-design-4",
+          "text": "End every design with one tradeoff and one next step, out loud."
+        }
+      ]
+    },
+    {
+      "id": "round-lp-present",
+      "order": 4,
+      "title": "Round 4 (possible): Leadership Principles and present a project",
+      "format": "Reported, not confirmed",
+      "duration_min": 60,
+      "location": "USC campus (room unconfirmed)",
+      "default_status": "not_started",
+      "default_date": null,
+      "note": "Not every candidate reports a fourth round. When it happens, expect 2 to 3 LP questions and a short segment presenting or \"selling\" a project you built to a customer audience.",
+      "lead_stories": [
+        "erp-hitl",
+        "pacsun-exec",
+        "modelscope"
+      ],
+      "prep_pages": [
+        "behavioral",
+        "questions",
+        "mock"
+      ],
+      "checklist": [
+        {
+          "id": "round-lp-present-1",
+          "text": "Prepare a 5-minute walkthrough of the ERP migration for a non-technical customer: problem, approach, result, next step."
+        },
+        {
+          "id": "round-lp-present-2",
+          "text": "Prepare the same walkthrough for an engineer: confidence routing, failure handling, and what you would change."
+        },
+        {
+          "id": "round-lp-present-3",
+          "text": "Write the mentoring story in the gap section (Hire and Develop the Best)."
+        },
+        {
+          "id": "round-lp-present-4",
+          "text": "Pick two questions to ask your interviewer."
         }
       ]
     }

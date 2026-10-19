@@ -22,8 +22,10 @@ const visit = async path => {
 };
 try {
   await visit('index.html');
-  await page.getByRole('link', { name: /Open my October 28 sprint/ }).click();
+  await page.getByRole('link', { name: /Amazon SA Prep/ }).click();
   await page.locator('#sprint').waitFor();
+  assert.equal(await page.locator('#rounds .stage').count(), 4);
+  assert.match(await page.locator('#rounds').innerText(), /Reported, not confirmed/);
   assert.equal(await page.locator('.sprint-day').count(), 12);
   assert.match(await page.locator('#readout').innerText(), /Sprint essentials.*0 \/ 29/si);
   assert.match(await page.locator('.countdown').innerText(), /tentative target/i);
@@ -55,7 +57,31 @@ try {
   await page.getByLabel('Date and time confirmed with the recruiter', { exact: true }).check();
   await event.fill('2026-11-16T10:30'); await event.dispatchEvent('change');
   assert.equal(await page.getByLabel('Date and time confirmed with the recruiter', { exact: true }).isChecked(), false);
-  for (const path of ['review', 'behavioral', 'cheatsheet', 'architecture', 'aws', 'design', 'questions', 'mock']) await visit(`amazon/${path}.html`);
+  for (const path of ['review', 'behavioral', 'cheatsheet', 'architecture', 'aws', 'compare', 'design', 'fundamentals', 'questions', 'mock']) await visit(`amazon/${path}.html`);
+  // Gap stories are visible, flagged, and show highlighted fill prompts.
+  await visit('amazon/behavioral.html');
+  assert.equal(await page.locator('#gaps .comp.is-gap').count(), 3);
+  assert.ok(await page.locator('#gaps mark.fill').count() >= 12);
+  // Glossary shows full forms; the acronym table links jump to a term even when filters hide it.
+  await visit('amazon/aws.html');
+  assert.match(await page.locator('#aws-ec2').innerText(), /Elastic Compute Cloud/);
+  await page.locator('#acronyms a[href="#aws-msk"]').click();
+  await page.locator('#aws-msk').waitFor();
+  // Look-alike pairs drill opens on the tell.
+  await visit('amazon/compare.html');
+  assert.ok(await page.locator('.compare-card').count() >= 40);
+  await page.getByRole('button', { name: 'Drill what is shown', exact: true }).click();
+  await page.locator('dialog.rehearse').waitFor();
+  await page.keyboard.press('Escape');
+  // Fundamentals quiz: answer every question, score is saved and statuses update.
+  await visit('amazon/fundamentals.html');
+  await page.getByRole('button', { name: '10 at random', exact: true }).click();
+  for (let i = 0; i < 10; i += 1) {
+    await page.getByRole('button', { name: 'Reveal', exact: true }).click();
+    await page.getByRole('button', { name: i % 2 ? 'Missed it' : 'Knew it', exact: true }).click();
+  }
+  assert.equal(await page.locator('#quiz .score').innerText(), '5 / 10');
+  assert.match(await page.locator('#readout').innerText(), /5 \/ 37/);
   await visit('amazon/architecture.html');
   assert.equal(await page.locator('svg.arch-svg').count(), 8);
   await page.locator('#pattern-ha-web').getByRole('button', { name: 'Trace the request' }).click();
@@ -117,7 +143,7 @@ try {
   await page.reload();
   assert.match(await page.locator('#history').innerText(), /15 \/ 15/);
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ['index', 'review', 'cheatsheet', 'behavioral']) {
+  for (const path of ['index', 'review', 'cheatsheet', 'behavioral', 'compare', 'fundamentals', 'design', 'aws']) {
     await visit(`amazon/${path}.html`);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, `${path}: mobile overflow`);
   }
@@ -132,5 +158,5 @@ try {
     await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/review-desktop.png`, fullPage: false });
   }
   assert.deepEqual(errors, []);
-  console.log('Browser checks passed: 10 routes, traceable architecture diagrams, movable plan, Pacific date, saved progress, private draft preservation, cheat sheet filters/flashcards, export/import, tailored mock scoring, mobile layout and navigation.');
+  console.log('Browser checks passed: 12 routes, reported loop rounds, gap prompts, AWS full forms and acronyms, look-alike drill, fundamentals quiz, traceable architecture diagrams, movable plan, Pacific date, saved progress, private draft preservation, cheat sheet filters/flashcards, export/import, tailored mock scoring, mobile layout and navigation.');
 } finally { await browser.close(); }

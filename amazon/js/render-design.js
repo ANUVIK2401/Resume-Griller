@@ -23,6 +23,8 @@
         block('Non-functional requirements', d.requirements.non_functional)),
       figure.figure,
       el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Request flow'), figure.steps),
+      el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Why these choices'), table(['Decision', 'Why'], d.why.map((w) => [w.decision, w.reason]))),
+      el('div', { class: 'probe' }, el('p', { class: 'probe-q' }, 'Watch out'), el('p', {}, d.watch_out)),
       el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Components'), table(['Component', 'Role'], d.components.map((c) => [c.name, c.role]))),
       el('div', { class: 'grid-3' },
         block('Scale', d.scale), block('Security', d.security), block('Cost', d.cost)),

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "compare.schema.json",
+  "title": "Look-alike AWS and IT pairs with a one-line tell",
+  "type": "object",
+  "required": ["intro", "status_options", "groups", "pairs"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "intro": { "$ref": "common.schema.json#/$defs/text" },
+    "status_options": { "type": "array", "minItems": 2, "items": { "type": "object", "required": ["id", "label"] } },
+    "groups": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "name"], "additionalProperties": false, "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "name": { "$ref": "common.schema.json#/$defs/text" } } } },
+    "pairs": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["id", "group", "a", "b", "services", "tell", "pick_a", "pick_b"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "group": { "type": "string", "description": "groups[].id" },
+          "a": { "$ref": "common.schema.json#/$defs/text" },
+          "b": { "$ref": "common.schema.json#/$defs/text" },
+          "services": { "type": "array", "items": { "type": "string", "description": "aws.services[].id" } },
+          "tell": { "$ref": "common.schema.json#/$defs/text", "description": "One sentence that separates the two" },
+          "pick_a": { "$ref": "common.schema.json#/$defs/text" },
+          "pick_b": { "$ref": "common.schema.json#/$defs/text" }
+        }
+      }
+    }
+  }
+}

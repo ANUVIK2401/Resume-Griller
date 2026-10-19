@@ -135,15 +135,15 @@
 
   function gapsSection(data) {
     const lpName = (id) => data.lps.find((lp) => lp.id === id).name;
-    return ui.section('gaps', 'Gap stories', 'Before your interview', el('span', {}, 'Close the ', el('em', {}, 'gaps')),
-      el('p', { class: 'section-intro' }, 'Prepare these from real events; the supplied material does not establish them yet. Drafts save in this browser.'),
+    return ui.section('gaps', 'Gap stories', `${data.gaps.length} unfinished: write before October 28`, el('span', {}, 'Close the ', el('em', {}, 'gaps')),
+      el('p', { class: 'section-intro' }, 'Every round can ask for a failure, a disagreement, or someone you developed. No story in the bank covers Have Backbone or Hire and Develop the Best, so these need a real event from you. Answer each highlighted prompt; drafts save in this browser and export with your progress.'),
       el('div', { class: 'comp-grid' }, data.gaps.map((g) => el('div', { class: 'comp is-gap' },
-        el('div', { class: 'row' }, el('p', { class: 'h3' }, g.name), el('span', { class: 'chip chip-red' }, 'Gap')),
+        el('div', { class: 'row' }, el('p', { class: 'h3' }, g.name), el('span', { class: 'chip chip-red' }, 'Unfinished')),
         el('div', { class: 'row' }, g.lps.map((id) => el('span', { class: 'chip' }, lpName(id)))),
         el('div', { class: 'kv' }, el('p', { class: 'label' }, 'Asked as'), ui.list(g.asked_as)),
         el('p', { class: 'muted' }, g.seeds),
         STAR.map(([key, letter]) => el('div', { class: 'kv' },
-          el('p', { class: 'gap-prompt' }, el('b', {}, letter), g.template[key]),
+          el('p', { class: 'gap-prompt' }, el('b', {}, letter), ui.fill(g.template[key])),
           ui.notesBox(`gap-${g.id}-${key}`, `${letter} draft`)))))));
   }
 
@@ -154,10 +154,10 @@
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
       pitchSection(data.pitch),
       storiesSection(data, profile, updateReadout),
+      gapsSection(data),
       ui.section('numbers', 'Numbers quiz', 'Rapid fire', el('span', {}, 'Know your ', el('em', {}, 'numbers')), window.Prep.quiz.mount(profile)),
       lpMapSection(data),
-      rulesSection(data),
-      fold('Optional: build additional failure, disagreement, and mentoring examples', gapsSection(data))));
+      rulesSection(data)));
     updateReadout();
     if (location.hash.startsWith('#story-')) showStory(location.hash.slice(7));
   };

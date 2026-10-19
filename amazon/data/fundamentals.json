@@ -1,0 +1,310 @@
+{
+  "$schema": "./schema/fundamentals.schema.json",
+  "intro": "Reported, not confirmed: candidates describe a resume deep dive mixed with quick IT fundamentals checks. Say each answer out loud in about 30 seconds, then reveal and mark yourself honestly. Speed matters less than a clean, correct first sentence.",
+  "pass_pct": 80,
+  "status_options": [
+    {
+      "id": "new",
+      "label": "New"
+    },
+    {
+      "id": "shaky",
+      "label": "Shaky"
+    },
+    {
+      "id": "known",
+      "label": "Known"
+    }
+  ],
+  "topics": [
+    {
+      "id": "web",
+      "name": "DNS and the request path"
+    },
+    {
+      "id": "network",
+      "name": "Networking"
+    },
+    {
+      "id": "security",
+      "name": "Security and encryption"
+    },
+    {
+      "id": "compute",
+      "name": "Compute and operating systems"
+    },
+    {
+      "id": "data",
+      "name": "Databases and data"
+    },
+    {
+      "id": "architecture",
+      "name": "Architecture patterns"
+    },
+    {
+      "id": "storage",
+      "name": "Storage"
+    }
+  ],
+  "items": [
+    {
+      "id": "url-flow",
+      "topic": "web",
+      "q": "What happens when you type a URL into a browser and press Enter?",
+      "a": "The browser resolves the hostname to an IP through DNS, opens a TCP connection, and does a TLS handshake for HTTPS. It sends an HTTP request, which may hit a CDN, then a load balancer, then an app server and its database. The response comes back and the browser renders the HTML, fetching CSS, JavaScript, and images the same way.",
+      "followup": "Where would you look first if the page is slow, and how do you tell a DNS problem from a server problem?"
+    },
+    {
+      "id": "dns-resolution",
+      "topic": "web",
+      "q": "How does DNS resolution work?",
+      "a": "The client asks a recursive resolver. If the answer is not cached, the resolver asks a root server, which points to the TLD server for .com, which points to the authoritative name server for the domain. The authoritative server returns the record, and every layer caches it for the record's TTL.",
+      "followup": "Why can a DNS change take a while to reach everyone?"
+    },
+    {
+      "id": "dns-records",
+      "topic": "web",
+      "q": "A record vs CNAME vs Route 53 alias?",
+      "a": "An A record maps a name to an IPv4 address, AAAA to IPv6. A CNAME maps a name to another name and cannot sit at the zone apex. A Route 53 alias points to an AWS resource such as a load balancer or CloudFront, works at the apex, and costs nothing per query for AWS targets.",
+      "followup": "Why can you not put a CNAME on example.com itself?"
+    },
+    {
+      "id": "osi-layers",
+      "topic": "network",
+      "q": "Walk through the networking layers.",
+      "a": "The OSI model has seven layers: physical, data link, network, transport, session, presentation, application. In practice we use the TCP/IP model: link, internet (IP), transport (TCP or UDP), and application (HTTP, DNS). An ALB works at layer 7 and an NLB at layer 4.",
+      "followup": "Which layer does a security group filter on?"
+    },
+    {
+      "id": "tcp-udp",
+      "topic": "network",
+      "q": "TCP vs UDP?",
+      "a": "TCP is connection-oriented: it guarantees ordered, reliable delivery with retransmission and congestion control, at the cost of latency. UDP just sends datagrams with no handshake or guarantee, so it is faster and lighter. Use TCP for web and databases, UDP for DNS lookups, video, voice, and games.",
+      "followup": "HTTP/3 runs over UDP. How does it still stay reliable?"
+    },
+    {
+      "id": "tcp-handshake",
+      "topic": "network",
+      "q": "What is the TCP three-way handshake?",
+      "a": "The client sends SYN, the server replies SYN-ACK, and the client sends ACK. Both sides have now agreed on starting sequence numbers and the connection is open. Closing uses FIN and ACK from each side.",
+      "followup": "Why do connection pools and keep-alive matter for latency?"
+    },
+    {
+      "id": "http-basics",
+      "topic": "web",
+      "q": "Which HTTP methods are idempotent, and why does it matter?",
+      "a": "GET, PUT, DELETE, and HEAD are idempotent: repeating them leaves the same result. POST is not, so retrying it can create duplicates. That matters because networks fail and clients retry, so for POST you add an idempotency key the server uses to ignore repeats.",
+      "followup": "How would you make a payment API safe to retry?"
+    },
+    {
+      "id": "http-status",
+      "topic": "web",
+      "q": "HTTP status code families, and 502 vs 504?",
+      "a": "2xx success, 3xx redirect, 4xx client error such as 401, 403, 404, 429, and 5xx server error. A 502 Bad Gateway means the proxy got an invalid response from the backend. A 504 Gateway Timeout means the backend did not answer in time.",
+      "followup": "An ALB returns 504s. What do you check?"
+    },
+    {
+      "id": "http-versions",
+      "topic": "web",
+      "q": "HTTP/1.1 vs HTTP/2 vs HTTP/3?",
+      "a": "HTTP/1.1 sends one request at a time per connection. HTTP/2 multiplexes many streams over one TCP connection with header compression, but a lost packet still blocks all streams. HTTP/3 runs over QUIC on UDP, so streams recover independently and setup is faster.",
+      "followup": "Why does HTTP/3 help on mobile networks?"
+    },
+    {
+      "id": "tls-handshake",
+      "topic": "security",
+      "q": "How does a TLS handshake work?",
+      "a": "The client and server agree on a TLS version and cipher, the server presents its certificate, and the client checks it against trusted certificate authorities and the hostname. They then use asymmetric key exchange to agree on a shared session key. Everything after that is encrypted with fast symmetric encryption.",
+      "followup": "What breaks if the certificate's hostname does not match?"
+    },
+    {
+      "id": "sym-asym",
+      "topic": "security",
+      "q": "Symmetric vs asymmetric encryption?",
+      "a": "Symmetric encryption uses one shared key to encrypt and decrypt; it is fast, AES is the example. Asymmetric uses a public and private key pair; anyone can encrypt with the public key, only the private key decrypts, and it also enables signatures. It is slow, so TLS uses asymmetric only to exchange a symmetric session key.",
+      "followup": "Where does KMS envelope encryption fit?"
+    },
+    {
+      "id": "hash-encrypt",
+      "topic": "security",
+      "q": "Hashing vs encryption?",
+      "a": "Encryption is reversible with the key; hashing is one way. You encrypt data you need to read back, and you hash things you only need to verify, like passwords, using a slow salted hash such as bcrypt or Argon2.",
+      "followup": "Why is a fast hash like SHA-256 a poor choice for passwords?"
+    },
+    {
+      "id": "rest-transit",
+      "topic": "security",
+      "q": "Encryption at rest vs in transit?",
+      "a": "At rest protects stored data on disks, S3, and backups, usually with KMS keys. In transit protects data moving over the network, usually with TLS. You need both, plus access control, because encryption does not stop an authorized but compromised identity.",
+      "followup": "Who can decrypt an S3 object encrypted with a KMS key?"
+    },
+    {
+      "id": "authn-authz",
+      "topic": "security",
+      "q": "Authentication vs authorization?",
+      "a": "Authentication proves who you are: password, MFA, SSO. Authorization decides what you are allowed to do once known: IAM policies, roles, permissions. A 401 is a failed authentication; a 403 is an authenticated user who is not allowed.",
+      "followup": "How does an IAM role combine the two?"
+    },
+    {
+      "id": "least-privilege",
+      "topic": "security",
+      "q": "What is least privilege, and how do you apply it on AWS?",
+      "a": "Give each identity only the actions and resources it needs, nothing more. On AWS that means roles with temporary credentials, scoped IAM policies, SCPs as guardrails, and reviewing unused permissions with IAM Access Analyzer.",
+      "followup": "How do you grant a Lambda function access to exactly one S3 prefix?"
+    },
+    {
+      "id": "containers-vms",
+      "topic": "compute",
+      "q": "Containers vs virtual machines?",
+      "a": "A VM virtualizes hardware and runs its own full operating system on a hypervisor, so it is heavier and slower to boot but strongly isolated. A container shares the host kernel and packages only the app and its dependencies, so it starts in seconds and packs densely. On AWS, EC2 is the VM and ECS or EKS run containers.",
+      "followup": "When would you still pick a VM over a container?"
+    },
+    {
+      "id": "process-thread",
+      "topic": "compute",
+      "q": "Process vs thread?",
+      "a": "A process has its own memory space; threads run inside a process and share its memory. Threads are cheaper to create and communicate faster, but shared memory needs locks to avoid race conditions.",
+      "followup": "Why does Python's GIL push CPU-bound work toward multiple processes?"
+    },
+    {
+      "id": "scale-up-out",
+      "topic": "architecture",
+      "q": "Vertical vs horizontal scaling?",
+      "a": "Vertical scaling means a bigger machine: simple, but it has a ceiling and a single point of failure. Horizontal scaling means more machines behind a load balancer: near-unlimited and fault tolerant, but the app must be stateless or share state externally.",
+      "followup": "What has to change in an app before you can scale it horizontally?"
+    },
+    {
+      "id": "stateful-stateless",
+      "topic": "architecture",
+      "q": "Stateful vs stateless services?",
+      "a": "A stateless service keeps no client data between requests, so any instance can serve any request and you scale by adding instances. A stateful service keeps session or data locally, so requests must return to the same node and scaling or failover is harder. Push state out to a database, cache, or token so the app tier can be stateless.",
+      "followup": "Where would you keep user sessions for an auto-scaled web tier?"
+    },
+    {
+      "id": "load-balancing",
+      "topic": "architecture",
+      "q": "How does load balancing work, layer 4 vs layer 7?",
+      "a": "A load balancer spreads requests across healthy targets using health checks and an algorithm such as round robin or least outstanding requests. Layer 4 balances TCP or UDP connections without reading content. Layer 7 reads HTTP, so it can route by path or host and terminate TLS.",
+      "followup": "Why are sticky sessions a smell?"
+    },
+    {
+      "id": "caching",
+      "topic": "architecture",
+      "q": "Caching strategies and their risks?",
+      "a": "Cache-aside: read the cache, on a miss read the database and fill the cache. Write-through: write the cache and database together. The hard parts are invalidation and staleness, so set TTLs, and protect against a stampede when a hot key expires.",
+      "followup": "What happens to the database when the cache cluster restarts?"
+    },
+    {
+      "id": "cdn",
+      "topic": "web",
+      "q": "What does a CDN do?",
+      "a": "A CDN caches content at edge locations near users, so requests travel a short distance and the origin sees less load. It also terminates TLS close to users and absorbs traffic spikes and some attacks. CloudFront is the AWS CDN.",
+      "followup": "How do you push a fix to cached files immediately?"
+    },
+    {
+      "id": "latency-throughput",
+      "topic": "architecture",
+      "q": "Latency vs throughput?",
+      "a": "Latency is how long one request takes; throughput is how many requests you handle per second. They trade off: batching raises throughput but adds latency. Measure latency by percentiles like p50 and p99, because averages hide the slow tail.",
+      "followup": "Why does p99 matter more than the average for a checkout page?"
+    },
+    {
+      "id": "sql-nosql",
+      "topic": "data",
+      "q": "SQL vs NoSQL?",
+      "a": "SQL databases store relational tables with a fixed schema, joins, and ACID transactions, so they suit flexible queries and strong consistency. NoSQL covers key-value, document, wide-column, and graph stores that scale horizontally with flexible schemas, but you design around known access patterns. Pick from the queries you need, not from fashion.",
+      "followup": "Which would you choose for an order history page, and why?"
+    },
+    {
+      "id": "acid",
+      "topic": "data",
+      "q": "What does ACID mean?",
+      "a": "Atomicity: all of a transaction or none. Consistency: the database moves between valid states. Isolation: concurrent transactions do not see each other's partial work. Durability: once committed, data survives a crash.",
+      "followup": "What can go wrong with weaker isolation levels?"
+    },
+    {
+      "id": "cap",
+      "topic": "data",
+      "q": "What is the CAP theorem?",
+      "a": "In a distributed system, when a network partition happens you must choose between consistency, where every read sees the latest write, and availability, where every request gets an answer. You cannot give up partition tolerance across a network, so the real choice is C or A during a partition.",
+      "followup": "Where does DynamoDB's strongly consistent read option fit?"
+    },
+    {
+      "id": "consistency",
+      "topic": "data",
+      "q": "Strong vs eventual consistency?",
+      "a": "Strong consistency means a read always returns the latest committed write. Eventual consistency means replicas converge after a short delay, so a read may return slightly stale data, in exchange for lower latency and higher availability.",
+      "followup": "Which parts of a shopping app can tolerate eventual consistency?"
+    },
+    {
+      "id": "indexes",
+      "topic": "data",
+      "q": "How do database indexes help, and what do they cost?",
+      "a": "An index, usually a B-tree, lets the database find rows without scanning the whole table, which turns slow full scans into fast lookups. The cost is slower writes and extra storage, because every insert or update must also update each index. Index the columns your hot queries filter and join on.",
+      "followup": "How would you find which query needs an index?"
+    },
+    {
+      "id": "sharding",
+      "topic": "data",
+      "q": "What is sharding, and what goes wrong?",
+      "a": "Sharding splits data across several databases by a shard key, so each holds a subset and you scale writes horizontally. The risks are hot shards from a skewed key, cross-shard queries and transactions becoming hard, and painful resharding later. Choose a high-cardinality key that matches the main access pattern.",
+      "followup": "How would you shard a users table, and what would you avoid?"
+    },
+    {
+      "id": "shard-replicate",
+      "topic": "data",
+      "q": "Sharding vs replication vs partitioning?",
+      "a": "Replication copies the same data to several nodes for availability and read scaling. Sharding splits different data across nodes to scale writes and storage. Partitioning is the general idea of splitting a table, either inside one database or across shards. Real systems usually shard and also replicate each shard.",
+      "followup": "Which one helps if your problem is write throughput?"
+    },
+    {
+      "id": "replication-sync",
+      "topic": "data",
+      "q": "Synchronous vs asynchronous replication?",
+      "a": "Synchronous replication waits for the replica to confirm before committing, so no data is lost on failover but writes are slower. Asynchronous replication commits first and copies later, so writes are fast but a failover can lose the last few changes. RDS Multi-AZ is synchronous; read replicas are asynchronous.",
+      "followup": "How does this connect to RPO?"
+    },
+    {
+      "id": "storage-types",
+      "topic": "storage",
+      "q": "Block vs file vs object storage?",
+      "a": "Block storage is a raw disk attached to one machine, fast and low level, like EBS. File storage is a shared file system with folders that many machines mount, like EFS. Object storage keeps whole objects with metadata behind an API, scales without limit and is cheapest per GB, like S3.",
+      "followup": "Why can you not run a database directly on S3?"
+    },
+    {
+      "id": "queue-pubsub",
+      "topic": "architecture",
+      "q": "Message queue vs publish and subscribe?",
+      "a": "A queue delivers each message to one consumer, which spreads work and absorbs bursts. Pub and sub delivers each message to every subscriber, which fans one event out to many systems. On AWS, SQS is the queue, SNS and EventBridge are pub and sub, and SNS to several SQS queues combines them.",
+      "followup": "Why must consumers be idempotent with at-least-once delivery?"
+    },
+    {
+      "id": "retries",
+      "topic": "architecture",
+      "q": "How should clients retry failed calls?",
+      "a": "Retry only transient errors, with exponential backoff and jitter, and cap the number of attempts. Make the operation idempotent so a repeat is safe. Add timeouts and a circuit breaker so a struggling dependency is not flooded by retries.",
+      "followup": "What is a retry storm, and how do you prevent one?"
+    },
+    {
+      "id": "cidr",
+      "topic": "network",
+      "q": "What does a /24 CIDR block mean?",
+      "a": "The first 24 bits are the network, leaving 8 bits for hosts, so 256 addresses. AWS reserves 5 addresses in every subnet, leaving 251 usable. A VPC can be as large as a /16 and as small as a /28.",
+      "followup": "Why plan non-overlapping CIDRs before you peer VPCs?"
+    },
+    {
+      "id": "nat",
+      "topic": "network",
+      "q": "What does NAT do?",
+      "a": "Network address translation rewrites private source addresses to a public one on the way out and maps the replies back. It lets private machines reach the internet without being reachable from it. On AWS a NAT gateway sits in a public subnet and serves private subnets.",
+      "followup": "How do you keep a private subnet's S3 traffic off the NAT gateway?"
+    },
+    {
+      "id": "monolith-micro",
+      "topic": "architecture",
+      "q": "Monolith vs microservices?",
+      "a": "A monolith is one deployable unit: simple to build, test, and debug, but every change ships everything and it scales as one piece. Microservices split by business capability so teams deploy and scale independently, at the cost of network calls, distributed tracing, and data consistency work. Start simple and split where team or scaling pain is real.",
+      "followup": "What would you need in place before splitting a monolith?"
+    }
+  ]
+}

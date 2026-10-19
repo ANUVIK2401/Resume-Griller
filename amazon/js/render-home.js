@@ -1,4 +1,4 @@
-// Two-week plan, user-confirmed interview details, and practice scenarios.
+// Countdown, reported loop rounds with checklists, sprint plan, and progress across sections.
 (function () {
   const { el, load, ui, store, setReadout, practice } = { ...window.Prep, store: window.Prep.store };
 
@@ -9,6 +9,8 @@
     { page: 'design', data: 'designs', list: 'designs', prefix: 'design-', noun: 'designs ready' },
     { page: 'top', list: 'questions', prefix: 'top-', noun: 'top questions ready' },
     { page: 'questions', list: 'rapid_fire', prefix: 'q-', noun: 'rapid-fire known' },
+    { page: 'fundamentals', list: 'items', prefix: 'fund-', noun: 'fundamentals known' },
+    { page: 'compare', list: 'pairs', prefix: 'cmp-', noun: 'look-alike pairs known' },
   ];
 
   const pacificToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
@@ -231,12 +233,12 @@
     const updateReadout = () => setReadout('Sprint essentials', sprintChecks.filter((id) => store.get('checks', id, false)).length, sprintChecks.length);
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
       ui.section('countdown', 'Interview details', 'Tentative date-only target', el('span', {}, 'The ', el('em', {}, 'date')), heroCard(loop)),
+      ui.section('rounds', 'Loop tracker', `${loop.stages.length} rounds, reported not confirmed`, el('span', {}, 'The ', el('em', {}, 'loop')),
+        el('p', { class: 'section-intro' }, loop.structure_note),
+        el('div', { class: 'pipeline' }, loop.stages.map((s) => stageCard(s, loop, site, behavioral, updateReadout)))),
       sprintSection(loop, site, updateReadout),
       recruitingContext(loop),
       el('details', { class: 'card', id: 'extended-plan' }, el('summary', {}, 'Original adjustable 14-day plan (saved progress retained)'), planSection(loop, site, updateReadout)),
-      ui.section('rounds', 'Practice scenarios', `${loop.stages.length} practice scenarios`, el('span', {}, 'Skills to ', el('em', {}, 'rehearse')),
-        el('p', { class: 'section-intro' }, loop.structure_note),
-        el('div', { class: 'pipeline' }, loop.stages.map((s) => stageCard(s, loop, site, behavioral, updateReadout)))),
       await progressSection(site),
       ui.section('logistics', 'Logistics', 'The day itself', el('span', {}, 'Prepare the ', el('em', {}, 'logistics')),
         el('div', { class: 'card stack' }, ui.list(loop.logistics)))));

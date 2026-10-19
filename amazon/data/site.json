@@ -73,6 +73,16 @@
       "short": "Glossary"
     },
     {
+      "id": "compare",
+      "href": "compare.html",
+      "label": "Look-alike pairs",
+      "prompt": "SAY THE TELL FIRST",
+      "title": "Look-alikes and",
+      "accent": "the tell",
+      "lede": "Pairs interviewers use to test real understanding: SQS or SNS, security group or NACL, Multi-AZ or read replica. Say the one-line tell, then when you would pick each.",
+      "short": "Pairs"
+    },
+    {
       "id": "design",
       "href": "design.html",
       "label": "Whiteboard",
@@ -81,6 +91,16 @@
       "accent": "architectures",
       "lede": "One framework said out loud, six practice designs with the answer hidden until you have tried.",
       "short": "Whiteboard"
+    },
+    {
+      "id": "fundamentals",
+      "href": "fundamentals.html",
+      "label": "IT fundamentals",
+      "prompt": "DNS, NETWORKING, ENCRYPTION, DATA",
+      "title": "Fundamentals,",
+      "accent": "rapid fire",
+      "lede": "DNS, networking layers, TCP and HTTP, encryption, containers versus VMs, SQL versus NoSQL, sharding, stateful versus stateless, and storage types. Short spoken answers, a timer, and an honest self-score.",
+      "short": "Fundamentals"
     },
     {
       "id": "questions",

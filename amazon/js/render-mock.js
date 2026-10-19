@@ -1,10 +1,15 @@
-// Mock round: 2 LP questions and 1 technical item under per-question timers, notes, self-score, history.
+// Mock round: a 45-minute simulation. 2 LP questions and 1 technical item under per-question timers,
+// notes, self-score rubric, history.
 (function () {
   const { el, load, ui, store, setReadout, practice } = { ...window.Prep, store: window.Prep.store };
-  const MINUTES = { lp: 10, tech: 10, design: 20 };
+  const MINUTES = { lp: 12, tech: 21, design: 21 };
   const KIND_LABEL = { lp: 'Leadership Principle', tech: 'Technical', design: 'Whiteboard design' };
 
-  function resolve(item, questions, designs, behavioral) {
+  function resolve(item, questions, designs, behavioral, fundamentals) {
+    if (item.id.startsWith('fund-')) {
+      const f = fundamentals.items.find((x) => `fund-${x.id}` === item.id);
+      return { ...item, text: `${f.q} Then the follow-up: ${f.followup}`, answer: f.a };
+    }
     if (item.kind === 'lp') {
       const q = questions.lp_questions.find((x) => x.id === item.id);
       return { ...item, text: q.q, hint: practice.suggestQuestionStories(q, behavioral) };
@@ -30,12 +35,13 @@
   }
 
   window.Prep.pages.mock = async ({ main }) => {
-    const [questions, designs, behavioral] = await Promise.all([load('questions'), load('designs'), load('behavioral')]);
+    const [questions, designs, behavioral, fundamentals] = await Promise.all([load('questions'), load('designs'), load('behavioral'), load('fundamentals')]);
     const stage = el('div', { class: 'card stack mock' });
     const history = el('div');
     const paintHistory = () => {
       history.replaceChildren(historySection(behavioral.stories.length, (id) => questions.lp_questions.find((q) => q.id === id)?.q
         || questions.rapid_fire.find((q) => q.id === id)?.q
+        || fundamentals.items.find((f) => `fund-${f.id}` === id)?.q
         || designs.designs.find((d) => `design-${d.id}` === id)?.title || id));
       const mocks = store.all().quiz.filter((r) => r.kind === 'mock');
       setReadout('Mock rounds done', Math.min(mocks.length, 3), 3);
@@ -43,13 +49,13 @@
 
     function intro() {
       stage.replaceChildren(
-        el('p', { class: 'h3' }, 'Two Leadership Principle questions, then one technical question or whiteboard design.'),
-        ui.list([`About ${MINUTES.lp} minutes per LP question including follow-ups; ${MINUTES.tech} for a technical question, ${MINUTES.design} for a design.`, 'Answer out loud. Type notes as you go: what you said, what you forgot.', 'At the end, use the checks for the answer type: outcome and ownership for stories, correctness and clarity for rapid-fire, or requirements and tradeoffs for a design.']),
+        el('p', { class: 'h3' }, 'A 45-minute round: two Leadership Principle questions, then one technical deep dive or whiteboard design.'),
+        ui.list([`${MINUTES.lp} minutes per LP question including follow-ups, then ${MINUTES.tech} minutes for the technical part: ${MINUTES.lp * 2 + MINUTES.tech} minutes in all, close to the reported one-hour round minus introductions and your questions.`, 'Answer out loud. Type notes as you go: what you said, what you forgot.', 'At the end, use the checks for the answer type: outcome and ownership for stories, correctness and clarity for rapid-fire, or requirements and tradeoffs for a design.']),
         el('div', { class: 'row' }, el('button', { class: 'btn btn-gold', type: 'button', onclick: start }, 'Start a mock round')));
     }
 
     function start() {
-      const round = practice.pickMockRound(questions, designs).map((item) => resolve(item, questions, designs, behavioral));
+      const round = practice.pickMockRound(questions, designs, Math.random, fundamentals).map((item) => resolve(item, questions, designs, behavioral, fundamentals));
       ask(round, 0);
     }
 
@@ -99,7 +105,7 @@
     intro();
     paintHistory();
     main.replaceChildren(el('div', { class: 'wrap stack', style: { gap: 'var(--section)' } },
-      ui.section('round', 'Mock round', '30 to 40 minutes + review', el('span', {}, 'Run a ', el('em', {}, 'round')), stage),
+      ui.section('round', 'Mock round', '45 minutes + review', el('span', {}, 'Run a ', el('em', {}, 'round')), stage),
       ui.section('rubric', 'Rubric', 'Five checks', el('span', {}, 'The ', el('em', {}, 'rubric')),
         el('div', { class: 'grid-3' },
           el('div', { class: 'card card-navy stack' }, el('h3', { class: 'h3' }, 'Leadership Principles'), ui.list(practice.RUBRIC.map((r) => r.label))),

@@ -65,14 +65,18 @@
 
   // Two LP questions on different principles, then one technical item:
   // a rapid-fire question or a whiteboard design, chosen at random.
-  function pickMockRound(questions, designs, rng = Math.random) {
+  // The technical slot is a whiteboard design, an IT fundamentals deep dive (when that bank is
+  // passed), or an AWS rapid-fire question, in roughly equal shares.
+  function pickMockRound(questions, designs, rng = Math.random, fundamentals = null) {
     const first = pick(questions.lp_questions, rng);
     const others = questions.lp_questions.filter((q) => q.lp !== first.lp);
     const second = pick(others.length ? others : questions.lp_questions.filter((q) => q.id !== first.id), rng);
-    const useDesign = designs.designs.length && rng() < 0.5;
-    const tech = useDesign
-      ? { kind: 'design', id: `design-${pick(designs.designs, rng).id}` }
-      : { kind: 'tech', id: pick(questions.rapid_fire, rng).id };
+    const roll = rng();
+    const useFundamentals = fundamentals?.items?.length && roll < 1 / 3;
+    const useDesign = !useFundamentals && designs.designs.length && roll < (fundamentals?.items?.length ? 2 / 3 : 0.5);
+    const tech = useFundamentals ? { kind: 'tech', id: `fund-${pick(fundamentals.items, rng).id}` }
+      : useDesign ? { kind: 'design', id: `design-${pick(designs.designs, rng).id}` }
+        : { kind: 'tech', id: pick(questions.rapid_fire, rng).id };
     return [{ kind: 'lp', id: first.id }, { kind: 'lp', id: second.id }, tech];
   }
 
