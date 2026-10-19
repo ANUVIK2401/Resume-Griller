@@ -46,7 +46,7 @@
       const when = el('span', { class: 'gx-when' }, m.round);
       const link = el('a', { class: `gx-tab gx-${m.id}`, href: new URL(m.href, root).href, 'aria-current': m === active ? 'true' : null },
         el('span', { class: 'gx-dot', 'aria-hidden': 'true' }), el('span', { class: 'gx-name' }, m.name), when);
-      fetch(new URL(`${m.id}/data/loop.json`, root)).then((r) => (r.ok ? r.json() : null)).then((loop) => {
+      fetch(new URL(`${m.id}/data/loop.json`, root), { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((loop) => {
         const c = loop && countdown(m.date(loop));
         if (!c) return;
         when.replaceChildren(el('span', { class: 'gx-long' }, `${m.round} · ${c.long}`), el('span', { class: 'gx-short' }, c.short));
@@ -63,7 +63,7 @@
 
     const pages = el('nav', { class: 'gx-pages', 'aria-label': active ? `${active.name} pages` : 'Pages' });
     if (active) {
-      fetch(new URL(`${active.id}/data/site.json`, root)).then((r) => r.json()).then((site) => {
+      fetch(new URL(`${active.id}/data/site.json`, root), { cache: 'no-cache' }).then((r) => r.json()).then((site) => {
         const here = document.body.dataset.page;
         pages.replaceChildren(...site.pages.map((p) => el('a', { href: new URL(`${active.id}/${p.href}`, root).href, 'aria-current': p.id === here ? 'page' : null }, p.short || p.label)));
         pages.querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });

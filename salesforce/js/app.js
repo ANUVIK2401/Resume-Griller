@@ -25,7 +25,9 @@
   const cache = new Map();
   function fetchOnce(path, as) {
     if (!cache.has(path)) {
-      cache.set(path, fetch(path).then((res) => {
+      // no-cache revalidates with the server (a cheap 304 when unchanged), so every device
+      // reads the deployed data instead of a copy cached before the last push.
+      cache.set(path, fetch(path, { cache: 'no-cache' }).then((res) => {
         if (!res.ok) throw new Error(`${path} returned ${res.status}`);
         return as === 'text' ? res.text() : res.json();
       }));
