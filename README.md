@@ -1,25 +1,31 @@
-# AWSI - ETP Solutions Architect interview prep
+# Resume Griller
 
-A focused preparation workspace for Anuvik Thota: AWS service choices, customer architecture conversations, resume deep dives, and Amazon Leadership Principle stories.
+Interview prep for Anuvik Thota. Static HTML, CSS, and vanilla JS with JSON content; no build step. Every page shares one interview bar (`shared/switcher.js`) that switches modules and shows each countdown from the module's `data/loop.json`.
 
-Open the root landing page, then the [October 28 sprint](amazon/index.html), [resume and STAR review](amazon/review.html), or [AWS cheat sheet](amazon/cheatsheet.html). The full module and checks are documented in [amazon/README.md](amazon/README.md).
+Live site: https://anuvik2401.github.io/Resume-Griller/
+
+| Module | Interview | Live | Docs |
+|---|---|---|---|
+| Amazon SA Prep | AWS AWSI ETP Solutions Architect, on-campus loop at USC, Wednesday October 28, 2026 (format not yet confirmed) | [amazon/](https://anuvik2401.github.io/Resume-Griller/amazon/) | [amazon/README.md](amazon/README.md) |
+| Salesforce Prep | Software Engineering MTS, hiring manager round Thursday October 22, 2026 | [salesforce/](https://anuvik2401.github.io/Resume-Griller/salesforce/) | [salesforce/README.md](salesforce/README.md) |
+| General bank (archived) | Older general question bank; numbers predate the current resume | [general-prep.html](https://anuvik2401.github.io/Resume-Griller/general-prep.html) | |
+| Google (archived) | Earlier Google prep; numbers predate the current resume | [google-prep.html](https://anuvik2401.github.io/Resume-Griller/google-prep.html) | |
+
+Amazon pages: [loop tracker](https://anuvik2401.github.io/Resume-Griller/amazon/index.html), [Leadership Principles](https://anuvik2401.github.io/Resume-Griller/amazon/behavioral.html), [AWS glossary](https://anuvik2401.github.io/Resume-Griller/amazon/aws.html), [look-alike pairs](https://anuvik2401.github.io/Resume-Griller/amazon/compare.html), [whiteboard designs](https://anuvik2401.github.io/Resume-Griller/amazon/design.html), [IT fundamentals](https://anuvik2401.github.io/Resume-Griller/amazon/fundamentals.html), [mock round](https://anuvik2401.github.io/Resume-Griller/amazon/mock.html).
+
+## Run locally
 
 ```sh
 python3 -m http.server 8000
 # http://localhost:8000/
 ```
 
-Pure HTML/CSS/JS, JSON content, no production dependencies. Progress, mock history, and drafts save in the browser and can be exported. The current target is a possible on-campus interview on Wednesday, October 28, 2026. The dashboard prioritizes October 16-27 practice, with the exact start time, room, and interview structure still unconfirmed. Practice scenarios do not predict the actual loop.
+The pages fetch local JSON, so they need HTTP, not `file://`. Progress, notes, and drafts save in your browser and can be exported from each module's sidebar.
 
-Portable references:
+## Checks and deploy
 
-- [Final preparation card](amazon/FINAL-PREP.md)
-- [AWS cheat sheet](amazon/AWS-CHEATSHEET.md)
-- [Resume and STAR assessment](amazon/RESUME-STAR-REVIEW.md)
-- [STAR story bank](amazon/stories.md)
+`.github/workflows/pages.yml` runs on every push to `main`: the Salesforce and Amazon content checks, unit and integration tests, the Python reference solutions, the Amazon browser tests, and `shared/test_pages.mjs`, which loads every page at 390px and desktop width in light and dark mode and fails on console errors, failed requests, or horizontal overflow. GitHub Pages deploys only when all of them pass. See each module's README for the commands.
 
-The older general bank remains at [general-prep.html](general-prep.html). Salesforce is active: the hiring manager round is October 22, 2026; start with [salesforce/HM-BRIEF.md](salesforce/HM-BRIEF.md). Google preparation remains an archived module.
+## Privacy
 
-Every page shares one interview bar (`shared/switcher.js`): switch between Salesforce and Amazon, see each countdown from the module's `data/loop.json`, and jump between the current module's pages.
-
-The existing GitHub Pages workflow deploys pushes to main after validation. Local edits do not update the live site until pushed.
+The site is public. No recruiter or interviewer names, emails, phone numbers, case numbers, or personal status details belong in any file; `amazon/scripts/check.mjs` scans the whole repo and fails the build if one appears.
