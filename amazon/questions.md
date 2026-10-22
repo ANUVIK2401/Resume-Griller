@@ -67,7 +67,7 @@ Use stories.md. Prepare varied examples so different questions reveal different 
 2. **Migrate an on-prem ERP / financial system to AWS** (hypothetical AWS mapping of S1). Discovery, 7 Rs per workload, DMS where supported, landing zone, reconciliation and cutover. Explain how rollback preserves writes already accepted on the target.
 3. **Serverless document processing pipeline.** S3 upload -> EventBridge -> Step Functions -> Textract -> Bedrock summarization -> DynamoDB -> human review for low confidence (S1 pattern).
 4. **GenAI chatbot over company docs (RAG).** S3 docs -> Bedrock Knowledge Base (embeddings + vector store such as OpenSearch Serverless) -> Bedrock model with Guardrails -> API Gateway + Lambda -> Cognito auth; derive server-side retrieval filters from trusted identity; isolate caches by authorization. Guardrails do not replace document permissions. Evaluate answer quality before launch.
-5. **Real-time analytics / clickstream.** Kinesis -> Firehose -> S3 -> Glue -> Athena / QuickSight.
+5. **Real-time analytics / clickstream.** Kinesis -> Firehose -> S3 -> Glue -> Athena / Quick Sight.
 6. **Multi-region DR for a payments app.** Pick a DR tier from measured RPO/RTO, a single Aurora Global Database writer, writer fencing, Route 53 failover, stable payment-provider keys, and reconciliation. DNS alone does not prevent duplicate charges.
 
 ## E. Customer role-play practice

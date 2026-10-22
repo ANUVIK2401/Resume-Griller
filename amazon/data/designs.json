@@ -1135,14 +1135,14 @@
           "role": "SQL on the lake"
         },
         {
-          "name": "QuickSight",
+          "name": "Quick Sight",
           "role": "Dashboards"
         }
       ],
       "flow": [
         "Apps send events to Kinesis Data Streams.",
         "A real-time consumer updates live metrics; Firehose batches the same stream into S3 as Parquet.",
-        "Glue catalogs the data; Athena queries it; QuickSight shows dashboards."
+        "Glue catalogs the data; Athena queries it; Quick Sight shows dashboards."
       ],
       "scale": [
         "Add shards or use on-demand capacity mode",
@@ -1253,7 +1253,7 @@
           {
             "id": "ath",
             "label": "Athena",
-            "sub": "QuickSight on top",
+            "sub": "Quick Sight on top",
             "cat": "analytics",
             "at": [
               4,

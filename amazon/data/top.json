@@ -163,7 +163,7 @@
         "Ingest with Kinesis Data Streams when you need real-time consumers or replay; use Amazon Data Firehose when you only need to land data in S3.",
         "Firehose delivers to S3 in near real time, converting to Parquet and partitioning by date.",
         "Glue crawlers catalog the data, and Glue ETL jobs clean the raw zone into a curated zone.",
-        "Athena for ad-hoc questions, Redshift for heavy repeated dashboards, QuickSight on top.",
+        "Athena for ad-hoc questions, Redshift for heavy repeated dashboards, Quick Sight on top.",
         "Lake Formation controls who sees which tables and columns, which matters for personal data."
       ],
       "handle": ["Ask the freshness requirement first; it changes the whole design.", "Keep raw and curated zones separate so you can always reprocess."],

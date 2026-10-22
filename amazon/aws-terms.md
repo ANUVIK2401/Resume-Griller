@@ -72,7 +72,7 @@ Purchase options: **On-Demand** (flexible), **Reserved / Savings Plans** (1 to 3
 
 ## 8. Analytics
 - **Data lake pattern:** S3 + Glue Data Catalog + Athena (serverless SQL on S3) + Lake Formation (permissions).
-- **Glue:** serverless ETL (Spark). **EMR:** managed Spark/Hadoop clusters. **QuickSight:** BI dashboards.
+- **Glue:** serverless ETL (Spark). **EMR:** managed Spark/Hadoop clusters. **Quick Sight:** BI dashboards.
 
 ## 9. AI and ML (expect these, given your background)
 - **Amazon Bedrock:** managed foundation-model inference with Knowledge Bases (RAG), Agents, Guardrails, and evaluation. Verify the selected model, API, retention policy, invocation logging, and inference profile before making privacy claims. Models run in AWS service deployment accounts; global cross-Region inference can process requests in other supported commercial Regions. [Data protection](https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html), [retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html), [global inference](https://docs.aws.amazon.com/bedrock/latest/userguide/global-cross-region-inference.html).
@@ -103,8 +103,8 @@ Purchase options: **On-Demand** (flexible), **Reserved / Savings Plans** (1 to 3
 | Kubernetes on OCI with HPA | EKS with HPA, Karpenter for nodes |
 | Jenkins CLI validation | CodePipeline / CodeBuild, or GitHub Actions to AWS |
 | Databricks + Delta Lake | Glue / EMR + S3 + Iceberg + Athena |
-| Claude + LangGraph agents | Bedrock (Claude) + Step Functions or Bedrock Agents |
-| MCP tool calling | Bedrock Agents action groups, Lambda tools |
+| Claude + LangGraph agents | Bedrock (Claude) + Step Functions or Bedrock AgentCore |
+| MCP tool calling | Bedrock AgentCore Gateway, Lambda tools |
 | HITL review queue | Step Functions task token wait + SQS + A2I |
 | NetSuite SQL tuning | RDS / Aurora + CloudWatch Database Insights (check support) |
 | GNN fraud graph | Neptune + SageMaker |

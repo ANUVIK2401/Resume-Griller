@@ -257,7 +257,7 @@
           "role": "Spark and Hadoop frameworks"
         },
         {
-          "name": "QuickSight",
+          "name": "Quick Sight",
           "role": "BI dashboards"
         }
       ]
@@ -702,7 +702,7 @@
           "tradeoff": "Keep analytics off the transactional database."
         },
         {
-          "service": "QuickSight",
+          "service": "Quick Sight",
           "use": "Dashboards and BI.",
           "tradeoff": "Serve curated, permissioned datasets."
         },
@@ -722,7 +722,7 @@
           "tradeoff": "Prefer these when they meet the requirement."
         }
       ],
-      "rule": "Data lake: land raw data in S3, catalog and transform with Glue, query with Athena, and serve curated data through Redshift or QuickSight."
+      "rule": "Data lake: land raw data in S3, catalog and transform with Glue, query with Athena, and serve curated data through Redshift or Quick Sight."
     },
     {
       "id": "resilience",
@@ -1256,7 +1256,7 @@
           {
             "id": "dash",
             "label": "Dashboards",
-            "sub": "QuickSight or app",
+            "sub": "Quick Sight or app",
             "cat": "analytics",
             "at": [
               4,
@@ -2025,7 +2025,7 @@
           },
           {
             "id": "bi",
-            "label": "QuickSight or Redshift",
+            "label": "Quick Sight or Redshift",
             "cat": "analytics",
             "at": [
               3,
@@ -2099,7 +2099,7 @@
           "text": "Parquet or ORC, compression, and partitions cut how many bytes Athena scans."
         },
         {
-          "text": "Athena handles ad hoc SQL; Redshift serves repeated warehouse workloads; QuickSight shows dashboards."
+          "text": "Athena handles ad hoc SQL; Redshift serves repeated warehouse workloads; Quick Sight shows dashboards."
         },
         {
           "text": "Lake Formation, IAM, and bucket policies govern access, with central audit logs."
