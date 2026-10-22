@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'">
+  <meta name="robots" content="noindex">
+  <title>Fit a big AI model on a small computer: handout</title>
+  <style>
+  :root { --ink: #0F1720; --muted: #3A4656; --line: #C9CFD6; --accent: #FF9900; --accent-ink: #8A4B00; --sunk: #EEF0F2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 11pt/1.4 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  .page { max-width: 7.5in; margin: 0 auto; padding: 0.4in 0.2in; }
+  h1 { font-size: 20pt; line-height: 1.15; margin: 0 0 0.1in; }
+  h2 { font-size: 14pt; margin: 0.14in 0 0.06in; }
+  p { margin: 0 0 0.08in; }
+  ul, ol { margin: 0 0 0.08in; padding-left: 0.22in; }
+  li { margin: 0 0 0.03in; }
+  .muted { color: var(--muted); }
+  .kicker { text-transform: uppercase; letter-spacing: 0.08em; font-size: 8.5pt; color: var(--accent-ink); font-weight: 700; margin: 0 0 0.04in; }
+  .noprint { background: var(--sunk); padding: 0.08in 0.12in; border-radius: 6px; font-size: 9.5pt; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 0.035in 0.06in; border-bottom: 1px solid var(--line); }
+  th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  @page { size: letter; margin: 0.5in; }
+  @media print { .noprint { display: none; } .page { padding: 0; max-width: none; } .break { break-before: page; } }
+
+  .bars { display: grid; gap: 0.16in; margin: 0.1in 0 0.08in; }
+  .bar-head { display: flex; justify-content: space-between; gap: 0.2in; font-size: 11pt; }
+  .track { height: 0.34in; background: var(--sunk); border-radius: 0.17in; overflow: hidden; }
+  .fill { display: block; height: 100%; background: #6B7684; border-radius: inherit; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .fill.int4 { background: var(--accent); }
+  .note { font-size: 9.5pt; color: var(--muted); margin-top: 0.03in; }
+  .analogy { font-size: 14pt; border-left: 5px solid var(--accent); padding: 0.06in 0.14in; margin: 0.1in 0 0.14in; }
+  .cta { margin-top: 0.18in; padding: 0.14in 0.18in; border: 2px solid var(--ink); border-radius: 10px; }
+  .cta strong { display: block; font-size: 15pt; margin-bottom: 0.04in; }
+  footer { margin-top: 0.2in; font-size: 9pt; color: var(--muted); }</style>
+</head>
+<body>
+<main class="page">
+  <p class="noprint">Print with Cmd+P or Ctrl+P on Letter paper, 5 copies. Check the preview shows one page.</p>
+  <p class="kicker">Quantization explained</p>
+  <h1>Fit a big AI model on a small computer</h1>
+  <p class="analogy">Quantization is saving a model like a JPEG instead of a RAW photo: far smaller, and almost the same picture.</p>
+  <h2>Model memory by number format, ModelScope on a T4 GPU</h2>
+  <div class="bars" role="img" aria-label="Model memory by number format, ModelScope on a T4 GPU">
+    <div>
+      <div class="bar-head"><strong>FP16</strong><span class="muted">16 bits per number</span></div>
+      <div class="track"><span class="fill fp16" style="width: 100.0%"></span></div>
+      <p class="note">Baseline</p>
+    </div>
+    <div>
+      <div class="bar-head"><strong>INT8</strong><span class="muted">8 bits per number</span></div>
+      <div class="track"><span class="fill int8" style="width: 58.1%"></span></div>
+      <p class="note">53% more memory than INT4, 2.1x lower throughput</p>
+    </div>
+    <div>
+      <div class="bar-head"><strong>INT4</strong><span class="muted">4 bits per number</span></div>
+      <div class="track"><span class="fill int4" style="width: 38.0%"></span></div>
+      <p class="note">2299 MB, 62% below FP16, 13.7 tok/s, MMLU within a point</p>
+    </div>
+  </div>
+  <p class="note">Bar lengths are drawn from the measured relations: INT4 is 62% below FP16, and INT8 is 53% above INT4.</p>
+  <h2>Three takeaways</h2>
+  <ol>
+    <li>Fewer bits per number means less memory.</li>
+    <li>Measure quality on your own task, not just a general exam.</li>
+    <li>The middle option is not always the safe one. Benchmark.</li>
+  </ol>
+  <div class="cta"><strong>Before you buy a bigger GPU, benchmark a smaller number format.</strong>This week: load a 4-bit version of a model you already run, send both versions the same test prompts, and compare memory, speed, and answers.</div>
+  <footer>Anuvik Thota · ModelScope, a personal benchmarking project. Models: Llama-3.2-3B and Gemma-2-2B, 8 configs, T4 GPU.</footer>
+</main>
+</body>
+</html>

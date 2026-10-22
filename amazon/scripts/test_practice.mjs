@@ -11,6 +11,8 @@ const behavioral = json('behavioral');
 const questions = json('questions');
 const designs = json('designs');
 const loop = json('loop');
+const domains = json('domains');
+const presentation = json('presentation');
 
 const tests = [];
 const test = (name, run) => tests.push({ name, run });
@@ -50,19 +52,49 @@ test('prompt-specific suggestions refuse unrelated success stories for missing e
   assert.equal(details.gap, null);
 });
 
-test('mock round has two LP questions on different principles and one technical item', () => {
-  for (let seed = 1; seed < 200; seed += 1) {
-    const round = practice.pickMockRound(questions, designs, seeded(seed));
-    assert.equal(round.length, 3);
-    const [a, b, tech] = round;
-    assert.equal(a.kind, 'lp');
-    assert.equal(b.kind, 'lp');
-    const lpOf = (id) => questions.lp_questions.find((q) => q.id === id).lp;
-    assert.notEqual(lpOf(a.id), lpOf(b.id));
-    assert.ok(['tech', 'design'].includes(tech.kind));
-    if (tech.kind === 'tech') assert.ok(questions.rapid_fire.some((q) => q.id === tech.id));
-    else assert.ok(designs.designs.some((d) => `design-${d.id}` === tech.id));
+test('a mock day has four rounds that cover all 8 named LPs once and never repeat a question', () => {
+  const named = behavioral.lps.filter((lp) => lp.named).map((lp) => lp.id);
+  const domainOf = new Map(domains.domains.flatMap((d) => d.questions.map((q) => [q.id, d.id])));
+  for (let seed = 1; seed < 120; seed += 1) {
+    const day = practice.pickMockDay(behavioral, domains, loop.focus_areas, seeded(seed));
+    assert.equal(day.length, 4);
+    const ids = day.flat().filter((x) => !['talk', 'ask'].includes(x.kind)).map((x) => x.id);
+    assert.equal(new Set(ids).size, ids.length, `seed ${seed} repeats a question`);
+    const lps = day.flatMap((r) => r.filter((x) => x.kind === 'lp').map((x) => behavioral.question_bank.find((q) => q.id === x.id).lp));
+    assert.deepEqual([...lps].sort(), [...named].sort());
+    assert.equal(day.filter((r) => r.some((x) => x.kind === 'talk')).length, 1);
+    for (const round of day) {
+      assert.deepEqual(round.filter((x) => x.kind !== 'talk').map((x) => x.kind), ['lp', 'lp', 'breadth', 'depth', 'explain', 'ask']);
+      assert.equal(domainOf.get(round.find((x) => x.kind === 'depth').id), loop.focus_areas.depth);
+      assert.ok([...loop.focus_areas.breadth, ...loop.focus_areas.backup].includes(domainOf.get(round.find((x) => x.kind === 'breadth').id)));
+      assert.notEqual(domains.domains.flatMap((d) => d.questions).find((q) => q.id === round.find((x) => x.kind === 'explain').id).level, 'deep');
+    }
   }
+});
+
+test('story and talk timers classify the window, the current section, and the latest warning', () => {
+  assert.equal(practice.windowStatus(119), 'short');
+  assert.equal(practice.windowStatus(120), 'ok');
+  assert.equal(practice.windowStatus(240), 'ok');
+  assert.equal(practice.windowStatus(241), 'long');
+  const sections = presentation.sections;
+  assert.equal(practice.sectionAt(0, sections).id, 'hook');
+  assert.equal(practice.sectionAt(59, sections).id, 'hook');
+  assert.equal(practice.sectionAt(60, sections).id, 'what');
+  assert.equal(practice.sectionAt(400, sections).id, 'how');
+  assert.equal(practice.sectionAt(9999, sections).id, 'cta');
+  assert.equal(practice.warningAt(479, presentation.warnings), null);
+  assert.match(practice.warningAt(480, presentation.warnings).text, /8:00/);
+  assert.match(practice.warningAt(601, presentation.warnings).text, /10:00/);
+});
+
+test('scoreRound accepts a per-item rubric, as the presentation uses', () => {
+  const round = [{ kind: 'lp' }, { kind: 'talk', rubric: presentation.rubric }, { kind: 'explain' }];
+  const result = practice.scoreRound(round, [practice.RUBRIC.map((r) => r.id), ['clarity', 'cta'], ['analogy']]);
+  assert.equal(result.total, 5 + 6 + 5);
+  assert.equal(result.score, 5 + 2 + 1);
+  assert.ok(result.missed.includes('time-2'));
+  assert.ok(result.missed.includes('no-jargon-3'));
 });
 
 test('scoreRound counts ticked checks and names each miss by check and question', () => {
@@ -109,78 +141,21 @@ test('date logic uses Pacific calendar days and rejects impossible dates', () =>
   assert.equal(practice.validPlanDate('bad'), false);
 });
 
-test('the two-week schedule can be moved without mutating source data', () => {
-  const before = JSON.stringify(loop.plan);
-  const days = practice.schedulePlan(loop.plan, '2026-12-25');
-  assert.equal(days.length, 14);
-  assert.equal(days[0].date, '2026-12-25');
-  assert.equal(days.at(-1).date, '2027-01-07');
-  assert.equal(days[0].id, loop.plan[0].id);
-  assert.equal(JSON.stringify(loop.plan), before);
-  assert.throws(() => practice.schedulePlan(loop.plan, '2026-02-30'));
-});
-
-test('the plan defaults to fourteen days, with no invented interview details', () => {
-  assert.equal(loop.plan_start, '2026-10-15');
-  assert.equal(loop.plan.length, 14);
-  assert.equal(loop.event.date, '');
-  assert.equal(loop.event.confirmed, false);
-  assert.ok(loop.stages.every((s) => s.default_status === 'not_started' && !s.default_date));
-  assert.ok(!loop.plan.some((day) => /interview day/i.test(day.focus)));
-  assert.ok(loop.stages.every((stage) => stage.format === 'Preparation scenario'));
-  assert.deepEqual(loop.plan.map((d) => d.date), practice.schedulePlan(loop.plan, loop.plan_start).map((d) => d.date));
-  for (const day of loop.plan) {
-    assert.equal(day.tasks.reduce((sum, t) => sum + t.minutes, 0), 180, day.id);
-    assert.equal(day.tasks.filter((t) => t.minimum).reduce((sum, t) => sum + t.minutes, 0), 90, day.id);
-    assert.ok(day.deliverable && day.readiness_gate, day.id);
-  }
-});
-
-test('recruiting context separates established assessment facts from tentative interview details', () => {
-  const context = loop.recruiting_context;
-  assert.equal(context.assessment.status, 'passed');
-  assert.equal(context.assessment.completed_date, '2026-10-14');
-  assert.match(context.assessment.source, /user.*recruiter/i);
-  assert.equal(context.hold.status, 'tentative');
-  assert.equal(context.hold.weekday, 'Wednesday');
-  assert.match(context.interview_conditions, /in.person.*USC.*if selected/i);
-  assert.match(context.timing_conflict, /October 27.*October 28/);
-  assert.match(context.timing_conflict, /Tuesday.*Wednesday/);
-  assert.match(context.timing_conflict, /CST.*local/);
-  assert.ok(context.pending.some((item) => /time zone/i.test(item)));
-  assert.match(context.role.locations, /Dallas.*Seattle/);
-  assert.match(context.role.locations, /six months/i);
-  assert.deepEqual(context.role.cohort_starts, ['2027-01-04', '2027-07-06']);
-  assert.match(context.role.cohort_note, /choice.*unknown/i);
-  assert.match(context.role.success, /customer.*impact/i);
-  assert.match(context.role.success, /sales quotas/i);
-  assert.equal(loop.event.date, '');
-  assert.equal(loop.event.confirmed, false);
-});
-
-test('tentative date-only target drives a twelve-day sprint without inventing a time', () => {
-  assert.equal(loop.event.target_date, '2026-10-28');
-  assert.equal(loop.event.target_status, 'tentative');
-  assert.equal(loop.event.date, '');
-  assert.equal(loop.sprint.start, '2026-10-16');
-  assert.equal(loop.sprint.days.length, 12);
-  assert.equal(loop.sprint.days[0].date, '2026-10-16');
-  assert.equal(loop.sprint.days.at(-1).date, '2026-10-27');
-  assert.match(loop.sprint.days.at(-1).focus, /taper/i);
-  assert.equal(loop.sprint.days.filter((day) => day.full_mock).length, 3);
-  assert.equal(loop.sprint.days.filter((day) => day.paper_design).length, 3);
-  for (const day of loop.sprint.days) {
-    assert.equal(day.tasks.reduce((sum, task) => sum + task.minutes, 0), 180);
-    assert.equal(day.tasks.filter((task) => task.minimum).reduce((sum, task) => sum + task.minutes, 0), 90);
-    assert.ok(day.deliverable && day.readiness_gate);
-  }
-  const first = loop.sprint.days[0].tasks.map((task) => task.text).join(' ');
-  assert.match(first, /60.second.*S1.*S2/i);
-  assert.match(first, /IAM.*request path/i);
-  assert.match(first, /10.minute.*discovery/i);
-  assert.match(loop.sprint.story_strategy, /S1.*S2.*S4.*S5.*S3.*S6/);
-  assert.match(loop.sprint.gap_policy, /optional.*private.*real/i);
-  assert.ok(loop.sprint.interview_day.tasks.every((task) => !/9:00|45.minute|round [123]/i.test(task.text)));
+test('the loop records the confirmed format without placeholders', () => {
+  assert.equal(loop.event.date, '2026-10-28T09:30');
+  assert.equal(loop.event.confirmed, true);
+  assert.match(loop.event.location, /USC campus/);
+  assert.equal(loop.rounds.length, 4);
+  assert.equal(loop.schedule.filter((s) => s.kind === 'round').length, 4);
+  assert.ok(loop.schedule.some((s) => /lunch/i.test(s.label) && s.time === '11:30 am'));
+  assert.deepEqual(loop.plan.map((d) => d.date), ['2026-10-22', '2026-10-23', '2026-10-24', '2026-10-25', '2026-10-26', '2026-10-27', '2026-10-28']);
+  assert.equal(loop.focus_areas.depth, 'ai-ml');
+  assert.deepEqual(loop.focus_areas.breadth, ['networking', 'databases', 'security']);
+  assert.ok(!JSON.stringify(loop).match(/reported, not confirmed|tentative/i));
+  assert.ok(loop.unknowns.some((u) => /interviewer/i.test(u)));
+  const bring = loop.day_of.bring.map((b) => b.text).join(' ');
+  for (const item of [/resume.*5/i, /handout.*5/i, /notebook/i, /water/i]) assert.match(bring, item);
+  assert.ok(loop.day_of.notes.some((n) => /no laptop/i.test(n)));
 });
 
 // The progress store runs in a sandbox with an in-memory localStorage.
@@ -224,80 +199,41 @@ function flatten(node) {
 }
 const visibleText = (node) => typeof node === 'object' && node !== null ? (node.children || []).map(visibleText).join(' ') : String(node);
 
-test('home rerenders and persists a moved plan independently of interview date', async () => {
-  const { store } = storeContext();
-  const view = homeContext(store);
-  await view.home({ main: view.main, loop });
-  let nodes = flatten(view.main);
-  assert.equal(nodes.filter((n) => n.class?.startsWith('plan-day')).length, 14);
-  const start = nodes.find((n) => n['aria-label'] === '14-day study plan start date');
-  assert.equal(start.value, '2026-10-15');
-  start.value = '2027-03-07';
-  start.handlers.change();
-  assert.equal(store.get('notes', 'plan-start-date'), '2027-03-07');
-  assert.ok(visibleText(view.main).includes('Mar 20, 2027'));
-  const interview = nodes.find((n) => n.type === 'datetime-local');
-  interview.value = '2027-03-30T09:30';
-  interview.handlers.change();
-  assert.equal(store.get('notes', 'plan-start-date'), '2027-03-07');
-  assert.ok(visibleText(view.main).includes('2027-03-30 at 09:30 Pacific Time'));
-  assert.ok(visibleText(view.main).includes('does not move the study plan'));
-  const nextVisit = homeContext(store);
-  await nextVisit.home({ main: nextVisit.main, loop });
-  nodes = flatten(nextVisit.main);
-  assert.equal(nodes.find((n) => n.type === 'date').value, '2027-03-07');
-  assert.ok(visibleText(nextVisit.main).includes('Mar 20, 2027'));
-  const invalid = nodes.find((n) => n.type === 'date');
-  invalid.value = '2027-02-30';
-  invalid.handlers.change();
-  assert.equal(store.get('notes', 'plan-start-date'), '2027-03-07');
-  assert.ok(invalid.validationMessage);
-});
-
-test('home retains sourced recruiting context as secondary reference', async () => {
-  const view = homeContext(storeContext().store);
-  await view.home({ main: view.main, loop });
-  const text = visibleText(view.main);
-  assert.ok(text.includes('Online assessment passed'));
-  assert.ok(text.includes('Tentative Wednesday hold'));
-  assert.ok(text.includes('Exact date, start time, and time zone'));
-  assert.ok(flatten(view.main).some((node) => node.tag === 'details' && node.id === 'recruiting-context'));
-  assert.ok(text.includes('Set recruiter-confirmed date and time'));
-  assert.ok(text.includes('2027-01-04') && text.includes('2027-07-06'));
-});
-
-test('home leads with date-only target and current-day sprint while keeping old plan secondary', async () => {
-  const view = homeContext(storeContext().store, '2026-10-16T19:00:00Z');
+test('home leads with the confirmed day, today in the 7-day plan, four rounds, and the day-of panel', async () => {
+  const view = homeContext(storeContext().store, '2026-10-24T19:00:00Z');
   await view.home({ main: view.main, loop });
   const nodes = flatten(view.main);
   const text = visibleText(view.main);
-  assert.ok(text.includes('12 days to tentative target'));
-  assert.ok(text.includes('Wed, Oct 28, 2026'));
-  assert.ok(text.includes('Start time and room unconfirmed'));
-  assert.equal(nodes.filter((node) => node.class?.startsWith('sprint-day')).length, 12);
-  assert.ok(nodes.some((node) => node.id === 'sprint-sp01' && node.class.includes('plan-today')));
-  assert.ok(nodes.some((node) => node.tag === 'details' && node.id === 'extended-plan'));
-  assert.ok(nodes.some((node) => node.tag === 'details' && node.id === 'recruiting-context'));
+  assert.ok(text.includes('4 days'));
+  assert.ok(text.includes('Confirmed by the recruiter'));
+  assert.equal(nodes.filter((n) => n.class?.startsWith('plan-day')).length, 7);
+  assert.ok(nodes.find((n) => n.id === 'day-p1024').class.includes('plan-today'));
+  assert.equal(nodes.filter((n) => n.class === 'stage').length, 4);
+  assert.ok(nodes.some((n) => n.id === 'day-of'));
+  assert.ok(text.includes('Printed resume, 5 copies'));
+  assert.ok(text.includes('AI/ML depth') || text.includes('Depth'));
 });
 
-test('home refreshes across Pacific midnight without rebuilding the plan each minute', async () => {
-  const { store } = storeContext();
-  store.set('loop', 'interview-event', { date: '2026-10-17T09:00' });
-  const view = homeContext(store, '2026-10-16T06:59:00Z');
+test('home rebuilds the plan only when the Pacific day changes', async () => {
+  const view = homeContext(storeContext().store, '2026-10-24T06:59:00Z');
   await view.home({ main: view.main, loop });
   const day = (id) => flatten(view.main).find((n) => n.id === id);
-  const initialDay = day('day-d01');
-  assert.ok(initialDay.class.includes('plan-today'));
-  assert.ok(visibleText(view.main).includes('2 days'));
-  assert.equal(view.timers.length, 3);
-  assert.ok(view.timers.every((timer) => timer.interval === 60000));
-  view.timers.forEach((timer) => timer.run());
-  assert.equal(day('day-d01'), initialDay, 'same-day timer preserves checkbox DOM and focus');
-  view.advance('2026-10-16T07:01:00Z');
-  view.timers.forEach((timer) => timer.run());
-  assert.ok(day('day-d01').class.includes('plan-past'));
-  assert.ok(day('day-d02').class.includes('plan-today'));
-  assert.ok(visibleText(view.main).includes('Tomorrow'));
+  assert.ok(day('day-p1023').class.includes('plan-today'));
+  const before = day('day-p1023');
+  view.timers.forEach((t) => t.run());
+  assert.equal(day('day-p1023'), before, 'same-day timer keeps checkbox DOM');
+  view.advance('2026-10-24T07:01:00Z');
+  view.timers.forEach((t) => t.run());
+  assert.ok(day('day-p1024').class.includes('plan-today'));
+});
+
+test('presentation runs save with their length and survive export and import', async () => {
+  const { store, shared } = storeContext();
+  store.pushQuiz({ at: new Date().toISOString(), kind: 'talk', score: 5, total: 6, missed: ['time'], seconds: 545 });
+  const fresh = storeContext().store;
+  await fresh.importFile({ text: async () => shared.get('awsprep:v1') });
+  assert.equal(fresh.all().quiz[0].seconds, 545);
+  assert.throws(() => store.pushQuiz({ at: new Date().toISOString(), kind: 'talk', score: 1, total: 6, missed: [], seconds: -1 }));
 });
 
 test('mock and tech results round trip through export and import', async () => {

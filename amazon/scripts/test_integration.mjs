@@ -3,7 +3,7 @@ import { readFileSync, existsSync } from 'node:fs';
 const root = new URL('../../', import.meta.url);
 const read = path => readFileSync(new URL(path, root), 'utf8');
 const site = JSON.parse(read('amazon/data/site.json'));
-for (const id of ['home', 'review', 'behavioral', 'cheatsheet', 'architecture', 'aws', 'design', 'questions', 'mock']) {
+for (const id of ['home', 'domains', 'behavioral', 'presentation', 'mock', 'review', 'cheatsheet', 'architecture', 'aws', 'design', 'questions']) {
   const page = site.pages.find(page => page.id === id);
   assert.ok(page, `Missing navigation: ${id}`);
   assert.ok(existsSync(new URL(`amazon/${page.href}`, root)), `Missing page: ${page.href}`);
@@ -22,4 +22,5 @@ assert.ok(existsSync(new URL('general-prep.html', root)));
 const checker = read('amazon/scripts/check.mjs');
 assert.doesNotMatch(checker, /Sports Analytics is volunteer research/);
 assert.doesNotMatch(checker, /Oracle tenure is "close to 3 years"/);
-console.log('Integration checks passed: 9 navigation routes, local assets, Amazon entry, resume-aligned policy.');
+for (const page of ['presentation-handout.html', 'final-review.html', 'FINAL-REVIEW.md']) assert.ok(existsSync(new URL(`amazon/${page}`, root)), `Missing ${page}`);
+console.log('Integration checks passed: 11 navigation routes, print pages, local assets, Amazon entry, resume-aligned policy.');

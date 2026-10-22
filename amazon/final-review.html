@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'">
+  <meta name="robots" content="noindex">
+  <title>Final review</title>
+  <style>
+  :root { --ink: #0F1720; --muted: #3A4656; --line: #C9CFD6; --accent: #FF9900; --accent-ink: #8A4B00; --sunk: #EEF0F2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 11pt/1.4 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  .page { max-width: 7.5in; margin: 0 auto; padding: 0.4in 0.2in; }
+  h1 { font-size: 20pt; line-height: 1.15; margin: 0 0 0.1in; }
+  h2 { font-size: 14pt; margin: 0.14in 0 0.06in; }
+  p { margin: 0 0 0.08in; }
+  ul, ol { margin: 0 0 0.08in; padding-left: 0.22in; }
+  li { margin: 0 0 0.03in; }
+  .muted { color: var(--muted); }
+  .kicker { text-transform: uppercase; letter-spacing: 0.08em; font-size: 8.5pt; color: var(--accent-ink); font-weight: 700; margin: 0 0 0.04in; }
+  .noprint { background: var(--sunk); padding: 0.08in 0.12in; border-radius: 6px; font-size: 9.5pt; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 0.035in 0.06in; border-bottom: 1px solid var(--line); }
+  th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  @page { size: letter; margin: 0.5in; }
+  @media print { .noprint { display: none; } .page { padding: 0; max-width: none; } .break { break-before: page; } }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2in; }
+  .slots { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.05in; font-size: 9.5pt; }
+  .slots li { border: 1px solid var(--line); border-radius: 6px; padding: 0.04in 0.06in; }
+  .box { list-style: none; padding: 0; } .box li::before { content: "\2610  "; }
+  .cue { border-left: 4px solid var(--accent); padding-left: 0.1in; margin-bottom: 0.08in; }
+  .cue p { margin: 0 0 0.02in; font-size: 10pt; }
+  td.term { width: 27%; font-weight: 700; }
+  td .probe { color: var(--muted); font-size: 8pt; display: block; margin-top: 0.02in; }
+  body { font-size: 10pt; }
+  h1 { font-size: 17pt; }
+  table { font-size: 9pt; }
+  h2 { font-size: 12.5pt; margin-top: 0.1in; }</style>
+</head>
+<body>
+<main>
+<p class="noprint page">Print with Cmd+P or Ctrl+P on Letter paper. One page per section: the day, the talk, then each domain.</p>
+<section class="page">
+  <p class="kicker">Final review · AWS Solutions Architect, 2027 full time, L4, AWSI Emerging Talent Program</p>
+  <h1>Wednesday, October 28: the day</h1>
+  <p><strong>Arrive by 9:00 am.</strong> Interviews 9:30 am to 2:30 pm, In person, USC campus.</p>
+  <ul class="slots">
+    <li><strong>9:00 am</strong><br>Arrive and check in</li>
+    <li><strong>9:30 am</strong><br>Interview 1, 60 minutes</li>
+    <li><strong>10:30 am</strong><br>Interview 2, 60 minutes</li>
+    <li><strong>11:30 am</strong><br>Lunch break, 60 minutes</li>
+    <li><strong>12:30 pm</strong><br>Interview 3, 60 minutes</li>
+    <li><strong>1:30 pm</strong><br>Interview 4, 60 minutes</li>
+    <li><strong>2:30 pm</strong><br>Done</li>
+  </ul>
+  <div class="two">
+    <div>
+      <h2>Bring</h2>
+      <ul class="box">
+        <li>Printed resume, 5 copies</li>
+        <li>Printed presentation handout, 5 copies</li>
+        <li>Printed final review sheet, for lunch only</li>
+        <li>Notebook and pen</li>
+        <li>Water</li>
+      </ul>
+      <p class="muted">No laptop and no slides for the presentation.</p>
+    </div>
+    <div>
+      <h2>Answer rubric</h2>
+      <ul>
+        <li>Use STAR: Situation, Task, Action, Result.</li>
+        <li>Speak for 2 to 4 minutes, not 60 to 90 seconds.</li>
+        <li>Put a metric in every result.</li>
+        <li>Say &quot;I&quot; for your work, not &quot;we&quot;.</li>
+        <li>Use examples from the last 5 years.</li>
+        <li>Each answer should show 4 to 6 Leadership Principles.</li>
+        <li>Be ready for &quot;How would you implement this at AWS?&quot; and &quot;What would you do differently?&quot;</li>
+      </ul>
+    </div>
+  </div>
+  <h2>The 8 named LPs: open with</h2>
+  <table>
+    <thead><tr><th>LP</th><th>Lead story and first sentence</th><th>Backup</th></tr></thead>
+    <tbody>
+      <tr><td class="term">Customer Obsession</td><td>S1 Multi-agent ERP migration with human-in-the-loop<span class="probe">I built an ERP migration workflow that cut turnaround from 3 days to 5.5 hours across 12 client entities.</span></td><td>S9</td></tr>
+      <tr><td class="term">Ownership</td><td>S2 P1 MTTR from 94 to 26 minutes<span class="probe">I reduced P1 incident recovery time at Oracle from 94 to 26 minutes by putting diagnostic context in front of on-call engineers.</span></td><td>S12</td></tr>
+      <tr><td class="term">Bias for Action</td><td>S8 DQN training stall, 40% shorter runs<span class="probe">I shortened DQN training runs from 52 to 31 minutes by fixing replay-buffer sampling and a data-loader stall.</span></td><td>S2</td></tr>
+      <tr><td class="term">Earn Trust</td><td>S4 CLI validation toolchain adopted by 4 teams<span class="probe">I shipped a validation toolchain adopted by 4 teams that reduced failed deployments from 11% to 4%.</span></td><td>S1</td></tr>
+      <tr><td class="term">Learn and Be Curious</td><td>S11 ModelScope quantization study<span class="probe">In ModelScope, my INT4 benchmark used 2299 MB and sustained 13.7 tokens per second with MMLU within a point of baseline.</span></td><td>S7</td></tr>
+      <tr><td class="term">Insist on the Highest Standards</td><td>S3 SLO alerting, 41% fewer false pages<span class="probe">I reduced false-positive on-call pages by 41% by improving the observability and alerting approach at Oracle.</span></td><td>S6</td></tr>
+      <tr><td class="term">Deliver Results</td><td>S1 Multi-agent ERP migration with human-in-the-loop<span class="probe">I built an ERP migration workflow that cut turnaround from 3 days to 5.5 hours across 12 client entities.</span></td><td>S4</td></tr>
+      <tr><td class="term">Dive Deep</td><td>S5 NetSuite search latency down 30%<span class="probe">I reduced NetSuite search P50 page-load latency from 840 milliseconds to 588 milliseconds, a 30% reduction.</span></td><td>S8</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Failure story: write it in the worksheet before the day.</p>
+</section>
+<section class="page break">
+  <p class="kicker">Presentation cue card · 9:00 target</p>
+  <h1>How do you fit a big AI model on a small computer? Quantization explained</h1>
+  <div class="cue">
+    <p><strong>Hook and intro</strong> <span class="muted">0:00 to 1:00</span></p>
+    <p>In the next nine minutes I want to show you how to make a big model fit on a small computer, and how to know if it still works.</p>
+    <p class="muted">Ask: &quot;Has anyone downloaded an AI model, pressed run, and got out of memory?&quot; Pause. Look around. Picture it: the model is a suitcase, the GPU is the overhead bin, and the suitcase does not fit.</p>
+  </div>
+  <div class="cue">
+    <p><strong>What is it</strong> <span class="muted">1:00 to 3:00</span></p>
+    <p>Quantization is saving the model as a JPEG instead of a RAW photo: much smaller, almost the same picture.</p>
+    <p class="muted">A model is billions of numbers. Its memory is how many numbers times how many bits each one takes. Quantization means storing each number with fewer bits. Fewer digits, same model.</p>
+  </div>
+  <div class="cue">
+    <p><strong>Why should we care</strong> <span class="muted">3:00 to 6:00</span></p>
+    <p>If the model is smaller, it is cheaper to run, often faster, and it can run in places it could not before.</p>
+    <p class="muted">Cost: memory is often the reason you need an expensive GPU. Shrink the model, and a smaller, cheaper GPU can serve it. Speed: when a model writes text, each new word means reading its weights from memory. Fewer bytes to read usually means faster answers.</p>
+  </div>
+  <div class="cue">
+    <p><strong>How it works</strong> <span class="muted">6:00 to 8:00</span></p>
+    <p>In my tests the 4-bit version used 62% less memory than the original and scored within a point on the exam.</p>
+    <p class="muted">Mechanism: take a group of numbers, find their range, and map each one to the nearest of a few levels. Keep one scale factor per group to map back. What you lose: fine distinctions between nearby values, and rare large values that do not fit the levels well.</p>
+  </div>
+  <div class="cue">
+    <p><strong>Call to action</strong> <span class="muted">8:00 to 9:00</span></p>
+    <p>Before you buy a bigger GPU, benchmark a smaller number format.</p>
+    <p class="muted">Recap in one breath: fewer bits, much less memory, quality you can measure. The call to action: before you buy a bigger GPU, benchmark a smaller number format.</p>
+  </div>
+  <p><strong>Warnings:</strong> 8:00. Move to the call to action now. 10:00. Stop: finish your sentence and thank them.</p>
+  <p><strong>Call to action:</strong> Before you buy a bigger GPU, benchmark a smaller number format.</p>
+</section>
+<section class="page break">
+  <p class="kicker">depth · 49 questions in the bank</p>
+  <h1>AI and machine learning</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">Overfitting vs underfitting</td><td>Overfitting memorizes training data and fails on new data; underfitting is too simple to learn the pattern at all.<span class="probe">Probe: High training score with much lower validation score is overfitting; both low is underfitting.</span></td></tr>
+      <tr><td class="term">Precision vs recall</td><td>Precision: of the cases flagged, how many were real. Recall: of the real cases, how many were flagged.<span class="probe">Probe: Which error costs the business more decides which one you favor, via the threshold.</span></td></tr>
+      <tr><td class="term">Class imbalance</td><td>When one class is rare (fraud at a few percent), accuracy rewards always predicting the common class.<span class="probe">Probe: Use precision, recall, PR-AUC, and evaluate on the real distribution, never a rebalanced one.</span></td></tr>
+      <tr><td class="term">ROC-AUC</td><td>Probability the model scores a random positive above a random negative; 0.5 is chance, 1.0 is perfect.<span class="probe">Probe: It is a ranking measure, not accuracy, and can look rosy under heavy imbalance; pair it with PR-AUC.</span></td></tr>
+      <tr><td class="term">Gradient descent and backprop</td><td>Backprop computes how each weight affects the loss; gradient descent nudges every weight downhill by the learning rate.<span class="probe">Probe: Epoch is a full pass over data; iteration is one batch update.</span></td></tr>
+      <tr><td class="term">Attention</td><td>Each token scores every other token (query vs key) and takes a weighted blend of their values.<span class="probe">Probe: Cost grows with the square of sequence length, which is why long prompts are expensive.</span></td></tr>
+      <tr><td class="term">Tokens and context window</td><td>Tokens are subword pieces the model reads and is billed on; the context window is the max tokens per request, input plus output.<span class="probe">Probe: A big context window does not remove the need for RAG: cost, latency, and focus.</span></td></tr>
+      <tr><td class="term">Temperature</td><td>Scales the next-token probabilities: low is focused and repeatable, high is varied and riskier.<span class="probe">Probe: Temperature 0 means most likely, not most true; it does not stop hallucination.</span></td></tr>
+      <tr><td class="term">Embeddings</td><td>Vectors that place similar meanings close together so search works by meaning, not keywords.<span class="probe">Probe: Queries and documents must use the same embedding model; changing it means re-embedding.</span></td></tr>
+      <tr><td class="term">RAG</td><td>Retrieve relevant chunks from your data and put them in the prompt so the model answers from sources with citations.<span class="probe">Probe: Most RAG failures are retrieval failures: check whether the right chunk reached the prompt.</span></td></tr>
+      <tr><td class="term">RAG vs fine-tuning</td><td>RAG supplies knowledge at question time; fine-tuning changes behavior, format, and style.<span class="probe">Probe: Fine-tuning does not reliably teach facts and gives no citations; default to prompt, then RAG, then tune.</span></td></tr>
+      <tr><td class="term">Agents and MCP</td><td>An agent is an LLM in a loop that calls tools; MCP is an open standard for connecting models to tools and data.<span class="probe">Probe: The model only proposes tool calls; your code executes them, which is where permissions and approvals live.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">breadth · 33 questions in the bank</p>
+  <h1>Networking</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">OSI vs TCP/IP model</td><td>OSI has 7 teaching layers; the real internet runs the 4-layer TCP/IP model (link, internet, transport, application).<span class="probe">Probe: Name a protocol at each layer and say which layer a load balancer or firewall works at.</span></td></tr>
+      <tr><td class="term">TCP vs UDP</td><td>TCP is connection-based, ordered, and retransmits lost data; UDP sends independent datagrams with no delivery guarantee.<span class="probe">Probe: Why video calls and DNS lean on UDP, and why HTTP/3 builds reliability on top of UDP.</span></td></tr>
+      <tr><td class="term">Ports</td><td>A 16-bit number that picks which program on a host gets the traffic: 443 HTTPS, 80 HTTP, 22 SSH, 53 DNS.<span class="probe">Probe: Return traffic uses an ephemeral client port, which matters for stateless NACL rules.</span></td></tr>
+      <tr><td class="term">HTTP status families</td><td>2xx success, 3xx redirect, 4xx the client asked wrong, 5xx the server failed.<span class="probe">Probe: 401 means not authenticated, 403 means authenticated but not allowed; 502 and 504 usually mean the backend behind a proxy failed.</span></td></tr>
+      <tr><td class="term">TLS 1.3</td><td>Encrypts and authenticates a connection in one round trip using an ephemeral key exchange and the server's certificate.<span class="probe">Probe: What the certificate proves (identity) vs what the key exchange provides (secrecy).</span></td></tr>
+      <tr><td class="term">DNS resolution</td><td>Recursive resolver walks root, then TLD, then the authoritative server, and caches the answer for the record's TTL.<span class="probe">Probe: Lower the TTL days before a migration, not on the day.</span></td></tr>
+      <tr><td class="term">CIDR</td><td>Address/prefix length: /16 is 65,536 addresses, /24 is 256, each extra bit halves the block.<span class="probe">Probe: AWS reserves 5 IPs per subnet, so a /24 gives 251 usable addresses.</span></td></tr>
+      <tr><td class="term">NAT</td><td>Rewrites private source addresses to a public one so private hosts can reach out without being reachable from outside.<span class="probe">Probe: In AWS, a public NAT gateway lives in a public subnet and needs an Elastic IP.</span></td></tr>
+      <tr><td class="term">Stateful vs stateless filtering</td><td>Stateful remembers a connection and auto-allows the reply; stateless judges every packet alone.<span class="probe">Probe: Security groups are stateful and allow-only; network ACLs are stateless, ordered, and can deny.</span></td></tr>
+      <tr><td class="term">L4 vs L7 load balancing</td><td>L4 balances TCP/UDP connections by address and port; L7 reads HTTP and can route by path, host, or header.<span class="probe">Probe: ALB is layer 7, NLB is layer 4 with static IPs and very low latency.</span></td></tr>
+      <tr><td class="term">Latency vs bandwidth vs throughput</td><td>Latency is delay per trip, bandwidth is the pipe's capacity, throughput is what you actually get.<span class="probe">Probe: More bandwidth does not fix a chatty app on a high-latency link.</span></td></tr>
+      <tr><td class="term">Route 53 alias record</td><td>A Route 53 extension that points a name, including the zone apex, at an AWS resource and answers with its current IPs.<span class="probe">Probe: CNAME cannot sit at the apex; alias can, and alias queries to AWS resources are free.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">breadth · 32 questions in the bank</p>
+  <h1>Databases and analytics</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">ACID</td><td>Atomicity, Consistency, Isolation, Durability: the guarantees a transaction gives.<span class="probe">Probe: Atomicity is all-or-nothing; durability is survives a crash after commit. Do not mix them up.</span></td></tr>
+      <tr><td class="term">Isolation levels</td><td>Read uncommitted, read committed, repeatable read, serializable: each blocks more anomalies.<span class="probe">Probe: Which anomaly each level allows: dirty, non-repeatable, phantom.</span></td></tr>
+      <tr><td class="term">B-tree index</td><td>A balanced, sorted tree that finds a row in a few page reads instead of scanning the table.<span class="probe">Probe: Faster reads, slower writes, extra storage.</span></td></tr>
+      <tr><td class="term">Composite index</td><td>An index on several columns in a fixed order, such as (customer_id, order_date).<span class="probe">Probe: Leftmost prefix rule: it helps filters on customer_id, not on order_date alone.</span></td></tr>
+      <tr><td class="term">Normalization vs denormalization</td><td>Store each fact once (normalized) or copy data to avoid joins (denormalized).<span class="probe">Probe: Normalize for write correctness, denormalize for read speed.</span></td></tr>
+      <tr><td class="term">CAP theorem</td><td>During a network partition, a distributed system must choose consistency or availability.<span class="probe">Probe: It is not pick any two at all times; partitions are not optional.</span></td></tr>
+      <tr><td class="term">BASE and eventual consistency</td><td>Basically available, soft state, eventually consistent: replicas converge over time.<span class="probe">Probe: Eventual does not mean wrong; it means a read may briefly be stale.</span></td></tr>
+      <tr><td class="term">Sync vs async replication</td><td>Sync waits for the copy before confirming a write; async confirms first and copies after.<span class="probe">Probe: RDS Multi-AZ standby is synchronous; read replicas are asynchronous.</span></td></tr>
+      <tr><td class="term">Partition key</td><td>The value that decides which shard or partition holds a record.<span class="probe">Probe: Low-cardinality or skewed keys create hot partitions.</span></td></tr>
+      <tr><td class="term">Cache-aside vs write-through</td><td>Cache-aside loads the cache on a miss; write-through updates cache and database on every write.<span class="probe">Probe: Cache-aside can serve stale data; write-through adds write latency.</span></td></tr>
+      <tr><td class="term">OLTP vs OLAP</td><td>OLTP runs many small transactions; OLAP runs big analytical scans over history.<span class="probe">Probe: Row storage suits OLTP, columnar suits OLAP.</span></td></tr>
+      <tr><td class="term">Warehouse, lake, lakehouse</td><td>Warehouse: structured and modeled. Lake: raw files in object storage. Lakehouse: lake files with table features like ACID and schema.<span class="probe">Probe: Delta Lake, Apache Iceberg, and Apache Hudi are the table formats that make a lakehouse.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">breadth · 32 questions in the bank</p>
+  <h1>Security</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">CIA triad</td><td>Confidentiality (only the right people see it), integrity (it is not changed silently), availability (it is there when needed).<span class="probe">Probe: Name a control for each: encryption for confidentiality, hashing or signatures for integrity, redundancy and DDoS protection for availability.</span></td></tr>
+      <tr><td class="term">Authentication vs authorization</td><td>Authentication proves who you are; authorization decides what you may do.<span class="probe">Probe: OIDC is for authentication, OAuth 2.0 is for authorization. A 401 means not authenticated, a 403 means authenticated but not allowed.</span></td></tr>
+      <tr><td class="term">Hashing vs encryption</td><td>Hashing is one-way and fixed length; encryption is two-way with a key.<span class="probe">Probe: Passwords are hashed with a slow, salted algorithm, never encrypted.</span></td></tr>
+      <tr><td class="term">Symmetric vs asymmetric</td><td>Symmetric uses one shared key and is fast; asymmetric uses a public and private key pair and is slower.<span class="probe">Probe: TLS uses asymmetric crypto to agree on keys, then symmetric crypto for the bulk data.</span></td></tr>
+      <tr><td class="term">Envelope encryption</td><td>Encrypt data with a data key, then encrypt the data key with a KMS key and store it next to the data.<span class="probe">Probe: The KMS key never leaves the KMS HSMs unencrypted; only the small data key travels to KMS.</span></td></tr>
+      <tr><td class="term">Least privilege</td><td>Give each person or workload only the permissions it needs, for only as long as it needs them.<span class="probe">Probe: Prefer roles with temporary credentials over long-lived access keys.</span></td></tr>
+      <tr><td class="term">Zero trust</td><td>Never trust a request because of where it comes from on the network; verify identity, device, and context on every request.<span class="probe">Probe: It does not mean removing the network perimeter; it means the perimeter is no longer the only check.</span></td></tr>
+      <tr><td class="term">IAM evaluation</td><td>Everything starts as an implicit deny; an allow is needed to proceed; any explicit deny anywhere wins.<span class="probe">Probe: An explicit deny in an identity policy, resource policy, SCP, or boundary overrides every allow.</span></td></tr>
+      <tr><td class="term">Service control policy</td><td>An AWS Organizations guardrail that caps the maximum permissions of IAM users and roles in member accounts.<span class="probe">Probe: SCPs never grant permissions and do not affect the management account or service-linked roles.</span></td></tr>
+      <tr><td class="term">Shield Standard vs Advanced</td><td>Standard is automatic, at no extra charge, against common network and transport layer DDoS; Advanced is a paid tier with more detection, response team access, and cost protection.<span class="probe">Probe: Layer 7 floods are handled together with AWS WAF rules.</span></td></tr>
+      <tr><td class="term">CloudTrail vs Config</td><td>CloudTrail records who called which API and when; Config records what each resource looked like over time and checks it against rules.<span class="probe">Probe: CloudTrail answers who did it; Config answers what changed and is it compliant.</span></td></tr>
+      <tr><td class="term">Amazon GuardDuty</td><td>Managed threat detection that analyzes CloudTrail management events, VPC Flow Logs, and Route 53 Resolver DNS logs.<span class="probe">Probe: You do not have to turn those logs on yourself, and GuardDuty detects; it does not block.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">backup · 39 questions in the bank</p>
+  <h1>CS fundamentals and coding concepts</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">Big-O</td><td>How time or memory grows with input size, ignoring constants: O(1), O(log n), O(n), O(n log n), O(n^2).<span class="probe">Probe: State time and space separately, and remember Big-O ignores constant factors that still matter in practice.</span></td></tr>
+      <tr><td class="term">Amortized cost</td><td>Average cost per operation over any sequence, such as O(1) list appends despite occasional O(n) resizes.<span class="probe">Probe: Amortized is not average case: it is a worst-case guarantee over a whole sequence.</span></td></tr>
+      <tr><td class="term">Hash map</td><td>Key to hash to bucket index, then compare keys; O(1) average for get, put, and delete.<span class="probe">Probe: Worst case is O(n) on heavy collisions; resizing keeps the load factor low.</span></td></tr>
+      <tr><td class="term">Heap / priority queue</td><td>Tree in an array where the parent beats its children; peek O(1), push and pop O(log n), build O(n).<span class="probe">Probe: Only the root is ordered; top k in O(n log k) with a size-k heap.</span></td></tr>
+      <tr><td class="term">Balanced BST and B-tree</td><td>Ordered tree giving O(log n) search, insert, and delete plus sorted and range queries.<span class="probe">Probe: An unbalanced BST on sorted input degrades to O(n); databases use shallow B-trees.</span></td></tr>
+      <tr><td class="term">BFS vs DFS</td><td>BFS goes level by level with a queue; DFS goes deep with a stack. Both O(V + E).<span class="probe">Probe: BFS gives shortest paths only on unweighted graphs; weighted needs Dijkstra.</span></td></tr>
+      <tr><td class="term">DP vs greedy</td><td>DP reuses answers to overlapping subproblems; greedy commits to the best local choice.<span class="probe">Probe: Greedy fails on coins 1, 3, 4 for amount 6; DP handles it.</span></td></tr>
+      <tr><td class="term">Quicksort vs merge sort</td><td>Quicksort: O(n log n) average, O(n^2) worst, in place. Merge sort: O(n log n) always, stable, O(n) extra.<span class="probe">Probe: Name quicksort's worst case and how random pivots or introsort avoid it.</span></td></tr>
+      <tr><td class="term">SOLID</td><td>Single responsibility, open-closed, Liskov substitution, interface segregation, dependency inversion.<span class="probe">Probe: Have one concrete example per letter, such as Square versus Rectangle for Liskov.</span></td></tr>
+      <tr><td class="term">Race condition</td><td>Outcome depends on thread timing around shared state, such as count += 1.<span class="probe">Probe: The GIL does not make read-modify-write atomic; use a lock or avoid shared state.</span></td></tr>
+      <tr><td class="term">Deadlock (Coffman)</td><td>Needs all four: mutual exclusion, hold and wait, no preemption, circular wait.<span class="probe">Probe: Break one; a global lock order removes circular wait.</span></td></tr>
+      <tr><td class="term">Stack vs heap memory</td><td>Stack: per-thread call frames, fast, auto-freed. Heap: dynamic objects, freed manually or by GC.<span class="probe">Probe: GC languages still leak through reachable but unused objects.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">backup · 26 questions in the bank</p>
+  <h1>Application development</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">CI vs CD</td><td>Continuous integration merges and tests every change automatically; continuous delivery keeps every build releasable, and continuous deployment ships it automatically.<span class="probe">Probe: Delivery has a human approval before production; deployment does not.</span></td></tr>
+      <tr><td class="term">Infrastructure as code</td><td>Define servers, networks, and permissions in versioned files that a tool applies, instead of clicking in a console.<span class="probe">Probe: AWS CDK synthesizes AWS CloudFormation templates; CloudFormation does the actual provisioning.</span></td></tr>
+      <tr><td class="term">Monolith vs microservices</td><td>One deployable unit vs many small services owned by separate teams and deployed independently.<span class="probe">Probe: Microservices trade code complexity for operational and network complexity.</span></td></tr>
+      <tr><td class="term">Idempotency key</td><td>A unique client-supplied ID that lets the server recognize a retry and return the original result instead of repeating the action.<span class="probe">Probe: Needed because networks retry and SQS standard queues can deliver duplicates.</span></td></tr>
+      <tr><td class="term">Stateless service</td><td>A server that keeps no client session in its own memory, so any instance can handle any request.<span class="probe">Probe: Put session state in a shared store such as ElastiCache or DynamoDB, not in sticky sessions.</span></td></tr>
+      <tr><td class="term">Horizontal vs vertical scaling</td><td>Add more machines vs make one machine bigger.<span class="probe">Probe: Horizontal needs stateless design but has no single-box ceiling and improves availability.</span></td></tr>
+      <tr><td class="term">Queue vs pub/sub</td><td>A queue hands each message to one consumer; pub/sub copies each message to every subscriber.<span class="probe">Probe: SNS to multiple SQS queues is the classic fan-out pattern.</span></td></tr>
+      <tr><td class="term">SQS standard vs FIFO</td><td>Standard: nearly unlimited throughput, at-least-once delivery, best-effort ordering. FIFO: ordering within a message group and exactly-once processing, with lower throughput.<span class="probe">Probe: Standard consumers must be idempotent.</span></td></tr>
+      <tr><td class="term">AWS Lambda limits</td><td>Event-driven functions billed per request and duration, with a timeout of 3 seconds by default and 15 minutes maximum.<span class="probe">Probe: Long-running jobs belong in Step Functions, ECS, or Fargate.</span></td></tr>
+      <tr><td class="term">Step Functions Standard vs Express</td><td>Standard: up to one year, exactly-once, priced per state transition. Express: up to five minutes, at-least-once (async), priced per execution and duration.<span class="probe">Probe: Use Standard for non-idempotent steps like payments.</span></td></tr>
+      <tr><td class="term">AWS Fargate</td><td>Serverless compute for containers on Amazon ECS and Amazon EKS, so you do not manage EC2 instances.<span class="probe">Probe: Fargate is not an orchestrator; ECS or EKS still schedules the containers.</span></td></tr>
+      <tr><td class="term">SLI, SLO, error budget</td><td>SLI is the measurement, SLO is the target, and the error budget is the allowed failure, 100% minus the SLO.<span class="probe">Probe: A 99.9% monthly SLO allows about 43 minutes of downtime in 30 days.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">backup · 26 questions in the bank</p>
+  <h1>Cloud computing</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">Cloud computing</td><td>On-demand IT resources over the internet with pay-as-you-go pricing.<span class="probe">Probe: Renting electricity from the grid instead of running your own generator.</span></td></tr>
+      <tr><td class="term">IaaS, PaaS, SaaS</td><td>Rent raw servers, rent a platform to run your code, or rent finished software.<span class="probe">Probe: Who manages what: the higher the model, the less you manage.</span></td></tr>
+      <tr><td class="term">Public, private, hybrid, multi-cloud</td><td>Shared provider cloud, dedicated cloud, a mix with on-premises, or several providers.<span class="probe">Probe: Hybrid mixes on-premises with cloud; multi-cloud means more than one provider.</span></td></tr>
+      <tr><td class="term">Six advantages of cloud</td><td>Variable expense, economies of scale, stop guessing capacity, speed and agility, stop running data centers, go global in minutes.<span class="probe">Probe: Name them in AWS's words.</span></td></tr>
+      <tr><td class="term">Region and Availability Zone</td><td>A Region is a geographic area with multiple isolated AZs; an AZ is one or more data centers with separate power and networking.<span class="probe">Probe: Spread across AZs for high availability; across Regions for disaster recovery.</span></td></tr>
+      <tr><td class="term">Edge location</td><td>A site close to users that caches content and serves DNS and edge security.<span class="probe">Probe: Used by CloudFront, Route 53, and Global Accelerator; you do not run EC2 there.</span></td></tr>
+      <tr><td class="term">HA vs fault tolerance vs DR</td><td>HA: brief blips are OK. Fault tolerance: no visible interruption. DR: recovering from a major disaster.<span class="probe">Probe: Fault tolerance costs more than HA because spares are always running.</span></td></tr>
+      <tr><td class="term">RPO and RTO</td><td>RPO: how much data you can lose. RTO: how long you can be down.<span class="probe">Probe: RPO looks back to the last good copy, RTO looks forward to recovery.</span></td></tr>
+      <tr><td class="term">Four DR strategies</td><td>Backup and restore, pilot light, warm standby, multi-site active/active: cheapest and slowest to costliest and fastest.<span class="probe">Probe: Pilot light cannot serve traffic until switched on; warm standby can, at reduced capacity.</span></td></tr>
+      <tr><td class="term">Elasticity vs scalability</td><td>Scalability is the ability to grow; elasticity is growing and shrinking automatically with demand.<span class="probe">Probe: Elastic means you also scale in and stop paying.</span></td></tr>
+      <tr><td class="term">Pricing models</td><td>On-Demand, Savings Plans, Reserved Instances, Spot.<span class="probe">Probe: Spot is cheapest but can be interrupted with a two-minute warning.</span></td></tr>
+      <tr><td class="term">Well-Architected pillars</td><td>Operational excellence, security, reliability, performance efficiency, cost optimization, sustainability.<span class="probe">Probe: There are six; sustainability was added last.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="page break">
+  <p class="kicker">backup · 16 questions in the bank</p>
+  <h1>Hardware</h1>
+  <table>
+    <thead><tr><th>Concept</th><th>In one line, and what they probe</th></tr></thead>
+    <tbody>
+      <tr><td class="term">Core vs thread</td><td>A core is an independent processing unit; a hardware thread lets one core juggle two instruction streams by sharing its parts.<span class="probe">Probe: On x86 EC2 a vCPU is usually one hardware thread; on Graviton a vCPU is a full core.</span></td></tr>
+      <tr><td class="term">CPU cache (L1, L2, L3)</td><td>Small fast memory on the chip: L1 and L2 per core, L3 shared, each level bigger and slower.<span class="probe">Probe: Code that reads memory in order (good locality) stays in cache and runs far faster.</span></td></tr>
+      <tr><td class="term">Latency orders of magnitude</td><td>About 1 ns for L1, about 100 ns for RAM, tens of microseconds for SSD, milliseconds for HDD and long network trips.<span class="probe">Probe: Each step down is roughly 10x to 1000x slower, which is why caching matters.</span></td></tr>
+      <tr><td class="term">GPU vs CPU</td><td>A CPU has a few powerful cores for varied logic; a GPU has thousands of simple cores doing the same math in parallel.<span class="probe">Probe: Neural networks are mostly matrix multiplication, which is exactly what GPUs parallelize.</span></td></tr>
+      <tr><td class="term">Inferentia and Trainium</td><td>AWS-designed AI chips: Inferentia for running models (inference), Trainium for training them, both programmed through the AWS Neuron SDK.<span class="probe">Probe: The pitch is lower cost per inference or per training run than comparable GPU instances.</span></td></tr>
+      <tr><td class="term">AWS Graviton</td><td>AWS-designed Arm-based processors for EC2, aimed at better price performance and lower energy use than comparable x86.<span class="probe">Probe: Software must run on arm64: interpreted languages usually just work, native binaries and images need arm64 builds.</span></td></tr>
+      <tr><td class="term">HDD vs SSD vs NVMe</td><td>HDD spins a platter and moves a head; SSD uses flash with no moving parts; NVMe is a fast interface that connects SSDs over PCIe.<span class="probe">Probe: NVMe's many deep queues are why it beats older SATA SSDs on parallel I/O.</span></td></tr>
+      <tr><td class="term">IOPS vs throughput</td><td>IOPS counts read or write operations per second; throughput is data volume per second. Throughput is about IOPS times I/O size.<span class="probe">Probe: Databases with small random I/O need IOPS; log processing and big scans need throughput.</span></td></tr>
+      <tr><td class="term">RAID 0, 1, 5, 10</td><td>0 stripes for speed with no protection, 1 mirrors, 5 stripes with parity and survives one disk loss, 10 mirrors then stripes.<span class="probe">Probe: RAID 0 doubles the chance of losing everything; RAID 10 is the usual choice for fast, safe databases.</span></td></tr>
+      <tr><td class="term">VM vs container vs bare metal</td><td>A VM runs its own OS on a hypervisor; a container shares the host kernel; bare metal has no virtualization layer.<span class="probe">Probe: Containers start in seconds and pack densely, but the isolation boundary is weaker than a VM's.</span></td></tr>
+      <tr><td class="term">AWS Nitro System</td><td>The platform under modern EC2: Nitro Cards for networking, storage, and management, the Nitro Security Chip, and a minimal Nitro Hypervisor.<span class="probe">Probe: Offloading to dedicated hardware gives near bare-metal performance and keeps operators out of customer instances.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+</main>
+</body>
+</html>

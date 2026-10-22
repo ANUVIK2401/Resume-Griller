@@ -4,7 +4,7 @@ const base = process.env.BASE_URL || 'http://127.0.0.1:8000';
 const browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 try {
-  for (const [path, id] of [['review', 'review-erp-hitl'], ['design', 'design-rag-chatbot'], ['behavioral', 'gaps']]) {
+  for (const [path, id] of [['review', 'review-erp-hitl'], ['design', 'design-rag-chatbot'], ['behavioral', 'failure'], ['domains', 'q-net-url-enter']]) {
     await page.goto(`${base}/amazon/${path}.html#${id}`);
     await page.locator(`#${id}`).waitFor({ state: 'attached' });
     await page.waitForFunction(() => document.querySelector('#toc a'));
