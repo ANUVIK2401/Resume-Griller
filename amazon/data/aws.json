@@ -3,186 +3,1844 @@
   "mental_model": "An SA maps a customer problem to a few well-chosen services, then justifies the tradeoff against the Well-Architected pillars. Know each service in one line, plus when not to use it.",
   "verify_note": "Technical audit: October 16, 2026. The cheatsheet prioritizes 13 P0 decisions; this glossary is reference material. Verify model terms, Region support, quotas, and prices against the linked AWS sources.",
   "status_options": [
-    { "id": "new", "label": "New" },
-    { "id": "shaky", "label": "Shaky" },
-    { "id": "known", "label": "Known" }
+    {
+      "id": "new",
+      "label": "New"
+    },
+    {
+      "id": "shaky",
+      "label": "Shaky"
+    },
+    {
+      "id": "known",
+      "label": "Known"
+    }
   ],
-  "categories": [
-    { "id": "infra", "name": "Global infrastructure" },
-    { "id": "compute", "name": "Compute" },
-    { "id": "storage", "name": "Storage" },
-    { "id": "database", "name": "Databases" },
-    { "id": "networking", "name": "Networking" },
-    { "id": "security", "name": "Security and identity" },
-    { "id": "integration", "name": "Integration and serverless" },
-    { "id": "analytics", "name": "Analytics" },
-    { "id": "ai", "name": "AI and ML" },
-    { "id": "ops", "name": "Observability and management" }
+  "families": [
+    {
+      "id": "infra",
+      "name": "Global infrastructure"
+    },
+    {
+      "id": "compute",
+      "name": "Compute"
+    },
+    {
+      "id": "storage",
+      "name": "Storage"
+    },
+    {
+      "id": "database",
+      "name": "Databases"
+    },
+    {
+      "id": "networking",
+      "name": "Networking"
+    },
+    {
+      "id": "security",
+      "name": "Security and identity"
+    },
+    {
+      "id": "integration",
+      "name": "Integration and serverless"
+    },
+    {
+      "id": "analytics",
+      "name": "Analytics"
+    },
+    {
+      "id": "ai",
+      "name": "AI and ML"
+    },
+    {
+      "id": "ops",
+      "name": "Observability and management"
+    }
   ],
   "tiers": [
-    { "level": 1, "name": "Tier 1: must know cold", "note": "Expect direct questions. Explain each in one breath: what it is, when to pick it, the trap." },
-    { "level": 2, "name": "Tier 2: should know", "note": "Comes up as follow-ups or inside a design. Know when it beats the tier 1 default." },
-    { "level": 3, "name": "Tier 3: recognize", "note": "Know what it is if the interviewer names it. Do not lead with it." }
+    {
+      "level": 1,
+      "name": "Tier 1: must know cold",
+      "note": "Expect direct questions. Explain each in one breath: what it is, when to pick it, the trap."
+    },
+    {
+      "level": 2,
+      "name": "Tier 2: should know",
+      "note": "Comes up as follow-ups or inside a design. Know when it beats the tier 1 default."
+    },
+    {
+      "level": 3,
+      "name": "Tier 3: recognize",
+      "note": "Know what it is if the interviewer names it. Do not lead with it."
+    }
   ],
   "services": [
-    { "id": "region", "category": "infra", "tier": 1, "name": "Region", "one_liner": "A geographic area with multiple isolated Availability Zones.", "use_when": "Choosing where to run: pick by latency to users, data residency rules, service availability, and price.", "avoid_when": "Do not spread across Regions by default; multi-Region adds cost and complexity, so do it only for DR, latency, or residency needs." },
-    { "id": "az", "category": "infra", "tier": 1, "name": "Availability Zone (AZ)", "one_liner": "One or more isolated data centers with independent power and networking inside a Region.", "use_when": "High availability: run across at least 2 AZs so one data center failing does not take you down.", "avoid_when": "Do not assume Multi-AZ protects against a full Region outage; that needs a multi-Region DR plan." },
-    { "id": "edge-location", "category": "infra", "tier": 2, "name": "Edge location", "one_liner": "A CloudFront and Route 53 point of presence close to users.", "use_when": "Caching content and answering DNS near users to cut latency.", "avoid_when": "You cannot run general compute or databases there; it is for caching, DNS, and light edge functions." },
-    { "id": "local-zones", "category": "infra", "tier": 3, "name": "Local Zones", "one_liner": "AWS compute and storage placed in a metro area, extending a Region.", "use_when": "Single-digit millisecond latency to users in one city: media rendering, gaming, real-time trading.", "avoid_when": "A regional deployment meets the latency requirement; compare prices, available services, resilience and operational cost rather than assuming one is always cheaper." },
-    { "id": "wavelength", "category": "infra", "tier": 3, "name": "Wavelength", "one_liner": "AWS compute inside telecom 5G networks.", "use_when": "Ultra-low-latency apps for mobile devices on a carrier 5G network.", "avoid_when": "Users are not on a partner 5G network, or latency needs are ordinary." },
-    { "id": "outposts", "category": "infra", "tier": 3, "name": "Outposts", "one_liner": "AWS-managed hardware running in the customer's own data center.", "use_when": "Data must stay on premises, or the app needs very low latency to on-prem systems, but the team wants AWS APIs.", "avoid_when": "The workload can move to a Region; Outposts is a commitment with less elasticity." },
-    { "id": "ec2", "category": "compute", "tier": 1, "name": "EC2", "one_liner": "Virtual servers with full OS control.", "use_when": "Steady workloads, custom software, GPUs, or anything that needs OS-level control.", "avoid_when": "Spiky, event-driven, or short tasks where Lambda or Fargate removes server management." },
-    { "id": "asg", "category": "compute", "tier": 1, "name": "Auto Scaling group", "one_liner": "Adds or removes EC2 instances by policy and replaces unhealthy ones.", "use_when": "Variable load and self-healing; target tracking on CPU or request count, scheduled scaling for known peaks.", "avoid_when": "Stateful single servers that cannot be replaced freely; move state out first." },
-    { "id": "lambda", "category": "compute", "tier": 1, "name": "Lambda", "one_liner": "Runs your code per event with no servers; up to 15 minutes per invocation.", "use_when": "Spiky, event-driven, short tasks: S3 uploads, API backends, queue consumers, glue code.", "avoid_when": "Jobs exceed the invocation limit, require unsupported hardware, or cannot meet a measured latency/cost target. Compare containers for sustained utilization and test concurrency limits." },
-    { "id": "ecs", "category": "compute", "tier": 1, "name": "ECS", "one_liner": "AWS's own container orchestrator, simpler than Kubernetes.", "use_when": "Running containers without Kubernetes overhead, especially an AWS-only team.", "avoid_when": "A real Kubernetes API/ecosystem requirement may favor EKS. Container portability also depends on identity, networking, data and AWS integrations." },
-    { "id": "fargate", "category": "compute", "tier": 1, "name": "Fargate", "one_liner": "Serverless compute for ECS or EKS containers: no nodes to manage.", "use_when": "You want containers without patching or scaling hosts.", "avoid_when": "GPUs, daemon-style workloads, or large steady fleets where EC2 capacity is cheaper." },
-    { "id": "eks", "category": "compute", "tier": 1, "name": "EKS", "one_liner": "Managed Kubernetes control plane.", "use_when": "The team already uses Kubernetes, wants portability, or needs its ecosystem (Helm, operators, Karpenter).", "avoid_when": "Kubernetes adds operations without a customer benefit; evaluate ECS/Fargate or a supported app platform against team capabilities." },
-    { "id": "beanstalk", "category": "compute", "tier": 3, "name": "Elastic Beanstalk", "one_liner": "Managed app platform: upload code, it provisions EC2, load balancer, and scaling.", "use_when": "Simple web apps that need a fast start with little infrastructure work.", "avoid_when": "Complex architectures that need fine control; use CloudFormation or CDK directly." },
-    { "id": "batch", "category": "compute", "tier": 3, "name": "AWS Batch", "one_liner": "Managed queue and scheduler for batch compute jobs.", "use_when": "Large queued jobs: simulations, rendering, genomics, often on Spot.", "avoid_when": "Interactive or request-response workloads." },
-    { "id": "graviton", "category": "compute", "tier": 2, "name": "Graviton", "one_liner": "AWS-designed Arm processors for EC2, Lambda, RDS, and more.", "use_when": "Cutting cost per unit of work for code that runs on Arm, which most interpreted and JVM code does.", "avoid_when": "Software that only ships x86 binaries." },
-    { "id": "on-demand", "category": "compute", "tier": 2, "name": "On-Demand pricing", "one_liner": "Pay by the second or hour with no commitment.", "use_when": "New or unpredictable workloads and short experiments.", "avoid_when": "Steady baseline load; Savings Plans are much cheaper for it." },
-    { "id": "savings-plans", "category": "compute", "tier": 2, "name": "Savings Plans and Reserved Instances", "one_liner": "A 1 or 3 year commitment in exchange for a large discount.", "use_when": "The steady baseline you know you will run.", "avoid_when": "Workloads you might shut down or move soon." },
-    { "id": "spot", "category": "compute", "tier": 2, "name": "Spot Instances", "one_liner": "Spare EC2 capacity that can be interrupted; notices normally precede stop/termination by 2 minutes, while hibernation starts immediately.", "use_when": "Fault-tolerant batch, CI, stateless capacity mixed with On-Demand, and checkpointed training; react to interruption signals and design for notice loss.", "avoid_when": "Databases or anything that cannot handle sudden interruption." },
-    { "id": "s3", "category": "storage", "tier": 1, "name": "S3", "one_liner": "Object storage designed for 11 nines of durability; versioning, replication, lifecycle rules.", "use_when": "Data lakes, backups, static assets, ML datasets, logs; anything accessed as whole objects.", "avoid_when": "Low-latency block storage for a database or a POSIX file system; use EBS or EFS." },
-    { "id": "s3-classes", "category": "storage", "tier": 2, "name": "S3 storage classes", "one_liner": "Standard, Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant, Flexible, and Deep Archive.", "use_when": "Matching cost to access pattern; lifecycle rules move objects down as they cool.", "avoid_when": "Infrequent-access classes for small or short-lived objects: minimum size and duration charges can cost more." },
-    { "id": "intelligent-tiering", "category": "storage", "tier": 2, "name": "S3 Intelligent-Tiering", "one_liner": "Moves objects between access tiers automatically based on use.", "use_when": "Access patterns are unknown or change over time.", "avoid_when": "Access is predictable; a plain lifecycle rule avoids the monitoring fee." },
-    { "id": "ebs", "category": "storage", "tier": 1, "name": "EBS", "one_liner": "AZ-scoped block storage, normally attached to one EC2 instance; supported io1/io2 Multi-Attach volumes can attach to multiple instances in the same AZ.", "use_when": "Boot volumes and databases on EC2 that need low-latency block storage.", "avoid_when": "A shared POSIX file system is needed; use EFS or FSx. Multi-Attach requires application/filesystem coordination and is not a generic shared filesystem." },
-    { "id": "efs", "category": "storage", "tier": 2, "name": "EFS", "one_liner": "Managed shared NFS file storage; Regional file systems span AZs, while One Zone file systems store data in one AZ.", "use_when": "Shared files for Linux fleets, containers, or lift-and-shift apps that expect a file system.", "avoid_when": "Windows SMB shares (consider FSx for Windows), cheap object storage (S3), or assuming One Zone survives loss of its AZ." },
-    { "id": "fsx", "category": "storage", "tier": 3, "name": "FSx", "one_liner": "Managed third-party file systems: Windows File Server, Lustre, NetApp ONTAP, OpenZFS.", "use_when": "Windows SMB shares, HPC scratch with Lustre, or migrating NetApp workloads unchanged.", "avoid_when": "Plain Linux shared storage; EFS is simpler." },
-    { "id": "storage-gateway", "category": "storage", "tier": 3, "name": "Storage Gateway", "one_liner": "Hybrid storage that presents cloud storage to on-prem apps as file, volume, or tape.", "use_when": "On-prem apps need to keep working while data moves to S3, or tape backup moves to the cloud.", "avoid_when": "One-time data transfer; assess DataSync or supported offline options rather than adding a persistent gateway." },
-    { "id": "snowball", "category": "storage", "tier": 2, "name": "Snowball", "one_liner": "Physical offline data-transfer devices; availability and customer eligibility must be checked.", "use_when": "Existing eligible customers with a supported offline transfer need; confirm current ordering eligibility before recommending.", "avoid_when": "Assuming new customers can order Snowball; compare DataSync, Direct Connect, and transfer partners for current alternatives." },
-    { "id": "datasync", "category": "storage", "tier": 2, "name": "DataSync", "one_liner": "Online transfer service that moves and syncs files between on-prem and AWS storage.", "use_when": "Network migration of file data to S3, EFS, or FSx, with scheduling and verification.", "avoid_when": "Database migration (use DMS) or bulk data over a constrained link; compare dedicated connectivity and currently eligible offline-transfer options." },
-    { "id": "rds", "category": "database", "tier": 1, "name": "RDS", "one_liner": "Managed relational databases with backups, patching, and failover options.", "use_when": "Joins and transactions. Multi-AZ DB instance: synchronous non-readable standby for HA. Multi-AZ DB cluster (supported MySQL/PostgreSQL versions): writer plus two readable standbys across three AZs. Read replicas generally replicate asynchronously for read scaling.", "avoid_when": "Massive key-value scale with simple access patterns (DynamoDB) or analytics over huge datasets (Redshift)." },
-    { "id": "aurora", "category": "database", "tier": 1, "name": "Aurora", "one_liner": "AWS-built MySQL and PostgreSQL-compatible database with storage replicated across 3 AZs, up to 15 read replicas, a Serverless option, and Global Database.", "use_when": "High-performance relational workloads, fast failover, or cross-Region reads and DR.", "avoid_when": "Small, cheap, steady databases where standard RDS costs less." },
-    { "id": "dynamodb", "category": "database", "tier": 1, "name": "DynamoDB", "one_liner": "Managed key-value/document database with conditional writes, regional ACID transactions, Streams and global tables.", "use_when": "Known key-based access patterns at scale; design partition keys and indexes. Tables/LSIs support optional strong reads; GSIs provide eventually consistent reads.", "avoid_when": "Ad hoc joins or treating capacity as a cure for a hot key. Transactions exist, but do not remove access-pattern or cross-Region consistency design." },
-    { "id": "elasticache", "category": "database", "tier": 1, "name": "ElastiCache", "one_liner": "Managed in-memory cache: Redis OSS, Valkey, Memcached.", "use_when": "Caching hot reads, sessions, leaderboards, rate limiting.", "avoid_when": "As the only copy of durable data; use MemoryDB if you need durability with Redis APIs." },
-    { "id": "memorydb", "category": "database", "tier": 3, "name": "MemoryDB", "one_liner": "Durable, Redis-compatible in-memory database with a multi-AZ transaction log.", "use_when": "Microsecond reads where the in-memory store is the primary database.", "avoid_when": "A cache in front of another database; ElastiCache is cheaper." },
-    { "id": "redshift", "category": "database", "tier": 2, "name": "Redshift", "one_liner": "Columnar data warehouse for SQL analytics at scale; Serverless option.", "use_when": "BI and reporting over large structured datasets with complex joins.", "avoid_when": "Transactional workloads or occasional queries on S3 data; Athena may be cheaper." },
-    { "id": "documentdb", "category": "database", "tier": 3, "name": "DocumentDB", "one_liner": "Managed document database with MongoDB API compatibility.", "use_when": "A document workload fits supported MongoDB APIs; test driver, feature, query, and behavior compatibility before migration.", "avoid_when": "Simple key-value at massive scale (DynamoDB) or relational needs (RDS)." },
-    { "id": "neptune", "category": "database", "tier": 3, "name": "Neptune", "one_liner": "Managed graph database (property graph and RDF).", "use_when": "Highly connected data: fraud rings, recommendations, knowledge graphs. Ties to your GNN fraud project.", "avoid_when": "Data that is not relationship-heavy; a relational or key-value store is simpler." },
-    { "id": "timestream", "category": "database", "tier": 3, "name": "Timestream (LiveAnalytics / for InfluxDB)", "one_liner": "Time-series services with different engines, pricing and customer eligibility.", "use_when": "Evaluate the required engine and query model; LiveAnalytics is closed to new customers as of June 20, 2025. Consider supported Timestream for InfluxDB options for a new workload.", "avoid_when": "Treating all Timestream offerings as interchangeable or recommending LiveAnalytics to a new customer." },
-    { "id": "opensearch", "category": "database", "tier": 2, "name": "OpenSearch Service", "one_liner": "Managed search and log analytics; also a vector store for RAG.", "use_when": "Full-text search, log analytics dashboards, vector search for retrieval.", "avoid_when": "As the system of record; keep the source of truth in a database or S3." },
-    { "id": "dms", "category": "database", "tier": 2, "name": "Database Migration Service (DMS)", "one_liner": "Migrates databases to AWS with ongoing change data capture to keep source and target in sync.", "use_when": "Moving a database with minimal downtime; pair with Schema Conversion for engine changes.", "avoid_when": "File or object data (use DataSync)." },
-    { "id": "vpc", "category": "networking", "tier": 1, "name": "VPC", "one_liner": "Your private, isolated network in a Region, with subnets per AZ.", "use_when": "Control networking for resources such as EC2, RDS, and internal load balancers. S3 and DynamoDB are regional managed services accessed through APIs; a customer VPC is not required for every design.", "avoid_when": "Adding VPC attachment to Lambda without a private-resource requirement; plan non-overlapping CIDRs and endpoint/egress paths when a VPC is needed." },
-    { "id": "subnets", "category": "networking", "tier": 1, "name": "Public and private subnets", "one_liner": "A subnet is public if its route table points to an Internet Gateway, private otherwise.", "use_when": "Load balancers in public subnets; app servers and databases in private ones.", "avoid_when": "Putting databases or app servers in public subnets." },
-    { "id": "igw", "category": "networking", "tier": 1, "name": "Internet Gateway", "one_liner": "Lets resources in public subnets reach and be reached from the internet.", "use_when": "Any VPC that serves public traffic.", "avoid_when": "Private-only workloads; use VPC endpoints and NAT instead." },
-    { "id": "nat", "category": "networking", "tier": 1, "name": "NAT Gateway", "one_liner": "Lets private subnets make outbound internet connections without accepting inbound ones.", "use_when": "Private instances need patches or external APIs.", "avoid_when": "Heavy traffic to S3 or DynamoDB; gateway endpoints are free and skip NAT data charges." },
-    { "id": "security-group", "category": "networking", "tier": 1, "name": "Security group", "one_liner": "Stateful virtual firewall on an instance or network interface; allow rules only.", "use_when": "Default access control: reference other security groups instead of IP ranges.", "avoid_when": "You need an explicit deny for a subnet; that is a NACL." },
-    { "id": "nacl", "category": "networking", "tier": 2, "name": "Network ACL", "one_liner": "Stateless subnet-level firewall with ordered allow and deny rules.", "use_when": "Blocking a known bad IP range for a whole subnet, as a second layer.", "avoid_when": "As the main control; being stateless, you must allow return traffic explicitly." },
-    { "id": "vpc-peering", "category": "networking", "tier": 2, "name": "VPC peering", "one_liner": "A private one-to-one connection between two VPCs; not transitive.", "use_when": "Connecting a few VPCs simply.", "avoid_when": "Many VPCs or on-prem links; use Transit Gateway as a hub." },
-    { "id": "transit-gateway", "category": "networking", "tier": 2, "name": "Transit Gateway", "one_liner": "A regional hub that connects many VPCs and on-prem networks.", "use_when": "Dozens of VPCs and accounts, plus VPN or Direct Connect.", "avoid_when": "Two VPCs; peering is cheaper." },
-    { "id": "privatelink", "category": "networking", "tier": 2, "name": "PrivateLink and VPC endpoints", "one_liner": "PrivateLink powers interface endpoints for supported services; S3/DynamoDB gateway endpoints are a different endpoint type.", "use_when": "Compliance requires traffic to stay off the internet, or to cut NAT costs.", "avoid_when": "Assuming endpoint reachability grants service permission or that every endpoint type has identical routing and charges." },
-    { "id": "direct-connect", "category": "networking", "tier": 2, "name": "Direct Connect", "one_liner": "Dedicated private connectivity from a customer network to AWS; not encrypted by default.", "use_when": "Predictable connectivity for hybrid workloads; separately design redundant connections and encryption using supported MACsec, VPN, or application TLS.", "avoid_when": "You need it next week; provisioning takes time. Start with Site-to-Site VPN." },
-    { "id": "vpn", "category": "networking", "tier": 2, "name": "Site-to-Site VPN", "one_liner": "An encrypted tunnel over the internet between on-prem and a VPC.", "use_when": "Fast, cheap hybrid connectivity, or as backup for Direct Connect.", "avoid_when": "You need guaranteed bandwidth and latency." },
-    { "id": "alb", "category": "networking", "tier": 1, "name": "Application Load Balancer", "one_liner": "Layer 7 load balancer: routes HTTP and HTTPS by path, host, and header.", "use_when": "Web apps and microservices, containers, path-based routing, TLS termination.", "avoid_when": "Non-HTTP protocols, static IPs, or extreme throughput; use NLB." },
-    { "id": "nlb", "category": "networking", "tier": 2, "name": "Network Load Balancer", "one_liner": "Layer 4 load balancer for TCP, UDP, and TLS with static IPs and very low latency.", "use_when": "Very high throughput, non-HTTP protocols, static IPs for allow-lists, PrivateLink services.", "avoid_when": "You need HTTP routing rules; use ALB." },
-    { "id": "gwlb", "category": "networking", "tier": 3, "name": "Gateway Load Balancer", "one_liner": "Distributes traffic to third-party network appliances such as firewalls.", "use_when": "Inserting inspection appliances transparently into traffic flows.", "avoid_when": "Ordinary app load balancing." },
-    { "id": "route53", "category": "networking", "tier": 1, "name": "Route 53", "one_liner": "DNS with health checks and routing policies: simple, weighted, latency, failover, geolocation, geoproximity, multivalue.", "use_when": "Domain names, failover between Regions, weighted canary releases, latency-based routing.", "avoid_when": "Expecting instant failover; clients cache DNS for the TTL." },
-    { "id": "cloudfront", "category": "networking", "tier": 1, "name": "CloudFront", "one_liner": "CDN delivering static and dynamic HTTP content through edge locations.", "use_when": "Global web delivery, origin offload, WAF, and TLS at the edge; uncacheable dynamic requests can benefit from edge connections and the AWS network. Disable caching for sensitive personalized paths.", "avoid_when": "Non-HTTP protocols or a measured workload where added edge delivery gives no benefit; compare Global Accelerator for static IPs and regional routing." },
-    { "id": "global-accelerator", "category": "networking", "tier": 3, "name": "Global Accelerator", "one_liner": "Static anycast IPs that route users over the AWS backbone to the nearest healthy endpoint.", "use_when": "Non-HTTP or latency-sensitive global apps needing fast regional failover and fixed IPs.", "avoid_when": "Cacheable web content; CloudFront fits better." },
-    { "id": "api-gateway", "category": "networking", "tier": 1, "name": "API Gateway", "one_liner": "Managed REST, HTTP, and WebSocket APIs; features differ by API type. REST APIs support API keys and usage plans.", "use_when": "Managed API authentication, authorization, integrations and throttling; compare the required features and cost of HTTP versus REST APIs.", "avoid_when": "Usage-plan API keys are not authentication or authorization; use an authorizer, IAM, or supported identity integration. Quotas are best-effort, not a spending cap." },
-    { "id": "iam", "category": "security", "tier": 1, "name": "IAM", "one_liner": "Users, groups, roles, and JSON policies that decide who can do what.", "use_when": "Every access decision; follow least privilege.", "avoid_when": "Long-lived access keys for humans; use roles and Identity Center." },
-    { "id": "iam-role", "category": "security", "tier": 1, "name": "IAM role", "one_liner": "An identity that is assumed and gives temporary credentials.", "use_when": "Apps on EC2, Lambda, and containers, cross-account access, and federated humans.", "avoid_when": "Never embed access keys in code instead of using a role." },
-    { "id": "organizations", "category": "security", "tier": 2, "name": "Organizations and SCPs", "one_liner": "Groups accounts; SCPs limit permissions for member-account principals without granting access.", "use_when": "Multi-account setups: separate prod, dev, security, and billing.", "avoid_when": "Assuming an SCP restricts the management account or service-linked roles; those are exempt. An applicable explicit deny still overrides identity-policy allows." },
-    { "id": "identity-center", "category": "security", "tier": 2, "name": "IAM Identity Center", "one_liner": "Single sign-on for people across AWS accounts and apps.", "use_when": "Workforce access to many accounts, federated with an existing identity provider.", "avoid_when": "Customer sign-in for your app; that is Cognito." },
-    { "id": "kms", "category": "security", "tier": 1, "name": "KMS", "one_liner": "Managed cryptographic keys and API operations with CloudTrail audit support.", "use_when": "Control key access for service encryption and envelope encryption. Audit KMS API calls, but verify trail selectors and application data-event logging; not every local use of a cached data key calls KMS.", "avoid_when": "Storing secrets like passwords; use Secrets Manager." },
-    { "id": "secrets-manager", "category": "security", "tier": 1, "name": "Secrets Manager", "one_liner": "Stores secrets and supports configured rotation workflows.", "use_when": "Credentials requiring lifecycle management; choose a supported managed rotation or implement and test a rotation function plus client refresh.", "avoid_when": "Plain config values; Parameter Store is cheaper." },
-    { "id": "parameter-store", "category": "security", "tier": 2, "name": "Systems Manager Parameter Store", "one_liner": "Hierarchical storage for config and simple secrets.", "use_when": "App config and feature flags; low-cost secure strings.", "avoid_when": "Secrets that need built-in rotation." },
-    { "id": "acm", "category": "security", "tier": 2, "name": "Certificate Manager (ACM)", "one_liner": "Manages TLS certificates; integrated non-exportable public certificates have no certificate charge.", "use_when": "HTTPS on supported AWS integrations; exportable public certificates can support servers outside those integrations, with charges.", "avoid_when": "Assuming all certificates are free or cannot be exported; check certificate type, integration support, and renewal deployment." },
-    { "id": "waf", "category": "security", "tier": 2, "name": "WAF", "one_liner": "Layer 7 web firewall rules: SQL injection, XSS, rate limits, bot control.", "use_when": "In front of CloudFront, ALB, or API Gateway for public apps.", "avoid_when": "Network-level DDoS alone; Shield covers that layer." },
-    { "id": "shield", "category": "security", "tier": 2, "name": "Shield", "one_liner": "DDoS protection; Standard is automatic and free, Advanced adds response team and cost protection.", "use_when": "Advanced for high-profile public apps that cannot go down.", "avoid_when": "Paying for Advanced on small internal apps." },
-    { "id": "guardduty", "category": "security", "tier": 2, "name": "GuardDuty", "one_liner": "Threat detection from CloudTrail, VPC Flow Logs, and DNS logs.", "use_when": "Turn it on in every account to catch compromised credentials and odd behavior.", "avoid_when": "Expecting it to block anything; it detects, other tools respond." },
-    { "id": "inspector", "category": "security", "tier": 3, "name": "Inspector", "one_liner": "Scans EC2, container images, and Lambda for vulnerabilities.", "use_when": "Continuous vulnerability management.", "avoid_when": "Runtime threat detection; that is GuardDuty." },
-    { "id": "macie", "category": "security", "tier": 3, "name": "Macie", "one_liner": "Finds sensitive data such as PII in S3.", "use_when": "Compliance audits of data lakes and buckets.", "avoid_when": "Data that is not in S3." },
-    { "id": "security-hub", "category": "security", "tier": 3, "name": "Security Hub", "one_liner": "Aggregates security findings and checks against standards across accounts.", "use_when": "One view of security posture in a multi-account setup.", "avoid_when": "Expecting aggregation alone to remediate findings; define owners and response actions even for a small account." },
-    { "id": "cloudtrail", "category": "security", "tier": 1, "name": "CloudTrail", "one_liner": "Records supported AWS API/account activity for audit; management and data-event coverage differ.", "use_when": "Forensics and compliance with protected central logging. Configure needed data events, such as S3 object activity, explicitly; Event history alone is not a complete audit archive.", "avoid_when": "Performance metrics; that is CloudWatch." },
-    { "id": "config", "category": "security", "tier": 2, "name": "AWS Config", "one_liner": "Tracks resource configuration over time and checks it against rules.", "use_when": "Proving compliance and catching drift, like an open security group.", "avoid_when": "Tracking API calls; that is CloudTrail." },
-    { "id": "cognito", "category": "security", "tier": 2, "name": "Cognito", "one_liner": "User sign-up, sign-in, and tokens for your own apps.", "use_when": "Customer-facing login, social sign-in, and securing APIs with JWTs.", "avoid_when": "Workforce SSO into AWS accounts; use Identity Center." },
-    { "id": "sqs", "category": "integration", "tier": 1, "name": "SQS", "one_liner": "Managed queue: Standard has at-least-once delivery and best-effort ordering; FIFO orders within each message group and deduplicates sends within a 5-minute window.", "use_when": "Buffering spikes and retries with a DLQ. Use idempotent consumers: a crash after a side effect but before deletion can cause processing again, even with FIFO.", "avoid_when": "Treating FIFO deduplication as end-to-end exactly-once side effects; use SNS fan-out for independent subscribers or Kinesis for replayable streams." },
-    { "id": "sns", "category": "integration", "tier": 1, "name": "SNS", "one_liner": "Pub/sub push to many subscribers.", "use_when": "Fan-out: one event to many SQS queues, Lambdas, emails, or SMS.", "avoid_when": "Durable buffering for a slow consumer; put SQS behind it." },
-    { "id": "eventbridge", "category": "integration", "tier": 1, "name": "EventBridge", "one_liner": "Serverless event bus with content-based routing rules, SaaS and AWS events, and schedules.", "use_when": "Event-driven architectures across services, reacting to AWS events, cron jobs.", "avoid_when": "High-throughput ordered streams; use Kinesis or MSK." },
-    { "id": "step-functions", "category": "integration", "tier": 1, "name": "Step Functions", "one_liner": "Workflow orchestration with state, retries, branching, and human-approval waits.", "use_when": "Multi-step processes like agent pipelines, document processing, order flows. Fits your S1 story.", "avoid_when": "One simple step; a single Lambda is enough." },
-    { "id": "kinesis-streams", "category": "integration", "tier": 1, "name": "Kinesis Data Streams", "one_liner": "Real-time ordered streams by shard that many consumers can replay.", "use_when": "Clickstreams, telemetry, real-time analytics with multiple consumers.", "avoid_when": "Simple job queues; SQS is cheaper and simpler." },
-    { "id": "firehose", "category": "integration", "tier": 2, "name": "Data Firehose", "one_liner": "Managed streaming delivery to destinations such as S3 and OpenSearch, with optional transforms and buffering.", "use_when": "Getting streams into storage with no consumer code.", "avoid_when": "Sub-second processing or custom replayable consumers; choose a stream processor. Zero-buffering is available for supported configurations; dynamic partitioning does not support it." },
-    { "id": "msk", "category": "integration", "tier": 3, "name": "MSK", "one_liner": "Managed Apache Kafka.", "use_when": "Teams already on Kafka, or needing its ecosystem and semantics.", "avoid_when": "New simple streaming needs; Kinesis has less to operate." },
-    { "id": "glue", "category": "analytics", "tier": 1, "name": "Glue", "one_liner": "Serverless Spark ETL plus the Glue Data Catalog of table metadata.", "use_when": "ETL into a data lake and a shared catalog for Athena, EMR, and Redshift.", "avoid_when": "Long-running heavily tuned Spark clusters; EMR gives more control." },
-    { "id": "athena", "category": "analytics", "tier": 1, "name": "Athena", "one_liner": "Serverless SQL directly on data in S3; pay per data scanned.", "use_when": "Ad hoc queries on a data lake; partition and use columnar formats to cut cost.", "avoid_when": "Choosing a query engine by a blanket cost rule: benchmark sustained analytics against Redshift using concurrency, query performance, and total cost." },
-    { "id": "lake-formation", "category": "analytics", "tier": 2, "name": "Lake Formation", "one_liner": "Fine-grained permissions on data lake tables, columns, and rows.", "use_when": "Many teams share one data lake with different access rights.", "avoid_when": "A single team and a few buckets." },
-    { "id": "emr", "category": "analytics", "tier": 3, "name": "EMR", "one_liner": "Managed Spark, Hadoop, and Presto clusters, on EC2, EKS, or Serverless.", "use_when": "Large or tuned Spark jobs; migrating existing Hadoop. Maps to your Databricks work.", "avoid_when": "Small ETL that Glue handles without clusters." },
-    { "id": "quicksight", "category": "analytics", "tier": 2, "name": "Amazon Quick Sight", "one_liner": "Managed BI dashboards, formerly QuickSight, now part of Amazon Quick.", "use_when": "Dashboards for business users on top of Athena, Redshift, or RDS.", "avoid_when": "The customer has standardized on another BI tool." },
-    { "id": "bedrock", "category": "ai", "tier": 1, "name": "Amazon Bedrock", "one_liner": "Managed API to foundation models (Anthropic Claude, Amazon Nova, Llama, and others).", "use_when": "Generative AI without managing model infrastructure. Verify the selected model and API retention terms, invocation logging, and inference routing before promising privacy or residency.", "avoid_when": "A custom model architecture requires training or hosting control; consider SageMaker AI. Cross-Region inference can process data beyond the source Region." },
-    { "id": "bedrock-kb", "category": "ai", "tier": 1, "name": "Bedrock Knowledge Bases", "one_liner": "Managed RAG: ingests documents, chunks and embeds them into a vector store, retrieves at query time.", "use_when": "Answering questions over company documents with citations.", "avoid_when": "Answers depend on live transactional data better fetched by a tool call." },
-    { "id": "bedrock-agents", "category": "ai", "tier": 3, "name": "Bedrock AgentCore", "one_liner": "Runtime, gateway, memory, identity, and observability for agents that call your tools. Bedrock Agents is now Agents Classic, closed to new customers.", "use_when": "Multi-step tasks that need tools: the AWS-native home for agents like your MCP-connected ones.", "avoid_when": "A fixed workflow; Step Functions is more predictable." },
-    { "id": "bedrock-guardrails", "category": "ai", "tier": 2, "name": "Bedrock Guardrails", "one_liner": "Filters for harmful content, denied topics, PII, and grounding checks on model input and output.", "use_when": "Any customer-facing GenAI app, especially in regulated industries.", "avoid_when": "Using content filters as authorization or access control. Guardrails do not replace IAM, document permissions, trusted retrieval filters, evaluations, or monitoring." },
-    { "id": "sagemaker", "category": "ai", "tier": 1, "name": "SageMaker AI", "one_liner": "Build, train, tune, and deploy your own models; real-time, serverless, async, and batch endpoints.", "use_when": "Custom models, fine-tuning, or full control of ML pipelines.", "avoid_when": "Calling an existing foundation model is enough; Bedrock is faster to ship." },
-    { "id": "amazon-q", "category": "ai", "tier": 3, "name": "Amazon Q", "one_liner": "Generative AI assistants, such as Q Developer for coding and AWS help. Q Business is closed to new customers; Amazon Quick is the successor.", "use_when": "Customers want an assistant without building one.", "avoid_when": "They need a custom app experience; build on Bedrock." },
-    { "id": "trainium", "category": "ai", "tier": 3, "name": "Trainium", "one_liner": "AWS-built chips for training models at lower cost (Trn instances).", "use_when": "Large training jobs where cost per run matters.", "avoid_when": "Code tied to CUDA-only libraries without porting effort." },
-    { "id": "inferentia", "category": "ai", "tier": 3, "name": "Inferentia", "one_liner": "AWS-built chips for low-cost, high-throughput inference (Inf instances).", "use_when": "High-volume inference where cost per token or prediction dominates.", "avoid_when": "Small or bursty inference; serverless or Bedrock may be cheaper." },
-    { "id": "rekognition", "category": "ai", "tier": 2, "name": "Rekognition", "one_liner": "Image and video analysis: labels, faces, text, moderation.", "use_when": "Vision features without training a model.", "avoid_when": "Highly custom visual tasks; train with SageMaker AI." },
-    { "id": "textract", "category": "ai", "tier": 2, "name": "Textract", "one_liner": "Extracts text, forms, and tables from documents.", "use_when": "Invoices, forms, and scanned documents into structured data.", "avoid_when": "Clean digital text that needs no OCR." },
-    { "id": "comprehend", "category": "ai", "tier": 3, "name": "Comprehend", "one_liner": "NLP service: entities, sentiment, key phrases, PII detection, classification.", "use_when": "Standard text analytics at scale without an LLM.", "avoid_when": "Open-ended generation or reasoning; use Bedrock." },
-    { "id": "transcribe", "category": "ai", "tier": 3, "name": "Transcribe", "one_liner": "Speech to text.", "use_when": "Call center transcripts, captions, voice notes.", "avoid_when": "Text input already exists." },
-    { "id": "polly", "category": "ai", "tier": 3, "name": "Polly", "one_liner": "Text to speech.", "use_when": "Voice output for apps, IVR, accessibility.", "avoid_when": "No audio output is needed." },
-    { "id": "translate", "category": "ai", "tier": 3, "name": "Translate", "one_liner": "Neural machine translation.", "use_when": "Localizing content and support at scale.", "avoid_when": "Legal or brand copy that needs human review anyway." },
-    { "id": "kendra", "category": "ai", "tier": 3, "name": "Kendra", "one_liner": "Managed enterprise search with connectors to many document sources.", "use_when": "Search across company repositories with access controls.", "avoid_when": "A simple RAG app; Bedrock Knowledge Bases may be enough." },
-    { "id": "a2i", "category": "ai", "tier": 3, "name": "Augmented AI (A2I)", "one_liner": "Routes low-confidence ML predictions to human reviewers.", "use_when": "Human-in-the-loop review, like your S1 and S10 stories.", "avoid_when": "Predictions that are always confident or always reviewed." },
-    { "id": "cloudwatch", "category": "ops", "tier": 1, "name": "CloudWatch", "one_liner": "Metrics, logs, alarms, and dashboards; Application Signals adds SLOs.", "use_when": "Monitoring and alerting on everything you run.", "avoid_when": "Auditing API calls (CloudTrail) or configuration history (Config)." },
-    { "id": "xray", "category": "ops", "tier": 2, "name": "X-Ray", "one_liner": "Distributed tracing across services.", "use_when": "Finding which service in a chain is slow or failing.", "avoid_when": "A single monolith where logs and metrics are enough." },
-    { "id": "amp", "category": "ops", "tier": 3, "name": "Managed Service for Prometheus", "one_liner": "Managed, Prometheus-compatible metrics storage and querying.", "use_when": "Kubernetes and teams already on Prometheus. Maps to your Oracle work.", "avoid_when": "Teams fine with CloudWatch metrics alone." },
-    { "id": "amg", "category": "ops", "tier": 3, "name": "Managed Grafana", "one_liner": "Managed Grafana dashboards over Prometheus, CloudWatch, and other sources.", "use_when": "Teams that already use Grafana dashboards.", "avoid_when": "CloudWatch dashboards already cover the need." },
-    { "id": "cloudformation", "category": "ops", "tier": 1, "name": "CloudFormation", "one_liner": "Infrastructure as code in YAML or JSON templates.", "use_when": "Repeatable, reviewable environments; drift detection.", "avoid_when": "A different infrastructure-as-code tool is the established standard, or a short experiment does not justify a stack; drift detection covers only supported resource properties." },
-    { "id": "cdk", "category": "ops", "tier": 1, "name": "CDK", "one_liner": "Infrastructure as code in real programming languages that synthesizes CloudFormation.", "use_when": "Developer teams who want loops, types, and reusable constructs.", "avoid_when": "Teams standardized on Terraform." },
-    { "id": "codepipeline", "category": "ops", "tier": 3, "name": "CodePipeline and CodeBuild", "one_liner": "Managed CI/CD pipelines and build runners.", "use_when": "AWS-native CI/CD with validation stages. Maps to your Jenkins toolchain.", "avoid_when": "The team already runs GitHub Actions well; connect it to AWS with OIDC roles." },
-    { "id": "ssm", "category": "ops", "tier": 2, "name": "Systems Manager", "one_liner": "Patching, run commands, Session Manager shell access, Automation runbooks.", "use_when": "Operating fleets without SSH keys or bastion hosts.", "avoid_when": "No fleet or AWS-resource runbook requirement exists; Automation can manage AWS resources beyond EC2, so serverless alone is not a reason to exclude it." },
-    { "id": "trusted-advisor", "category": "ops", "tier": 2, "name": "Trusted Advisor", "one_liner": "Checks for cost, security, fault tolerance, performance, and service limits.", "use_when": "Quick best-practice review of an account.", "avoid_when": "Deep architecture review; run a Well-Architected review." },
-    { "id": "cost-explorer", "category": "ops", "tier": 2, "name": "Cost Explorer", "one_liner": "Visualizes and forecasts spend by service, account, and tag.", "use_when": "Finding what drives the bill; requires good cost allocation tags.", "avoid_when": "Alerting on overspend; that is Budgets." },
-    { "id": "budgets", "category": "ops", "tier": 2, "name": "Budgets", "one_liner": "Alerts and actions when cost or usage crosses a threshold.", "use_when": "Every account, so surprises surface early.", "avoid_when": "Treating an alert or automated budget action as a guaranteed spending cap; billing updates and actions can lag." },
-    { "id": "compute-optimizer", "category": "ops", "tier": 3, "name": "Compute Optimizer", "one_liner": "Right-sizing recommendations for EC2, EBS, Lambda, and more from real usage.", "use_when": "Cutting over-provisioned resources.", "avoid_when": "Workloads with too little history to judge." },
-    { "id": "control-tower", "category": "ops", "tier": 3, "name": "Control Tower", "one_liner": "Sets up a governed multi-account landing zone with guardrails.", "use_when": "A new enterprise or migration needs accounts, logging, and guardrails from day one.", "avoid_when": "A single-account prototype." }
+    {
+      "id": "region",
+      "family": "infra",
+      "tier": 1,
+      "name": "Region",
+      "full_form": "AWS Region",
+      "what": "A geographic area with multiple isolated Availability Zones.",
+      "pick_when": "Choosing where to run: pick by latency to users, data residency rules, service availability, and price.",
+      "trap": "Do not spread across Regions by default; multi-Region adds cost and complexity, so do it only for DR, latency, or residency needs."
+    },
+    {
+      "id": "az",
+      "family": "infra",
+      "tier": 1,
+      "name": "Availability Zone (AZ)",
+      "full_form": "Availability Zone",
+      "what": "One or more isolated data centers with independent power and networking inside a Region.",
+      "pick_when": "High availability: run across at least 2 AZs so one data center failing does not take you down.",
+      "trap": "Do not assume Multi-AZ protects against a full Region outage; that needs a multi-Region DR plan."
+    },
+    {
+      "id": "edge-location",
+      "family": "infra",
+      "tier": 2,
+      "name": "Edge location",
+      "full_form": "Edge location (point of presence)",
+      "what": "A CloudFront and Route 53 point of presence close to users.",
+      "pick_when": "Caching content and answering DNS near users to cut latency.",
+      "trap": "You cannot run general compute or databases there; it is for caching, DNS, and light edge functions."
+    },
+    {
+      "id": "local-zones",
+      "family": "infra",
+      "tier": 3,
+      "name": "Local Zones",
+      "full_form": "AWS Local Zones",
+      "what": "AWS compute and storage placed in a metro area, extending a Region.",
+      "pick_when": "Single-digit millisecond latency to users in one city: media rendering, gaming, real-time trading.",
+      "trap": "A regional deployment meets the latency requirement; compare prices, available services, resilience and operational cost rather than assuming one is always cheaper."
+    },
+    {
+      "id": "wavelength",
+      "family": "infra",
+      "tier": 3,
+      "name": "Wavelength",
+      "full_form": "AWS Wavelength",
+      "what": "AWS compute inside telecom 5G networks.",
+      "pick_when": "Ultra-low-latency apps for mobile devices on a carrier 5G network.",
+      "trap": "Users are not on a partner 5G network, or latency needs are ordinary."
+    },
+    {
+      "id": "outposts",
+      "family": "infra",
+      "tier": 3,
+      "name": "Outposts",
+      "full_form": "AWS Outposts",
+      "what": "AWS-managed hardware running in the customer's own data center.",
+      "pick_when": "Data must stay on premises, or the app needs very low latency to on-prem systems, but the team wants AWS APIs.",
+      "trap": "The workload can move to a Region; Outposts is a commitment with less elasticity."
+    },
+    {
+      "id": "ec2",
+      "family": "compute",
+      "tier": 1,
+      "name": "EC2",
+      "full_form": "Amazon Elastic Compute Cloud",
+      "what": "Virtual servers with full OS control.",
+      "pick_when": "Steady workloads, custom software, GPUs, or anything that needs OS-level control.",
+      "trap": "Spiky, event-driven, or short tasks where Lambda or Fargate removes server management."
+    },
+    {
+      "id": "asg",
+      "family": "compute",
+      "tier": 1,
+      "name": "Auto Scaling group",
+      "full_form": "Amazon EC2 Auto Scaling group",
+      "what": "Adds or removes EC2 instances by policy and replaces unhealthy ones.",
+      "pick_when": "Variable load and self-healing; target tracking on CPU or request count, scheduled scaling for known peaks.",
+      "trap": "Stateful single servers that cannot be replaced freely; move state out first."
+    },
+    {
+      "id": "lambda",
+      "family": "compute",
+      "tier": 1,
+      "name": "Lambda",
+      "full_form": "AWS Lambda",
+      "what": "Runs your code per event with no servers; up to 15 minutes per invocation.",
+      "pick_when": "Spiky, event-driven, short tasks: S3 uploads, API backends, queue consumers, glue code.",
+      "trap": "Jobs exceed the invocation limit, require unsupported hardware, or cannot meet a measured latency/cost target. Compare containers for sustained utilization and test concurrency limits."
+    },
+    {
+      "id": "ecs",
+      "family": "compute",
+      "tier": 1,
+      "name": "ECS",
+      "full_form": "Amazon Elastic Container Service",
+      "what": "AWS's own container orchestrator, simpler than Kubernetes.",
+      "pick_when": "Running containers without Kubernetes overhead, especially an AWS-only team.",
+      "trap": "A real Kubernetes API/ecosystem requirement may favor EKS. Container portability also depends on identity, networking, data and AWS integrations."
+    },
+    {
+      "id": "fargate",
+      "family": "compute",
+      "tier": 1,
+      "name": "Fargate",
+      "full_form": "AWS Fargate",
+      "what": "Serverless compute for ECS or EKS containers: no nodes to manage.",
+      "pick_when": "You want containers without patching or scaling hosts.",
+      "trap": "GPUs, daemon-style workloads, or large steady fleets where EC2 capacity is cheaper."
+    },
+    {
+      "id": "eks",
+      "family": "compute",
+      "tier": 1,
+      "name": "EKS",
+      "full_form": "Amazon Elastic Kubernetes Service",
+      "what": "Managed Kubernetes control plane.",
+      "pick_when": "The team already uses Kubernetes, wants portability, or needs its ecosystem (Helm, operators, Karpenter).",
+      "trap": "Kubernetes adds operations without a customer benefit; evaluate ECS/Fargate or a supported app platform against team capabilities."
+    },
+    {
+      "id": "beanstalk",
+      "family": "compute",
+      "tier": 3,
+      "name": "Elastic Beanstalk",
+      "full_form": "AWS Elastic Beanstalk",
+      "what": "Managed app platform: upload code, it provisions EC2, load balancer, and scaling.",
+      "pick_when": "Simple web apps that need a fast start with little infrastructure work.",
+      "trap": "Complex architectures that need fine control; use CloudFormation or CDK directly."
+    },
+    {
+      "id": "batch",
+      "family": "compute",
+      "tier": 3,
+      "name": "AWS Batch",
+      "full_form": "AWS Batch",
+      "what": "Managed queue and scheduler for batch compute jobs.",
+      "pick_when": "Large queued jobs: simulations, rendering, genomics, often on Spot.",
+      "trap": "Interactive or request-response workloads."
+    },
+    {
+      "id": "graviton",
+      "family": "compute",
+      "tier": 2,
+      "name": "Graviton",
+      "full_form": "AWS Graviton (Arm-based processors)",
+      "what": "AWS-designed Arm processors for EC2, Lambda, RDS, and more.",
+      "pick_when": "Cutting cost per unit of work for code that runs on Arm, which most interpreted and JVM code does.",
+      "trap": "Software that only ships x86 binaries."
+    },
+    {
+      "id": "on-demand",
+      "family": "compute",
+      "tier": 2,
+      "name": "On-Demand pricing",
+      "full_form": "Amazon EC2 On-Demand Instances",
+      "what": "Pay by the second or hour with no commitment.",
+      "pick_when": "New or unpredictable workloads and short experiments.",
+      "trap": "Steady baseline load; Savings Plans are much cheaper for it."
+    },
+    {
+      "id": "savings-plans",
+      "family": "compute",
+      "tier": 2,
+      "name": "Savings Plans and Reserved Instances",
+      "full_form": "Savings Plans and Reserved Instances (RIs)",
+      "what": "A 1 or 3 year commitment in exchange for a large discount.",
+      "pick_when": "The steady baseline you know you will run.",
+      "trap": "Workloads you might shut down or move soon."
+    },
+    {
+      "id": "spot",
+      "family": "compute",
+      "tier": 2,
+      "name": "Spot Instances",
+      "full_form": "Amazon EC2 Spot Instances",
+      "what": "Spare EC2 capacity that can be interrupted; notices normally precede stop/termination by 2 minutes, while hibernation starts immediately.",
+      "pick_when": "Fault-tolerant batch, CI, stateless capacity mixed with On-Demand, and checkpointed training; react to interruption signals and design for notice loss.",
+      "trap": "Databases or anything that cannot handle sudden interruption."
+    },
+    {
+      "id": "karpenter",
+      "family": "compute",
+      "tier": 3,
+      "name": "Karpenter",
+      "full_form": "Karpenter (open-source Kubernetes node autoscaler, built by AWS)",
+      "what": "Launches right-sized EC2 nodes for pending Kubernetes pods and removes nodes that are no longer needed.",
+      "pick_when": "EKS clusters with varied pod shapes where fixed node groups waste capacity, or Spot-heavy fleets.",
+      "trap": "It scales nodes, not pods. You still need HPA or KEDA to add pods, and disruption budgets so consolidation does not evict too much at once."
+    },
+    {
+      "id": "s3",
+      "family": "storage",
+      "tier": 1,
+      "name": "S3",
+      "full_form": "Amazon Simple Storage Service",
+      "what": "Object storage designed for 11 nines of durability; versioning, replication, lifecycle rules.",
+      "pick_when": "Data lakes, backups, static assets, ML datasets, logs; anything accessed as whole objects.",
+      "trap": "Low-latency block storage for a database or a POSIX file system; use EBS or EFS."
+    },
+    {
+      "id": "s3-classes",
+      "family": "storage",
+      "tier": 2,
+      "name": "S3 storage classes",
+      "full_form": "Amazon S3 storage classes",
+      "what": "Standard, Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant, Flexible, and Deep Archive.",
+      "pick_when": "Matching cost to access pattern; lifecycle rules move objects down as they cool.",
+      "trap": "Infrequent-access classes for small or short-lived objects: minimum size and duration charges can cost more."
+    },
+    {
+      "id": "intelligent-tiering",
+      "family": "storage",
+      "tier": 2,
+      "name": "S3 Intelligent-Tiering",
+      "full_form": "Amazon S3 Intelligent-Tiering",
+      "what": "Moves objects between access tiers automatically based on use.",
+      "pick_when": "Access patterns are unknown or change over time.",
+      "trap": "Access is predictable; a plain lifecycle rule avoids the monitoring fee."
+    },
+    {
+      "id": "ebs",
+      "family": "storage",
+      "tier": 1,
+      "name": "EBS",
+      "full_form": "Amazon Elastic Block Store",
+      "what": "AZ-scoped block storage, normally attached to one EC2 instance; supported io1/io2 Multi-Attach volumes can attach to multiple instances in the same AZ.",
+      "pick_when": "Boot volumes and databases on EC2 that need low-latency block storage.",
+      "trap": "A shared POSIX file system is needed; use EFS or FSx. Multi-Attach requires application/filesystem coordination and is not a generic shared filesystem."
+    },
+    {
+      "id": "efs",
+      "family": "storage",
+      "tier": 2,
+      "name": "EFS",
+      "full_form": "Amazon Elastic File System",
+      "what": "Managed shared NFS file storage; Regional file systems span AZs, while One Zone file systems store data in one AZ.",
+      "pick_when": "Shared files for Linux fleets, containers, or lift-and-shift apps that expect a file system.",
+      "trap": "Windows SMB shares (consider FSx for Windows), cheap object storage (S3), or assuming One Zone survives loss of its AZ."
+    },
+    {
+      "id": "fsx",
+      "family": "storage",
+      "tier": 3,
+      "name": "FSx",
+      "full_form": "Amazon FSx (Windows File Server, Lustre, NetApp ONTAP, OpenZFS)",
+      "what": "Managed third-party file systems: Windows File Server, Lustre, NetApp ONTAP, OpenZFS.",
+      "pick_when": "Windows SMB shares, HPC scratch with Lustre, or migrating NetApp workloads unchanged.",
+      "trap": "Plain Linux shared storage; EFS is simpler."
+    },
+    {
+      "id": "storage-gateway",
+      "family": "storage",
+      "tier": 3,
+      "name": "Storage Gateway",
+      "full_form": "AWS Storage Gateway",
+      "what": "Hybrid storage that presents cloud storage to on-prem apps as file, volume, or tape.",
+      "pick_when": "On-prem apps need to keep working while data moves to S3, or tape backup moves to the cloud.",
+      "trap": "One-time data transfer; assess DataSync or supported offline options rather than adding a persistent gateway."
+    },
+    {
+      "id": "snowball",
+      "family": "storage",
+      "tier": 2,
+      "name": "Snowball",
+      "full_form": "AWS Snowball",
+      "what": "Physical offline data-transfer devices; availability and customer eligibility must be checked.",
+      "pick_when": "Existing eligible customers with a supported offline transfer need; confirm current ordering eligibility before recommending.",
+      "trap": "Assuming new customers can order Snowball; compare DataSync, Direct Connect, and transfer partners for current alternatives."
+    },
+    {
+      "id": "datasync",
+      "family": "storage",
+      "tier": 2,
+      "name": "DataSync",
+      "full_form": "AWS DataSync",
+      "what": "Online transfer service that moves and syncs files between on-prem and AWS storage.",
+      "pick_when": "Network migration of file data to S3, EFS, or FSx, with scheduling and verification.",
+      "trap": "Database migration (use DMS) or bulk data over a constrained link; compare dedicated connectivity and currently eligible offline-transfer options."
+    },
+    {
+      "id": "aws-backup",
+      "family": "storage",
+      "tier": 2,
+      "name": "AWS Backup",
+      "full_form": "AWS Backup",
+      "what": "Central backup policies, schedules, retention, and cross-Region or cross-account copies for many AWS services.",
+      "pick_when": "You need one auditable backup plan across EBS, RDS, DynamoDB, EFS and more, including copies to another Region for DR.",
+      "trap": "A backup you never restored is a hope, not a plan. Test restores and measure the real RTO."
+    },
+    {
+      "id": "rds",
+      "family": "database",
+      "tier": 1,
+      "name": "RDS",
+      "full_form": "Amazon Relational Database Service",
+      "what": "Managed relational databases with backups, patching, and failover options.",
+      "pick_when": "Joins and transactions. Multi-AZ DB instance: synchronous non-readable standby for HA. Multi-AZ DB cluster (supported MySQL/PostgreSQL versions): writer plus two readable standbys across three AZs. Read replicas generally replicate asynchronously for read scaling.",
+      "trap": "Massive key-value scale with simple access patterns (DynamoDB) or analytics over huge datasets (Redshift)."
+    },
+    {
+      "id": "aurora",
+      "family": "database",
+      "tier": 1,
+      "name": "Aurora",
+      "full_form": "Amazon Aurora",
+      "what": "AWS-built MySQL and PostgreSQL-compatible database with storage replicated across 3 AZs, up to 15 read replicas, a Serverless option, and Global Database.",
+      "pick_when": "High-performance relational workloads, fast failover, or cross-Region reads and DR.",
+      "trap": "Small, cheap, steady databases where standard RDS costs less."
+    },
+    {
+      "id": "dynamodb",
+      "family": "database",
+      "tier": 1,
+      "name": "DynamoDB",
+      "full_form": "Amazon DynamoDB",
+      "what": "Managed key-value/document database with conditional writes, regional ACID transactions, Streams and global tables.",
+      "pick_when": "Known key-based access patterns at scale; design partition keys and indexes. Tables/LSIs support optional strong reads; GSIs provide eventually consistent reads.",
+      "trap": "Ad hoc joins or treating capacity as a cure for a hot key. Transactions exist, but do not remove access-pattern or cross-Region consistency design."
+    },
+    {
+      "id": "elasticache",
+      "family": "database",
+      "tier": 1,
+      "name": "ElastiCache",
+      "full_form": "Amazon ElastiCache",
+      "what": "Managed in-memory cache: Redis OSS, Valkey, Memcached.",
+      "pick_when": "Caching hot reads, sessions, leaderboards, rate limiting.",
+      "trap": "As the only copy of durable data; use MemoryDB if you need durability with Redis APIs."
+    },
+    {
+      "id": "memorydb",
+      "family": "database",
+      "tier": 3,
+      "name": "MemoryDB",
+      "full_form": "Amazon MemoryDB",
+      "what": "Durable, Redis-compatible in-memory database with a multi-AZ transaction log.",
+      "pick_when": "Microsecond reads where the in-memory store is the primary database.",
+      "trap": "A cache in front of another database; ElastiCache is cheaper."
+    },
+    {
+      "id": "redshift",
+      "family": "database",
+      "tier": 2,
+      "name": "Redshift",
+      "full_form": "Amazon Redshift",
+      "what": "Columnar data warehouse for SQL analytics at scale; Serverless option.",
+      "pick_when": "BI and reporting over large structured datasets with complex joins.",
+      "trap": "Transactional workloads or occasional queries on S3 data; Athena may be cheaper."
+    },
+    {
+      "id": "documentdb",
+      "family": "database",
+      "tier": 3,
+      "name": "DocumentDB",
+      "full_form": "Amazon DocumentDB (with MongoDB compatibility)",
+      "what": "Managed document database with MongoDB API compatibility.",
+      "pick_when": "A document workload fits supported MongoDB APIs; test driver, feature, query, and behavior compatibility before migration.",
+      "trap": "Simple key-value at massive scale (DynamoDB) or relational needs (RDS)."
+    },
+    {
+      "id": "neptune",
+      "family": "database",
+      "tier": 3,
+      "name": "Neptune",
+      "full_form": "Amazon Neptune",
+      "what": "Managed graph database (property graph and RDF).",
+      "pick_when": "Highly connected data: fraud rings, recommendations, knowledge graphs. Ties to your GNN fraud project.",
+      "trap": "Data that is not relationship-heavy; a relational or key-value store is simpler."
+    },
+    {
+      "id": "timestream",
+      "family": "database",
+      "tier": 3,
+      "name": "Timestream (LiveAnalytics / for InfluxDB)",
+      "full_form": "Amazon Timestream",
+      "what": "Time-series services with different engines, pricing and customer eligibility.",
+      "pick_when": "Evaluate the required engine and query model; LiveAnalytics is closed to new customers as of June 20, 2025. Consider supported Timestream for InfluxDB options for a new workload.",
+      "trap": "Treating all Timestream offerings as interchangeable or recommending LiveAnalytics to a new customer."
+    },
+    {
+      "id": "opensearch",
+      "family": "database",
+      "tier": 2,
+      "name": "OpenSearch Service",
+      "full_form": "Amazon OpenSearch Service",
+      "what": "Managed search and log analytics; also a vector store for RAG.",
+      "pick_when": "Full-text search, log analytics dashboards, vector search for retrieval.",
+      "trap": "As the system of record; keep the source of truth in a database or S3."
+    },
+    {
+      "id": "dms",
+      "family": "database",
+      "tier": 2,
+      "name": "Database Migration Service (DMS)",
+      "full_form": "AWS Database Migration Service",
+      "what": "Migrates databases to AWS with ongoing change data capture to keep source and target in sync.",
+      "pick_when": "Moving a database with minimal downtime; pair with Schema Conversion for engine changes.",
+      "trap": "File or object data (use DataSync)."
+    },
+    {
+      "id": "aurora-global",
+      "family": "database",
+      "tier": 2,
+      "name": "Aurora Global Database",
+      "full_form": "Amazon Aurora Global Database",
+      "what": "One primary Aurora cluster that replicates to read-only secondary clusters in other Regions.",
+      "pick_when": "Low-latency reads in other Regions, or a cross-Region DR target with a small RPO.",
+      "trap": "There is still one writer. Write forwarding sends writes to the primary; fence the old writer before promoting a secondary."
+    },
+    {
+      "id": "dynamodb-global",
+      "family": "database",
+      "tier": 2,
+      "name": "DynamoDB global tables",
+      "full_form": "Amazon DynamoDB global tables",
+      "what": "Replicas of one DynamoDB table in several Regions that all accept writes.",
+      "pick_when": "Multi-Region active-active access with key-value patterns and local-latency reads and writes.",
+      "trap": "Conditional writes and transactions are regional. Cross-Region conflicts resolve by the chosen consistency mode, so do not rely on them for global deduplication of payments."
+    },
+    {
+      "id": "vpc",
+      "family": "networking",
+      "tier": 1,
+      "name": "VPC",
+      "full_form": "Amazon Virtual Private Cloud",
+      "what": "Your private, isolated network in a Region, with subnets per AZ.",
+      "pick_when": "Control networking for resources such as EC2, RDS, and internal load balancers. S3 and DynamoDB are regional managed services accessed through APIs; a customer VPC is not required for every design.",
+      "trap": "Adding VPC attachment to Lambda without a private-resource requirement; plan non-overlapping CIDRs and endpoint/egress paths when a VPC is needed."
+    },
+    {
+      "id": "subnets",
+      "family": "networking",
+      "tier": 1,
+      "name": "Public and private subnets",
+      "full_form": "VPC subnets (public and private)",
+      "what": "A subnet is public if its route table points to an Internet Gateway, private otherwise.",
+      "pick_when": "Load balancers in public subnets; app servers and databases in private ones.",
+      "trap": "Putting databases or app servers in public subnets."
+    },
+    {
+      "id": "igw",
+      "family": "networking",
+      "tier": 1,
+      "name": "Internet Gateway",
+      "full_form": "Internet Gateway (IGW)",
+      "what": "Lets resources in public subnets reach and be reached from the internet.",
+      "pick_when": "Any VPC that serves public traffic.",
+      "trap": "Private-only workloads; use VPC endpoints and NAT instead."
+    },
+    {
+      "id": "nat",
+      "family": "networking",
+      "tier": 1,
+      "name": "NAT Gateway",
+      "full_form": "Network Address Translation Gateway",
+      "what": "Lets private subnets make outbound internet connections without accepting inbound ones.",
+      "pick_when": "Private instances need patches or external APIs.",
+      "trap": "Heavy traffic to S3 or DynamoDB; gateway endpoints are free and skip NAT data charges."
+    },
+    {
+      "id": "security-group",
+      "family": "networking",
+      "tier": 1,
+      "name": "Security group",
+      "full_form": "Security group (SG)",
+      "what": "Stateful virtual firewall on an instance or network interface; allow rules only.",
+      "pick_when": "Default access control: reference other security groups instead of IP ranges.",
+      "trap": "You need an explicit deny for a subnet; that is a NACL."
+    },
+    {
+      "id": "nacl",
+      "family": "networking",
+      "tier": 2,
+      "name": "Network ACL",
+      "full_form": "Network Access Control List",
+      "what": "Stateless subnet-level firewall with ordered allow and deny rules.",
+      "pick_when": "Blocking a known bad IP range for a whole subnet, as a second layer.",
+      "trap": "As the main control; being stateless, you must allow return traffic explicitly."
+    },
+    {
+      "id": "vpc-peering",
+      "family": "networking",
+      "tier": 2,
+      "name": "VPC peering",
+      "full_form": "Amazon VPC peering connection",
+      "what": "A private one-to-one connection between two VPCs; not transitive.",
+      "pick_when": "Connecting a few VPCs simply.",
+      "trap": "Many VPCs or on-prem links; use Transit Gateway as a hub."
+    },
+    {
+      "id": "transit-gateway",
+      "family": "networking",
+      "tier": 2,
+      "name": "Transit Gateway",
+      "full_form": "AWS Transit Gateway (TGW)",
+      "what": "A regional hub that connects many VPCs and on-prem networks.",
+      "pick_when": "Dozens of VPCs and accounts, plus VPN or Direct Connect.",
+      "trap": "Two VPCs; peering is cheaper."
+    },
+    {
+      "id": "privatelink",
+      "family": "networking",
+      "tier": 2,
+      "name": "PrivateLink and VPC endpoints",
+      "full_form": "AWS PrivateLink and VPC endpoints",
+      "what": "PrivateLink powers interface endpoints for supported services; S3/DynamoDB gateway endpoints are a different endpoint type.",
+      "pick_when": "Compliance requires traffic to stay off the internet, or to cut NAT costs.",
+      "trap": "Assuming endpoint reachability grants service permission or that every endpoint type has identical routing and charges."
+    },
+    {
+      "id": "direct-connect",
+      "family": "networking",
+      "tier": 2,
+      "name": "Direct Connect",
+      "full_form": "AWS Direct Connect (DX)",
+      "what": "Dedicated private connectivity from a customer network to AWS; not encrypted by default.",
+      "pick_when": "Predictable connectivity for hybrid workloads; separately design redundant connections and encryption using supported MACsec, VPN, or application TLS.",
+      "trap": "You need it next week; provisioning takes time. Start with Site-to-Site VPN."
+    },
+    {
+      "id": "vpn",
+      "family": "networking",
+      "tier": 2,
+      "name": "Site-to-Site VPN",
+      "full_form": "AWS Site-to-Site Virtual Private Network",
+      "what": "An encrypted tunnel over the internet between on-prem and a VPC.",
+      "pick_when": "Fast, cheap hybrid connectivity, or as backup for Direct Connect.",
+      "trap": "You need guaranteed bandwidth and latency."
+    },
+    {
+      "id": "alb",
+      "family": "networking",
+      "tier": 1,
+      "name": "Application Load Balancer",
+      "full_form": "Application Load Balancer",
+      "what": "Layer 7 load balancer: routes HTTP and HTTPS by path, host, and header.",
+      "pick_when": "Web apps and microservices, containers, path-based routing, TLS termination.",
+      "trap": "Non-HTTP protocols, static IPs, or extreme throughput; use NLB."
+    },
+    {
+      "id": "nlb",
+      "family": "networking",
+      "tier": 2,
+      "name": "Network Load Balancer",
+      "full_form": "Network Load Balancer",
+      "what": "Layer 4 load balancer for TCP, UDP, and TLS with static IPs and very low latency.",
+      "pick_when": "Very high throughput, non-HTTP protocols, static IPs for allow-lists, PrivateLink services.",
+      "trap": "You need HTTP routing rules; use ALB."
+    },
+    {
+      "id": "gwlb",
+      "family": "networking",
+      "tier": 3,
+      "name": "Gateway Load Balancer",
+      "full_form": "Gateway Load Balancer",
+      "what": "Distributes traffic to third-party network appliances such as firewalls.",
+      "pick_when": "Inserting inspection appliances transparently into traffic flows.",
+      "trap": "Ordinary app load balancing."
+    },
+    {
+      "id": "route53",
+      "family": "networking",
+      "tier": 1,
+      "name": "Route 53",
+      "full_form": "Amazon Route 53 (DNS, named for port 53)",
+      "what": "DNS with health checks and routing policies: simple, weighted, latency, failover, geolocation, geoproximity, multivalue.",
+      "pick_when": "Domain names, failover between Regions, weighted canary releases, latency-based routing.",
+      "trap": "Expecting instant failover; clients cache DNS for the TTL."
+    },
+    {
+      "id": "cloudfront",
+      "family": "networking",
+      "tier": 1,
+      "name": "CloudFront",
+      "full_form": "Amazon CloudFront (content delivery network)",
+      "what": "CDN delivering static and dynamic HTTP content through edge locations.",
+      "pick_when": "Global web delivery, origin offload, WAF, and TLS at the edge; uncacheable dynamic requests can benefit from edge connections and the AWS network. Disable caching for sensitive personalized paths.",
+      "trap": "Non-HTTP protocols or a measured workload where added edge delivery gives no benefit; compare Global Accelerator for static IPs and regional routing."
+    },
+    {
+      "id": "global-accelerator",
+      "family": "networking",
+      "tier": 3,
+      "name": "Global Accelerator",
+      "full_form": "AWS Global Accelerator",
+      "what": "Static anycast IPs that route users over the AWS backbone to the nearest healthy endpoint.",
+      "pick_when": "Non-HTTP or latency-sensitive global apps needing fast regional failover and fixed IPs.",
+      "trap": "Cacheable web content; CloudFront fits better."
+    },
+    {
+      "id": "api-gateway",
+      "family": "networking",
+      "tier": 1,
+      "name": "API Gateway",
+      "full_form": "Amazon API Gateway",
+      "what": "Managed REST, HTTP, and WebSocket APIs; features differ by API type. REST APIs support API keys and usage plans.",
+      "pick_when": "Managed API authentication, authorization, integrations and throttling; compare the required features and cost of HTTP versus REST APIs.",
+      "trap": "Usage-plan API keys are not authentication or authorization; use an authorizer, IAM, or supported identity integration. Quotas are best-effort, not a spending cap."
+    },
+    {
+      "id": "iam",
+      "family": "security",
+      "tier": 1,
+      "name": "IAM",
+      "full_form": "AWS Identity and Access Management",
+      "what": "Users, groups, roles, and JSON policies that decide who can do what.",
+      "pick_when": "Every access decision; follow least privilege.",
+      "trap": "Long-lived access keys for humans; use roles and Identity Center."
+    },
+    {
+      "id": "iam-role",
+      "family": "security",
+      "tier": 1,
+      "name": "IAM role",
+      "full_form": "IAM role (AWS Identity and Access Management role)",
+      "what": "An identity that is assumed and gives temporary credentials.",
+      "pick_when": "Apps on EC2, Lambda, and containers, cross-account access, and federated humans.",
+      "trap": "Never embed access keys in code instead of using a role."
+    },
+    {
+      "id": "organizations",
+      "family": "security",
+      "tier": 2,
+      "name": "Organizations and SCPs",
+      "full_form": "AWS Organizations and Service Control Policies",
+      "what": "Groups accounts; SCPs limit permissions for member-account principals without granting access.",
+      "pick_when": "Multi-account setups: separate prod, dev, security, and billing.",
+      "trap": "Assuming an SCP restricts the management account or service-linked roles; those are exempt. An applicable explicit deny still overrides identity-policy allows."
+    },
+    {
+      "id": "identity-center",
+      "family": "security",
+      "tier": 2,
+      "name": "IAM Identity Center",
+      "full_form": "AWS IAM Identity Center (successor to AWS Single Sign-On)",
+      "what": "Single sign-on for people across AWS accounts and apps.",
+      "pick_when": "Workforce access to many accounts, federated with an existing identity provider.",
+      "trap": "Customer sign-in for your app; that is Cognito."
+    },
+    {
+      "id": "kms",
+      "family": "security",
+      "tier": 1,
+      "name": "KMS",
+      "full_form": "AWS Key Management Service",
+      "what": "Managed cryptographic keys and API operations with CloudTrail audit support.",
+      "pick_when": "Control key access for service encryption and envelope encryption. Audit KMS API calls, but verify trail selectors and application data-event logging; not every local use of a cached data key calls KMS.",
+      "trap": "Storing secrets like passwords; use Secrets Manager."
+    },
+    {
+      "id": "secrets-manager",
+      "family": "security",
+      "tier": 1,
+      "name": "Secrets Manager",
+      "full_form": "AWS Secrets Manager",
+      "what": "Stores secrets and supports configured rotation workflows.",
+      "pick_when": "Credentials requiring lifecycle management; choose a supported managed rotation or implement and test a rotation function plus client refresh.",
+      "trap": "Plain config values; Parameter Store is cheaper."
+    },
+    {
+      "id": "parameter-store",
+      "family": "security",
+      "tier": 2,
+      "name": "Systems Manager Parameter Store",
+      "full_form": "AWS Systems Manager Parameter Store",
+      "what": "Hierarchical storage for config and simple secrets.",
+      "pick_when": "App config and feature flags; low-cost secure strings.",
+      "trap": "Secrets that need built-in rotation."
+    },
+    {
+      "id": "acm",
+      "family": "security",
+      "tier": 2,
+      "name": "Certificate Manager (ACM)",
+      "full_form": "AWS Certificate Manager",
+      "what": "Manages TLS certificates; integrated non-exportable public certificates have no certificate charge.",
+      "pick_when": "HTTPS on supported AWS integrations; exportable public certificates can support servers outside those integrations, with charges.",
+      "trap": "Assuming all certificates are free or cannot be exported; check certificate type, integration support, and renewal deployment."
+    },
+    {
+      "id": "waf",
+      "family": "security",
+      "tier": 2,
+      "name": "WAF",
+      "full_form": "AWS Web Application Firewall",
+      "what": "Layer 7 web firewall rules: SQL injection, XSS, rate limits, bot control.",
+      "pick_when": "In front of CloudFront, ALB, or API Gateway for public apps.",
+      "trap": "Network-level DDoS alone; Shield covers that layer."
+    },
+    {
+      "id": "shield",
+      "family": "security",
+      "tier": 2,
+      "name": "Shield",
+      "full_form": "AWS Shield (DDoS protection)",
+      "what": "DDoS protection; Standard is automatic and free, Advanced adds response team and cost protection.",
+      "pick_when": "Advanced for high-profile public apps that cannot go down.",
+      "trap": "Paying for Advanced on small internal apps."
+    },
+    {
+      "id": "guardduty",
+      "family": "security",
+      "tier": 2,
+      "name": "GuardDuty",
+      "full_form": "Amazon GuardDuty",
+      "what": "Threat detection from CloudTrail, VPC Flow Logs, and DNS logs.",
+      "pick_when": "Turn it on in every account to catch compromised credentials and odd behavior.",
+      "trap": "Expecting it to block anything; it detects, other tools respond."
+    },
+    {
+      "id": "inspector",
+      "family": "security",
+      "tier": 3,
+      "name": "Inspector",
+      "full_form": "Amazon Inspector",
+      "what": "Scans EC2, container images, and Lambda for vulnerabilities.",
+      "pick_when": "Continuous vulnerability management.",
+      "trap": "Runtime threat detection; that is GuardDuty."
+    },
+    {
+      "id": "macie",
+      "family": "security",
+      "tier": 3,
+      "name": "Macie",
+      "full_form": "Amazon Macie",
+      "what": "Finds sensitive data such as PII in S3.",
+      "pick_when": "Compliance audits of data lakes and buckets.",
+      "trap": "Data that is not in S3."
+    },
+    {
+      "id": "security-hub",
+      "family": "security",
+      "tier": 3,
+      "name": "Security Hub",
+      "full_form": "AWS Security Hub",
+      "what": "Aggregates security findings and checks against standards across accounts.",
+      "pick_when": "One view of security posture in a multi-account setup.",
+      "trap": "Expecting aggregation alone to remediate findings; define owners and response actions even for a small account."
+    },
+    {
+      "id": "cloudtrail",
+      "family": "security",
+      "tier": 1,
+      "name": "CloudTrail",
+      "full_form": "AWS CloudTrail",
+      "what": "Records supported AWS API/account activity for audit; management and data-event coverage differ.",
+      "pick_when": "Forensics and compliance with protected central logging. Configure needed data events, such as S3 object activity, explicitly; Event history alone is not a complete audit archive.",
+      "trap": "Performance metrics; that is CloudWatch."
+    },
+    {
+      "id": "config",
+      "family": "security",
+      "tier": 2,
+      "name": "AWS Config",
+      "full_form": "AWS Config",
+      "what": "Tracks resource configuration over time and checks it against rules.",
+      "pick_when": "Proving compliance and catching drift, like an open security group.",
+      "trap": "Tracking API calls; that is CloudTrail."
+    },
+    {
+      "id": "cognito",
+      "family": "security",
+      "tier": 2,
+      "name": "Cognito",
+      "full_form": "Amazon Cognito",
+      "what": "User sign-up, sign-in, and tokens for your own apps.",
+      "pick_when": "Customer-facing login, social sign-in, and securing APIs with JWTs.",
+      "trap": "Workforce SSO into AWS accounts; use Identity Center."
+    },
+    {
+      "id": "sqs",
+      "family": "integration",
+      "tier": 1,
+      "name": "SQS",
+      "full_form": "Amazon Simple Queue Service",
+      "what": "Managed queue: Standard has at-least-once delivery and best-effort ordering; FIFO orders within each message group and deduplicates sends within a 5-minute window.",
+      "pick_when": "Buffering spikes and retries with a DLQ. Use idempotent consumers: a crash after a side effect but before deletion can cause processing again, even with FIFO.",
+      "trap": "Treating FIFO deduplication as end-to-end exactly-once side effects; use SNS fan-out for independent subscribers or Kinesis for replayable streams."
+    },
+    {
+      "id": "sns",
+      "family": "integration",
+      "tier": 1,
+      "name": "SNS",
+      "full_form": "Amazon Simple Notification Service",
+      "what": "Pub/sub push to many subscribers.",
+      "pick_when": "Fan-out: one event to many SQS queues, Lambdas, emails, or SMS.",
+      "trap": "Durable buffering for a slow consumer; put SQS behind it."
+    },
+    {
+      "id": "eventbridge",
+      "family": "integration",
+      "tier": 1,
+      "name": "EventBridge",
+      "full_form": "Amazon EventBridge",
+      "what": "Serverless event bus with content-based routing rules, SaaS and AWS events, and schedules.",
+      "pick_when": "Event-driven architectures across services, reacting to AWS events, cron jobs.",
+      "trap": "High-throughput ordered streams; use Kinesis or MSK."
+    },
+    {
+      "id": "step-functions",
+      "family": "integration",
+      "tier": 1,
+      "name": "Step Functions",
+      "full_form": "AWS Step Functions",
+      "what": "Workflow orchestration with state, retries, branching, and human-approval waits.",
+      "pick_when": "Multi-step processes like agent pipelines, document processing, order flows. Fits your S1 story.",
+      "trap": "One simple step; a single Lambda is enough."
+    },
+    {
+      "id": "kinesis-streams",
+      "family": "integration",
+      "tier": 1,
+      "name": "Kinesis Data Streams",
+      "full_form": "Amazon Kinesis Data Streams",
+      "what": "Real-time ordered streams by shard that many consumers can replay.",
+      "pick_when": "Clickstreams, telemetry, real-time analytics with multiple consumers.",
+      "trap": "Simple job queues; SQS is cheaper and simpler."
+    },
+    {
+      "id": "firehose",
+      "family": "integration",
+      "tier": 2,
+      "name": "Data Firehose",
+      "full_form": "Amazon Data Firehose (formerly Kinesis Data Firehose)",
+      "what": "Managed streaming delivery to destinations such as S3 and OpenSearch, with optional transforms and buffering.",
+      "pick_when": "Getting streams into storage with no consumer code.",
+      "trap": "Sub-second processing or custom replayable consumers; choose a stream processor. Zero-buffering is available for supported configurations; dynamic partitioning does not support it."
+    },
+    {
+      "id": "msk",
+      "family": "integration",
+      "tier": 3,
+      "name": "MSK",
+      "full_form": "Amazon Managed Streaming for Apache Kafka",
+      "what": "Managed Apache Kafka.",
+      "pick_when": "Teams already on Kafka, or needing its ecosystem and semantics.",
+      "trap": "New simple streaming needs; Kinesis has less to operate."
+    },
+    {
+      "id": "glue",
+      "family": "analytics",
+      "tier": 1,
+      "name": "Glue",
+      "full_form": "AWS Glue",
+      "what": "Serverless Spark ETL plus the Glue Data Catalog of table metadata.",
+      "pick_when": "ETL into a data lake and a shared catalog for Athena, EMR, and Redshift.",
+      "trap": "Long-running heavily tuned Spark clusters; EMR gives more control."
+    },
+    {
+      "id": "athena",
+      "family": "analytics",
+      "tier": 1,
+      "name": "Athena",
+      "full_form": "Amazon Athena",
+      "what": "Serverless SQL directly on data in S3; pay per data scanned.",
+      "pick_when": "Ad hoc queries on a data lake; partition and use columnar formats to cut cost.",
+      "trap": "Choosing a query engine by a blanket cost rule: benchmark sustained analytics against Redshift using concurrency, query performance, and total cost."
+    },
+    {
+      "id": "lake-formation",
+      "family": "analytics",
+      "tier": 2,
+      "name": "Lake Formation",
+      "full_form": "AWS Lake Formation",
+      "what": "Fine-grained permissions on data lake tables, columns, and rows.",
+      "pick_when": "Many teams share one data lake with different access rights.",
+      "trap": "A single team and a few buckets."
+    },
+    {
+      "id": "emr",
+      "family": "analytics",
+      "tier": 3,
+      "name": "EMR",
+      "full_form": "Amazon EMR (formerly Elastic MapReduce)",
+      "what": "Managed Spark, Hadoop, and Presto clusters, on EC2, EKS, or Serverless.",
+      "pick_when": "Large or tuned Spark jobs; migrating existing Hadoop. Maps to your Databricks work.",
+      "trap": "Small ETL that Glue handles without clusters."
+    },
+    {
+      "id": "quicksight",
+      "family": "analytics",
+      "tier": 2,
+      "name": "Amazon Quick Sight",
+      "full_form": "Amazon Quick Sight (formerly QuickSight, now part of Amazon Quick)",
+      "what": "Managed BI dashboards, with natural-language questions. Renamed from QuickSight.",
+      "pick_when": "Dashboards for business users on top of Athena, Redshift, or RDS.",
+      "trap": "The customer has standardized on another BI tool."
+    },
+    {
+      "id": "bedrock",
+      "family": "ai",
+      "tier": 1,
+      "name": "Amazon Bedrock",
+      "full_form": "Amazon Bedrock",
+      "what": "Managed API to foundation models (Anthropic Claude, Amazon Nova, Llama, and others).",
+      "pick_when": "Generative AI without managing model infrastructure. Verify the selected model and API retention terms, invocation logging, and inference routing before promising privacy or residency.",
+      "trap": "A custom model architecture requires training or hosting control; consider SageMaker AI. Cross-Region inference can process data beyond the source Region."
+    },
+    {
+      "id": "bedrock-kb",
+      "family": "ai",
+      "tier": 1,
+      "name": "Bedrock Knowledge Bases",
+      "full_form": "Knowledge Bases for Amazon Bedrock (managed RAG)",
+      "what": "Managed RAG: ingests documents, chunks and embeds them into a vector store, retrieves at query time.",
+      "pick_when": "Answering questions over company documents with citations.",
+      "trap": "Answers depend on live transactional data better fetched by a tool call."
+    },
+    {
+      "id": "bedrock-agents",
+      "family": "ai",
+      "tier": 3,
+      "name": "Bedrock AgentCore",
+      "full_form": "Amazon Bedrock AgentCore (Bedrock Agents is now Agents Classic, closed to new customers)",
+      "what": "Runtime, gateway, memory, identity, and observability for agents that call your tools.",
+      "pick_when": "Multi-step tasks that need tools: the AWS-native home for agents like your MCP-connected ones.",
+      "trap": "A fixed workflow; Step Functions is more predictable."
+    },
+    {
+      "id": "bedrock-guardrails",
+      "family": "ai",
+      "tier": 2,
+      "name": "Bedrock Guardrails",
+      "full_form": "Guardrails for Amazon Bedrock",
+      "what": "Filters for harmful content, denied topics, PII, and grounding checks on model input and output.",
+      "pick_when": "Any customer-facing GenAI app, especially in regulated industries.",
+      "trap": "Using content filters as authorization or access control. Guardrails do not replace IAM, document permissions, trusted retrieval filters, evaluations, or monitoring."
+    },
+    {
+      "id": "sagemaker",
+      "family": "ai",
+      "tier": 1,
+      "name": "SageMaker AI",
+      "full_form": "Amazon SageMaker AI",
+      "what": "Build, train, tune, and deploy your own models; real-time, serverless, async, and batch endpoints.",
+      "pick_when": "Custom models, fine-tuning, or full control of ML pipelines.",
+      "trap": "Calling an existing foundation model is enough; Bedrock is faster to ship."
+    },
+    {
+      "id": "amazon-q",
+      "family": "ai",
+      "tier": 3,
+      "name": "Amazon Q",
+      "full_form": "Amazon Q (Q Developer; Q Business is closed to new customers)",
+      "what": "Generative AI assistants, such as Q Developer for coding and AWS help. Amazon Quick succeeds Q Business for new customers.",
+      "pick_when": "Customers want an assistant without building one.",
+      "trap": "They need a custom app experience; build on Bedrock."
+    },
+    {
+      "id": "trainium",
+      "family": "ai",
+      "tier": 3,
+      "name": "Trainium",
+      "full_form": "AWS Trainium",
+      "what": "AWS-built chips for training models at lower cost (Trn instances).",
+      "pick_when": "Large training jobs where cost per run matters.",
+      "trap": "Code tied to CUDA-only libraries without porting effort."
+    },
+    {
+      "id": "inferentia",
+      "family": "ai",
+      "tier": 3,
+      "name": "Inferentia",
+      "full_form": "AWS Inferentia",
+      "what": "AWS-built chips for low-cost, high-throughput inference (Inf instances).",
+      "pick_when": "High-volume inference where cost per token or prediction dominates.",
+      "trap": "Small or bursty inference; serverless or Bedrock may be cheaper."
+    },
+    {
+      "id": "rekognition",
+      "family": "ai",
+      "tier": 2,
+      "name": "Rekognition",
+      "full_form": "Amazon Rekognition",
+      "what": "Image and video analysis: labels, faces, text, moderation.",
+      "pick_when": "Vision features without training a model.",
+      "trap": "Highly custom visual tasks; train with SageMaker AI."
+    },
+    {
+      "id": "textract",
+      "family": "ai",
+      "tier": 2,
+      "name": "Textract",
+      "full_form": "Amazon Textract",
+      "what": "Extracts text, forms, and tables from documents.",
+      "pick_when": "Invoices, forms, and scanned documents into structured data.",
+      "trap": "Clean digital text that needs no OCR."
+    },
+    {
+      "id": "comprehend",
+      "family": "ai",
+      "tier": 3,
+      "name": "Comprehend",
+      "full_form": "Amazon Comprehend",
+      "what": "NLP service: entities, sentiment, key phrases, PII detection, classification.",
+      "pick_when": "Standard text analytics at scale without an LLM.",
+      "trap": "Open-ended generation or reasoning; use Bedrock."
+    },
+    {
+      "id": "transcribe",
+      "family": "ai",
+      "tier": 3,
+      "name": "Transcribe",
+      "full_form": "Amazon Transcribe",
+      "what": "Speech to text.",
+      "pick_when": "Call center transcripts, captions, voice notes.",
+      "trap": "Text input already exists."
+    },
+    {
+      "id": "polly",
+      "family": "ai",
+      "tier": 3,
+      "name": "Polly",
+      "full_form": "Amazon Polly",
+      "what": "Text to speech.",
+      "pick_when": "Voice output for apps, IVR, accessibility.",
+      "trap": "No audio output is needed."
+    },
+    {
+      "id": "translate",
+      "family": "ai",
+      "tier": 3,
+      "name": "Translate",
+      "full_form": "Amazon Translate",
+      "what": "Neural machine translation.",
+      "pick_when": "Localizing content and support at scale.",
+      "trap": "Legal or brand copy that needs human review anyway."
+    },
+    {
+      "id": "kendra",
+      "family": "ai",
+      "tier": 3,
+      "name": "Kendra",
+      "full_form": "Amazon Kendra",
+      "what": "Managed enterprise search with connectors to many document sources.",
+      "pick_when": "Search across company repositories with access controls.",
+      "trap": "A simple RAG app; Bedrock Knowledge Bases may be enough."
+    },
+    {
+      "id": "a2i",
+      "family": "ai",
+      "tier": 3,
+      "name": "Augmented AI (A2I)",
+      "full_form": "Amazon Augmented AI",
+      "what": "Routes low-confidence ML predictions to human reviewers.",
+      "pick_when": "Human-in-the-loop review, like your S1 and S10 stories.",
+      "trap": "Predictions that are always confident or always reviewed."
+    },
+    {
+      "id": "cloudwatch",
+      "family": "ops",
+      "tier": 1,
+      "name": "CloudWatch",
+      "full_form": "Amazon CloudWatch",
+      "what": "Metrics, logs, alarms, and dashboards; Application Signals adds SLOs.",
+      "pick_when": "Monitoring and alerting on everything you run.",
+      "trap": "Auditing API calls (CloudTrail) or configuration history (Config)."
+    },
+    {
+      "id": "xray",
+      "family": "ops",
+      "tier": 2,
+      "name": "X-Ray",
+      "full_form": "AWS X-Ray",
+      "what": "Distributed tracing across services.",
+      "pick_when": "Finding which service in a chain is slow or failing.",
+      "trap": "A single monolith where logs and metrics are enough."
+    },
+    {
+      "id": "amp",
+      "family": "ops",
+      "tier": 3,
+      "name": "Managed Service for Prometheus",
+      "full_form": "Amazon Managed Service for Prometheus (AMP)",
+      "what": "Managed, Prometheus-compatible metrics storage and querying.",
+      "pick_when": "Kubernetes and teams already on Prometheus. Maps to your Oracle work.",
+      "trap": "Teams fine with CloudWatch metrics alone."
+    },
+    {
+      "id": "amg",
+      "family": "ops",
+      "tier": 3,
+      "name": "Managed Grafana",
+      "full_form": "Amazon Managed Grafana (AMG)",
+      "what": "Managed Grafana dashboards over Prometheus, CloudWatch, and other sources.",
+      "pick_when": "Teams that already use Grafana dashboards.",
+      "trap": "CloudWatch dashboards already cover the need."
+    },
+    {
+      "id": "cloudformation",
+      "family": "ops",
+      "tier": 1,
+      "name": "CloudFormation",
+      "full_form": "AWS CloudFormation",
+      "what": "Infrastructure as code in YAML or JSON templates.",
+      "pick_when": "Repeatable, reviewable environments; drift detection.",
+      "trap": "A different infrastructure-as-code tool is the established standard, or a short experiment does not justify a stack; drift detection covers only supported resource properties."
+    },
+    {
+      "id": "cdk",
+      "family": "ops",
+      "tier": 1,
+      "name": "CDK",
+      "full_form": "AWS Cloud Development Kit",
+      "what": "Infrastructure as code in real programming languages that synthesizes CloudFormation.",
+      "pick_when": "Developer teams who want loops, types, and reusable constructs.",
+      "trap": "Teams standardized on Terraform."
+    },
+    {
+      "id": "codepipeline",
+      "family": "ops",
+      "tier": 3,
+      "name": "CodePipeline and CodeBuild",
+      "full_form": "AWS CodePipeline and AWS CodeBuild",
+      "what": "Managed CI/CD pipelines and build runners.",
+      "pick_when": "AWS-native CI/CD with validation stages. Maps to your Jenkins toolchain.",
+      "trap": "The team already runs GitHub Actions well; connect it to AWS with OIDC roles."
+    },
+    {
+      "id": "ssm",
+      "family": "ops",
+      "tier": 2,
+      "name": "Systems Manager",
+      "full_form": "AWS Systems Manager (SSM)",
+      "what": "Patching, run commands, Session Manager shell access, Automation runbooks.",
+      "pick_when": "Operating fleets without SSH keys or bastion hosts.",
+      "trap": "No fleet or AWS-resource runbook requirement exists; Automation can manage AWS resources beyond EC2, so serverless alone is not a reason to exclude it."
+    },
+    {
+      "id": "trusted-advisor",
+      "family": "ops",
+      "tier": 2,
+      "name": "Trusted Advisor",
+      "full_form": "AWS Trusted Advisor",
+      "what": "Checks for cost, security, fault tolerance, performance, and service limits.",
+      "pick_when": "Quick best-practice review of an account.",
+      "trap": "Deep architecture review; run a Well-Architected review."
+    },
+    {
+      "id": "cost-explorer",
+      "family": "ops",
+      "tier": 2,
+      "name": "Cost Explorer",
+      "full_form": "AWS Cost Explorer",
+      "what": "Visualizes and forecasts spend by service, account, and tag.",
+      "pick_when": "Finding what drives the bill; requires good cost allocation tags.",
+      "trap": "Alerting on overspend; that is Budgets."
+    },
+    {
+      "id": "budgets",
+      "family": "ops",
+      "tier": 2,
+      "name": "Budgets",
+      "full_form": "AWS Budgets",
+      "what": "Alerts and actions when cost or usage crosses a threshold.",
+      "pick_when": "Every account, so surprises surface early.",
+      "trap": "Treating an alert or automated budget action as a guaranteed spending cap; billing updates and actions can lag."
+    },
+    {
+      "id": "compute-optimizer",
+      "family": "ops",
+      "tier": 3,
+      "name": "Compute Optimizer",
+      "full_form": "AWS Compute Optimizer",
+      "what": "Right-sizing recommendations for EC2, EBS, Lambda, and more from real usage.",
+      "pick_when": "Cutting over-provisioned resources.",
+      "trap": "Workloads with too little history to judge."
+    },
+    {
+      "id": "control-tower",
+      "family": "ops",
+      "tier": 3,
+      "name": "Control Tower",
+      "full_form": "AWS Control Tower",
+      "what": "Sets up a governed multi-account landing zone with guardrails.",
+      "pick_when": "A new enterprise or migration needs accounts, logging, and guardrails from day one.",
+      "trap": "A single-account prototype."
+    },
+    {
+      "id": "aws-transform",
+      "family": "ops",
+      "tier": 3,
+      "name": "AWS Transform",
+      "full_form": "AWS Transform (agentic migration and modernization service)",
+      "what": "AI-assisted discovery, planning, and code modernization for migrations; AWS points new discovery use cases here.",
+      "pick_when": "A customer starts a migration assessment and needs discovery and wave planning.",
+      "trap": "Application Discovery Service closed to new customers on November 7, 2025. Confirm the current tool before naming one."
+    },
+    {
+      "id": "application-signals",
+      "family": "ops",
+      "tier": 3,
+      "name": "CloudWatch Application Signals",
+      "full_form": "Amazon CloudWatch Application Signals",
+      "what": "Application performance monitoring with service maps and SLOs on latency and availability inside CloudWatch.",
+      "pick_when": "You want SLO-based alerting on AWS, the same idea as your Oracle Prometheus SLO work.",
+      "trap": "An SLO without an error budget policy is just a chart. Agree what happens when the budget burns."
+    }
+  ],
+  "acronyms": [
+    {
+      "acronym": "A2I",
+      "full_form": "Amazon Augmented AI",
+      "service": "a2i"
+    },
+    {
+      "acronym": "ACM",
+      "full_form": "AWS Certificate Manager",
+      "service": "acm"
+    },
+    {
+      "acronym": "ALB",
+      "full_form": "Application Load Balancer",
+      "service": "alb"
+    },
+    {
+      "acronym": "AMI",
+      "full_form": "Amazon Machine Image",
+      "service": "ec2"
+    },
+    {
+      "acronym": "AMG",
+      "full_form": "Amazon Managed Grafana",
+      "service": "amg"
+    },
+    {
+      "acronym": "AMP",
+      "full_form": "Amazon Managed Service for Prometheus",
+      "service": "amp"
+    },
+    {
+      "acronym": "API",
+      "full_form": "Application Programming Interface",
+      "service": "api-gateway"
+    },
+    {
+      "acronym": "ARN",
+      "full_form": "Amazon Resource Name",
+      "service": "iam"
+    },
+    {
+      "acronym": "ASG",
+      "full_form": "Auto Scaling group",
+      "service": "asg"
+    },
+    {
+      "acronym": "AZ",
+      "full_form": "Availability Zone",
+      "service": "az"
+    },
+    {
+      "acronym": "CAF",
+      "full_form": "Cloud Adoption Framework",
+      "service": null
+    },
+    {
+      "acronym": "CDK",
+      "full_form": "Cloud Development Kit",
+      "service": "cdk"
+    },
+    {
+      "acronym": "CDN",
+      "full_form": "Content Delivery Network",
+      "service": "cloudfront"
+    },
+    {
+      "acronym": "CIDR",
+      "full_form": "Classless Inter-Domain Routing",
+      "service": "vpc"
+    },
+    {
+      "acronym": "CRR",
+      "full_form": "Cross-Region Replication (S3)",
+      "service": "s3"
+    },
+    {
+      "acronym": "DDoS",
+      "full_form": "Distributed Denial of Service",
+      "service": "shield"
+    },
+    {
+      "acronym": "DMS",
+      "full_form": "Database Migration Service",
+      "service": "dms"
+    },
+    {
+      "acronym": "DR",
+      "full_form": "Disaster Recovery",
+      "service": null
+    },
+    {
+      "acronym": "DX",
+      "full_form": "Direct Connect",
+      "service": "direct-connect"
+    },
+    {
+      "acronym": "EBS",
+      "full_form": "Elastic Block Store",
+      "service": "ebs"
+    },
+    {
+      "acronym": "EC2",
+      "full_form": "Elastic Compute Cloud",
+      "service": "ec2"
+    },
+    {
+      "acronym": "ECR",
+      "full_form": "Elastic Container Registry",
+      "service": "ecs"
+    },
+    {
+      "acronym": "ECS",
+      "full_form": "Elastic Container Service",
+      "service": "ecs"
+    },
+    {
+      "acronym": "EFS",
+      "full_form": "Elastic File System",
+      "service": "efs"
+    },
+    {
+      "acronym": "EIP",
+      "full_form": "Elastic IP address",
+      "service": "ec2"
+    },
+    {
+      "acronym": "EKS",
+      "full_form": "Elastic Kubernetes Service",
+      "service": "eks"
+    },
+    {
+      "acronym": "EMR",
+      "full_form": "Elastic MapReduce (now just Amazon EMR)",
+      "service": "emr"
+    },
+    {
+      "acronym": "ENI",
+      "full_form": "Elastic Network Interface",
+      "service": "vpc"
+    },
+    {
+      "acronym": "ETL",
+      "full_form": "Extract, Transform, Load",
+      "service": "glue"
+    },
+    {
+      "acronym": "FSx",
+      "full_form": "File System x: managed third-party file systems",
+      "service": "fsx"
+    },
+    {
+      "acronym": "GSI",
+      "full_form": "Global Secondary Index (DynamoDB)",
+      "service": "dynamodb"
+    },
+    {
+      "acronym": "GWLB",
+      "full_form": "Gateway Load Balancer",
+      "service": "gwlb"
+    },
+    {
+      "acronym": "HA",
+      "full_form": "High Availability",
+      "service": null
+    },
+    {
+      "acronym": "HPA",
+      "full_form": "Horizontal Pod Autoscaler (Kubernetes)",
+      "service": "eks"
+    },
+    {
+      "acronym": "IaC",
+      "full_form": "Infrastructure as Code",
+      "service": "cloudformation"
+    },
+    {
+      "acronym": "IAM",
+      "full_form": "Identity and Access Management",
+      "service": "iam"
+    },
+    {
+      "acronym": "IGW",
+      "full_form": "Internet Gateway",
+      "service": "igw"
+    },
+    {
+      "acronym": "KMS",
+      "full_form": "Key Management Service",
+      "service": "kms"
+    },
+    {
+      "acronym": "LSI",
+      "full_form": "Local Secondary Index (DynamoDB)",
+      "service": "dynamodb"
+    },
+    {
+      "acronym": "MFA",
+      "full_form": "Multi-Factor Authentication",
+      "service": "iam"
+    },
+    {
+      "acronym": "MSK",
+      "full_form": "Managed Streaming for Apache Kafka",
+      "service": "msk"
+    },
+    {
+      "acronym": "NACL",
+      "full_form": "Network Access Control List",
+      "service": "nacl"
+    },
+    {
+      "acronym": "NAT",
+      "full_form": "Network Address Translation",
+      "service": "nat"
+    },
+    {
+      "acronym": "NLB",
+      "full_form": "Network Load Balancer",
+      "service": "nlb"
+    },
+    {
+      "acronym": "OAC",
+      "full_form": "Origin Access Control (CloudFront to S3)",
+      "service": "cloudfront"
+    },
+    {
+      "acronym": "PR-FAQ",
+      "full_form": "Press Release and Frequently Asked Questions (Working Backwards)",
+      "service": null
+    },
+    {
+      "acronym": "RAG",
+      "full_form": "Retrieval-Augmented Generation",
+      "service": "bedrock-kb"
+    },
+    {
+      "acronym": "RDS",
+      "full_form": "Relational Database Service",
+      "service": "rds"
+    },
+    {
+      "acronym": "RI",
+      "full_form": "Reserved Instance",
+      "service": "savings-plans"
+    },
+    {
+      "acronym": "RPO",
+      "full_form": "Recovery Point Objective: data loss tolerated, in time",
+      "service": null
+    },
+    {
+      "acronym": "RTO",
+      "full_form": "Recovery Time Objective: downtime tolerated",
+      "service": null
+    },
+    {
+      "acronym": "S3",
+      "full_form": "Simple Storage Service",
+      "service": "s3"
+    },
+    {
+      "acronym": "SCP",
+      "full_form": "Service Control Policy",
+      "service": "organizations"
+    },
+    {
+      "acronym": "SG",
+      "full_form": "Security Group",
+      "service": "security-group"
+    },
+    {
+      "acronym": "SLO",
+      "full_form": "Service Level Objective",
+      "service": "application-signals"
+    },
+    {
+      "acronym": "SNS",
+      "full_form": "Simple Notification Service",
+      "service": "sns"
+    },
+    {
+      "acronym": "SQS",
+      "full_form": "Simple Queue Service",
+      "service": "sqs"
+    },
+    {
+      "acronym": "SSM",
+      "full_form": "Systems Manager (from its original name, Simple Systems Manager)",
+      "service": "ssm"
+    },
+    {
+      "acronym": "SSO",
+      "full_form": "Single Sign-On",
+      "service": "identity-center"
+    },
+    {
+      "acronym": "TGW",
+      "full_form": "Transit Gateway",
+      "service": "transit-gateway"
+    },
+    {
+      "acronym": "TLS",
+      "full_form": "Transport Layer Security",
+      "service": "acm"
+    },
+    {
+      "acronym": "TTL",
+      "full_form": "Time To Live (DNS records, caches)",
+      "service": "route53"
+    },
+    {
+      "acronym": "VPC",
+      "full_form": "Virtual Private Cloud",
+      "service": "vpc"
+    },
+    {
+      "acronym": "VPN",
+      "full_form": "Virtual Private Network",
+      "service": "vpn"
+    },
+    {
+      "acronym": "WAF",
+      "full_form": "Web Application Firewall (not Well-Architected Framework)",
+      "service": "waf"
+    }
   ],
   "pillars": [
-    { "id": "op-ex", "name": "Operational Excellence", "question": "How do you run, monitor, and improve the workload?", "practices": ["Infrastructure as code", "Small, reversible changes", "Runbooks and post-incident reviews"], "tie": "Your P1 MTTR and CLI toolchain stories." },
-    { "id": "security", "name": "Security", "question": "How do you protect data, systems, and identities?", "practices": ["Least-privilege IAM roles", "Encrypt at rest and in transit", "Traceability with CloudTrail"], "tie": "Human-review routing in the ERP migration; confirm the actual access and audit controls you implemented." },
-    { "id": "reliability", "name": "Reliability", "question": "How does it recover from failure and meet demand?", "practices": ["Multi-AZ by default", "Automatic recovery and scaling", "Test recovery, not just backups"], "tie": "p99 SLOs held at 2x peak load." },
-    { "id": "performance", "name": "Performance Efficiency", "question": "How do you use resources efficiently as demand changes?", "practices": ["Pick the right service type", "Measure before tuning", "Use managed and serverless where it fits"], "tie": "NetSuite query plans and indexes." },
-    { "id": "cost", "name": "Cost Optimization", "question": "How do you deliver value at the lowest price?", "practices": ["Right-size, then commit with Savings Plans", "Spot for interruptible work", "Tag and measure spend"], "tie": "ModelScope INT4 on a T4." },
-    { "id": "sustainability", "name": "Sustainability", "question": "How do you minimize environmental impact?", "practices": ["Maximize utilization", "Graviton and managed services", "Delete data you do not need"], "tie": "ModelScope measures memory and throughput efficiency; do not claim measured carbon savings without evidence." }
+    {
+      "id": "op-ex",
+      "name": "Operational Excellence",
+      "question": "How do you run, monitor, and improve the workload?",
+      "practices": [
+        "Infrastructure as code",
+        "Small, reversible changes",
+        "Runbooks and post-incident reviews"
+      ],
+      "tie": "Your P1 MTTR and CLI toolchain stories."
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "question": "How do you protect data, systems, and identities?",
+      "practices": [
+        "Least-privilege IAM roles",
+        "Encrypt at rest and in transit",
+        "Traceability with CloudTrail"
+      ],
+      "tie": "Human-review routing in the ERP migration; confirm the actual access and audit controls you implemented."
+    },
+    {
+      "id": "reliability",
+      "name": "Reliability",
+      "question": "How does it recover from failure and meet demand?",
+      "practices": [
+        "Multi-AZ by default",
+        "Automatic recovery and scaling",
+        "Test recovery, not just backups"
+      ],
+      "tie": "p99 SLOs held at 2x peak load."
+    },
+    {
+      "id": "performance",
+      "name": "Performance Efficiency",
+      "question": "How do you use resources efficiently as demand changes?",
+      "practices": [
+        "Pick the right service type",
+        "Measure before tuning",
+        "Use managed and serverless where it fits"
+      ],
+      "tie": "NetSuite query plans and indexes."
+    },
+    {
+      "id": "cost",
+      "name": "Cost Optimization",
+      "question": "How do you deliver value at the lowest price?",
+      "practices": [
+        "Right-size, then commit with Savings Plans",
+        "Spot for interruptible work",
+        "Tag and measure spend"
+      ],
+      "tie": "ModelScope INT4 on a T4."
+    },
+    {
+      "id": "sustainability",
+      "name": "Sustainability",
+      "question": "How do you minimize environmental impact?",
+      "practices": [
+        "Maximize utilization",
+        "Graviton and managed services",
+        "Delete data you do not need"
+      ],
+      "tie": "ModelScope measures memory and throughput efficiency; do not claim measured carbon savings without evidence."
+    }
   ],
   "seven_rs": [
-    { "id": "retire", "name": "Retire", "what": "Turn it off; nobody needs it.", "example": "An old reporting server no one has opened in a year." },
-    { "id": "retain", "name": "Retain", "what": "Keep it where it is for now.", "example": "A system with a hardware dependency or a recent upgrade." },
-    { "id": "rehost", "name": "Rehost (lift and shift)", "what": "Move as is to EC2.", "example": "A VM fleet moved with Application Migration Service to hit a data center exit date." },
-    { "id": "relocate", "name": "Relocate", "what": "Move the hypervisor-level platform without changing apps.", "example": "VMware workloads moved to VMware on AWS." },
-    { "id": "repurchase", "name": "Repurchase", "what": "Move to a SaaS product.", "example": "Your ERP story: Sage X3 to Sage Intacct, with a data migration." },
-    { "id": "replatform", "name": "Replatform (lift and reshape)", "what": "A few cloud optimizations without changing core architecture.", "example": "Self-managed MySQL moved to RDS." },
-    { "id": "refactor", "name": "Refactor (re-architect)", "what": "Redesign for cloud-native benefits.", "example": "A monolith split into services on Lambda and DynamoDB." }
+    {
+      "id": "retire",
+      "name": "Retire",
+      "what": "Turn it off; nobody needs it.",
+      "example": "An old reporting server no one has opened in a year."
+    },
+    {
+      "id": "retain",
+      "name": "Retain",
+      "what": "Keep it where it is for now.",
+      "example": "A system with a hardware dependency or a recent upgrade."
+    },
+    {
+      "id": "rehost",
+      "name": "Rehost (lift and shift)",
+      "what": "Move as is to EC2.",
+      "example": "A VM fleet moved with Application Migration Service to hit a data center exit date."
+    },
+    {
+      "id": "relocate",
+      "name": "Relocate",
+      "what": "Move the hypervisor-level platform without changing apps.",
+      "example": "VMware workloads moved to VMware on AWS."
+    },
+    {
+      "id": "repurchase",
+      "name": "Repurchase",
+      "what": "Move to a SaaS product.",
+      "example": "Your ERP story: Sage X3 to Sage Intacct, with a data migration."
+    },
+    {
+      "id": "replatform",
+      "name": "Replatform (lift and reshape)",
+      "what": "A few cloud optimizations without changing core architecture.",
+      "example": "Self-managed MySQL moved to RDS."
+    },
+    {
+      "id": "refactor",
+      "name": "Refactor (re-architect)",
+      "what": "Redesign for cloud-native benefits.",
+      "example": "A monolith split into services on Lambda and DynamoDB."
+    }
   ],
   "dr_tiers": [
-    { "id": "backup-restore", "name": "Backup and restore", "rpo": "Illustrative: hours", "rto": "Illustrative: hours to a day", "cost": "Lowest", "how": "Back up to S3 or AWS Backup in another Region; rebuild infrastructure with IaC when needed." },
-    { "id": "pilot-light", "name": "Pilot light", "rpo": "Illustrative: minutes", "rto": "Illustrative: tens of minutes", "cost": "Low", "how": "Data replicates continuously; core services are off or minimal until a failover scales them up." },
-    { "id": "warm-standby", "name": "Warm standby", "rpo": "Illustrative: seconds to minutes", "rto": "Illustrative: minutes", "cost": "Medium", "how": "A scaled-down full copy runs in the second Region and scales up on failover." },
-    { "id": "active-active", "name": "Multi-site active/active", "rpo": "Illustrative: near zero", "rto": "Illustrative: near zero", "cost": "Highest", "how": "Both Regions serve traffic; consistency and conflict handling determine write safety. Aurora Global Database is single-writer across Regions, even with write forwarding. All tier timings are illustrative targets, not guarantees; test end-to-end recovery." }
+    {
+      "id": "backup-restore",
+      "name": "Backup and restore",
+      "rpo": "Illustrative: hours",
+      "rto": "Illustrative: hours to a day",
+      "cost": "Lowest",
+      "how": "Back up to S3 or AWS Backup in another Region; rebuild infrastructure with IaC when needed."
+    },
+    {
+      "id": "pilot-light",
+      "name": "Pilot light",
+      "rpo": "Illustrative: minutes",
+      "rto": "Illustrative: tens of minutes",
+      "cost": "Low",
+      "how": "Data replicates continuously; core services are off or minimal until a failover scales them up."
+    },
+    {
+      "id": "warm-standby",
+      "name": "Warm standby",
+      "rpo": "Illustrative: seconds to minutes",
+      "rto": "Illustrative: minutes",
+      "cost": "Medium",
+      "how": "A scaled-down full copy runs in the second Region and scales up on failover."
+    },
+    {
+      "id": "active-active",
+      "name": "Multi-site active/active",
+      "rpo": "Illustrative: near zero",
+      "rto": "Illustrative: near zero",
+      "cost": "Highest",
+      "how": "Both Regions serve traffic; consistency and conflict handling determine write safety. Aurora Global Database is single-writer across Regions, even with write forwarding. All tier timings are illustrative targets, not guarantees; test end-to-end recovery."
+    }
   ],
   "dr_terms": [
-    { "term": "RPO", "meaning": "Recovery point objective: how much data loss, measured in time, the business accepts." },
-    { "term": "RTO", "meaning": "Recovery time objective: how long the business accepts being down." }
+    {
+      "term": "RPO",
+      "meaning": "Recovery point objective: how much data loss, measured in time, the business accepts."
+    },
+    {
+      "term": "RTO",
+      "meaning": "Recovery time objective: how long the business accepts being down."
+    }
   ],
-  "shared_responsibility": { "aws": ["Physical data centers and hardware", "Global network", "Hypervisor and managed service internals", "Patching of managed service infrastructure"], "customer": ["Their data and its classification", "IAM users, roles, and policies", "Encryption choices and key management", "Security groups and network rules", "OS and app patching on EC2"], "note": "Managed services reduce infrastructure work, not customer responsibility for data, IAM, code, dependencies and configuration. With Lambda, AWS publishes supported runtime updates; customers manage runtime choices and must rebuild/redeploy container images and application dependencies as needed." },
+  "shared_responsibility": {
+    "aws": [
+      "Physical data centers and hardware",
+      "Global network",
+      "Hypervisor and managed service internals",
+      "Patching of managed service infrastructure"
+    ],
+    "customer": [
+      "Their data and its classification",
+      "IAM users, roles, and policies",
+      "Encryption choices and key management",
+      "Security groups and network rules",
+      "OS and app patching on EC2"
+    ],
+    "note": "Managed services reduce infrastructure work, not customer responsibility for data, IAM, code, dependencies and configuration. With Lambda, AWS publishes supported runtime updates; customers manage runtime choices and must rebuild/redeploy container images and application dependencies as needed."
+  },
   "other_frameworks": [
-    { "name": "Working Backwards (PR-FAQ)", "what": "Start from the customer: write the press release and FAQ before building." },
-    { "name": "Cloud Adoption Framework (CAF)", "what": "Six perspectives for a cloud program: business, people, governance, platform, security, operations." }
+    {
+      "name": "Working Backwards (PR-FAQ)",
+      "what": "Start from the customer: write the press release and FAQ before building."
+    },
+    {
+      "name": "Cloud Adoption Framework (CAF)",
+      "what": "Six perspectives for a cloud program: business, people, governance, platform, security, operations."
+    }
   ],
   "resume_map": [
-    { "you_did": "Prometheus and Grafana SLOs, 47 dashboards, 41% fewer false pages", "aws": "Managed Service for Prometheus and Managed Grafana; CloudWatch Application Signals SLOs", "story": "slo-alerting" },
-    { "you_did": "Kubernetes on OCI with autoscaling on custom metrics", "aws": "EKS with HPA on custom metrics, Karpenter for nodes", "story": "k8s-autoscaling" },
-    { "you_did": "Jenkins CLI validation adopted by 4 teams", "aws": "CodePipeline and CodeBuild, or GitHub Actions deploying with OIDC roles", "story": "cli-toolchain" },
-    { "you_did": "Databricks and Delta Lake nightly feed, 4.2M rows", "aws": "Glue or EMR into S3 with Iceberg, queried by Athena", "story": "databricks-feed" },
-    { "you_did": "Claude and LangGraph agents for ERP migration", "aws": "Bedrock (Claude) with Step Functions or Bedrock AgentCore", "story": "erp-hitl" },
-    { "you_did": "MCP tool calling", "aws": "Bedrock AgentCore Gateway in front of Lambda tools", "story": "pacsun-exec" },
-    { "you_did": "Human-in-the-loop review queue, 83% auto-approved", "aws": "Step Functions task-token wait with SQS, or Amazon A2I", "story": "erp-hitl" },
-    { "you_did": "NetSuite SQL tuning, P50 840 to 588 ms", "aws": "RDS or Aurora with CloudWatch Database Insights (verify engine and mode support)", "story": "netsuite-latency" },
-    { "you_did": "Real-time API diagnostics, MTTR 94 to 26 min", "aws": "CloudWatch Logs Insights, X-Ray, EventBridge, Systems Manager runbooks", "story": "p1-mttr" },
-    { "you_did": "GNN fraud graph, 726K nodes", "aws": "Neptune with SageMaker AI", "story": null },
-    { "you_did": "ModelScope INT4 benchmarking on a T4", "aws": "Inferentia or G instances, SageMaker AI endpoints sized by benchmark", "story": "modelscope" }
+    {
+      "you_did": "Prometheus and Grafana SLOs, 47 dashboards, 41% fewer false pages",
+      "aws": "Managed Service for Prometheus and Managed Grafana; CloudWatch Application Signals SLOs",
+      "story": "slo-alerting"
+    },
+    {
+      "you_did": "Kubernetes on OCI with autoscaling on custom metrics",
+      "aws": "EKS with HPA on custom metrics, Karpenter for nodes",
+      "story": "k8s-autoscaling"
+    },
+    {
+      "you_did": "Jenkins CLI validation adopted by 4 teams",
+      "aws": "CodePipeline and CodeBuild, or GitHub Actions deploying with OIDC roles",
+      "story": "cli-toolchain"
+    },
+    {
+      "you_did": "Databricks and Delta Lake nightly feed, 4.2M rows",
+      "aws": "Glue or EMR into S3 with Iceberg, queried by Athena",
+      "story": "databricks-feed"
+    },
+    {
+      "you_did": "Claude and LangGraph agents for ERP migration",
+      "aws": "Bedrock (Claude) with Step Functions or Bedrock AgentCore",
+      "story": "erp-hitl"
+    },
+    {
+      "you_did": "MCP tool calling",
+      "aws": "Bedrock AgentCore Gateway in front of Lambda tools",
+      "story": "pacsun-exec"
+    },
+    {
+      "you_did": "Human-in-the-loop review queue, 83% auto-approved",
+      "aws": "Step Functions task-token wait with SQS, or Amazon A2I",
+      "story": "erp-hitl"
+    },
+    {
+      "you_did": "NetSuite SQL tuning, P50 840 to 588 ms",
+      "aws": "RDS or Aurora with CloudWatch Database Insights (verify engine and mode support)",
+      "story": "netsuite-latency"
+    },
+    {
+      "you_did": "Real-time API diagnostics, MTTR 94 to 26 min",
+      "aws": "CloudWatch Logs Insights, X-Ray, EventBridge, Systems Manager runbooks",
+      "story": "p1-mttr"
+    },
+    {
+      "you_did": "GNN fraud graph, 726K nodes",
+      "aws": "Neptune with SageMaker AI",
+      "story": null
+    },
+    {
+      "you_did": "ModelScope INT4 benchmarking on a T4",
+      "aws": "Inferentia or G instances, SageMaker AI endpoints sized by benchmark",
+      "story": "modelscope"
+    }
   ]
 }

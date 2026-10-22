@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fundamentals.schema.json",
+  "title": "IT fundamentals rapid-fire quiz with short spoken answers",
+  "type": "object",
+  "required": ["intro", "pass_pct", "status_options", "topics", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "intro": { "$ref": "common.schema.json#/$defs/text" },
+    "pass_pct": { "type": "integer", "minimum": 1 },
+    "status_options": { "type": "array", "minItems": 2, "items": { "type": "object", "required": ["id", "label"] } },
+    "topics": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "name"], "additionalProperties": false, "properties": { "id": { "$ref": "common.schema.json#/$defs/id" }, "name": { "$ref": "common.schema.json#/$defs/text" } } } },
+    "items": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["id", "topic", "q", "a", "followup"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "topic": { "type": "string", "description": "topics[].id" },
+          "q": { "$ref": "common.schema.json#/$defs/text" },
+          "a": { "$ref": "common.schema.json#/$defs/text", "description": "Short spoken answer, about 20 to 30 seconds" },
+          "followup": { "$ref": "common.schema.json#/$defs/text" }
+        }
+      }
+    }
+  }
+}

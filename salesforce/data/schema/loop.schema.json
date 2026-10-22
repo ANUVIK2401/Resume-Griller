@@ -14,7 +14,6 @@
       "type": "object", "required": ["name", "mission", "work"],
       "properties": { "name": { "type": "string" }, "mission": { "$ref": "common.schema.json#/$defs/text" }, "work": { "$ref": "common.schema.json#/$defs/textList" }, "urgency": { "type": "string" } }
     },
-    "visa": { "type": "object", "properties": { "provider": { "type": "string" }, "case": { "type": "string" }, "step": { "type": "string" }, "date": { "type": "string", "format": "date" } } },
     "status": { "type": "object", "required": ["as_of", "summary"], "properties": { "as_of": { "type": "string", "format": "date" }, "summary": { "type": "string" } } },
     "status_options": { "type": "array", "items": { "type": "object", "required": ["id", "label"], "properties": { "id": { "$ref": "#/$defs/status" }, "label": { "type": "string" } } } },
     "stages": {

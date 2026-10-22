@@ -273,7 +273,7 @@
     el('tbody', {}, rows.map((r) => el('tr', {}, r.map((c) => el('td', {}, c)))))));
 
 
-  // Rendered lazily; works on any page that loads mermaid from the CDN.
+  // Rendered lazily; works on any page that loads vendor/mermaid.min.js.
   function diagram(source, label) {
     const box = el('div', { class: 'mermaid-box', role: 'img', 'aria-label': label }, el('p', { class: 'muted' }, 'Rendering diagram...'));
     drawDiagram(box, source);

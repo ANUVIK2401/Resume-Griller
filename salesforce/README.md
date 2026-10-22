@@ -31,7 +31,7 @@ Technical wording was checked against [Google's SLO alerting guidance](https://s
 
 The hiring manager round is confirmed for Thursday, October 22, 2026, 11:45 to 12:30. Every `[fill: ...]` prompt in the behavioral and AI banks is now a complete answer that stays inside resume-supported facts; prompts that only asked for unknown details were removed rather than guessed. Failure, disagreement, and mentoring remain open gaps: they need a real example from the candidate. Start with [HM-BRIEF.md](HM-BRIEF.md).
 
-The profile now matches the October 7 resume: MSRcosmos May 2026 to August 2026, and Sports Analytics as an AI/ML Research Intern role. Spoken Oracle tenure stays "nearly 3 years" in both the Salesforce and Amazon modules, by candidate decision.
+Facts confirmed by the candidate on October 19, 2026: MSRcosmos Jun 2026 to Aug 2026; USC Sports Analytics is volunteer research; USC MS CS graduates December 16, 2026; Oracle Software Engineer II Jul 2022 to Jan 2025, spoken as "nearly 3 years" (or "about 3 years") in both the Salesforce and Amazon modules. `scripts/check.mjs` enforces each one.
 
 ## October 10, 2026 audit
 
@@ -77,6 +77,6 @@ Deployed by the repo's GitHub Pages workflow on every push to `main`.
 
 ## Privacy
 
-The site is public. Keep the visa case number, contact names, and anything else private out of `data/`. Delivery practice on the Loop and Behavioral pages turns reference content into timed spoken answers, saved rubrics, and personal drafts.
+The site is public. Keep case numbers, contact names, emails, phone numbers, and personal status details out of `data/`; `scripts/check.mjs` fails the build if any appear. Delivery practice on the Loop and Behavioral pages turns reference content into timed spoken answers, saved rubrics, and personal drafts.
 
 Progress, notes, and drafts live only in your browser's localStorage and are never committed; use Export to back them up.

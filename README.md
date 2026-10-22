@@ -1,28 +1,31 @@
-# AWS Solutions Architect (AWSI - ETP) interview prep
+# Resume Griller
 
-A focused preparation workspace for Anuvik Thota: AWS service choices, customer architecture conversations, resume deep dives, and Amazon Leadership Principle stories.
+Interview prep for Anuvik Thota. Static HTML, CSS, and vanilla JS with JSON content; no build step. Every page shares one interview bar (`shared/switcher.js`) that switches modules and shows each countdown from the module's `data/loop.json`.
 
-Open the root landing page, then [today's plan](amazon/index.html), the [technical domains](amazon/domains.html), the [Leadership Principle stories](amazon/behavioral.html), the [presentation](amazon/presentation.html), or a [mock day](amazon/mock.html). The full module and checks are documented in [amazon/README.md](amazon/README.md).
+Live site: https://anuvik2401.github.io/Resume-Griller/
+
+| Module | Interview | Live | Docs |
+|---|---|---|---|
+| Amazon SA Prep | AWS Solutions Architect, L4, AWSI Emerging Talent Program. Confirmed: four 60-minute rounds on the USC campus, Wednesday October 28, 2026, 9:30 am to 2:30 pm | [amazon/](https://anuvik2401.github.io/Resume-Griller/amazon/) | [amazon/README.md](amazon/README.md) |
+| Salesforce Prep | Software Engineering MTS, hiring manager round Thursday October 22, 2026 | [salesforce/](https://anuvik2401.github.io/Resume-Griller/salesforce/) | [salesforce/README.md](salesforce/README.md) |
+| General bank (archived) | Older general question bank; numbers predate the current resume | [general-prep.html](https://anuvik2401.github.io/Resume-Griller/general-prep.html) | |
+| Google (archived) | Earlier Google prep; numbers predate the current resume | [google-prep.html](https://anuvik2401.github.io/Resume-Griller/google-prep.html) | |
+
+Amazon pages: [7-day plan](https://anuvik2401.github.io/Resume-Griller/amazon/index.html), [technical domains](https://anuvik2401.github.io/Resume-Griller/amazon/domains.html), [Leadership Principles](https://anuvik2401.github.io/Resume-Griller/amazon/behavioral.html), [presentation](https://anuvik2401.github.io/Resume-Griller/amazon/presentation.html), [mock day](https://anuvik2401.github.io/Resume-Griller/amazon/mock.html), [printable final review](https://anuvik2401.github.io/Resume-Griller/amazon/final-review.html), [presentation handout](https://anuvik2401.github.io/Resume-Griller/amazon/presentation-handout.html), [AWS glossary](https://anuvik2401.github.io/Resume-Griller/amazon/aws.html), [look-alike pairs](https://anuvik2401.github.io/Resume-Griller/amazon/compare.html), [whiteboard designs](https://anuvik2401.github.io/Resume-Griller/amazon/design.html), [IT fundamentals](https://anuvik2401.github.io/Resume-Griller/amazon/fundamentals.html).
+
+## Run locally
 
 ```sh
 python3 -m http.server 8000
 # http://localhost:8000/
 ```
 
-Pure HTML/CSS/JS, JSON content, no production dependencies. Progress, mock history, and drafts save in the browser and can be exported.
+The pages fetch local JSON, so they need HTTP, not `file://`. Progress, notes, and drafts save in your browser and can be exported from each module's sidebar.
 
-**Confirmed loop:** Wednesday, October 28, 2026, in person on the USC campus. Four 60-minute interviews, 9:30 am to 2:30 pm, lunch 11:30 am to 12:30 pm, arrive by 9:00 am. Leadership Principles in every round; a technical evaluation with AI/ML depth, breadth in networking, databases and analytics, and security, and explaining technical ideas to non-technical listeners (no live coding); and an 8 to 10 minute presentation with no slides. The 7-day plan runs October 22 to 28.
+## Checks and deploy
 
-Portable references:
+`.github/workflows/pages.yml` runs on every push to `main`: the Salesforce and Amazon content checks, unit and integration tests, the Python reference solutions, the Amazon browser tests, and `shared/test_pages.mjs`, which loads every page at 390px and desktop width in light and dark mode and fails on console errors, failed requests, or horizontal overflow. GitHub Pages deploys only when all of them pass. See each module's README for the commands.
 
-- [Final review](amazon/FINAL-REVIEW.md), printable as [final-review.html](amazon/final-review.html)
-- [Presentation handout](amazon/presentation-handout.html)
-- [AWS cheat sheet](amazon/AWS-CHEATSHEET.md)
-- [Resume and STAR assessment](amazon/RESUME-STAR-REVIEW.md)
-- [STAR story bank](amazon/stories.md)
+## Privacy
 
-The older general bank remains at [general-prep.html](general-prep.html). Salesforce is active: the hiring manager round is October 22, 2026; start with [salesforce/HM-BRIEF.md](salesforce/HM-BRIEF.md). Google preparation remains an archived module.
-
-Every page shares one interview bar (`shared/switcher.js`): switch between Salesforce and Amazon, see each countdown from the module's `data/loop.json`, and jump between the current module's pages.
-
-The existing GitHub Pages workflow deploys pushes to main after validation. Local edits do not update the live site until pushed.
+The site is public. No recruiter or interviewer names, emails, phone numbers, case numbers, or personal status details belong in any file; `amazon/scripts/check.mjs` scans the whole repo and fails the build if one appears.

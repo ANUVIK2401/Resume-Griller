@@ -172,7 +172,7 @@
           : el('p', { class: 'gap-text' }, `No story yet. Lower priority: the ${lp.gap} worksheet is below.`)))),
       ...data.gaps.filter((g) => !g.required).map((g) => el('div', { class: 'comp is-gap stack' },
         el('p', { class: 'h3' }, g.name), ui.list(g.asked_as), el('p', { class: 'muted' }, g.seeds),
-        ['s', 't', 'a', 'r'].map((k) => el('div', { class: 'kv' }, el('p', { class: 'gap-prompt' }, el('b', {}, k.toUpperCase()), g.template[k]), ui.notesBox(`gap-${g.id}-${k}`, `${k.toUpperCase()} draft`))))));
+        ['s', 't', 'a', 'r'].map((k) => el('div', { class: 'kv' }, el('p', { class: 'gap-prompt' }, el('b', {}, k.toUpperCase()), ui.fill(g.template[k])), ui.notesBox(`gap-${g.id}-${k}`, `${k.toUpperCase()} draft`))))));
   }
 
   window.Prep.pages.behavioral = async ({ main, profile }) => {

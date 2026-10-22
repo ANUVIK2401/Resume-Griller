@@ -1,8 +1,11 @@
 // Content guard. Run before every commit: node amazon/scripts/check.mjs
 // Fails on: invalid JSON, schema violations, em/en dashes anywhere, duplicate ids,
-// broken story/LP cross references, candidate metrics missing from profile.json,
-// source-aligned employment chronology, domain question minimums, the 8 named LPs,
-// Oracle tenure wording, privacy patterns, and stale generated files.
+// broken cross references, candidate metrics missing from profile.json, numbers that drift
+// from salesforce/data/profile.json, contradicted resume facts (Oracle tenure wording,
+// MSRcosmos dates, Sports Analytics as volunteer research, graduation date), an LP with no
+// story and no gap entry, and private data (emails, phone numbers, case numbers,
+// immigration details) anywhere in the repo.
+// Also: domain question minimums, the 8 named LPs, and stale generated print pages.
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createRequire } from 'node:module';
@@ -126,7 +129,17 @@ for (const lp of behavioral.lps || []) {
   }
 }
 for (const g of behavioral.gaps || []) refs(`behavioral.gaps.${g.id}.lps`, g.lps, lpIds);
-refs('aws.services.category', (aws.services || []).map((s) => s.category), ids(aws.categories));
+const awsIds = ids(aws.services);
+refs('aws.acronyms.service', (aws.acronyms || []).map((a) => a.service), awsIds);
+const { compare = {}, fundamentals = {} } = data;
+refs('compare.pairs.group', (compare.pairs || []).map((p) => p.group), ids(compare.groups));
+for (const p of compare.pairs || []) refs(`compare.pairs.${p.id}.services`, p.services, awsIds);
+refs('fundamentals.items.topic', (fundamentals.items || []).map((x) => x.topic), ids(fundamentals.topics));
+for (const d of designs.designs || []) {
+  const focus = d.diagram?.focus;
+  if (focus && focus.length > d.flow.length) fail(`designs.designs.${d.id}.diagram.focus`, 'more highlighted steps than flow steps');
+}
+refs('aws.services.family', (aws.services || []).map((s) => s.family), ids(aws.families));
 refs('aws.resume_map.story', (aws.resume_map || []).map((r) => r.story), storyIds);
 refs('designs.designs.story', (designs.designs || []).map((d) => d.story), storyIds);
 refs('top.questions.group', (data.top?.questions || []).map((q) => q.group), ids(data.top?.groups));
@@ -182,8 +195,12 @@ if (data.presentation) {
 for (const lp of behavioral.lps || []) {
   const tagged = (behavioral.stories || []).filter((s) => s.lps.includes(lp.id));
   if (tagged.length) continue;
-  if (lp.gap) warnings.push(`LP "${lp.name}" has no story yet; write the "${lp.gap}" gap story`);
-  else fail(`behavioral.lps.${lp.id}`, 'no story is tagged with this LP and no gap story is planned');
+  const gap = (behavioral.gaps || []).find((g) => g.id === lp.gap && g.lps.includes(lp.id));
+  if (gap) warnings.push(`LP "${lp.name}" is covered only by the unfinished "${gap.id}" gap entry; write it from a real event`);
+  else fail(`behavioral.lps.${lp.id}`, 'no story is tagged with this LP and no gap entry lists it');
+}
+for (const g of behavioral.gaps || []) {
+  for (const key of ['s', 't', 'a', 'r']) if (!String(g.template?.[key] || '').trim()) fail(`behavioral.gaps.${g.id}.template.${key}`, 'empty STAR slot');
 }
 for (const lp of behavioral.lps || []) {
   if (!(questions.lp_questions || []).some((q) => q.lp === lp.id)) fail(`questions.lp_questions`, `no question for LP "${lp.id}"`);
@@ -214,28 +231,72 @@ for (const [where, text] of spoken) {
   for (const n of numbersIn(String(text).replace(/\[fill:[^\]]*\]/g, ''))) if (!known.has(n)) fail(where, `metric "${n}" is not in profile.json`);
 }
 
-// 8. Resume chronology is source-aligned; do not force unsupported employment labels.
+// 7b. Numbers are copied from salesforce/data/profile.json, never invented here: every Amazon
+// number must exist there with the same answer and unit.
+const repo = join(root, '..');
+const sfProfile = JSON.parse(readFileSync(join(repo, 'salesforce/data/profile.json'), 'utf8'));
+const sfNumbers = new Map(sfProfile.numbers.map((n) => [n.id, n]));
+for (const n of profile.numbers || []) {
+  const sf = sfNumbers.get(n.id);
+  if (!sf) fail(`profile.numbers.${n.id}`, 'not in salesforce/data/profile.json; copy numbers from there, do not invent them');
+  else if (sf.a !== n.a || sf.unit !== n.unit) fail(`profile.numbers.${n.id}`, `answer ${n.a} ${n.unit} differs from Salesforce ${sf.a} ${sf.unit}`);
+}
+
+// 8. Candidate-confirmed facts (October 19, 2026).
 const experience = Object.fromEntries((profile.experience || []).map(item => [item.id, item]));
-for (const [id, expected] of Object.entries({ oracle: ['2022-07', '2025-01'], msrcosmos: ['2026-05', '2026-08'] })) {
+for (const [id, expected] of Object.entries({ oracle: ['2022-07', '2025-01'], msrcosmos: ['2026-06', '2026-08'] })) {
   const dates = experience[id]?.legal_dates;
-  if (dates?.start !== expected[0] || dates?.end !== expected[1]) fail(`profile.experience.${id}`, 'dates differ from the reviewed resume');
+  if (dates?.start !== expected[0] || dates?.end !== expected[1]) fail(`profile.experience.${id}`, `legal_dates must be ${expected[0]} to ${expected[1]}`);
 }
-
-// 8b. Oracle tenure is spoken as "nearly 3 years" everywhere.
-for (const [where, text] of [...strings(behavioral).map((t) => ['behavioral', t]), ...strings(data.domains || {}).map((t) => ['domains', t]), ...strings(data.presentation || {}).map((t) => ['presentation', t])]) {
-  for (const m of text.matchAll(/(\w+\s+)?(?:2|two|2\.5|3|three)\+?\s+years\b/gi)) {
-    if (/Oracle/i.test(text) && !/^nearly\s/i.test(m[0])) fail(where, `Oracle tenure must be "nearly 3 years", found "${m[0]}"`);
-  }
-}
-
-// 8c. Public repo privacy: no emails, phone numbers, street addresses, or work-authorization terms.
-const PRIVACY = [
-  [/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/, 'email address'],
-  [/(?:\+1[\s.-]?)?\(?\b\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b/, 'phone number'],
-  [/\b\d{1,5}\s+(?:[A-Z][a-z]+\s+){1,3}(?:Street|St\.|Avenue|Ave\.|Boulevard|Blvd|Road|Rd\.|Drive|Dr\.|Way|Lane)\b/, 'street address'],
-  [/\b(?:H-1B|H1B|OPT|CPT)\b/, 'work-authorization detail'],
-  [/\b(?:F-1 visa|green card|visa sponsorship|work authorization|work permit)\b/i, 'work-authorization detail'],
+if (experience.sports?.kind !== 'volunteer research') fail('profile.experience.sports.kind', 'USC Sports Analytics is volunteer research');
+if (!/Dec 16, 2026/.test(profile.education?.find((e) => e.id === 'usc-ms')?.dates_display || '')) fail('profile.education.usc-ms', 'USC MS CS graduates Dec 16, 2026');
+// Copy rules for every data string and Markdown file. The review's discrepancy log quotes the
+// earlier resume PDF on purpose, so it is exempt.
+const FACT_RULES = [
+  // Guarded so unrelated terms, such as a 3-year Savings Plan, do not trip the tenure rule.
+  [/\b(?<!nearly |about )(3|three) years\b|\b(2\.5|two and a half|2 and a half) years\b|\b(close to|almost|over|more than|around|roughly) (3|three) years\b/i, 'Oracle tenure is "nearly 3 years" or "about 3 years"', /Oracle|experience|tenure|worked|career/i],
+  [/\bMay 2026\b|2026-05/, 'MSRcosmos ran Jun 2026 to Aug 2026'],
+  [/\bresearch intern(ship)?\b/i, 'USC Sports Analytics is volunteer research, not an internship'],
 ];
+function pathStrings(node, path, out = []) {
+  if (typeof node === 'string') out.push([path, node]);
+  else if (node && typeof node === 'object') for (const [k, v] of Object.entries(node)) if (k !== '$schema') pathStrings(v, `${path}.${k}`, out);
+  return out;
+}
+const copyTexts = [
+  ...Object.entries(data).flatMap(([name, json]) => pathStrings(json, name)).filter(([path]) => !path.startsWith('review.discrepancies')),
+  ...walk(root).filter((p) => p.endsWith('.md')).flatMap((p) => readFileSync(p, 'utf8').split('\n')
+    .map((line, i) => [`${relative(root, p)}:${i + 1}`, line]).filter(([, line]) => !/Earlier resume PDF|Candidate decision, October 19/.test(line))),
+];
+for (const [where, text] of copyTexts) for (const [re, why, guard] of FACT_RULES) if ((!guard || guard.test(text)) && re.test(text)) fail(where, why);
+
+// 8b. Privacy: the site is public. Scan every text file in the repo (not just amazon/) for
+// emails, phone numbers, immigration case numbers, and immigration status details.
+const PRIVATE = [
+  [/[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z]{2,}/, 'email address'],
+  [/(?<![\w.])(\+?1[ .-]?)?\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}(?!\d)/, 'phone number'],
+  [/\b(IOE|WAC|EAC|LIN|SRC|MSC|NBC|YSC)\d{10}\b/, 'immigration case number'],
+  [/\b(visa|H-?1B|STEM OPT|USCIS|green card|I-20|I-765|I-797|immigration|sponsorship)\b/i, 'immigration detail'],
+];
+const SELF = new Set([join(root, 'scripts/check.mjs')]);
+const repoFiles = (function walkRepo(dir) {
+  return readdirSync(dir).flatMap((name) => {
+    if (name.startsWith('.') || ['node_modules', 'vendor'].includes(name)) return [];
+    const path = join(dir, name);
+    return statSync(path).isDirectory() ? walkRepo(path) : [path];
+  });
+})(repo).filter((p) => /\.(html|css|js|mjs|json|md|py|yml)$/.test(p) && !SELF.has(p));
+for (const path of repoFiles) {
+  readFileSync(path, 'utf8').split('\n').forEach((line, i) => {
+    for (const [re, what] of PRIVATE) if (re.test(line)) fail(`${relative(repo, path)}:${i + 1}`, `${what} in a public file`);
+  });
+}
+
+// 8c. Public repo privacy: no street addresses in shipped pages.
+// Their scan below covers emails, phones, and immigration details; this adds street addresses.
+const PRIVACY = [
+  [/\b\d{1,5}\s+(?:[A-Z][a-z]+\s+){1,3}(?:Street|St\.|Avenue|Ave\.|Boulevard|Blvd|Road|Rd\.|Drive|Dr\.|Way|Lane)\b/, 'street address'],
+]
 for (const path of walk(root).filter((p) => /\.(html|json|md)$/.test(p) && !p.includes('/scripts/'))) {
   readFileSync(path, 'utf8').split('\n').forEach((line, i) => {
     for (const [re, what] of PRIVACY) if (re.test(line)) fail(`${relative(root, path)}:${i + 1}`, `looks like a ${what}; keep it out of the public repo`);
@@ -267,4 +328,4 @@ if (errors.length) {
   process.exit(1);
 }
 const qCount = (data.domains?.domains || []).reduce((n, d) => n + d.questions.length, 0);
-console.log(`check passed: ${Object.keys(data).length} data files, ${(behavioral.stories || []).length} stories, ${(behavioral.lps || []).length} LPs, ${qCount} domain questions, ${(aws.services || []).length} AWS terms`);
+console.log(`check passed: ${Object.keys(data).length} data files, ${(behavioral.stories || []).length} stories, ${(behavioral.gaps || []).length} unfinished gap entries, ${(behavioral.lps || []).length} LPs, ${qCount} domain questions, ${(aws.services || []).length} AWS terms, ${(compare.pairs || []).length} pairs, ${(fundamentals.items || []).length} fundamentals`);

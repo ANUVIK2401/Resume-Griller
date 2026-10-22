@@ -375,7 +375,22 @@
             "step": 4
           }
         ]
-      }
+      },
+      "why": [
+        {
+          "decision": "ALB, not NLB",
+          "reason": "HTTP routing by host and path. Use NLB for Layer 4, extreme throughput, or static IPs."
+        },
+        {
+          "decision": "RDS Multi-AZ",
+          "reason": "Fails over automatically. Add read replicas or a cache if reads need to scale."
+        },
+        {
+          "decision": "S3 + CloudFront",
+          "reason": "Static files never touch the app servers."
+        }
+      ],
+      "watch_out": "Keep the app and database private. Production also needs CI/CD, backups, WAF rules, encryption, health checks, and a tested failover."
     },
     {
       "id": "erp-migration",
@@ -643,7 +658,22 @@
             "ec2"
           ]
         ]
-      }
+      },
+      "why": [
+        {
+          "decision": "Discover before deciding",
+          "reason": "Dependencies decide wave order. Moving an app without its database or batch jobs breaks month-end close."
+        },
+        {
+          "decision": "Repurchase for the ERP, rehost for the rest first",
+          "reason": "Moving to SaaS ERP removes the most operational work; rehosting the long tail gets out of the data center quickly."
+        },
+        {
+          "decision": "DMS with change data capture",
+          "reason": "Keeps the source and target in sync so cutover is a short window instead of a weekend outage."
+        }
+      ],
+      "watch_out": "Financial data needs reconciliation, not just a row count. Agree record-level checks and a rollback plan with finance before cutover, and keep one write authority at a time."
     },
     {
       "id": "doc-pipeline",
@@ -888,7 +918,22 @@
             "step": 4
           }
         ]
-      }
+      },
+      "why": [
+        {
+          "decision": "Step Functions, not chained Lambdas",
+          "reason": "The workflow has retries, branching, and a human review wait; Step Functions keeps that state visible."
+        },
+        {
+          "decision": "Textract plus Bedrock",
+          "reason": "Textract pulls structured fields reliably; Bedrock summarizes and classifies. Each does the part it is good at."
+        },
+        {
+          "decision": "Human review on low scores",
+          "reason": "The same confidence routing idea as your ERP work: automate the easy cases, send uncertain ones to a person."
+        }
+      ],
+      "watch_out": "Do not trust model self-confidence alone. Calibrate the review threshold on a labeled set and track wrong auto-approvals, not just review volume."
     },
     {
       "id": "rag-chatbot",
@@ -1089,7 +1134,22 @@
             "step": 4
           }
         ]
-      }
+      },
+      "why": [
+        {
+          "decision": "Bedrock",
+          "reason": "Hosted foundation models, no model servers to run."
+        },
+        {
+          "decision": "SageMaker instead",
+          "reason": "When you train or host a custom model on a managed endpoint."
+        },
+        {
+          "decision": "Lambda or ECS",
+          "reason": "Lambda for short API work; ECS for long-running or streaming responses."
+        }
+      ],
+      "watch_out": "Managed AI does not remove the need for data authorization, evaluation, prompt-injection defenses, human review of high-impact decisions, and cost controls."
     },
     {
       "id": "clickstream",
@@ -1305,7 +1365,22 @@
             "step": 3
           }
         ]
-      }
+      },
+      "why": [
+        {
+          "decision": "Athena or Redshift",
+          "reason": "Athena for ad hoc SQL on lake files; Redshift for repeated, curated warehouse queries."
+        },
+        {
+          "decision": "Raw and curated zones",
+          "reason": "Keeps source fidelity while giving analysts consistent, fast datasets."
+        },
+        {
+          "decision": "Glue",
+          "reason": "Catalog and transformation, not storage."
+        }
+      ],
+      "watch_out": "Data quality, schema evolution, PII controls, partition strategy, and ownership matter as much as the services."
     },
     {
       "id": "multi-region-dr",
@@ -1547,7 +1622,22 @@
             "pay"
           ]
         ]
-      }
+      },
+      "why": [
+        {
+          "decision": "Backup and restore",
+          "reason": "Lowest cost, longest recovery."
+        },
+        {
+          "decision": "Pilot light or warm standby",
+          "reason": "Faster recovery for more always-on cost."
+        },
+        {
+          "decision": "Active-active",
+          "reason": "Shortest recovery, highest complexity and data-consistency burden."
+        }
+      ],
+      "watch_out": "Replication copies corruption and deletes too. Pair it with protected point-in-time backups and a rehearsed runbook."
     }
   ]
 }

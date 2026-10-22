@@ -29,8 +29,8 @@ test('assessment exposes the real gaps, overlapping episodes and resume discrepa
   assert.equal(byId('learn-langgraph').readiness, 'overlapping-angle');
   for (const id of ['pacsun-exec', 'trust-hitl']) assert.equal(byId(id).readiness, 'needs-outcome');
   assert.deepEqual(data.gaps.map(g => g.id).sort(), ['disagreement', 'failure', 'mentoring']);
-  assert.ok(data.discrepancies.some(d => /May/.test(d.resume) && /Jun/.test(d.previous)));
-  assert.ok(data.discrepancies.some(d => /Intern/.test(d.resume) && /volunteer/.test(d.previous)));
+  assert.ok(data.discrepancies.some(d => /May/.test(d.resume) && /Jun 2026/.test(d.previous)));
+  assert.ok(data.discrepancies.some(d => /Intern/.test(d.resume) && /volunteer research/.test(d.previous)));
   assert.ok(data.discrepancies.some(d => /2022/.test(d.resume) && /2025/.test(d.resume)));
 });
 
@@ -45,9 +45,10 @@ test('the bank no longer turns plausible details into personal history', () => {
   assert.match(bank.stories.find(s => s.id === 'dqn-stall').r, /shorter|reduction/);
   assert.match(bank.stories.find(s => s.id === 'modelscope').r, /2299|2,299/);
   const profile = read('profile');
-  assert.equal(profile.experience.find(e => e.id === 'msrcosmos').legal_dates.start, '2026-05');
-  assert.equal(profile.experience.find(e => e.id === 'sports').role, 'AI/ML Research Intern');
-  assert.match(profile.experience.find(e => e.id === 'oracle').dates_display, /Jul 2022.*Jan 2025/);
+  assert.equal(profile.experience.find(e => e.id === 'msrcosmos').legal_dates.start, '2026-06');
+  assert.equal(profile.experience.find(e => e.id === 'sports').kind, 'volunteer research');
+  assert.deepEqual(profile.experience.find(e => e.id === 'oracle').legal_dates, { start: '2022-07', end: '2025-01' });
+  assert.equal(profile.experience.find(e => e.id === 'oracle').dates_display, 'nearly 3 years');
 });
 
 test('review sources resolve and the page uses safe shared controls for local drafts', () => {

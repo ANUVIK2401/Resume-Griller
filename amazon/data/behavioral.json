@@ -194,10 +194,10 @@
       ],
       "seeds": "Look for a real event in the last 5 years: an Oracle deploy that failed before the validation toolchain existed, an early MSRcosmos agent run that produced a wrong result, or an assumption that data proved wrong. Pick one where you owned part of the cause.",
       "template": {
-        "s": "What did I own that went wrong, and who felt it?",
-        "t": "What was I on the hook for when it broke?",
-        "a": "What did I do in the first hour, and what did I change so it could not repeat the same way?",
-        "r": "The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse."
+        "s": "[fill: What did I own that went wrong, and who felt it?]",
+        "t": "[fill: What was I on the hook for when it broke?]",
+        "a": "[fill: What did I do in the first hour, and what did I change so it could not repeat the same way?]",
+        "r": "[fill: The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse.]"
       },
       "required": true,
       "worksheet": [
@@ -248,10 +248,10 @@
       ],
       "seeds": "Build from S3 (moving alerts from static thresholds to SLOs) or S4 (a team resisting the CLI validation gate). Use a real disagreement only.",
       "template": {
-        "s": "Who did I disagree with, about which technical decision?",
-        "t": "What was at stake, and who owned the decision?",
-        "a": "How did I understand their view first, what data did I bring, and how was it decided?",
-        "r": "What shipped. If I lost, how I committed fully anyway. What I learned about disagreeing well."
+        "s": "[fill: Who did I disagree with, about which technical decision?]",
+        "t": "[fill: What was at stake, and who owned the decision?]",
+        "a": "[fill: How did I understand their view first, what data did I bring, and how was it decided?]",
+        "r": "[fill: What shipped. If I lost, how I committed fully anyway. What I learned about disagreeing well.]"
       },
       "required": false
     },
@@ -267,10 +267,10 @@
       ],
       "seeds": "A new teammate, a lab member, an on-call engineer using your runbooks, or an engineer on one of the 4 teams adopting the CLI toolchain.",
       "template": {
-        "s": "Who did I help ramp up, and where were they starting from?",
-        "t": "What did they need to be able to do, and by when?",
-        "a": "How did I teach it: pairing, docs, reviews? One specific thing I did.",
-        "r": "What they could do on their own afterward. A concrete outcome."
+        "s": "[fill: Who did I help ramp up, and where were they starting from?]",
+        "t": "[fill: What did they need to be able to do, and by when?]",
+        "a": "[fill: How did I teach it: pairing, docs, reviews? One specific thing I did.]",
+        "r": "[fill: What they could do on their own afterward. A concrete outcome.]"
       },
       "required": false
     }
@@ -676,7 +676,7 @@
       "title": "DQN training stall, 40% shorter runs",
       "experience_id": "sports",
       "lead": true,
-      "note": "The PDF lists AI/ML Research Intern, Sports Analytics. Earlier site data said volunteer research; confirm the official role classification before using it on forms.",
+      "note": "USC Sports Analytics is volunteer research. Say so plainly; do not call it an internship.",
       "lps": [
         "dive-deep",
         "bias-for-action",

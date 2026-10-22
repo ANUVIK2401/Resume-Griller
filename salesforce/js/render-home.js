@@ -126,7 +126,6 @@
       ['Team', `${loop.team.name}. ${loop.team.mission}`],
       ['Urgency', loop.team.urgency],
       ['Contacts', loop.contacts.map((c) => [c.role, c.title].filter(Boolean).join(', ')).join('; ')],
-      ['Visa', `${loop.visa.provider}: ${loop.visa.step} (${loop.visa.date})`],
       ['Status', `${loop.status.summary} (as of ${loop.status.as_of})`],
     ];
     return ui.section('process', 'Process', 'The req', el('span', {}, 'The ', el('em', {}, 'process')),

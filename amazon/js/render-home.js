@@ -7,6 +7,8 @@
     { page: 'domains', noun: 'domain questions known', items: (d) => d.domains.flatMap((x) => x.questions), prefix: 'dq-' },
     { page: 'behavioral', noun: 'stories ready', items: (d) => d.stories, prefix: 'story-' },
     { page: 'top', noun: 'top questions ready', items: (d) => d.questions, prefix: 'top-' },
+    { page: 'fundamentals', noun: 'fundamentals known', items: (d) => d.items, prefix: 'fund-' },
+    { page: 'compare', noun: 'look-alike pairs known', items: (d) => d.pairs, prefix: 'cmp-' },
   ];
 
   const pacificToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());

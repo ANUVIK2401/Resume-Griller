@@ -28,15 +28,15 @@
   "discrepancies": [
     {
       "id": "msr-dates",
-      "resume": "MSRcosmos: May 2026 to Aug 2026.",
-      "previous": "Site profile: Jun 2026 to Aug 2026.",
-      "action": "Site profile is aligned to the PDF, including legal_dates. Confirm exact dates against your records before forms or background checks."
+      "resume": "Earlier resume PDF: MSRcosmos May 2026 to Aug 2026.",
+      "previous": "Candidate decision, October 19, 2026: Jun 2026 to Aug 2026.",
+      "action": "Site profile and legal_dates now say Jun 2026 to Aug 2026. Update the resume PDF to match before you hand it to an interviewer."
     },
     {
       "id": "sports-role",
-      "resume": "USC Sports Analytics: AI/ML Research Intern, Jun 2025 to Sep 2025.",
-      "previous": "Site profile and S8: volunteer research.",
-      "action": "Display the PDF title; volunteer status is not established by the supplied PDF. Reconcile official classification with your appointment records."
+      "resume": "Earlier resume PDF: USC Sports Analytics, AI/ML Research Intern, Jun 2025 to Sep 2025.",
+      "previous": "Candidate decision, October 19, 2026: volunteer research.",
+      "action": "Say volunteer research. Update the resume PDF title to match so the paper and the spoken answer agree."
     },
     {
       "id": "oracle-tenure",
