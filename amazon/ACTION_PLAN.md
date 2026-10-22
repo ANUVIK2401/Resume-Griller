@@ -29,7 +29,7 @@ The recruiter confirmed the loop on October 21, 2026. Everything labeled "report
 - **No invented candidate facts.** Only use metrics in `data/profile.json`. Unwritten personal stories stay as `[fill: ...]` prompts.
 - **Candidate facts:** Oracle SWE II Jul 2022 to Jan 2025, spoken as "nearly 3 years"; MSRcosmos AI Forward Deployed SWE Intern Jun 2026 to Aug 2026; USC Sports Analytics is volunteer research; USC MS CS graduates December 16, 2026. PacSun and Trust Lab work is ongoing: say "building", not "built".
 - **No em dashes or en dashes anywhere.** Commas, colons, periods.
-- **Public repo privacy:** no recruiter names or emails, no phone numbers, no street address or room number, no immigration or visa details. Say "USC campus" for the location.
+- **Public repo privacy:** no recruiter names or emails, no phone numbers, no street address or room number, no work-authorization details. Say "USC campus" for the location.
 - Plain, spoken English in every answer. Short sentences. Answer first, then the reason.
 
 ## 2. Phase A: update the loop to the confirmed format
@@ -196,7 +196,7 @@ Update `mock.html` to simulate the real day:
 
 ## 8. Phase G: checks, verification, deploy
 
-- Extend `scripts/check.mjs`: schema-validate every new data file; every domain meets its minimum question count; every question has non-empty `plain` and `technical`; every LP in the 8 has at least two stories; no em or en dashes; no metric outside profile.json; Oracle tenure wording; privacy patterns (emails, phone numbers, street addresses, visa terms) fail the check.
+- Extend `scripts/check.mjs`: schema-validate every new data file; every domain meets its minimum question count; every question has non-empty `plain` and `technical`; every LP in the 8 has at least two stories; no em or en dashes; no metric outside profile.json; Oracle tenure wording; privacy patterns already enforced by the existing check (emails, phone numbers, street addresses, work-authorization terms) still fail.
 - Add tests for the new renderers and timers in the style of the existing `scripts/test_*.mjs`.
 - Run all existing Salesforce and Amazon checks and tests; everything must pass.
 - Serve with `python3 -m http.server 8000`. With Playwright (Chromium is preinstalled; do not run `playwright install`), load every Amazon page in light and dark mode at 390 px and 1280 px. Fail on console errors, failed requests, or horizontal overflow. Print-preview the handout and final review to confirm one-page fit.
