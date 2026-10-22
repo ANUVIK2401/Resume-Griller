@@ -1,19 +1,22 @@
-# AWSI - ETP Solutions Architect interview prep
+# AWS Solutions Architect (AWSI - ETP) interview prep
 
 A focused preparation workspace for Anuvik Thota: AWS service choices, customer architecture conversations, resume deep dives, and Amazon Leadership Principle stories.
 
-Open the root landing page, then the [October 28 sprint](amazon/index.html), [resume and STAR review](amazon/review.html), or [AWS cheat sheet](amazon/cheatsheet.html). The full module and checks are documented in [amazon/README.md](amazon/README.md).
+Open the root landing page, then [today's plan](amazon/index.html), the [technical domains](amazon/domains.html), the [Leadership Principle stories](amazon/behavioral.html), the [presentation](amazon/presentation.html), or a [mock day](amazon/mock.html). The full module and checks are documented in [amazon/README.md](amazon/README.md).
 
 ```sh
 python3 -m http.server 8000
 # http://localhost:8000/
 ```
 
-Pure HTML/CSS/JS, JSON content, no production dependencies. Progress, mock history, and drafts save in the browser and can be exported. The current target is a possible on-campus interview on Wednesday, October 28, 2026. The dashboard prioritizes October 16-27 practice, with the exact start time, room, and interview structure still unconfirmed. Practice scenarios do not predict the actual loop.
+Pure HTML/CSS/JS, JSON content, no production dependencies. Progress, mock history, and drafts save in the browser and can be exported.
+
+**Confirmed loop:** Wednesday, October 28, 2026, in person on the USC campus. Four 60-minute interviews, 9:30 am to 2:30 pm, lunch 11:30 am to 12:30 pm, arrive by 9:00 am. Leadership Principles in every round; a technical evaluation with AI/ML depth, breadth in networking, databases and analytics, and security, and explaining technical ideas to non-technical listeners (no live coding); and an 8 to 10 minute presentation with no slides. The 7-day plan runs October 22 to 28.
 
 Portable references:
 
-- [Final preparation card](amazon/FINAL-PREP.md)
+- [Final review](amazon/FINAL-REVIEW.md), printable as [final-review.html](amazon/final-review.html)
+- [Presentation handout](amazon/presentation-handout.html)
 - [AWS cheat sheet](amazon/AWS-CHEATSHEET.md)
 - [Resume and STAR assessment](amazon/RESUME-STAR-REVIEW.md)
 - [STAR story bank](amazon/stories.md)

@@ -1,71 +1,70 @@
-# AWSI - ETP Solutions Architect preparation
+# AWS Solutions Architect loop preparation
 
-A focused two-week workspace for Anuvik's Amazon Solutions Architect interview. Vanilla HTML/CSS/JS with JSON content; no production build step. The supplied recruiter screenshots confirm the AWSI - ETP full-time role and a passed OA. Your latest update targets Wednesday, October 28, 2026, on campus at USC. The date remains tentative; start time, room, and interview structure are unconfirmed. Older recruiter date wording is preserved in secondary notes. No account segment, specialty, or numerical level is assumed.
+A workspace for Anuvik's AWS Solutions Architect interview: 2027 full time, L4, AWSI Emerging Talent Program. The role is customer-facing, pre-sales architecture, not software engineering. Vanilla HTML/CSS/JS with JSON content and no build step.
+
+## The confirmed loop
+
+Confirmed by the recruiter on October 21, 2026.
+
+- **When and where:** Wednesday, October 28, 2026, 9:30 am to 2:30 pm, in person on the USC campus. Arrive by 9:00 am. Lunch 11:30 am to 12:30 pm.
+- **Format:** four 60-minute interviews with four interviewers. Which interviewer covers which part is not stated, so expect Leadership Principle questions in every round.
+- **Technical evaluation, no live coding:** breadth across three areas, depth in one, and explaining technical concepts to a non-technical audience (the most important skill). Chosen areas: depth in AI/ML; breadth in networking, databases and analytics, and security; backup coverage of CS fundamentals, application development, cloud computing, and hardware.
+- **Leadership Principles:** the 8 named for this role are Customer Obsession, Ownership, Bias for Action, Earn Trust, Learn and Be Curious, Insist on the Highest Standards, Deliver Results, and Dive Deep. Answers run 2 to 4 minutes, STAR, with a metric in every result.
+- **Presentation:** 8 to 10 minutes on a topic of choice, then Q&A. No laptop, no slides; handouts allowed. Topic: "How do you fit a big AI model on a small computer? Quantization explained," built on ModelScope.
+
+## Pages
 
 | Page | Purpose |
 |---|---|
-| `index.html` | Primary October 16-27 sprint with 90-minute essentials, three mocks, three paper designs, taper and campus checklist; original movable plan retained |
-| `top.html` | Top priority: the 26 most asked SA questions (14 P0) with one-minute model answers, how to handle each live, likely follow-ups and traps, plus the 7-step answer method |
-| `review.html` | Resume discrepancies, assessment of all 12 STAR stories, evidence gaps, delivery coaching, and private local rewrites |
-| `behavioral.html` | Pitch, resume metrics, Leadership Principles, STAR drafts, timed rehearsal and missing-story templates |
-| `cheatsheet.html` | Prioritized AWS choices, comparison traps, customer architecture drills, optional labs and official references |
-| `architecture.html` | Eight reference architectures drawn as traceable diagrams, requirement-to-service heuristics, family comparison tables, a service map and the design checklist |
-| `aws.html` | Searchable reference glossary, flashcards, proposed resume-to-AWS translations and frameworks |
-| `design.html` | Whiteboard framework and six architecture exercises; answers use the same traceable diagrams |
-| `questions.html` | Openers, fundamentals, LP randomizer, customer role-plays and interviewer questions |
-| `mock.html` | Two LP prompts plus a technical/design prompt, kind-specific self-assessment and saved history |
+| `index.html` | Countdown and schedule, the 7-day plan (October 22 to 28) with today highlighted, what is evaluated, four round cards, the answer rubric, the day-of panel, and progress |
+| `domains.html` | 8 domains, 253 questions, each with a plain answer for a non-technical listener, a technical answer, follow-ups, AWS context, resume tie-ins, and the trap; cheat sheets, concept figures, and 10 spoken code drills |
+| `behavioral.html` | The 8 named LPs with two stories each, the recruiter's 5 sample questions, 12 stories with 2 to 4 minute versions, a 2 to 4 minute timer and self-assessment, the required failure worksheet, and a 40-question LP bank |
+| `presentation.html` | Five timed sections of spoken cues (9:00 total), the handout, 15 audience questions, a 10-minute practice timer with warnings at 8:00 and 10:00, a six-criteria self-score, saved runs, and a backup topic |
+| `mock.html` | A full mock day: four rounds, each with two LP questions, one breadth, one AI/ML depth, and one explain-it-simply question; the presentation in one round; no repeats within a day |
+| `presentation-handout.html` | One printed Letter page for the talk |
+| `final-review.html` | Printable night-before and morning-of review: the day, LP openers, the talk cue card, and one page per domain |
+| `top.html`, `review.html`, `cheatsheet.html`, `architecture.html`, `aws.html`, `design.html`, `questions.html` | Earlier AWS references: top SA questions, speaking scripts, cheat sheet, reference architectures, glossary, whiteboard designs, and the question randomizer |
 
-Start at the repo root landing page or `amazon/index.html`. The [final preparation card](FINAL-PREP.md) is generated with `node amazon/scripts/finalprep_md.mjs`. The prior general interview bank is preserved at `general-prep.html`; other company modules are archives.
+## Data and generated files
 
-## Study artifacts
+- `data/*.json` holds every piece of content, each with a schema in `data/schema/`.
+- `stories.md` is generated by `node amazon/scripts/stories_md.mjs`.
+- `presentation-handout.html`, `final-review.html`, and `FINAL-REVIEW.md` are generated by `node amazon/scripts/print_pages.mjs`.
+- `scripts/check.mjs` fails if any generated file is stale.
 
-- `AWS-CHEATSHEET.md`: portable study reference with sources. Rebuild with `node amazon/scripts/cheatsheet_md.mjs`.
-- `RESUME-STAR-REVIEW.md`: complete speaking scripts and optional deeper preparation. Rebuild with `node amazon/scripts/review_md.mjs`.
-- `stories.md`: generated from `data/behavioral.json`. Rebuild with `node amazon/scripts/stories_md.mjs`.
-- `aws-terms.md` and `questions.md`: longer references; JSON drives the pages.
-
-Review facts against the supplied resume, not the older Salesforce profile. A resume supports what was claimed, but does not independently verify measurements. AWS translations describe proposed architectures, not deployments the candidate has demonstrated. Missing failure, disagreement, and mentoring anecdotes require the candidate's real examples.
+Candidate facts come only from `data/profile.json`, which is aligned to the resume PDF. AWS facts in `data/domains.json` were checked against docs.aws.amazon.com on the date in each domain's `verified_on`. Lines marked `[fill: ...]` are personal details only the candidate can supply.
 
 ## Run locally
 
-From repo root:
+From the repo root:
 
 ```sh
 python3 -m http.server 8000
 # http://localhost:8000/amazon/
 ```
 
-The pages fetch local JSON and require HTTP. Progress and drafts are browser-local. Export from the sidebar to back up or transfer them. Changing the interview date does not move the study plan; move its start separately. The primary sprint ends October 27 and treats October 28 as tentative interview day; the original movable plan remains separately available.
-
 ## Validate
 
-From repo root:
+From the repo root:
 
 ```sh
 node amazon/scripts/check.mjs
 node amazon/scripts/test_practice.mjs
-node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs amazon/scripts/test_rehearsal.mjs amazon/scripts/test_finalprep.mjs amazon/scripts/test_diagrams.mjs
+node --test amazon/scripts/test_review.mjs amazon/scripts/test_cheatsheet.mjs amazon/scripts/test_architecture.mjs amazon/scripts/test_storage.mjs amazon/scripts/test_recruiting.mjs amazon/scripts/test_rehearsal.mjs amazon/scripts/test_finalprep.mjs amazon/scripts/test_diagrams.mjs amazon/scripts/test_domains.mjs
 node amazon/scripts/test_integration.mjs
-node --test --experimental-test-coverage --test-coverage-include='**/amazon/js/practice.js' amazon/scripts/test_practice.mjs
 ```
 
-For real browser tests, install Playwright in your development environment, start the HTTP server above, and run:
+`check.mjs` enforces schemas, minimum question counts per domain, plain and technical answers on every question, two or more stories for each named LP, no em or en dashes, no candidate metric outside `profile.json`, the "nearly 3 years" Oracle wording, and privacy patterns (emails, phone numbers, street addresses, work-authorization terms).
+
+Browser tests need a running server and Playwright:
 
 ```sh
 node amazon/scripts/test_browser.mjs
 node amazon/scripts/test_navigation.mjs
 ```
 
-`BASE_URL` overrides localhost. `BROWSER_CHANNEL=chrome` selects an installed Chrome; otherwise Playwright's Chromium is used. `PLAYWRIGHT_MODULE` can point to an existing Playwright ESM module. `SCREENSHOT_DIR` optionally saves screenshots. Production pages have no Playwright dependency.
+`BASE_URL` overrides localhost, `BROWSER_CHANNEL=chrome` uses an installed Chrome, and `PLAYWRIGHT_MODULE` can point to an existing Playwright ESM module.
 
-The browser suite exercises navigation, mobile overflow, saved/moved dates, independent interview settings, and a complete mock round. Unit/integration checks cover content invariants, source alignment and practice logic. Coverage figures for practice logic do not describe the entire app.
+## Privacy
 
-## Privacy and publication
-
-The repo's existing workflow deploys on pushes to main. Local changes are published only after a push and successful deployment. Static JSON and Markdown are public if deployed; do not add private client records, recruiter contacts, credentials or interview notes to them. The source PDF is not copied into the site. Personal drafts remain in localStorage and exports; no backend receives them. `noindex` is a search preference, not access control.
-
-## Recruiter context
-
-The dashboard summarizes role expectations and recruiting status from user-supplied screenshots. The role involves designing customer solutions, partnering with sales, and adapting communication from engineers to executives. The email describes success through customer impact rather than sales quotas. Optional role video linked by the recruiter: [watch on YouTube](https://www.youtube.com/watch?v=btxzd3-RZQs); video content has not been reviewed. The email's request to watch it is recorded as context, not executed as an instruction to this assistant.
-
-The email lists Wednesday October 27 and Thursday October 28, but in 2026 those dates are Tuesday and Wednesday. It also mixes CST and local time. The later Wednesday hold does not resolve the exact slot. The latest candidate update supplies a tentative October 28 date. Keep the exact datetime empty until the start time is confirmed. OA preparation is complete; preparation now focuses on the next interview stage. General cohort/location information is not a candidate availability or relocation commitment. No intake answers or recruiter contact information are stored in the site.
+The repo is public once pushed. Do not add recruiter contacts, phone numbers, street addresses, room numbers, or work-authorization details. Personal drafts stay in browser storage and in exports; no backend receives them. `noindex` is a search preference, not access control.

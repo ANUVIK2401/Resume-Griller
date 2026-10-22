@@ -1,16 +1,56 @@
 {
   "$schema": "./schema/site.schema.json",
-  "title": "AWSI - ETP Solutions Architect prep",
+  "title": "AWS Solutions Architect loop prep",
   "pages": [
     {
       "id": "home",
       "href": "index.html",
-      "label": "October 28 sprint",
-      "prompt": "AWSI - ETP SOLUTIONS ARCHITECT",
+      "label": "October 28 loop",
+      "prompt": "AWS SOLUTIONS ARCHITECT, L4, CONFIRMED",
       "title": "Ready for",
       "accent": "October 28",
-      "lede": "Prepare for a possible on-campus interview on Wednesday, October 28. Start with today's 90-minute essentials, then rehearse stories, AWS decisions, and customer conversations. The date remains tentative; start time and room are unconfirmed.",
-      "short": "Sprint"
+      "lede": "Confirmed: four 60-minute interviews on the USC campus, 9:30 am to 2:30 pm. Arrive by 9:00 am. Leadership Principles in every round, a technical evaluation in AI/ML depth plus breadth, and an 8 to 10 minute presentation. Follow today in the 7-day plan.",
+      "short": "Loop"
+    },
+    {
+      "id": "domains",
+      "href": "domains.html",
+      "label": "Technical domains",
+      "prompt": "DEPTH, BREADTH, EXPLAIN IT SIMPLY",
+      "title": "Explain it",
+      "accent": "simply",
+      "lede": "AI/ML in depth; networking, databases, and security in breadth; CS fundamentals, app development, cloud, and hardware as backup. Every question has a plain answer for a non-technical listener and the technical answer an engineer accepts.",
+      "short": "Domains"
+    },
+    {
+      "id": "behavioral",
+      "href": "behavioral.html",
+      "label": "Leadership Principles",
+      "prompt": "~/prep/lp --rehearse",
+      "title": "Stories and",
+      "accent": "principles",
+      "lede": "The 8 principles named for this role come first, each with two stories. Every story has a 2 to 4 minute version, a self-check, and answers to: How would you do this at AWS? What would you do differently?",
+      "short": "LPs"
+    },
+    {
+      "id": "presentation",
+      "href": "presentation.html",
+      "label": "Presentation",
+      "prompt": "8 TO 10 MINUTES, NO SLIDES",
+      "title": "Quantization,",
+      "accent": "explained",
+      "lede": "Your talk: How do you fit a big AI model on a small computer? Five timed sections of spoken cues, a one-page handout, audience Q&A, and a 10-minute practice timer with saved runs.",
+      "short": "Talk"
+    },
+    {
+      "id": "mock",
+      "href": "mock.html",
+      "label": "Mock day",
+      "prompt": "~/prep/mock --day",
+      "title": "Mock",
+      "accent": "day",
+      "lede": "Four 60-minute rounds like the real day: two LP questions, one breadth, one AI/ML depth, and one explain-it-simply question per round, with the presentation in one round. No question repeats within a day.",
+      "short": "Mock day"
     },
     {
       "id": "top",
@@ -31,16 +71,6 @@
       "accent": "answers",
       "lede": "Complete speaking scripts, short delivery drills, and optional coaching. Start with ERP migration, incident response, deployment validation, and SQL performance.",
       "short": "Scripts"
-    },
-    {
-      "id": "behavioral",
-      "href": "behavioral.html",
-      "label": "Leadership Principles",
-      "prompt": "~/prep/lp --rehearse",
-      "title": "Stories and",
-      "accent": "principles",
-      "lede": "A ready-to-speak introduction and twelve complete STAR answers with your resume numbers. Rehearse first; open deeper coaching only when you need it.",
-      "short": "LPs"
     },
     {
       "id": "cheatsheet",
@@ -91,16 +121,6 @@
       "accent": "role-play",
       "lede": "Openers, a rapid-fire technical quiz, an LP question randomizer, customer role-plays, and what to ask them.",
       "short": "Questions"
-    },
-    {
-      "id": "mock",
-      "href": "mock.html",
-      "label": "Mock round",
-      "prompt": "~/prep/mock --45min",
-      "title": "Mock",
-      "accent": "round",
-      "lede": "Two Leadership Principle questions and one technical question under a timer, then an honest self-score.",
-      "short": "Mock"
     }
   ]
 }
