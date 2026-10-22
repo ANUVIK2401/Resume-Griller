@@ -1,0 +1,143 @@
+{
+  "$schema": "./schema/presentation.schema.json",
+  "title": "How do you fit a big AI model on a small computer?",
+  "subtitle": "Quantization explained",
+  "audience": "Technical professionals who do not know this topic. Explain like you would to a smart engineer from another field.",
+  "format": [
+    "8 to 10 minutes, then brief Q&A.",
+    "No laptop, no slides. One printed handout and your hands.",
+    "Scored on clarity, engagement, organization, confidence and presence, time management, and a clear call to action.",
+    "Keep it free of any employer's proprietary information. ModelScope is your own project."
+  ],
+  "target_seconds": 540,
+  "sections": [
+    {
+      "id": "hook",
+      "label": "Hook and intro",
+      "seconds": 60,
+      "goal": "Make them picture the problem in one sentence.",
+      "cues": [
+        "Ask: \"Has anyone downloaded an AI model, pressed run, and got out of memory?\" Pause. Look around.",
+        "Picture it: the model is a suitcase, the GPU is the overhead bin, and the suitcase does not fit.",
+        "Most people's answer is: buy a bigger bin. A bigger GPU.",
+        "Today: a way to make the suitcase smaller instead, what it costs you, and how I measured it."
+      ],
+      "say": "In the next nine minutes I want to show you how to make a big model fit on a small computer, and how to know if it still works."
+    },
+    {
+      "id": "what",
+      "label": "What is it",
+      "seconds": 120,
+      "goal": "One clear definition and one analogy they will remember.",
+      "cues": [
+        "A model is billions of numbers. Its memory is how many numbers times how many bits each one takes.",
+        "Quantization means storing each number with fewer bits. Fewer digits, same model.",
+        "Analogy: a RAW photo versus a JPEG. The JPEG is far smaller and looks the same to almost everyone. You only lose fine detail.",
+        "The formats: FP16 uses 16 bits per number. INT8 uses 8. INT4 uses 4. Point to the bars on the handout.",
+        "Check for understanding: \"So fewer bits per number means less memory. The question is what we lose.\""
+      ],
+      "say": "Quantization is saving the model as a JPEG instead of a RAW photo: much smaller, almost the same picture."
+    },
+    {
+      "id": "why",
+      "label": "Why should we care",
+      "seconds": 180,
+      "goal": "Connect it to money, speed, and where AI can run.",
+      "cues": [
+        "Cost: memory is often the reason you need an expensive GPU. Shrink the model, and a smaller, cheaper GPU can serve it.",
+        "Speed: when a model writes text, each new word means reading its weights from memory. Fewer bytes to read usually means faster answers.",
+        "Reach: a smaller model can run on a laptop, a phone, or a device in a store, close to the data and without sending it to the cloud.",
+        "More users per machine: the memory you free up can hold more conversations at once.",
+        "Real uses: on-device assistants, private document search inside a company, and customer support summaries at lower cost.",
+        "Transition: \"That is the promise. Does it hold up? I tested it.\""
+      ],
+      "say": "If the model is smaller, it is cheaper to run, often faster, and it can run in places it could not before."
+    },
+    {
+      "id": "how",
+      "label": "How it works",
+      "seconds": 120,
+      "goal": "Show the mechanism and your own evidence, including the surprise.",
+      "cues": [
+        "Mechanism: take a group of numbers, find their range, and map each one to the nearest of a few levels. Keep one scale factor per group to map back.",
+        "What you lose: fine distinctions between nearby values, and rare large values that do not fit the levels well.",
+        "How I measured quality: MMLU, a multiple-choice exam across many subjects, compared with the FP16 baseline. Plus memory and tokens per second.",
+        "My project, ModelScope: Llama-3.2-3B and Gemma-2-2B, 8 configs, on a T4 GPU.",
+        "Result: INT4 used 2299 MB, 62% less than FP16, ran at 13.7 tokens per second, and MMLU stayed within a point.",
+        "The surprise: INT8, the safe middle option, lost on both counts in my setup. 53% more memory than INT4 and 2.1x lower throughput. Measure, do not assume."
+      ],
+      "say": "In my tests the 4-bit version used 62% less memory than the original and scored within a point on the exam."
+    },
+    {
+      "id": "cta",
+      "label": "Call to action",
+      "seconds": 60,
+      "goal": "One action they can take this week.",
+      "cues": [
+        "Recap in one breath: fewer bits, much less memory, quality you can measure.",
+        "The call to action: before you buy a bigger GPU, benchmark a smaller number format.",
+        "First step: take one model you already run, load a 4-bit version, and run the same set of your own test prompts through both. Compare memory, speed, and answers side by side.",
+        "Close: \"If the answers hold up, you just made your model cheaper. Thank you, I am happy to take questions.\""
+      ],
+      "say": "Before you buy a bigger GPU, benchmark a smaller number format."
+    }
+  ],
+  "handout": {
+    "title": "Fit a big AI model on a small computer",
+    "analogy": "Quantization is saving a model like a JPEG instead of a RAW photo: far smaller, and almost the same picture.",
+    "chart_title": "Model memory by number format, ModelScope on a T4 GPU",
+    "bars": [
+      { "id": "fp16", "label": "FP16", "bits": "16 bits per number", "note": "Baseline", "ratio": 1 },
+      { "id": "int8", "label": "INT8", "bits": "8 bits per number", "note": "53% more memory than INT4, 2.1x lower throughput", "ratio": 0.5814 },
+      { "id": "int4", "label": "INT4", "bits": "4 bits per number", "note": "2299 MB, 62% below FP16, 13.7 tok/s, MMLU within a point", "ratio": 0.38 }
+    ],
+    "chart_note": "Bar lengths are drawn from the measured relations: INT4 is 62% below FP16, and INT8 is 53% above INT4.",
+    "takeaways": [
+      "Fewer bits per number means less memory.",
+      "Measure quality on your own task, not just a general exam.",
+      "The middle option is not always the safe one. Benchmark."
+    ],
+    "cta": "Before you buy a bigger GPU, benchmark a smaller number format.",
+    "first_step": "This week: load a 4-bit version of a model you already run, send both versions the same test prompts, and compare memory, speed, and answers."
+  },
+  "qa": [
+    { "id": "qa-accuracy", "q": "Does quantization hurt accuracy?", "a": "It can, so you measure it. In my tests INT4 stayed within a point of FP16 on MMLU. Smaller models and harder tasks can lose more, which is why I say: test on your own task." },
+    { "id": "qa-int8-slower", "q": "Why was INT8 slower than INT4?", "a": "In my setup it was, and I would not generalize it. A common reason is that some INT8 methods handle large outlier values separately in higher precision, which adds work in every layer, and the GPU code for that path can be less optimized than the 4-bit path. [fill: confirm which library you used for INT8, for example bitsandbytes, before stating the cause]" },
+    { "id": "qa-when-not", "q": "When would you not quantize?", "a": "When the quality drop on your task is not acceptable, for example strict accuracy needs; when the model already fits and is fast enough; or when your hardware or library has no fast kernels for the low-bit format. Then it adds risk without a benefit." },
+    { "id": "qa-measure", "q": "How did you measure quality?", "a": "I compared MMLU, a multiple-choice exam across many subjects, against the FP16 baseline, and recorded memory and tokens per second for each config. For a real product I would add a test set from the actual task. [fill: any other evaluations you ran]" },
+    { "id": "qa-aws", "q": "How does this relate to AWS Inferentia or Amazon Bedrock?", "a": "Inferentia is AWS's own chip built for inference, and it is designed around lower-precision formats, so the same idea of using fewer bits applies. With Amazon Bedrock, AWS runs the model for you, so you pick a model, not a number format. If you quantize your own open model, you can host it on an Amazon SageMaker AI endpoint, or import supported architectures with Bedrock Custom Model Import." },
+    { "id": "qa-nf4", "q": "What is NF4, and how is it different from INT4?", "a": "Both use 4 bits. INT4 spaces its levels evenly. NF4, NormalFloat 4, places its levels to match how model weights are usually distributed, with more levels near zero where most weights sit, so it often keeps more quality at the same size." },
+    { "id": "qa-training", "q": "Can you train a quantized model?", "a": "Usually you train in higher precision and quantize afterward. A popular middle ground, QLoRA, keeps the base model in 4 bits and trains small extra adapter layers in higher precision, which makes fine-tuning possible on a single GPU." },
+    { "id": "qa-distill", "q": "How is this different from distillation?", "a": "Quantization keeps the same model and stores its numbers with fewer bits. Distillation trains a new, smaller model to imitate a bigger one. They stack: you can distill, then quantize the result." },
+    { "id": "qa-speed-why", "q": "Why does smaller memory make it faster?", "a": "Generating each new token means reading the model's weights from memory, and on most GPUs that reading, not the math, is the bottleneck. Fewer bytes to read usually means more tokens per second, as long as the low-bit math has fast GPU code." },
+    { "id": "qa-cpu", "q": "Can I run a quantized model on a laptop without a GPU?", "a": "Often yes for small models. 4-bit formats are popular exactly because they let a model fit in a laptop's memory. It will be slower than a good GPU, but for a private, local assistant that can be fine." },
+    { "id": "qa-which-models", "q": "Why those two models?", "a": "Llama-3.2-3B and Gemma-2-2B are small enough to test many configs on one T4 GPU, and they come from two different model families, so the result is not about one family's quirks." },
+    { "id": "qa-production", "q": "Would you use INT4 in production?", "a": "If it passes a task-specific quality test and the latency target, yes, because the cost savings are real. I would roll it out like any change: compare against the baseline on real traffic first, then switch." },
+    { "id": "qa-break", "q": "Where does quantization break down?", "a": "At very low bits, below 4, quality drops faster. Some tasks, such as long reasoning chains or exact arithmetic, are more sensitive. And outlier weights can be damaged if the method does not handle them." },
+    { "id": "qa-cost", "q": "How much money does this save?", "a": "It depends on the hardware and traffic, so I would measure cost per token for both versions. The mechanism is simple: less memory per model can mean a cheaper instance or more users per instance." },
+    { "id": "qa-start", "q": "What tool should I start with?", "a": "Start with the quantized versions many model hubs already publish, or the quantization options in your serving library, so you are not building anything new. Then run your own test prompts through both versions." }
+  ],
+  "rubric": [
+    { "id": "clarity", "label": "Clarity: one idea per section, no unexplained jargon" },
+    { "id": "engagement", "label": "Engagement: asked a question, used the handout, made eye contact" },
+    { "id": "organization", "label": "Organization: hook, what, why, how, call to action, in order" },
+    { "id": "presence", "label": "Confidence and presence: steady voice, standing still, no reading" },
+    { "id": "time", "label": "Time management: finished between 8:00 and 10:00" },
+    { "id": "cta", "label": "Clear call to action with a concrete first step" }
+  ],
+  "warnings": [
+    { "at": 480, "text": "8:00. Move to the call to action now." },
+    { "at": 600, "text": "10:00. Stop: finish your sentence and thank them." }
+  ],
+  "backup": {
+    "title": "Why AI agents need a human in the loop",
+    "note": "Use only if the interviewer redirects. General framing only, no client or employer details.",
+    "sections": [
+      { "label": "Hook", "cues": ["Ask: \"Would you let a new hire approve payments on day one, unsupervised?\" Most people say no. Yet we often let software agents act with no check at all."] },
+      { "label": "What is it", "cues": ["An AI agent is a model that can take actions: call tools, update records, send messages.", "Human in the loop means a person reviews or approves some of those actions before they take effect."] },
+      { "label": "Why care", "cues": ["Models can be confidently wrong.", "Actions are harder to undo than words.", "Trust: people adopt automation they can check, and abandon automation that surprises them."] },
+      { "label": "How it works", "cues": ["Route by confidence and by risk: low-risk, high-confidence actions go straight through; the rest wait for a person.", "Log every decision so it can be audited.", "Measure: how often reviewers overturn the agent tells you when to widen or narrow the gate."] },
+      { "label": "Call to action", "cues": ["Before you give an agent write access, decide which actions need a human, and log every one."] }
+    ]
+  }
+}

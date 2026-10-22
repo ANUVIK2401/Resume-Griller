@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "presentation.schema.json",
+  "title": "Communication assessment: 9-minute script in five timed sections, one-page handout, audience Q&A, self-score rubric, timer warnings, and a backup topic.",
+  "type": "object",
+  "required": [
+    "title",
+    "subtitle",
+    "audience",
+    "format",
+    "target_seconds",
+    "sections",
+    "handout",
+    "qa",
+    "rubric",
+    "warnings",
+    "backup"
+  ],
+  "properties": {
+    "title": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "subtitle": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "audience": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "format": {
+      "$ref": "common.schema.json#/$defs/textList"
+    },
+    "target_seconds": {
+      "type": "integer",
+      "minimum": 480
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "seconds",
+          "goal",
+          "cues",
+          "say"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "label": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "seconds": {
+            "type": "integer",
+            "minimum": 30
+          },
+          "goal": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "cues": {
+            "$ref": "common.schema.json#/$defs/textList",
+            "minItems": 2
+          },
+          "say": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "handout": {
+      "type": "object",
+      "required": [
+        "title",
+        "analogy",
+        "chart_title",
+        "bars",
+        "chart_note",
+        "takeaways",
+        "cta",
+        "first_step"
+      ],
+      "properties": {
+        "title": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "analogy": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "chart_title": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "chart_note": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "takeaways": {
+          "$ref": "common.schema.json#/$defs/textList"
+        },
+        "cta": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "first_step": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "bars": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "bits",
+              "note",
+              "ratio"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/$defs/id"
+              },
+              "label": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "bits": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "note": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "ratio": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "qa": {
+      "type": "array",
+      "minItems": 15,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "q",
+          "a"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "q": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "a": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "rubric": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "label": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "at",
+          "text"
+        ],
+        "properties": {
+          "at": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "backup": {
+      "type": "object",
+      "required": [
+        "title",
+        "note",
+        "sections"
+      ],
+      "properties": {
+        "title": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "note": {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "cues"
+            ],
+            "properties": {
+              "label": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "cues": {
+                "$ref": "common.schema.json#/$defs/textList"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
