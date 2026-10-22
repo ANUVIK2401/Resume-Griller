@@ -1,13 +1,13 @@
 {
   "$schema": "./schema/behavioral.schema.json",
   "rules": [
-    "Answer the question directly, then use Situation, Task, Action, and Result. The scripts below are complete starting points for speaking practice.",
-    "Practise a 90-second core answer, then expand for follow-up questions. Spend most of the answer on your decisions and actions.",
-    "Use I for your contribution and credit collaborators accurately. Keep your role separate from the work of the wider team.",
-    "Explain how the technical choice addressed the problem. Use one main result with its baseline and unit.",
-    "Use the main speaking script first. Preparation notes and proposed AWS designs are separate from your account of what you implemented.",
-    "Build breadth across distinct episodes. S7 is another angle on S1. Use a real separate example for failure, disagreement, or mentoring.",
-    "For the AWSI-ETP Solutions Architect role, connect the design to customer impact and adapt the depth for engineers or executives."
+    "Answer the question first, then tell it as Situation, Task, Action, Result.",
+    "Speak for 2 to 4 minutes. Spend most of that time on what you did, the obstacle, and the tradeoff.",
+    "Put a metric in every result, with its baseline and unit.",
+    "Say I for your own work, and credit others accurately.",
+    "Use examples from the last 5 years. Every story here qualifies.",
+    "Each answer should show 4 to 6 Leadership Principles. The chips on each story show which.",
+    "Close with the lesson, then be ready for: How would you do this at AWS? What would you do differently?"
   ],
   "status_options": [
     {
@@ -51,35 +51,80 @@
       "name": "Customer Obsession",
       "meaning": "Start with the customer and work backwards; earn and keep their trust.",
       "primary": "erp-hitl",
-      "backup": "pacsun-exec"
+      "backup": "pacsun-exec",
+      "named": true
     },
     {
       "id": "ownership",
       "name": "Ownership",
       "meaning": "Act on behalf of the whole company and the long term; never say that is not my job.",
+      "primary": "p1-mttr",
+      "backup": "databricks-feed",
+      "named": true
+    },
+    {
+      "id": "bias-for-action",
+      "name": "Bias for Action",
+      "meaning": "Speed matters; many decisions are reversible, so take calculated risks.",
+      "primary": "dqn-stall",
+      "backup": "p1-mttr",
+      "named": true
+    },
+    {
+      "id": "earn-trust",
+      "name": "Earn Trust",
+      "meaning": "Listen, speak candidly, admit mistakes, and treat others respectfully.",
+      "primary": "cli-toolchain",
+      "backup": "erp-hitl",
+      "named": true
+    },
+    {
+      "id": "learn-and-be-curious",
+      "name": "Learn and Be Curious",
+      "meaning": "Never done learning; explore new possibilities.",
+      "primary": "modelscope",
+      "backup": "learn-langgraph",
+      "named": true
+    },
+    {
+      "id": "highest-standards",
+      "name": "Insist on the Highest Standards",
+      "meaning": "Keep raising the bar; do not pass defects downstream.",
+      "primary": "slo-alerting",
+      "backup": "k8s-autoscaling",
+      "named": true
+    },
+    {
+      "id": "deliver-results",
+      "name": "Deliver Results",
+      "meaning": "Focus on the key inputs and deliver them with quality and on time.",
       "primary": "erp-hitl",
-      "backup": "p1-mttr"
+      "backup": "cli-toolchain",
+      "named": true
+    },
+    {
+      "id": "dive-deep",
+      "name": "Dive Deep",
+      "meaning": "Stay connected to the details; no task is beneath you.",
+      "primary": "netsuite-latency",
+      "backup": "dqn-stall",
+      "named": true
     },
     {
       "id": "invent-and-simplify",
       "name": "Invent and Simplify",
       "meaning": "Expect and find new ways; make the complex simple.",
       "primary": "cli-toolchain",
-      "backup": "trust-hitl"
+      "backup": "trust-hitl",
+      "named": false
     },
     {
       "id": "are-right-a-lot",
       "name": "Are Right, A Lot",
       "meaning": "Strong judgment and good instincts; seek diverse views and try to disprove your own beliefs.",
-      "primary": "slo-alerting",
-      "backup": "modelscope"
-    },
-    {
-      "id": "learn-and-be-curious",
-      "name": "Learn and Be Curious",
-      "meaning": "Never done learning; explore new possibilities.",
-      "primary": "learn-langgraph",
-      "backup": "modelscope"
+      "primary": "modelscope",
+      "backup": "slo-alerting",
+      "named": false
     },
     {
       "id": "hire-and-develop",
@@ -87,49 +132,24 @@
       "meaning": "Raise the bar and help other people grow.",
       "primary": null,
       "backup": null,
-      "gap": "mentoring"
-    },
-    {
-      "id": "highest-standards",
-      "name": "Insist on the Highest Standards",
-      "meaning": "Keep raising the bar; do not pass defects downstream.",
-      "primary": "erp-hitl",
-      "backup": "k8s-autoscaling"
+      "gap": "mentoring",
+      "named": false
     },
     {
       "id": "think-big",
       "name": "Think Big",
       "meaning": "Set a bold direction that inspires results.",
       "primary": "pacsun-exec",
-      "backup": "p1-mttr"
-    },
-    {
-      "id": "bias-for-action",
-      "name": "Bias for Action",
-      "meaning": "Speed matters; many decisions are reversible, so take calculated risks.",
-      "primary": "p1-mttr",
-      "backup": "dqn-stall"
+      "backup": "p1-mttr",
+      "named": false
     },
     {
       "id": "frugality",
       "name": "Frugality",
       "meaning": "Accomplish more with less; constraints breed invention.",
-      "primary": "modelscope",
-      "backup": "netsuite-latency"
-    },
-    {
-      "id": "earn-trust",
-      "name": "Earn Trust",
-      "meaning": "Listen, speak candidly, admit mistakes, and treat others respectfully.",
-      "primary": "erp-hitl",
-      "backup": "cli-toolchain"
-    },
-    {
-      "id": "dive-deep",
-      "name": "Dive Deep",
-      "meaning": "Stay connected to the details; no task is beneath you.",
       "primary": "netsuite-latency",
-      "backup": "dqn-stall"
+      "backup": "modelscope",
+      "named": false
     },
     {
       "id": "have-backbone",
@@ -137,29 +157,24 @@
       "meaning": "Challenge decisions respectfully, then commit fully once decided.",
       "primary": null,
       "backup": null,
-      "gap": "disagreement"
-    },
-    {
-      "id": "deliver-results",
-      "name": "Deliver Results",
-      "meaning": "Focus on the key inputs and deliver them with quality and on time.",
-      "primary": "p1-mttr",
-      "backup": "databricks-feed",
-      "gap": "failure"
+      "gap": "disagreement",
+      "named": false
     },
     {
       "id": "best-employer",
       "name": "Strive to be Earth's Best Employer",
       "meaning": "Make the work environment safer, more productive, and more fulfilling for people.",
-      "primary": "cli-toolchain",
-      "backup": "slo-alerting"
+      "primary": "slo-alerting",
+      "backup": "cli-toolchain",
+      "named": false
     },
     {
       "id": "broad-responsibility",
       "name": "Success and Scale Bring Broad Responsibility",
       "meaning": "Think about second-order effects on people and society; act responsibly.",
       "primary": "trust-hitl",
-      "backup": "erp-hitl"
+      "backup": "erp-hitl",
+      "named": false
     }
   ],
   "gaps": [
@@ -169,20 +184,56 @@
       "lps": [
         "deliver-results",
         "earn-trust",
-        "are-right-a-lot"
+        "ownership",
+        "learn-and-be-curious"
       ],
       "asked_as": [
-        "Tell me about a time you failed.",
-        "A time you missed a deadline.",
-        "A time your judgment was wrong."
+        "Tell me about a time you took a risk, made a mistake, or failed.",
+        "Tell me about a time you missed a deadline or a goal.",
+        "Tell me about a time your judgment was wrong."
       ],
-      "seeds": "Look at Oracle deploys before the CLI toolchain existed, or an early MSRcosmos agent run that produced a wrong result.",
+      "seeds": "Look for a real event in the last 5 years: an Oracle deploy that failed before the validation toolchain existed, an early MSRcosmos agent run that produced a wrong result, or an assumption that data proved wrong. Pick one where you owned part of the cause.",
       "template": {
         "s": "What did I own that went wrong, and who felt it?",
         "t": "What was I on the hook for when it broke?",
         "a": "What did I do in the first hour, and what did I change so it could not repeat the same way?",
         "r": "The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse."
-      }
+      },
+      "required": true,
+      "worksheet": [
+        {
+          "key": "why",
+          "prompt": "Why did it matter? Who would feel it if it went wrong?"
+        },
+        {
+          "key": "risk",
+          "prompt": "What was the risk you took, or the mistake you made?"
+        },
+        {
+          "key": "did",
+          "prompt": "What did I do, specifically, before and after it went wrong?"
+        },
+        {
+          "key": "obstacle",
+          "prompt": "What was the obstacle that made it hard?"
+        },
+        {
+          "key": "tradeoff",
+          "prompt": "What tradeoff did I face, and which way did I choose?"
+        },
+        {
+          "key": "result",
+          "prompt": "What was the result? Give a number if one exists, good or bad."
+        },
+        {
+          "key": "lesson",
+          "prompt": "What was the lesson, in one sentence?"
+        },
+        {
+          "key": "changed",
+          "prompt": "What did I change afterward, and how do I know it stuck?"
+        }
+      ]
     },
     {
       "id": "disagreement",
@@ -201,7 +252,8 @@
         "t": "What was at stake, and who owned the decision?",
         "a": "How did I understand their view first, what data did I bring, and how was it decided?",
         "r": "What shipped. If I lost, how I committed fully anyway. What I learned about disagreeing well."
-      }
+      },
+      "required": false
     },
     {
       "id": "mentoring",
@@ -219,7 +271,8 @@
         "t": "What did they need to be able to do, and by when?",
         "a": "How did I teach it: pairing, docs, reviews? One specific thing I did.",
         "r": "What they could do on their own afterward. A concrete outcome."
-      }
+      },
+      "required": false
     }
   ],
   "stories": [
@@ -234,6 +287,7 @@
         "ownership",
         "earn-trust",
         "highest-standards",
+        "deliver-results",
         "broad-responsibility"
       ],
       "number_ids": [
@@ -274,7 +328,16 @@
           "a": "I would use a supported Claude model on Bedrock, S3 for staging, and Step Functions Standard to coordinate processing and wait for human review through a callback. Lambda could expose the tools, DynamoDB could store workflow decisions, and CloudWatch would monitor the system. I would design permissions, idempotency, timeouts, and financial validation before choosing an auto-approval policy."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "A wrong entry changes what a client believes it owes or is owed, and each of the 12 entities ran on its own cloud. Slow reconciliation also held back the move to the new system.",
+        "obstacle": "The hard part was trust. A finance team will not accept a black box that approves its ledger. [fill: the moment or record type that made this clear, for example a class of records the agent kept getting wrong]",
+        "tradeoff": "The threshold was the real decision. Set it high and reviewers drown in records the system could have handled. Set it low and wrong records slip through. In finance a missed error costs far more than an extra review, so I treated the threshold as a dial backed by reviewed results. [fill: where you set it first and how you adjusted it]",
+        "buy_in": "[fill: who had to accept the auto-approval rule, for example the client finance lead, and what evidence convinced them, such as reviewed sample records side by side]",
+        "result": "Manual reconciliation fell 68%. 83% of records cleared automatically above the threshold, so reviewers spent their time on the records that needed judgment. Turnaround went from 3 days to 5.5 hours across the 12 entities.",
+        "different": "I would build the evaluation set first: records reviewed by an expert before launch, so the threshold rests on a measured false-approval rate from day one. I would also add deterministic accounting checks, such as debits equal credits, that run no matter how confident the model is.",
+        "at_aws": "On AWS I would run Claude on Amazon Bedrock for the agents and use AWS Step Functions to coordinate the steps and pause for human review with a callback. Amazon S3 would hold staged records, AWS Lambda functions would be the tools, and Amazon DynamoDB would keep an audit trail of every decision. Amazon Bedrock Guardrails and least-privilege IAM roles would limit what the agents can touch."
+      }
     },
     {
       "id": "p1-mttr",
@@ -283,9 +346,11 @@
       "experience_id": "oracle",
       "lead": true,
       "lps": [
-        "deliver-results",
-        "bias-for-action",
         "ownership",
+        "bias-for-action",
+        "deliver-results",
+        "dive-deep",
+        "customer-obsession",
         "think-big"
       ],
       "number_ids": [
@@ -325,15 +390,27 @@
           "a": "A root-cause tag is a hypothesis, not proof. The engineer needs supporting evidence and runbook context so they can verify it and continue investigating if it is wrong. For a new system, I would evaluate incorrect tags, missing tags, and time to a useful action, rather than optimize only the number of failures labeled."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "A P1 is the highest severity, so every minute of one is time enterprise customers may feel. The slow part was diagnosis: knowing an API was failing did not tell on-call why.",
+        "obstacle": "The evidence existed, but it was spread across high-throughput event streams from 1M+ endpoints. [fill: the specific obstacle, for example event noise, who owned the streams, or the cost of tagging in real time]",
+        "tradeoff": "I focused on the failures that could be tagged with confidence, the 400 and 500 series, instead of trying to diagnose everything. A wrong tag sends on-call down the wrong path, so each tag came with its evidence and runbook context, and the engineer kept the final call.",
+        "buy_in": "[fill: how on-call engineers or the team lead came to use the tags, for example a trial on one service first]",
+        "result": "P1 mean time to recovery dropped from 94 to 26 minutes, a 72% reduction. On-call started each incident with a likely cause and the runbook step instead of a blank screen.",
+        "different": "I would measure tag accuracy from day one: how often each tag was right, wrong, or missing. That proves the tags drove the faster recovery and shows which tags to retire.",
+        "at_aws": "On AWS I would use Amazon CloudWatch Logs and metric filters for the error signals, AWS X-Ray traces to see which service failed, Amazon EventBridge rules to tag and route events, and AWS Systems Manager Automation runbooks attached to CloudWatch alarms, so the first step of the fix is one click."
+      }
     },
     {
       "id": "slo-alerting",
       "code": "S3",
       "title": "SLO alerting, 41% fewer false pages",
       "experience_id": "oracle",
-      "lead": false,
+      "lead": true,
       "lps": [
+        "highest-standards",
+        "dive-deep",
+        "earn-trust",
         "are-right-a-lot",
         "best-employer"
       ],
@@ -368,7 +445,16 @@
           "a": "The implementation moved toward SLO-based alerting and reduced false-positive pages by 41%. I would need the original alert configuration to describe the exact burn-rate policy. For a new design, I would consider multi-window burn-rate alerts to distinguish rapid error-budget consumption from slower degradation, then test whether the alerts produce an actionable response."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Every false page wakes an engineer for nothing. After enough of them, people trust alerts less, and that is how a real incident gets missed. Across 37,000+ tenants, alert noise was a reliability risk, not just an annoyance.",
+        "obstacle": "Static thresholds felt safe because they were familiar. [fill: the pushback you got, for example a worry that SLO alerts would miss real problems, and how you answered it]",
+        "tradeoff": "Fewer alerts carries a risk: you might miss something. So alerts followed what customers feel, p99 latency against the objective, while CPU and memory became investigation signals on dashboards instead of pages.",
+        "buy_in": "[fill: how you showed the team the new alerts still caught real incidents, for example running both alert sets side by side for a while]",
+        "result": "False-positive pages fell 41%. I built 47 dashboards and alert rules, so the engineer who did get paged had the view to act on it.",
+        "different": "I would publish an error budget for each service, so teams could see how much reliability they had left and make release decisions with it.",
+        "at_aws": "On AWS I would keep the same tooling with Amazon Managed Service for Prometheus and Amazon Managed Grafana, define SLOs in Amazon CloudWatch Application Signals, and use CloudWatch composite alarms so one problem fires one page instead of five."
+      }
     },
     {
       "id": "cli-toolchain",
@@ -377,8 +463,11 @@
       "experience_id": "oracle",
       "lead": true,
       "lps": [
-        "invent-and-simplify",
         "earn-trust",
+        "invent-and-simplify",
+        "highest-standards",
+        "deliver-results",
+        "ownership",
         "best-employer"
       ],
       "number_ids": [
@@ -413,7 +502,16 @@
           "a": "The failed-deployment rate went from 11% to 4%, a decrease of 7 percentage points. That is different from saying a 7% relative reduction. Four teams adopted the toolchain, and release cycles became 34% shorter. Those are separate measures of adoption, deployment reliability, and delivery time; none by itself demonstrates mentoring or a particular persuasion tactic."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "11% of deployments were failing. Each failure meant a rollback, a rerun, and engineers pulled off planned work, and some configuration errors only surfaced after a change reached production.",
+        "obstacle": "A gate that slows teams down gets bypassed. [fill: the hardest adoption obstacle, for example a team worried about build time or false rejections]",
+        "tradeoff": "Every check adds build time. The tradeoff is seconds in the pipeline against a failed deploy later, so each check had to catch a real class of error, and each failure message had to say exactly what to fix. [fill: one concrete check the toolchain ran]",
+        "buy_in": "I started with [fill: the first team or service], then used its results to bring the next teams on. 4 teams across NSX adopted it.",
+        "result": "Failed deploys fell from 11% to 4%, and release cycles got 34% shorter.",
+        "different": "I would record which check caught what. That data shows which checks earn their place, and it makes the case to the next team in one chart.",
+        "at_aws": "On AWS I would build this into AWS CodePipeline with an AWS CodeBuild validation stage, run cfn-lint and AWS CloudFormation Guard on templates, and use AWS Config rules to catch drift after deployment."
+      }
     },
     {
       "id": "netsuite-latency",
@@ -423,7 +521,10 @@
       "lead": true,
       "lps": [
         "dive-deep",
-        "frugality"
+        "customer-obsession",
+        "frugality",
+        "deliver-results",
+        "are-right-a-lot"
       ],
       "number_ids": [
         "oracle-p50-before",
@@ -456,7 +557,16 @@
           "a": "My implementation work was query-plan profiling, index restructuring, and SQL changes. For a production rollout, I would verify result correctness on representative data, compare read and write behavior, inspect tail latency, and check locking implications for the database engine. I would also define how to revert the query or index change before exposing the full workload."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Search is something users touch all day. At 840 milliseconds median, every search felt slow. The easy answer, a bigger database instance, would have cost more every month without proving it fixed the cause.",
+        "obstacle": "[fill: what made the diagnosis hard, for example queries that were only slow at certain data volumes]",
+        "tradeoff": "Indexes speed up reads but slow down writes and take space. So I restructured indexes on the hot predicates, the filters the searches actually used, instead of indexing everything.",
+        "buy_in": "[fill: who reviewed the index and SQL changes, and how you showed they were safe, for example before and after query plans]",
+        "result": "Median page load fell from 840 to 588 milliseconds, 30% faster, from a better access path rather than bigger hardware.",
+        "different": "I would add query performance checks to the release process, so a new query that triggers a full scan is caught before users feel it.",
+        "at_aws": "On Amazon RDS or Amazon Aurora I would start with Performance Insights to find the top queries by load, read their EXPLAIN plans, and fix indexes and SQL before resizing anything. If reads still dominate, I would add read replicas or an Amazon ElastiCache layer."
+      }
     },
     {
       "id": "k8s-autoscaling",
@@ -466,7 +576,10 @@
       "lead": false,
       "lps": [
         "highest-standards",
-        "are-right-a-lot"
+        "are-right-a-lot",
+        "deliver-results",
+        "dive-deep",
+        "ownership"
       ],
       "number_ids": [
         "oracle-slo-peak"
@@ -497,7 +610,16 @@
           "a": "I would not quote stabilization settings without the actual autoscaler configuration. In a new design, I would use a stable workload signal, tune the observation and stabilization periods, and scale down conservatively. I would test oscillating demand and dependency limits, because rapid replica changes can create instability rather than solve it."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Release surges pushed load well above normal. If the services fell behind, p99 latency would break its objective for tenants at exactly the moment changes were rolling out.",
+        "obstacle": "CPU could look healthy while latency was not. [fill: when you saw CPU-based scaling react too late]",
+        "tradeoff": "Scaling on custom metrics takes more work to set up and tune than scaling on CPU. I accepted that because CPU alone was not the signal that tracked whether the service kept up.",
+        "buy_in": "[fill: how you validated the scaling policy before production, for example a load test at peak]",
+        "result": "The services held their p99 SLOs at 2x peak load through release surges.",
+        "different": "I would add cost tracking next to the latency objective, so we know both that we stayed fast and what staying fast cost.",
+        "at_aws": "On AWS I would run Amazon EKS with the Kubernetes Horizontal Pod Autoscaler on custom metrics from Amazon Managed Service for Prometheus, add node capacity with Karpenter, and alarm in CloudWatch on p99 latency."
+      }
     },
     {
       "id": "learn-langgraph",
@@ -506,7 +628,10 @@
       "experience_id": "msrcosmos",
       "lead": false,
       "lps": [
-        "learn-and-be-curious"
+        "learn-and-be-curious",
+        "bias-for-action",
+        "invent-and-simplify",
+        "deliver-results"
       ],
       "number_ids": [
         "msr-reconciliation"
@@ -534,18 +659,30 @@
         }
       ],
       "note": "Same ERP episode as S1, told from the orchestration angle. Do not count it as a separate customer engagement or a documented rapid-learning timeline.",
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "The migration could not be done with one model prompt. The workflow had to call business systems, keep state across steps, and stop for a human. I had to learn the tools that make that possible while delivering a client project.",
+        "obstacle": "[fill: what was new to you, for example LangGraph state graphs or MCP servers, and how you learned it: docs, small prototypes, examples]",
+        "tradeoff": "A framework adds structure and also a dependency. I used LangGraph where orchestration and state needed it, and kept the Sage API calls behind MCP tools so each piece could be tested on its own.",
+        "buy_in": "[fill: how you showed the team the approach worked, for example a demo on one entity]",
+        "result": "The system cut manual reconciliation by 68%.",
+        "different": "I would write a short guide while learning, so the next engineer ramps up faster.",
+        "at_aws": "On AWS I would host the agents on Amazon Bedrock AgentCore with a Claude model from Amazon Bedrock, expose each business system as an AWS Lambda tool, and keep long-running workflow state and the human-review pause in AWS Step Functions."
+      }
     },
     {
       "id": "dqn-stall",
       "code": "S8",
       "title": "DQN training stall, 40% shorter runs",
       "experience_id": "sports",
-      "lead": false,
+      "lead": true,
       "note": "The PDF lists AI/ML Research Intern, Sports Analytics. Earlier site data said volunteer research; confirm the official role classification before using it on forms.",
       "lps": [
         "dive-deep",
-        "bias-for-action"
+        "bias-for-action",
+        "learn-and-be-curious",
+        "frugality",
+        "highest-standards"
       ],
       "number_ids": [
         "sports-plays",
@@ -577,18 +714,29 @@
           "a": "Runtime fell from 52 to 31 minutes, about 40% less time per run. Separately, agreement with EPA-optimal calls increased from 68% to 74%, a gain of 6 percentage points. I do not attribute the quality gain to faster data handling. To verify an optimization preserves training behavior, I would compare sampling semantics, training curves, and held-out results under controlled conditions."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Each training run took 52 minutes, which capped how many experiments fit in a day. In research, iteration speed decides how fast you learn.",
+        "obstacle": "The model code looked fine; the time was going somewhere else. [fill: how you found it, for example a profiler showing the GPU idle while the data loader waited]",
+        "tradeoff": "I could have asked for more compute. I profiled first instead, because more compute does not fix a pipeline that is waiting on data.",
+        "buy_in": "[fill: how you shared the fix with the research group]",
+        "result": "Runs dropped from 52 to 31 minutes, about 40%. Separately, agreement with EPA-optimal calls rose from 68% to 74% on held-out 2024 drives. I keep those apart: one is speed, the other is model quality.",
+        "different": "I would profile the first run, not wait until runs became painful.",
+        "at_aws": "On AWS I would use Amazon SageMaker AI training jobs with built-in profiling to spot an idle GPU, and stage the training data in Amazon S3 in the same Region as the training instances."
+      }
     },
     {
       "id": "pacsun-exec",
       "code": "S9",
       "title": "PacSun executive intelligence app",
       "experience_id": "annenberg",
-      "lead": true,
+      "lead": false,
       "ongoing": true,
       "lps": [
         "customer-obsession",
-        "think-big"
+        "think-big",
+        "learn-and-be-curious",
+        "ownership"
       ],
       "number_ids": [],
       "headline": "I am building a retail intelligence application that turns operational context into an owner-tagged view and briefs for PacSun executives.",
@@ -602,7 +750,7 @@
       "r": "The work is ongoing. The application brings context gathering, issue ranking, brief drafting, and meeting proposals into a workflow for executive decision-making.",
       "lesson": "The lesson is that executive communication is part of the solution design. Information becomes useful when the audience can see what needs attention and who owns the next step.",
       "twist": "For engineers, explain connector permissions, source attribution, ranking evaluation, and approval. For executives, explain which decision the owner-tagged view supports. State what is live and what remains a prototype; measured adoption or business impact is not yet supplied.",
-      "aws": "Proposed AWS design, not a claim of AWS implementation: Bedrock Agents with action groups (Lambda) in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.",
+      "aws": "Proposed AWS design, not a claim of AWS implementation: Amazon Bedrock AgentCore with Lambda tools in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.",
       "probes": [
         {
           "q": "How do agents get live data safely?",
@@ -617,7 +765,16 @@
           "a": "The application brings together context gathering, issue ranking, brief drafting, and meeting proposals. Those responsibilities provide a useful way to reason about the workflow. I would still compare the orchestration with a simpler implementation, because more agents also add latency, cost, and coordination failures. The design needs evidence that the extra complexity helps."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Executives decide based on what reaches them. If the right issue and the right owner do not reach them together, decisions wait.",
+        "obstacle": "[fill: the hardest part so far, for example reliable live context from internal systems, or agreeing what urgent means]",
+        "tradeoff": "[fill: one design choice and its tradeoff, for example a human review step before a brief reaches the CEO]",
+        "buy_in": "[fill: how you are getting feedback from the executive users]",
+        "result": "The work is ongoing. [fill: the latest progress you can measure and share]",
+        "different": "I would agree the success measure with the executives before building, for example time from an issue appearing to an owner acting on it.",
+        "at_aws": "On AWS I would use Amazon Bedrock for the models, Amazon Bedrock Knowledge Bases over internal documents, and AWS Lambda tools behind each connector with least-privilege IAM roles, with Amazon Bedrock Guardrails on what reaches the CEO."
+      }
     },
     {
       "id": "trust-hitl",
@@ -627,19 +784,21 @@
       "lead": false,
       "ongoing": true,
       "lps": [
+        "broad-responsibility",
         "invent-and-simplify",
-        "broad-responsibility"
+        "highest-standards",
+        "earn-trust"
       ],
       "number_ids": [],
-      "headline": "I built an annotation pipeline that combines rubric-based LLM labels with expert review for lower-confidence caseworker notes.",
-      "s": "At USC AI Trust Lab, my work includes using Llama 3.3 70B to label caseworker notes. Annotation needs a consistent definition of the labels, while the model also needs a path to escalate cases it cannot handle confidently.",
-      "t": "My task was to turn that into a pipeline with a rubric, confidence scores, and human-in-the-loop review.",
+      "headline": "I am building an annotation pipeline that combines rubric-based LLM labels with expert review for lower-confidence caseworker notes.",
+      "s": "At USC AI Trust Lab, I am using Llama 3.3 70B to label caseworker notes. Annotation needs a consistent definition of each label, and the model needs a path to escalate the cases it cannot handle confidently.",
+      "t": "My task is to turn that into a pipeline with a rubric, confidence scores, and human-in-the-loop review.",
       "a": [
-        "I built the rubric-based labeling workflow on Llama 3.3 70B, giving the annotation process explicit criteria rather than asking for an unconstrained answer.",
-        "I included confidence scoring and routed low-confidence cases to domain experts. The model handles labeling, while the review path gives the workflow a way to involve human judgment.",
-        "I kept the implementation centered on those responsibilities: produce a label, expose uncertainty, and route the cases that need attention."
+        "I am building the rubric-based labeling workflow on Llama 3.3 70B, giving the annotation process explicit criteria rather than asking the model for an unconstrained answer.",
+        "I am adding confidence scoring that routes low-confidence cases to domain experts. The model handles labeling, while the review path brings in human judgment where it matters.",
+        "I am keeping the design centered on three responsibilities: produce a label, expose uncertainty, and route the cases that need attention."
       ],
-      "r": "The pipeline labels notes, scores confidence, and routes lower-confidence cases to experts. That gives the annotation workflow a concrete path from an initial model label to domain-expert review.",
+      "r": "The work is ongoing. The pipeline labels notes, scores confidence, and routes lower-confidence cases to experts, giving the annotation workflow a concrete path from an initial model label to domain-expert review.",
       "lesson": "The design lesson is that confidence should guide review, not stand in for proof that a model is correct. The escalation path belongs in the architecture.",
       "twist": "For engineers, explain rubric evaluation, confidence calibration, expert review, and actual data controls. For executives, describe the boundary of model decision-making and what evidence is still needed. Do not claim measured accuracy or reviewer savings without a result.",
       "aws": "Proposed AWS design, not a claim of AWS implementation: choose a supported model on Bedrock or deploy a compatible model with SageMaker AI, evaluate on expert-labeled cases, and implement an authenticated human-review workflow with Step Functions Standard callbacks. Add explicit permissions and retention controls; guardrails do not validate factual accuracy. Callback pattern: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html.",
@@ -653,18 +812,29 @@
           "a": "The implemented workflow scores confidence and routes lower-confidence cases to domain experts. That provides a review path; it is not by itself an accuracy result. I would evaluate expert agreement on a labeled sample, inspect disagreements by category, and also sample high-confidence outputs so confident mistakes are not invisible."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Caseworker notes describe real people. A wrong label can mislead research about how people are served, so the pipeline has to know when it is unsure.",
+        "obstacle": "[fill: the hardest part, for example writing rubric criteria two experts would apply the same way]",
+        "tradeoff": "Routing more cases to experts raises quality but uses scarce expert time. The confidence threshold is the dial between them.",
+        "buy_in": "[fill: how you are working with the domain experts on the rubric]",
+        "result": "The work is ongoing. The pipeline labels notes, scores confidence, and routes low-confidence cases to experts. [fill: any measured progress so far]",
+        "different": "I would measure agreement between the model and the experts on a fixed sample from the start.",
+        "at_aws": "On AWS I would host the model on Amazon Bedrock or Amazon SageMaker AI, use AWS Step Functions to pause low-confidence cases for expert review, and keep the notes in Amazon S3 with strict access controls and encryption."
+      }
     },
     {
       "id": "modelscope",
       "code": "S11",
       "title": "ModelScope quantization study",
       "experience_id": "modelscope",
-      "lead": false,
+      "lead": true,
       "lps": [
-        "are-right-a-lot",
+        "learn-and-be-curious",
         "frugality",
-        "learn-and-be-curious"
+        "are-right-a-lot",
+        "dive-deep",
+        "highest-standards"
       ],
       "number_ids": [
         "ms-configs",
@@ -695,17 +865,28 @@
           "a": "I would treat this benchmark as a candidate configuration, then evaluate the customer workload. I would measure task quality, memory, throughput, latency, and operational constraints on the intended hardware. Staying within a point on MMLU is useful evidence, but it does not establish that the customer application will meet its quality requirements."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "Teams often assume they need a bigger GPU to run a model. If a smaller number format keeps quality, the same model runs on cheaper hardware. I wanted data, not assumptions.",
+        "obstacle": "[fill: what was hard, for example keeping the comparison fair with the same prompts and settings across all 8 configs]",
+        "tradeoff": "Smaller formats save memory but can lose quality, so I measured MMLU alongside speed and memory and compared the options on a Pareto view instead of a single number.",
+        "buy_in": "[fill: whether you shared the results, for example a write-up or repository]",
+        "result": "INT4 used 2299 MB, 62% less than FP16, ran at 13.7 tokens per second, and kept MMLU within a point of baseline. The surprise was INT8: in my setup it used 53% more memory than INT4 and ran 2.1x slower, so it lost on both counts.",
+        "different": "I would add a task-specific quality test next to MMLU, because a general benchmark can hide losses on the task a customer cares about.",
+        "at_aws": "On AWS I would run the same sweep on Amazon EC2 GPU instances and on AWS Inferentia2, compare cost per token, and host the winner on an Amazon SageMaker AI endpoint, or bring it in with Amazon Bedrock Custom Model Import if its architecture is supported."
+      }
     },
     {
       "id": "databricks-feed",
       "code": "S12",
       "title": "Nightly Databricks feed",
       "experience_id": "msrcosmos",
-      "lead": false,
+      "lead": true,
       "lps": [
         "deliver-results",
-        "frugality"
+        "ownership",
+        "frugality",
+        "dive-deep"
       ],
       "number_ids": [
         "msr-tables",
@@ -738,7 +919,324 @@
           "a": "The 22-minute result is the full-refresh measure. Partition pruning describes reducing reads, while incremental merges describe how changes are applied. They are not interchangeable runtime measures. Before comparing that result with an incremental run, I would match the input snapshot, rows changed, compute size, and definition of when the refresh begins and ends."
         }
       ],
-      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review."
+      "evidence_note": "Resume-supported actions and metrics are candidate claims, not independently verified. See the resume and STAR review.",
+      "long": {
+        "stakes": "The ERP agents were only as good as the data under them. If the nightly feed ran late or partial, the agents worked from stale financials the next morning.",
+        "obstacle": "[fill: what threatened the refresh window, for example a table that kept growing or a slow full rewrite]",
+        "tradeoff": "A full rewrite every night is simple but slow and expensive. Incremental merges are faster, but change detection has to be right. I used incremental merges with partition pruning so the job read and wrote only what changed.",
+        "buy_in": "[fill: who depended on the feed and how you kept them informed]",
+        "result": "The feed moved 17 financial tables and 4.2M rows into Delta Lake every night, and the full refresh held at 22 minutes.",
+        "different": "I would add data quality checks, such as row counts and totals per table, that fail the run loudly instead of passing bad data to the agents.",
+        "at_aws": "On AWS I would run Spark on AWS Glue or Amazon EMR, keep the data in Amazon S3 as Apache Iceberg tables for merges, govern access with the AWS Glue Data Catalog and AWS Lake Formation, and run checks with Amazon Athena."
+      }
+    }
+  ],
+  "self_rubric": [
+    {
+      "id": "tone",
+      "label": "Confident and enthusiastic tone"
+    },
+    {
+      "id": "pace",
+      "label": "Clear pace, with pauses"
+    },
+    {
+      "id": "concise",
+      "label": "Concise: between 2 and 4 minutes"
+    },
+    {
+      "id": "relevant",
+      "label": "Relevant: answered the question that was asked"
+    },
+    {
+      "id": "recent",
+      "label": "Recent: within the last 5 years"
+    },
+    {
+      "id": "complete",
+      "label": "Complete: situation, task, action, result, with a metric"
+    },
+    {
+      "id": "i-not-we",
+      "label": "Said I, not we, for my own actions"
+    }
+  ],
+  "samples": [
+    {
+      "id": "sq-options",
+      "q": "Tell me about a problem with several possible solutions. How did you choose?",
+      "story": "erp-hitl",
+      "alt": "netsuite-latency",
+      "opener": "Automating reconciliation for 10,000+ financial records, the options ranged from reviewing every record by hand to auto-approving everything. I chose confidence-based routing, and turnaround went from 3 days to 5.5 hours."
+    },
+    {
+      "id": "sq-failure",
+      "q": "Tell me about a time you took a risk, made a mistake, or failed.",
+      "gap": "failure",
+      "opener": "[fill: one sentence: what you owned, what went wrong, and the lesson you still use]"
+    },
+    {
+      "id": "sq-lead",
+      "q": "Tell me about a time you took the lead on a project.",
+      "story": "p1-mttr",
+      "alt": "erp-hitl",
+      "opener": "At Oracle I took on the diagnosis path for P1 incidents, and recovery time fell from 94 to 26 minutes."
+    },
+    {
+      "id": "sq-collab",
+      "q": "Tell me about a time you motivated a group or promoted collaboration.",
+      "story": "cli-toolchain",
+      "alt": "slo-alerting",
+      "opener": "I built a pre-deployment validation toolchain that 4 teams chose to adopt, and failed deploys fell from 11% to 4%."
+    },
+    {
+      "id": "sq-data",
+      "q": "Tell me about a time you used data to develop a strategy.",
+      "story": "modelscope",
+      "alt": "netsuite-latency",
+      "opener": "Instead of guessing which model format to run, I benchmarked 8 configurations. The data showed INT4 used 62% less memory than FP16 with MMLU within a point, and that INT8 was the wrong middle choice."
+    }
+  ],
+  "question_bank": [
+    {
+      "id": "qb-customer-obsession-1",
+      "lp": "customer-obsession",
+      "q": "Tell me about a time you went above and beyond for a customer.",
+      "story": "erp-hitl"
+    },
+    {
+      "id": "qb-customer-obsession-2",
+      "lp": "customer-obsession",
+      "q": "Tell me about a time you changed what you were building because of customer feedback.",
+      "story": "pacsun-exec"
+    },
+    {
+      "id": "qb-customer-obsession-3",
+      "lp": "customer-obsession",
+      "q": "Describe a time you balanced what a customer asked for against what they needed.",
+      "story": "erp-hitl"
+    },
+    {
+      "id": "qb-customer-obsession-4",
+      "lp": "customer-obsession",
+      "q": "Tell me about a time you improved the experience for end users.",
+      "story": "netsuite-latency"
+    },
+    {
+      "id": "qb-customer-obsession-5",
+      "lp": "customer-obsession",
+      "q": "Tell me about a time you protected customers from a problem before they felt it.",
+      "story": "p1-mttr"
+    },
+    {
+      "id": "qb-ownership-1",
+      "lp": "ownership",
+      "q": "Tell me about a time you took on something outside your area.",
+      "story": "cli-toolchain"
+    },
+    {
+      "id": "qb-ownership-2",
+      "lp": "ownership",
+      "q": "Describe a problem nobody owned that you fixed anyway.",
+      "story": "p1-mttr"
+    },
+    {
+      "id": "qb-ownership-3",
+      "lp": "ownership",
+      "q": "Tell me about a long-term choice you made at the cost of short-term speed.",
+      "story": "k8s-autoscaling"
+    },
+    {
+      "id": "qb-ownership-4",
+      "lp": "ownership",
+      "q": "Tell me about a time you went beyond your job description.",
+      "story": "erp-hitl"
+    },
+    {
+      "id": "qb-ownership-5",
+      "lp": "ownership",
+      "q": "Tell me about a time something you owned was at risk of slipping.",
+      "story": "databricks-feed"
+    },
+    {
+      "id": "qb-bias-for-action-1",
+      "lp": "bias-for-action",
+      "q": "Tell me about a decision you made with incomplete information.",
+      "story": "p1-mttr"
+    },
+    {
+      "id": "qb-bias-for-action-2",
+      "lp": "bias-for-action",
+      "q": "Tell me about a time you took a calculated risk.",
+      "story": "dqn-stall"
+    },
+    {
+      "id": "qb-bias-for-action-3",
+      "lp": "bias-for-action",
+      "q": "Describe a time when speed mattered more than perfection.",
+      "story": "learn-langgraph"
+    },
+    {
+      "id": "qb-bias-for-action-4",
+      "lp": "bias-for-action",
+      "q": "Tell me about a time you removed a blocker instead of waiting for someone else.",
+      "story": "dqn-stall"
+    },
+    {
+      "id": "qb-bias-for-action-5",
+      "lp": "bias-for-action",
+      "q": "Tell me about a time you acted quickly to fix a problem.",
+      "story": "p1-mttr"
+    },
+    {
+      "id": "qb-earn-trust-1",
+      "lp": "earn-trust",
+      "q": "Tell me about a time you had to win over a skeptical team.",
+      "story": "cli-toolchain"
+    },
+    {
+      "id": "qb-earn-trust-2",
+      "lp": "earn-trust",
+      "q": "Tell me about a time you admitted a mistake.",
+      "gap": "failure"
+    },
+    {
+      "id": "qb-earn-trust-3",
+      "lp": "earn-trust",
+      "q": "How did you get people to trust an automated system?",
+      "story": "erp-hitl"
+    },
+    {
+      "id": "qb-earn-trust-4",
+      "lp": "earn-trust",
+      "q": "Tell me about a change you made that other people depended on. How did you keep their trust?",
+      "story": "slo-alerting"
+    },
+    {
+      "id": "qb-earn-trust-5",
+      "lp": "earn-trust",
+      "q": "Tell me about a time you were candid about a limitation in your own results.",
+      "story": "dqn-stall"
+    },
+    {
+      "id": "qb-learn-and-be-curious-1",
+      "lp": "learn-and-be-curious",
+      "q": "Tell me about a time you learned a new technology quickly to deliver.",
+      "story": "learn-langgraph"
+    },
+    {
+      "id": "qb-learn-and-be-curious-2",
+      "lp": "learn-and-be-curious",
+      "q": "What did you teach yourself recently, and how did you use it?",
+      "story": "modelscope"
+    },
+    {
+      "id": "qb-learn-and-be-curious-3",
+      "lp": "learn-and-be-curious",
+      "q": "Tell me about a time curiosity led you to a better answer.",
+      "story": "dqn-stall"
+    },
+    {
+      "id": "qb-learn-and-be-curious-4",
+      "lp": "learn-and-be-curious",
+      "q": "Tell me about a new approach you tried that others had not.",
+      "story": "pacsun-exec"
+    },
+    {
+      "id": "qb-learn-and-be-curious-5",
+      "lp": "learn-and-be-curious",
+      "q": "How do you stay current in AI, and what changed your mind recently?",
+      "story": "modelscope"
+    },
+    {
+      "id": "qb-highest-standards-1",
+      "lp": "highest-standards",
+      "q": "Tell me about a time you refused to accept good enough.",
+      "story": "slo-alerting"
+    },
+    {
+      "id": "qb-highest-standards-2",
+      "lp": "highest-standards",
+      "q": "Tell me about a time you raised the quality bar for a team.",
+      "story": "cli-toolchain"
+    },
+    {
+      "id": "qb-highest-standards-3",
+      "lp": "highest-standards",
+      "q": "Describe a time you would not let work go out until it met the bar.",
+      "story": "erp-hitl"
+    },
+    {
+      "id": "qb-highest-standards-4",
+      "lp": "highest-standards",
+      "q": "Tell me about a time you set a measurable standard for a system.",
+      "story": "k8s-autoscaling"
+    },
+    {
+      "id": "qb-highest-standards-5",
+      "lp": "highest-standards",
+      "q": "Tell me about a time you designed a system to catch its own mistakes.",
+      "story": "trust-hitl"
+    },
+    {
+      "id": "qb-deliver-results-1",
+      "lp": "deliver-results",
+      "q": "What is your most significant accomplishment?",
+      "story": "p1-mttr"
+    },
+    {
+      "id": "qb-deliver-results-2",
+      "lp": "deliver-results",
+      "q": "Tell me about a time you delivered on a fixed schedule.",
+      "story": "databricks-feed"
+    },
+    {
+      "id": "qb-deliver-results-3",
+      "lp": "deliver-results",
+      "q": "Tell me about a time you failed to meet a goal.",
+      "gap": "failure"
+    },
+    {
+      "id": "qb-deliver-results-4",
+      "lp": "deliver-results",
+      "q": "Describe a time you delivered results with limited resources.",
+      "story": "netsuite-latency"
+    },
+    {
+      "id": "qb-deliver-results-5",
+      "lp": "deliver-results",
+      "q": "Tell me about a time you had to choose between competing goals.",
+      "story": "erp-hitl"
+    },
+    {
+      "id": "qb-dive-deep-1",
+      "lp": "dive-deep",
+      "q": "Tell me about a time you used data to find the root cause of a problem.",
+      "story": "netsuite-latency"
+    },
+    {
+      "id": "qb-dive-deep-2",
+      "lp": "dive-deep",
+      "q": "Tell me about a time a metric looked fine but something was wrong.",
+      "story": "k8s-autoscaling"
+    },
+    {
+      "id": "qb-dive-deep-3",
+      "lp": "dive-deep",
+      "q": "Tell me about a time you went several levels deep to solve a problem.",
+      "story": "dqn-stall"
+    },
+    {
+      "id": "qb-dive-deep-4",
+      "lp": "dive-deep",
+      "q": "Tell me about a time you questioned an assumption with data.",
+      "story": "modelscope"
+    },
+    {
+      "id": "qb-dive-deep-5",
+      "lp": "dive-deep",
+      "q": "How do you stay close to the details as a system grows?",
+      "story": "slo-alerting"
     }
   ]
 }

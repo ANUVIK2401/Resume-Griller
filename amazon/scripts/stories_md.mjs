@@ -29,9 +29,15 @@ export function render(behavioral, profile) {
     '',
     '## Leadership Principle map',
     '',
+    'The first 8 rows are the principles the recruiter named for this role.',
+    '',
     '| Leadership Principle | Primary story | Backup story |',
     '|---|---|---|',
-    ...behavioral.lps.map((lp) => `| ${lp.name} | ${ref(lp.primary)} | ${ref(lp.backup)} |`),
+    ...behavioral.lps.map((lp) => `| ${lp.named ? `**${lp.name}**` : lp.name} | ${ref(lp.primary)} | ${ref(lp.backup)} |`),
+    '',
+    '## Recruiter sample questions',
+    '',
+    ...behavioral.samples.flatMap((q) => [`- **${q.q}** ${q.opener} (${q.story ? ref(q.story) : 'failure story'})`]),
     '',
   ];
   for (const s of behavioral.stories) {
@@ -48,7 +54,19 @@ export function render(behavioral, profile) {
       ...s.a.map((a) => `  - ${a}`),
       `- **R:** ${s.r}`,
       '',
+      '**For the 2 to 4 minute version, add:**',
+      '',
+      `- **Stakes:** ${s.long.stakes}`,
+      `- **Obstacle:** ${s.long.obstacle}`,
+      `- **Tradeoff:** ${s.long.tradeoff}`,
+      `- **Buy-in:** ${s.long.buy_in}`,
+      `- **Result with metrics:** ${s.long.result}`,
+      '',
       `**Close with:** ${s.lesson}`,
+      '',
+      `**What I would do differently:** ${s.long.different}`,
+      '',
+      `**How I would do this at AWS:** ${s.long.at_aws}`,
       '',
       '### Preparation notes, separate from the speaking script',
       '',
@@ -66,16 +84,17 @@ export function render(behavioral, profile) {
       '',
     );
   }
+  lines.push('## LP question bank', '', ...behavioral.question_bank.map((q) => `- ${lpName(q.lp)}: ${q.q} Use ${q.story ? ref(q.story) : 'the failure story'}.`), '');
   lines.push('## Gap stories: write these from real events', '');
   for (const g of behavioral.gaps) {
     lines.push(
-      `### ${g.name}`,
+      `### ${g.name}${g.required ? ' (required)' : ''}`,
       '',
       `**LPs:** ${g.lps.map(lpName).join(', ')}. **Asked as:** ${g.asked_as.join(' ')}`,
       '',
       `**Where to look:** ${g.seeds}`,
       '',
-      ...['s', 't', 'a', 'r'].map((k) => `- **${k.toUpperCase()}:** ${g.template[k]}`),
+      ...(g.worksheet ? g.worksheet.map((w, i) => `${i + 1}. ${w.prompt}`) : ['s', 't', 'a', 'r'].map((k) => `- **${k.toUpperCase()}:** ${g.template[k]}`)),
       '',
     );
   }

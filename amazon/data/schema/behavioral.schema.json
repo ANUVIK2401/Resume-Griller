@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "behavioral.schema.json",
-  "title": "Leadership Principles: pitch, STAR bank tagged with LPs, the 16-LP map, and gap templates. Numbers quiz reads profile.json.",
+  "title": "Leadership Principles: pitch, STAR bank with 2 to 4 minute versions, the 16-LP map led by the 8 named for this role, recruiter sample questions, LP question bank, self-assessment rubric, and gap worksheets.",
   "type": "object",
   "required": [
     "rules",
@@ -9,7 +9,10 @@
     "pitch",
     "lps",
     "gaps",
-    "stories"
+    "stories",
+    "self_rubric",
+    "samples",
+    "question_bank"
   ],
   "properties": {
     "rules": {
@@ -107,6 +110,10 @@
           "gap": {
             "type": "string",
             "description": "gaps[].id still to write for this LP"
+          },
+          "named": {
+            "type": "boolean",
+            "description": "One of the 8 LPs the recruiter named for this role."
           }
         }
       }
@@ -120,8 +127,7 @@
           "name",
           "lps",
           "asked_as",
-          "seeds",
-          "template"
+          "seeds"
         ],
         "properties": {
           "id": {
@@ -153,6 +159,29 @@
             "additionalProperties": {
               "$ref": "common.schema.json#/$defs/text"
             }
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Must be written before the loop."
+          },
+          "worksheet": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "prompt"
+              ],
+              "properties": {
+                "key": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "prompt": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
           }
         }
       }
@@ -177,7 +206,8 @@
           "twist",
           "aws",
           "probes",
-          "evidence_note"
+          "evidence_note",
+          "long"
         ],
         "properties": {
           "id": {
@@ -206,10 +236,11 @@
           },
           "lps": {
             "type": "array",
-            "minItems": 1,
+            "minItems": 4,
             "items": {
               "type": "string"
-            }
+            },
+            "maxItems": 6
           },
           "number_ids": {
             "type": "array",
@@ -264,6 +295,140 @@
           },
           "evidence_note": {
             "$ref": "common.schema.json#/$defs/text"
+          },
+          "long": {
+            "type": "object",
+            "description": "Extra beats that turn the core STAR into a 2 to 4 minute answer.",
+            "required": [
+              "stakes",
+              "obstacle",
+              "tradeoff",
+              "buy_in",
+              "result",
+              "different",
+              "at_aws"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "stakes": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "obstacle": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "tradeoff": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "buy_in": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "result": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "different": {
+                "$ref": "common.schema.json#/$defs/text"
+              },
+              "at_aws": {
+                "$ref": "common.schema.json#/$defs/text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "self_rubric": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "label": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "samples": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "q",
+          "opener"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "q": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "story": {
+            "type": "string",
+            "description": "stories[].id"
+          },
+          "alt": {
+            "type": "string",
+            "description": "stories[].id"
+          },
+          "gap": {
+            "type": "string",
+            "description": "gaps[].id"
+          },
+          "opener": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "lp": {
+            "type": "string",
+            "description": "lps[].id"
+          }
+        }
+      }
+    },
+    "question_bank": {
+      "type": "array",
+      "minItems": 40,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "q",
+          "lp"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "q": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "story": {
+            "type": "string",
+            "description": "stories[].id"
+          },
+          "alt": {
+            "type": "string",
+            "description": "stories[].id"
+          },
+          "gap": {
+            "type": "string",
+            "description": "gaps[].id"
+          },
+          "opener": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "lp": {
+            "type": "string",
+            "description": "lps[].id"
           }
         }
       }

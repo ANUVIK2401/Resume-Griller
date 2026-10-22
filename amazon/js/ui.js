@@ -161,6 +161,59 @@
     return { node: el('div', { class: 'timer' }, face, toggle, el('button', { class: 'btn btn-sm', type: 'button', onclick: reset }, 'Reset')), start, stop, reset };
   }
 
+  // Counts up; onTick(seconds, face) lets the caller paint windows, sections, or warnings.
+  function stopwatch(onTick) {
+    let elapsed = 0;
+    let startedAt = null;
+    let handle = null;
+    const face = el('span', { class: 'timer-face', role: 'timer', 'aria-live': 'off' });
+    const now = () => elapsed + (startedAt === null ? 0 : Date.now() - startedAt);
+    const seconds = () => Math.floor(now() / 1000);
+    const paint = () => {
+      const s = seconds();
+      face.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+      onTick?.(s, face, handle !== null);
+    };
+    const toggle = el('button', { class: 'btn btn-sm', type: 'button' }, 'Start');
+    const start = () => {
+      if (handle !== null) return;
+      startedAt = Date.now();
+      handle = setInterval(paint, 250);
+      toggle.textContent = 'Pause';
+      paint();
+    };
+    const stop = () => {
+      if (handle === null) return;
+      elapsed = now();
+      startedAt = null;
+      clearInterval(handle);
+      handle = null;
+      toggle.textContent = 'Start';
+      paint();
+    };
+    const reset = () => { stop(); elapsed = 0; paint(); };
+    toggle.addEventListener('click', () => (handle !== null ? stop() : start()));
+    paint();
+    return { node: el('div', { class: 'timer' }, face, toggle, el('button', { class: 'btn btn-sm', type: 'button', onclick: reset }, 'Reset')), start, stop, reset, seconds };
+  }
+
+  // 2 to 4 minute story stopwatch with a live status line.
+  const STORY_STATUS = {
+    short: { live: 'Keep going: aim past 2:00.', done: 'Under 2:00. Add the obstacle, the tradeoff, and the metric.' },
+    ok: { live: 'In the 2 to 4 minute window.', done: 'In the window. Good length.' },
+    long: { live: 'Over 4:00. Land the result and stop.', done: 'Over 4:00. Cut the situation down.' },
+  };
+  function storyTimer(min = 120, max = 240) {
+    const status = el('span', { class: 'timer-status', 'aria-live': 'polite' });
+    const watch = stopwatch((s, face, running) => {
+      const state = window.Prep.practice.windowStatus(s, min, max);
+      face.dataset.window = s === 0 ? '' : state;
+      status.dataset.window = s === 0 ? '' : state;
+      status.textContent = s === 0 ? 'Target: 2:00 to 4:00' : STORY_STATUS[state][running ? 'live' : 'done'];
+    });
+    return { ...watch, node: el('div', { class: 'row' }, watch.node, status) };
+  }
+
   // Full-screen flashcard dialog. items: [{ kicker, front: () => Node, back: () => Node }]
   // Keyboard: space reveals, j and k move, esc closes. Touch: tap the card to reveal, swipe to move.
   function rehearse(items, title = 'Rehearse') {
@@ -236,5 +289,5 @@
     el('tbody', {}, rows.map((r) => el('tr', {}, r.map((c) => el('td', {}, c)))))));
 
 
-  window.Prep.ui = { section, fill, table, statusSelect, notesBox, confidence, checkbox, codeBlock, filterBar, timer, rehearse, shuffle, list };
+  window.Prep.ui = { section, fill, table, statusSelect, notesBox, confidence, checkbox, codeBlock, filterBar, timer, stopwatch, storyTimer, rehearse, shuffle, list };
 })();

@@ -6,13 +6,13 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## How to answer
 
-- Answer the question directly, then use Situation, Task, Action, and Result. The scripts below are complete starting points for speaking practice.
-- Practise a 90-second core answer, then expand for follow-up questions. Spend most of the answer on your decisions and actions.
-- Use I for your contribution and credit collaborators accurately. Keep your role separate from the work of the wider team.
-- Explain how the technical choice addressed the problem. Use one main result with its baseline and unit.
-- Use the main speaking script first. Preparation notes and proposed AWS designs are separate from your account of what you implemented.
-- Build breadth across distinct episodes. S7 is another angle on S1. Use a real separate example for failure, disagreement, or mentoring.
-- For the AWSI-ETP Solutions Architect role, connect the design to customer impact and adapt the depth for engineers or executives.
+- Answer the question first, then tell it as Situation, Task, Action, Result.
+- Speak for 2 to 4 minutes. Spend most of that time on what you did, the obstacle, and the tradeoff.
+- Put a metric in every result, with its baseline and unit.
+- Say I for your own work, and credit others accurately.
+- Use examples from the last 5 years. Every story here qualifies.
+- Each answer should show 4 to 6 Leadership Principles. The chips on each story show which.
+- Close with the lesson, then be ready for: How would you do this at AWS? What would you do differently?
 
 ## 60-second pitch
 
@@ -28,28 +28,38 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## Leadership Principle map
 
+The first 8 rows are the principles the recruiter named for this role.
+
 | Leadership Principle | Primary story | Backup story |
 |---|---|---|
-| Customer Obsession | S1 Multi-agent ERP migration with human-in-the-loop | S9 PacSun executive intelligence app |
-| Ownership | S1 Multi-agent ERP migration with human-in-the-loop | S2 P1 MTTR from 94 to 26 minutes |
+| **Customer Obsession** | S1 Multi-agent ERP migration with human-in-the-loop | S9 PacSun executive intelligence app |
+| **Ownership** | S2 P1 MTTR from 94 to 26 minutes | S12 Nightly Databricks feed |
+| **Bias for Action** | S8 DQN training stall, 40% shorter runs | S2 P1 MTTR from 94 to 26 minutes |
+| **Earn Trust** | S4 CLI validation toolchain adopted by 4 teams | S1 Multi-agent ERP migration with human-in-the-loop |
+| **Learn and Be Curious** | S11 ModelScope quantization study | S7 Applying LangGraph and MCP to the ERP workflow |
+| **Insist on the Highest Standards** | S3 SLO alerting, 41% fewer false pages | S6 Kubernetes autoscaling on custom metrics |
+| **Deliver Results** | S1 Multi-agent ERP migration with human-in-the-loop | S4 CLI validation toolchain adopted by 4 teams |
+| **Dive Deep** | S5 NetSuite search latency down 30% | S8 DQN training stall, 40% shorter runs |
 | Invent and Simplify | S4 CLI validation toolchain adopted by 4 teams | S10 Human-in-the-loop annotation pipeline |
-| Are Right, A Lot | S3 SLO alerting, 41% fewer false pages | S11 ModelScope quantization study |
-| Learn and Be Curious | S7 Applying LangGraph and MCP to the ERP workflow | S11 ModelScope quantization study |
+| Are Right, A Lot | S11 ModelScope quantization study | S3 SLO alerting, 41% fewer false pages |
 | Hire and Develop the Best | **GAP** | **GAP** |
-| Insist on the Highest Standards | S1 Multi-agent ERP migration with human-in-the-loop | S6 Kubernetes autoscaling on custom metrics |
 | Think Big | S9 PacSun executive intelligence app | S2 P1 MTTR from 94 to 26 minutes |
-| Bias for Action | S2 P1 MTTR from 94 to 26 minutes | S8 DQN training stall, 40% shorter runs |
-| Frugality | S11 ModelScope quantization study | S5 NetSuite search latency down 30% |
-| Earn Trust | S1 Multi-agent ERP migration with human-in-the-loop | S4 CLI validation toolchain adopted by 4 teams |
-| Dive Deep | S5 NetSuite search latency down 30% | S8 DQN training stall, 40% shorter runs |
+| Frugality | S5 NetSuite search latency down 30% | S11 ModelScope quantization study |
 | Have Backbone; Disagree and Commit | **GAP** | **GAP** |
-| Deliver Results | S2 P1 MTTR from 94 to 26 minutes | S12 Nightly Databricks feed |
-| Strive to be Earth's Best Employer | S4 CLI validation toolchain adopted by 4 teams | S3 SLO alerting, 41% fewer false pages |
+| Strive to be Earth's Best Employer | S3 SLO alerting, 41% fewer false pages | S4 CLI validation toolchain adopted by 4 teams |
 | Success and Scale Bring Broad Responsibility | S10 Human-in-the-loop annotation pipeline | S1 Multi-agent ERP migration with human-in-the-loop |
+
+## Recruiter sample questions
+
+- **Tell me about a problem with several possible solutions. How did you choose?** Automating reconciliation for 10,000+ financial records, the options ranged from reviewing every record by hand to auto-approving everything. I chose confidence-based routing, and turnaround went from 3 days to 5.5 hours. (S1 Multi-agent ERP migration with human-in-the-loop)
+- **Tell me about a time you took a risk, made a mistake, or failed.** [fill: one sentence: what you owned, what went wrong, and the lesson you still use] (failure story)
+- **Tell me about a time you took the lead on a project.** At Oracle I took on the diagnosis path for P1 incidents, and recovery time fell from 94 to 26 minutes. (S2 P1 MTTR from 94 to 26 minutes)
+- **Tell me about a time you motivated a group or promoted collaboration.** I built a pre-deployment validation toolchain that 4 teams chose to adopt, and failed deploys fell from 11% to 4%. (S4 CLI validation toolchain adopted by 4 teams)
+- **Tell me about a time you used data to develop a strategy.** Instead of guessing which model format to run, I benchmarked 8 configurations. The data showed INT4 used 62% less memory than FP16 with MMLU within a point, and that INT8 was the wrong middle choice. (S11 ModelScope quantization study)
 
 ## S1. Multi-agent ERP migration with human-in-the-loop (MSRcosmos)
 
-**LPs:** Customer Obsession, Ownership, Earn Trust, Insist on the Highest Standards, Success and Scale Bring Broad Responsibility
+**LPs:** Customer Obsession, Ownership, Earn Trust, Insist on the Highest Standards, Deliver Results, Success and Scale Bring Broad Responsibility
 
 **Open with:** I built an ERP migration workflow that cut turnaround from 3 days to 5.5 hours across 12 client entities.
 
@@ -61,7 +71,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I containerized the system with Docker for cloud-agnostic deployment across AWS, Azure, and GCP.
 - **R:** Manual reconciliation fell 68%, and 83% of records auto-approved. Turnaround decreased from 3 days to 5.5 hours.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** A wrong entry changes what a client believes it owes or is owed, and each of the 12 entities ran on its own cloud. Slow reconciliation also held back the move to the new system.
+- **Obstacle:** The hard part was trust. A finance team will not accept a black box that approves its ledger. [fill: the moment or record type that made this clear, for example a class of records the agent kept getting wrong]
+- **Tradeoff:** The threshold was the real decision. Set it high and reviewers drown in records the system could have handled. Set it low and wrong records slip through. In finance a missed error costs far more than an extra review, so I treated the threshold as a dial backed by reviewed results. [fill: where you set it first and how you adjusted it]
+- **Buy-in:** [fill: who had to accept the auto-approval rule, for example the client finance lead, and what evidence convinced them, such as reviewed sample records side by side]
+- **Result with metrics:** Manual reconciliation fell 68%. 83% of records cleared automatically above the threshold, so reviewers spent their time on the records that needed judgment. Turnaround went from 3 days to 5.5 hours across the 12 entities.
+
 **Close with:** The central design lesson is that useful automation needs an explicit boundary between what the system can process and what a person should review.
+
+**What I would do differently:** I would build the evaluation set first: records reviewed by an expert before launch, so the threshold rests on a measured false-approval rate from day one. I would also add deterministic accounting checks, such as debits equal credits, that run no matter how confident the model is.
+
+**How I would do this at AWS:** On AWS I would run Claude on Amazon Bedrock for the agents and use AWS Step Functions to coordinate the steps and pause for human review with a callback. Amazon S3 would hold staged records, AWS Lambda functions would be the tools, and Amazon DynamoDB would keep an audit trail of every decision. Amazon Bedrock Guardrails and least-privilege IAM roles would limit what the agents can touch.
 
 ### Preparation notes, separate from the speaking script
 
@@ -80,7 +102,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S2. P1 MTTR from 94 to 26 minutes (Oracle)
 
-**LPs:** Deliver Results, Bias for Action, Ownership, Think Big
+**LPs:** Ownership, Bias for Action, Deliver Results, Dive Deep, Customer Obsession, Think Big
 
 **Open with:** I reduced P1 incident recovery time at Oracle from 94 to 26 minutes by putting diagnostic context in front of on-call engineers.
 
@@ -92,7 +114,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I included runbook context so the on-call engineer could move from seeing an error to investigating and mitigating it. The important change was making the information actionable, rather than simply producing more telemetry.
 - **R:** P1 MTTR dropped from 94 to 26 minutes, a 72% reduction.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** A P1 is the highest severity, so every minute of one is time enterprise customers may feel. The slow part was diagnosis: knowing an API was failing did not tell on-call why.
+- **Obstacle:** The evidence existed, but it was spread across high-throughput event streams from 1M+ endpoints. [fill: the specific obstacle, for example event noise, who owned the streams, or the cost of tagging in real time]
+- **Tradeoff:** I focused on the failures that could be tagged with confidence, the 400 and 500 series, instead of trying to diagnose everything. A wrong tag sends on-call down the wrong path, so each tag came with its evidence and runbook context, and the engineer kept the final call.
+- **Buy-in:** [fill: how on-call engineers or the team lead came to use the tags, for example a trial on one service first]
+- **Result with metrics:** P1 mean time to recovery dropped from 94 to 26 minutes, a 72% reduction. On-call started each incident with a likely cause and the runbook step instead of a blank screen.
+
 **Close with:** The lesson is that operational tooling should shorten the path from signal to action. A dashboard has value when it helps someone recover the service.
+
+**What I would do differently:** I would measure tag accuracy from day one: how often each tag was right, wrong, or missing. That proves the tags drove the faster recovery and shows which tags to retire.
+
+**How I would do this at AWS:** On AWS I would use Amazon CloudWatch Logs and metric filters for the error signals, AWS X-Ray traces to see which service failed, Amazon EventBridge rules to tag and route events, and AWS Systems Manager Automation runbooks attached to CloudWatch alarms, so the first step of the fix is one click.
 
 ### Preparation notes, separate from the speaking script
 
@@ -111,7 +145,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S3. SLO alerting, 41% fewer false pages (Oracle)
 
-**LPs:** Are Right, A Lot, Strive to be Earth's Best Employer
+**LPs:** Insist on the Highest Standards, Dive Deep, Earn Trust, Are Right, A Lot, Strive to be Earth's Best Employer
 
 **Open with:** I reduced false-positive on-call pages by 41% by improving the observability and alerting approach at Oracle.
 
@@ -123,7 +157,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I treated the resource signals and latency together: CPU or memory alone does not describe the entire experience of a service.
 - **R:** False-positive on-call pages decreased 41%.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Every false page wakes an engineer for nothing. After enough of them, people trust alerts less, and that is how a real incident gets missed. Across 37,000+ tenants, alert noise was a reliability risk, not just an annoyance.
+- **Obstacle:** Static thresholds felt safe because they were familiar. [fill: the pushback you got, for example a worry that SLO alerts would miss real problems, and how you answered it]
+- **Tradeoff:** Fewer alerts carries a risk: you might miss something. So alerts followed what customers feel, p99 latency against the objective, while CPU and memory became investigation signals on dashboards instead of pages.
+- **Buy-in:** [fill: how you showed the team the new alerts still caught real incidents, for example running both alert sets side by side for a while]
+- **Result with metrics:** False-positive pages fell 41%. I built 47 dashboards and alert rules, so the engineer who did get paged had the view to act on it.
+
 **Close with:** The design lesson is to make alerts actionable and tied to service behavior. Reducing noise only helps if the system still brings meaningful problems to the on-call engineer.
+
+**What I would do differently:** I would publish an error budget for each service, so teams could see how much reliability they had left and make release decisions with it.
+
+**How I would do this at AWS:** On AWS I would keep the same tooling with Amazon Managed Service for Prometheus and Amazon Managed Grafana, define SLOs in Amazon CloudWatch Application Signals, and use CloudWatch composite alarms so one problem fires one page instead of five.
 
 ### Preparation notes, separate from the speaking script
 
@@ -141,7 +187,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S4. CLI validation toolchain adopted by 4 teams (Oracle)
 
-**LPs:** Invent and Simplify, Earn Trust, Strive to be Earth's Best Employer
+**LPs:** Earn Trust, Invent and Simplify, Insist on the Highest Standards, Deliver Results, Ownership, Strive to be Earth's Best Employer
 
 **Open with:** I shipped a validation toolchain adopted by 4 teams that reduced failed deployments from 11% to 4%.
 
@@ -153,7 +199,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - The toolchain was adopted by 4 engineering teams across NSX. That gave multiple teams a common way to catch configuration errors earlier while continuing to use Jenkins for delivery.
 - **R:** Release cycles became 34% shorter, and the failed-deployment rate fell from 11% to 4%.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** 11% of deployments were failing. Each failure meant a rollback, a rerun, and engineers pulled off planned work, and some configuration errors only surfaced after a change reached production.
+- **Obstacle:** A gate that slows teams down gets bypassed. [fill: the hardest adoption obstacle, for example a team worried about build time or false rejections]
+- **Tradeoff:** Every check adds build time. The tradeoff is seconds in the pipeline against a failed deploy later, so each check had to catch a real class of error, and each failure message had to say exactly what to fix. [fill: one concrete check the toolchain ran]
+- **Buy-in:** I started with [fill: the first team or service], then used its results to bring the next teams on. 4 teams across NSX adopted it.
+- **Result with metrics:** Failed deploys fell from 11% to 4%, and release cycles got 34% shorter.
+
 **Close with:** The lesson is that reliability can improve developer speed. A useful validation mechanism prevents downstream rework and makes the safer path part of the normal workflow.
+
+**What I would do differently:** I would record which check caught what. That data shows which checks earn their place, and it makes the case to the next team in one chart.
+
+**How I would do this at AWS:** On AWS I would build this into AWS CodePipeline with an AWS CodeBuild validation stage, run cfn-lint and AWS CloudFormation Guard on templates, and use AWS Config rules to catch drift after deployment.
 
 ### Preparation notes, separate from the speaking script
 
@@ -171,7 +229,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S5. NetSuite search latency down 30% (Oracle)
 
-**LPs:** Dive Deep, Frugality
+**LPs:** Dive Deep, Customer Obsession, Frugality, Deliver Results, Are Right, A Lot
 
 **Open with:** I reduced NetSuite search P50 page-load latency from 840 milliseconds to 588 milliseconds, a 30% reduction.
 
@@ -183,7 +241,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I focused on the query plan and index design because reducing unnecessary reads addresses the work the database is doing, rather than assuming that a larger instance is the answer.
 - **R:** P50 page-load latency improved from 840 to 588 milliseconds, a 30% reduction in median page load through a better database access path.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Search is something users touch all day. At 840 milliseconds median, every search felt slow. The easy answer, a bigger database instance, would have cost more every month without proving it fixed the cause.
+- **Obstacle:** [fill: what made the diagnosis hard, for example queries that were only slow at certain data volumes]
+- **Tradeoff:** Indexes speed up reads but slow down writes and take space. So I restructured indexes on the hot predicates, the filters the searches actually used, instead of indexing everything.
+- **Buy-in:** [fill: who reviewed the index and SQL changes, and how you showed they were safe, for example before and after query plans]
+- **Result with metrics:** Median page load fell from 840 to 588 milliseconds, 30% faster, from a better access path rather than bigger hardware.
+
 **Close with:** The lesson is to diagnose the access pattern before selecting a scaling solution. The right architecture recommendation starts with evidence about the bottleneck.
+
+**What I would do differently:** I would add query performance checks to the release process, so a new query that triggers a full scan is caught before users feel it.
+
+**How I would do this at AWS:** On Amazon RDS or Amazon Aurora I would start with Performance Insights to find the top queries by load, read their EXPLAIN plans, and fix indexes and SQL before resizing anything. If reads still dominate, I would add read replicas or an Amazon ElastiCache layer.
 
 ### Preparation notes, separate from the speaking script
 
@@ -201,7 +271,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S6. Kubernetes autoscaling on custom metrics (Oracle)
 
-**LPs:** Insist on the Highest Standards, Are Right, A Lot
+**LPs:** Insist on the Highest Standards, Are Right, A Lot, Deliver Results, Dive Deep, Ownership
 
 **Open with:** I used custom-metric autoscaling on OCI to keep NSX services within their p99 latency objectives at 2x peak load.
 
@@ -213,7 +283,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I connected the scaling behavior to the service latency objective, keeping the discussion focused on the performance the system needed to preserve through a surge.
 - **R:** The services held their p99 SLOs at 2x peak load through release surges.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Release surges pushed load well above normal. If the services fell behind, p99 latency would break its objective for tenants at exactly the moment changes were rolling out.
+- **Obstacle:** CPU could look healthy while latency was not. [fill: when you saw CPU-based scaling react too late]
+- **Tradeoff:** Scaling on custom metrics takes more work to set up and tune than scaling on CPU. I accepted that because CPU alone was not the signal that tracked whether the service kept up.
+- **Buy-in:** [fill: how you validated the scaling policy before production, for example a load test at peak]
+- **Result with metrics:** The services held their p99 SLOs at 2x peak load through release surges.
+
 **Close with:** The lesson is to scale from a signal that represents the workload and to evaluate the result against a service objective. My implementation experience here was on OCI.
+
+**What I would do differently:** I would add cost tracking next to the latency objective, so we know both that we stayed fast and what staying fast cost.
+
+**How I would do this at AWS:** On AWS I would run Amazon EKS with the Kubernetes Horizontal Pod Autoscaler on custom metrics from Amazon Managed Service for Prometheus, add node capacity with Karpenter, and alarm in CloudWatch on p99 latency.
 
 ### Preparation notes, separate from the speaking script
 
@@ -231,7 +313,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S7. Applying LangGraph and MCP to the ERP workflow (MSRcosmos)
 
-**LPs:** Learn and Be Curious
+**LPs:** Learn and Be Curious, Bias for Action, Invent and Simplify, Deliver Results
 
 **Open with:** I applied LangGraph orchestration and MCP tool calling to make an ERP migration workflow work across model, API, and human-review steps.
 
@@ -243,7 +325,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I combined that integration with confidence-based human review and Docker packaging for cloud-agnostic deployment. These pieces addressed different parts of delivering a usable application.
 - **R:** The migration system reduced manual reconciliation by 68%.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** The migration could not be done with one model prompt. The workflow had to call business systems, keep state across steps, and stop for a human. I had to learn the tools that make that possible while delivering a client project.
+- **Obstacle:** [fill: what was new to you, for example LangGraph state graphs or MCP servers, and how you learned it: docs, small prototypes, examples]
+- **Tradeoff:** A framework adds structure and also a dependency. I used LangGraph where orchestration and state needed it, and kept the Sage API calls behind MCP tools so each piece could be tested on its own.
+- **Buy-in:** [fill: how you showed the team the approach worked, for example a demo on one entity]
+- **Result with metrics:** The system cut manual reconciliation by 68%.
+
 **Close with:** The lesson is that learning a framework matters when it helps solve an application problem. Orchestration, tools, and review each have a distinct responsibility in a working system.
+
+**What I would do differently:** I would write a short guide while learning, so the next engineer ramps up faster.
+
+**How I would do this at AWS:** On AWS I would host the agents on Amazon Bedrock AgentCore with a Claude model from Amazon Bedrock, expose each business system as an AWS Lambda tool, and keep long-running workflow state and the human-review pause in AWS Step Functions.
 
 ### Preparation notes, separate from the speaking script
 
@@ -262,7 +356,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S8. DQN training stall, 40% shorter runs (USC Sports Analytics)
 
-**LPs:** Dive Deep, Bias for Action
+**LPs:** Dive Deep, Bias for Action, Learn and Be Curious, Frugality, Insist on the Highest Standards
 
 **Open with:** I shortened DQN training runs from 52 to 31 minutes by fixing replay-buffer sampling and a data-loader stall.
 
@@ -274,7 +368,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I kept the performance result separate from the model-quality result: making the pipeline quicker and improving decision agreement are different accomplishments with different measurements.
 - **R:** Training time fell to 31 minutes per run, about a 40% reduction in runtime. Separately, agreement with EPA-optimal calls improved from 68% to 74% on held-out 2024 drives.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Each training run took 52 minutes, which capped how many experiments fit in a day. In research, iteration speed decides how fast you learn.
+- **Obstacle:** The model code looked fine; the time was going somewhere else. [fill: how you found it, for example a profiler showing the GPU idle while the data loader waited]
+- **Tradeoff:** I could have asked for more compute. I profiled first instead, because more compute does not fix a pipeline that is waiting on data.
+- **Buy-in:** [fill: how you shared the fix with the research group]
+- **Result with metrics:** Runs dropped from 52 to 31 minutes, about 40%. Separately, agreement with EPA-optimal calls rose from 68% to 74% on held-out 2024 drives. I keep those apart: one is speed, the other is model quality.
+
 **Close with:** The lesson is to understand the work surrounding model computation. Data movement and sampling can limit experiment speed even when the model itself gets most of the attention.
+
+**What I would do differently:** I would profile the first run, not wait until runs became painful.
+
+**How I would do this at AWS:** On AWS I would use Amazon SageMaker AI training jobs with built-in profiling to spot an idle GPU, and stage the training data in Amazon S3 in the same Region as the training instances.
 
 ### Preparation notes, separate from the speaking script
 
@@ -293,7 +399,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S9. PacSun executive intelligence app (USC Annenberg)
 
-**LPs:** Customer Obsession, Think Big
+**LPs:** Customer Obsession, Think Big, Learn and Be Curious, Ownership
 
 **Open with:** I am building a retail intelligence application that turns operational context into an owner-tagged view and briefs for PacSun executives.
 
@@ -305,7 +411,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I also engineered a scheduling workflow that ranks open issues by urgency and owner, then proposes meeting slots with agendas.
 - **R:** The work is ongoing. The application brings context gathering, issue ranking, brief drafting, and meeting proposals into a workflow for executive decision-making.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Executives decide based on what reaches them. If the right issue and the right owner do not reach them together, decisions wait.
+- **Obstacle:** [fill: the hardest part so far, for example reliable live context from internal systems, or agreeing what urgent means]
+- **Tradeoff:** [fill: one design choice and its tradeoff, for example a human review step before a brief reaches the CEO]
+- **Buy-in:** [fill: how you are getting feedback from the executive users]
+- **Result with metrics:** The work is ongoing. [fill: the latest progress you can measure and share]
+
 **Close with:** The lesson is that executive communication is part of the solution design. Information becomes useful when the audience can see what needs attention and who owns the next step.
+
+**What I would do differently:** I would agree the success measure with the executives before building, for example time from an issue appearing to an owner acting on it.
+
+**How I would do this at AWS:** On AWS I would use Amazon Bedrock for the models, Amazon Bedrock Knowledge Bases over internal documents, and AWS Lambda tools behind each connector with least-privilege IAM roles, with Amazon Bedrock Guardrails on what reaches the CEO.
 
 ### Preparation notes, separate from the speaking script
 
@@ -315,7 +433,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 **SA audience bridge:** For engineers, explain connector permissions, source attribution, ranking evaluation, and approval. For executives, explain which decision the owner-tagged view supports. State what is live and what remains a prototype; measured adoption or business impact is not yet supplied.
 
-**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Bedrock Agents with action groups (Lambda) in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.
+**Proposed AWS design:** Proposed AWS design, not a claim of AWS implementation: Amazon Bedrock AgentCore with Lambda tools in place of MCP connectors, Knowledge Bases for documents, Guardrails, and IAM-scoped access to each system.
 
 **Probes:**
 
@@ -325,19 +443,31 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S10. Human-in-the-loop annotation pipeline (USC AI Trust Lab)
 
-**LPs:** Invent and Simplify, Success and Scale Bring Broad Responsibility
+**LPs:** Success and Scale Bring Broad Responsibility, Invent and Simplify, Insist on the Highest Standards, Earn Trust
 
-**Open with:** I built an annotation pipeline that combines rubric-based LLM labels with expert review for lower-confidence caseworker notes.
+**Open with:** I am building an annotation pipeline that combines rubric-based LLM labels with expert review for lower-confidence caseworker notes.
 
-- **S:** At USC AI Trust Lab, my work includes using Llama 3.3 70B to label caseworker notes. Annotation needs a consistent definition of the labels, while the model also needs a path to escalate cases it cannot handle confidently.
-- **T:** My task was to turn that into a pipeline with a rubric, confidence scores, and human-in-the-loop review.
+- **S:** At USC AI Trust Lab, I am using Llama 3.3 70B to label caseworker notes. Annotation needs a consistent definition of each label, and the model needs a path to escalate the cases it cannot handle confidently.
+- **T:** My task is to turn that into a pipeline with a rubric, confidence scores, and human-in-the-loop review.
 - **A:**
-  - I built the rubric-based labeling workflow on Llama 3.3 70B, giving the annotation process explicit criteria rather than asking for an unconstrained answer.
-  - I included confidence scoring and routed low-confidence cases to domain experts. The model handles labeling, while the review path gives the workflow a way to involve human judgment.
-  - I kept the implementation centered on those responsibilities: produce a label, expose uncertainty, and route the cases that need attention.
-- **R:** The pipeline labels notes, scores confidence, and routes lower-confidence cases to experts. That gives the annotation workflow a concrete path from an initial model label to domain-expert review.
+  - I am building the rubric-based labeling workflow on Llama 3.3 70B, giving the annotation process explicit criteria rather than asking the model for an unconstrained answer.
+  - I am adding confidence scoring that routes low-confidence cases to domain experts. The model handles labeling, while the review path brings in human judgment where it matters.
+  - I am keeping the design centered on three responsibilities: produce a label, expose uncertainty, and route the cases that need attention.
+- **R:** The work is ongoing. The pipeline labels notes, scores confidence, and routes lower-confidence cases to experts, giving the annotation workflow a concrete path from an initial model label to domain-expert review.
+
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Caseworker notes describe real people. A wrong label can mislead research about how people are served, so the pipeline has to know when it is unsure.
+- **Obstacle:** [fill: the hardest part, for example writing rubric criteria two experts would apply the same way]
+- **Tradeoff:** Routing more cases to experts raises quality but uses scarce expert time. The confidence threshold is the dial between them.
+- **Buy-in:** [fill: how you are working with the domain experts on the rubric]
+- **Result with metrics:** The work is ongoing. The pipeline labels notes, scores confidence, and routes low-confidence cases to experts. [fill: any measured progress so far]
 
 **Close with:** The design lesson is that confidence should guide review, not stand in for proof that a model is correct. The escalation path belongs in the architecture.
+
+**What I would do differently:** I would measure agreement between the model and the experts on a fixed sample from the start.
+
+**How I would do this at AWS:** On AWS I would host the model on Amazon Bedrock or Amazon SageMaker AI, use AWS Step Functions to pause low-confidence cases for expert review, and keep the notes in Amazon S3 with strict access controls and encryption.
 
 ### Preparation notes, separate from the speaking script
 
@@ -356,7 +486,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S11. ModelScope quantization study (ModelScope)
 
-**LPs:** Are Right, A Lot, Frugality, Learn and Be Curious
+**LPs:** Learn and Be Curious, Frugality, Are Right, A Lot, Dive Deep, Insist on the Highest Standards
 
 **Open with:** In ModelScope, my INT4 benchmark used 2299 MB and sustained 13.7 tokens per second with MMLU within a point of baseline.
 
@@ -368,7 +498,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I included MMLU as a quality check alongside the performance measurements, keeping the conclusion tied to the benchmark setup.
 - **R:** INT4 used 2299 MB, 62% below FP16, while sustaining 13.7 tokens per second and keeping MMLU within a point of baseline.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** Teams often assume they need a bigger GPU to run a model. If a smaller number format keeps quality, the same model runs on cheaper hardware. I wanted data, not assumptions.
+- **Obstacle:** [fill: what was hard, for example keeping the comparison fair with the same prompts and settings across all 8 configs]
+- **Tradeoff:** Smaller formats save memory but can lose quality, so I measured MMLU alongside speed and memory and compared the options on a Pareto view instead of a single number.
+- **Buy-in:** [fill: whether you shared the results, for example a write-up or repository]
+- **Result with metrics:** INT4 used 2299 MB, 62% less than FP16, ran at 13.7 tokens per second, and kept MMLU within a point of baseline. The surprise was INT8: in my setup it used 53% more memory than INT4 and ran 2.1x slower, so it lost on both counts.
+
 **Close with:** The lesson is to benchmark the workload before recommending a model configuration, then choose a configuration that meets its quality, performance, and operational requirements.
+
+**What I would do differently:** I would add a task-specific quality test next to MMLU, because a general benchmark can hide losses on the task a customer cares about.
+
+**How I would do this at AWS:** On AWS I would run the same sweep on Amazon EC2 GPU instances and on AWS Inferentia2, compare cost per token, and host the winner on an Amazon SageMaker AI endpoint, or bring it in with Amazon Bedrock Custom Model Import if its architecture is supported.
 
 ### Preparation notes, separate from the speaking script
 
@@ -385,7 +527,7 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 
 ## S12. Nightly Databricks feed (MSRcosmos)
 
-**LPs:** Deliver Results, Frugality
+**LPs:** Deliver Results, Ownership, Frugality, Dive Deep
 
 **Open with:** I automated a nightly Databricks feed for 17 financial tables and 4.2M rows, with a 22-minute full refresh.
 
@@ -397,7 +539,19 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
   - I automated the feed across the cloud workspaces, connecting the data-engineering layer with the multi-agent ERP system. The processing choices addressed how much data the job needed to read and update.
 - **R:** The full refresh held at 22 minutes.
 
+**For the 2 to 4 minute version, add:**
+
+- **Stakes:** The ERP agents were only as good as the data under them. If the nightly feed ran late or partial, the agents worked from stale financials the next morning.
+- **Obstacle:** [fill: what threatened the refresh window, for example a table that kept growing or a slow full rewrite]
+- **Tradeoff:** A full rewrite every night is simple but slow and expensive. Incremental merges are faster, but change detection has to be right. I used incremental merges with partition pruning so the job read and wrote only what changed.
+- **Buy-in:** [fill: who depended on the feed and how you kept them informed]
+- **Result with metrics:** The feed moved 17 financial tables and 4.2M rows into Delta Lake every night, and the full refresh held at 22 minutes.
+
 **Close with:** The lesson is that an AI application still depends on its data foundation. Efficient ingestion and clear refresh behavior matter just as much as the agent logic that uses the data.
+
+**What I would do differently:** I would add data quality checks, such as row counts and totals per table, that fail the run loudly instead of passing bad data to the agents.
+
+**How I would do this at AWS:** On AWS I would run Spark on AWS Glue or Amazon EMR, keep the data in Amazon S3 as Apache Iceberg tables for merges, govern access with the AWS Glue Data Catalog and AWS Lake Formation, and run checks with Amazon Athena.
 
 ### Preparation notes, separate from the speaking script
 
@@ -413,18 +567,65 @@ Read the evidence, confirmation prompts, and delivery review in [RESUME-STAR-REV
 - *What would you do if a source workspace were late?* The feed covered Databricks workspaces across AWS, Azure, and GCP. For the recovery design, I would make source freshness visible, distinguish complete from partial inputs, retry safely, and agree with the customer whether to delay publication or expose explicitly stale data. That policy must match what the downstream agents can safely do with incomplete inputs.
 - *How do full refresh and incremental merges fit together?* The 22-minute result is the full-refresh measure. Partition pruning describes reducing reads, while incremental merges describe how changes are applied. They are not interchangeable runtime measures. Before comparing that result with an incremental run, I would match the input snapshot, rows changed, compute size, and definition of when the refresh begins and ends.
 
+## LP question bank
+
+- Customer Obsession: Tell me about a time you went above and beyond for a customer. Use S1 Multi-agent ERP migration with human-in-the-loop.
+- Customer Obsession: Tell me about a time you changed what you were building because of customer feedback. Use S9 PacSun executive intelligence app.
+- Customer Obsession: Describe a time you balanced what a customer asked for against what they needed. Use S1 Multi-agent ERP migration with human-in-the-loop.
+- Customer Obsession: Tell me about a time you improved the experience for end users. Use S5 NetSuite search latency down 30%.
+- Customer Obsession: Tell me about a time you protected customers from a problem before they felt it. Use S2 P1 MTTR from 94 to 26 minutes.
+- Ownership: Tell me about a time you took on something outside your area. Use S4 CLI validation toolchain adopted by 4 teams.
+- Ownership: Describe a problem nobody owned that you fixed anyway. Use S2 P1 MTTR from 94 to 26 minutes.
+- Ownership: Tell me about a long-term choice you made at the cost of short-term speed. Use S6 Kubernetes autoscaling on custom metrics.
+- Ownership: Tell me about a time you went beyond your job description. Use S1 Multi-agent ERP migration with human-in-the-loop.
+- Ownership: Tell me about a time something you owned was at risk of slipping. Use S12 Nightly Databricks feed.
+- Bias for Action: Tell me about a decision you made with incomplete information. Use S2 P1 MTTR from 94 to 26 minutes.
+- Bias for Action: Tell me about a time you took a calculated risk. Use S8 DQN training stall, 40% shorter runs.
+- Bias for Action: Describe a time when speed mattered more than perfection. Use S7 Applying LangGraph and MCP to the ERP workflow.
+- Bias for Action: Tell me about a time you removed a blocker instead of waiting for someone else. Use S8 DQN training stall, 40% shorter runs.
+- Bias for Action: Tell me about a time you acted quickly to fix a problem. Use S2 P1 MTTR from 94 to 26 minutes.
+- Earn Trust: Tell me about a time you had to win over a skeptical team. Use S4 CLI validation toolchain adopted by 4 teams.
+- Earn Trust: Tell me about a time you admitted a mistake. Use the failure story.
+- Earn Trust: How did you get people to trust an automated system? Use S1 Multi-agent ERP migration with human-in-the-loop.
+- Earn Trust: Tell me about a change you made that other people depended on. How did you keep their trust? Use S3 SLO alerting, 41% fewer false pages.
+- Earn Trust: Tell me about a time you were candid about a limitation in your own results. Use S8 DQN training stall, 40% shorter runs.
+- Learn and Be Curious: Tell me about a time you learned a new technology quickly to deliver. Use S7 Applying LangGraph and MCP to the ERP workflow.
+- Learn and Be Curious: What did you teach yourself recently, and how did you use it? Use S11 ModelScope quantization study.
+- Learn and Be Curious: Tell me about a time curiosity led you to a better answer. Use S8 DQN training stall, 40% shorter runs.
+- Learn and Be Curious: Tell me about a new approach you tried that others had not. Use S9 PacSun executive intelligence app.
+- Learn and Be Curious: How do you stay current in AI, and what changed your mind recently? Use S11 ModelScope quantization study.
+- Insist on the Highest Standards: Tell me about a time you refused to accept good enough. Use S3 SLO alerting, 41% fewer false pages.
+- Insist on the Highest Standards: Tell me about a time you raised the quality bar for a team. Use S4 CLI validation toolchain adopted by 4 teams.
+- Insist on the Highest Standards: Describe a time you would not let work go out until it met the bar. Use S1 Multi-agent ERP migration with human-in-the-loop.
+- Insist on the Highest Standards: Tell me about a time you set a measurable standard for a system. Use S6 Kubernetes autoscaling on custom metrics.
+- Insist on the Highest Standards: Tell me about a time you designed a system to catch its own mistakes. Use S10 Human-in-the-loop annotation pipeline.
+- Deliver Results: What is your most significant accomplishment? Use S2 P1 MTTR from 94 to 26 minutes.
+- Deliver Results: Tell me about a time you delivered on a fixed schedule. Use S12 Nightly Databricks feed.
+- Deliver Results: Tell me about a time you failed to meet a goal. Use the failure story.
+- Deliver Results: Describe a time you delivered results with limited resources. Use S5 NetSuite search latency down 30%.
+- Deliver Results: Tell me about a time you had to choose between competing goals. Use S1 Multi-agent ERP migration with human-in-the-loop.
+- Dive Deep: Tell me about a time you used data to find the root cause of a problem. Use S5 NetSuite search latency down 30%.
+- Dive Deep: Tell me about a time a metric looked fine but something was wrong. Use S6 Kubernetes autoscaling on custom metrics.
+- Dive Deep: Tell me about a time you went several levels deep to solve a problem. Use S8 DQN training stall, 40% shorter runs.
+- Dive Deep: Tell me about a time you questioned an assumption with data. Use S11 ModelScope quantization study.
+- Dive Deep: How do you stay close to the details as a system grows? Use S3 SLO alerting, 41% fewer false pages.
+
 ## Gap stories: write these from real events
 
-### Failure or mistake
+### Failure or mistake (required)
 
-**LPs:** Deliver Results, Earn Trust, Are Right, A Lot. **Asked as:** Tell me about a time you failed. A time you missed a deadline. A time your judgment was wrong.
+**LPs:** Deliver Results, Earn Trust, Ownership, Learn and Be Curious. **Asked as:** Tell me about a time you took a risk, made a mistake, or failed. Tell me about a time you missed a deadline or a goal. Tell me about a time your judgment was wrong.
 
-**Where to look:** Look at Oracle deploys before the CLI toolchain existed, or an early MSRcosmos agent run that produced a wrong result.
+**Where to look:** Look for a real event in the last 5 years: an Oracle deploy that failed before the validation toolchain existed, an early MSRcosmos agent run that produced a wrong result, or an assumption that data proved wrong. Pick one where you owned part of the cause.
 
-- **S:** What did I own that went wrong, and who felt it?
-- **T:** What was I on the hook for when it broke?
-- **A:** What did I do in the first hour, and what did I change so it could not repeat the same way?
-- **R:** The fix, a number if there is one, and the one habit I kept. End on the lesson, not the excuse.
+1. Why did it matter? Who would feel it if it went wrong?
+2. What was the risk you took, or the mistake you made?
+3. What did I do, specifically, before and after it went wrong?
+4. What was the obstacle that made it hard?
+5. What tradeoff did I face, and which way did I choose?
+6. What was the result? Give a number if one exists, good or bad.
+7. What was the lesson, in one sentence?
+8. What did I change afterward, and how do I know it stuck?
 
 ### Disagreement (Have Backbone)
 

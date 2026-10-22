@@ -28,15 +28,17 @@
       && (value.date === undefined || value.date === null || validWallDate(value.date));
   }
 
-  // kind separates the numbers quiz, the rapid-fire tech quiz, and mock rounds; items lists what was asked.
-  const QUIZ_KINDS = ['numbers', 'tech', 'mock'];
+  // kind separates the numbers quiz, the rapid-fire tech quiz, mock rounds, and presentation runs;
+  // items lists what was asked; seconds is a timed run's length.
+  const QUIZ_KINDS = ['numbers', 'tech', 'mock', 'talk'];
   function validQuiz(value) {
-    return record(value) && Object.keys(value).every((key) => ['at', 'score', 'total', 'missed', 'kind', 'items'].includes(key))
+    return record(value) && Object.keys(value).every((key) => ['at', 'score', 'total', 'missed', 'kind', 'items', 'seconds'].includes(key))
       && validDate(value.at) && Number.isInteger(value.total) && value.total > 0 && value.total <= 10000
       && Number.isInteger(value.score) && value.score >= 0 && value.score <= value.total
       && Array.isArray(value.missed) && value.missed.length <= value.total && value.missed.every(validId)
       && (value.kind === undefined || QUIZ_KINDS.includes(value.kind))
-      && (value.items === undefined || (Array.isArray(value.items) && value.items.length <= 20 && value.items.every(validId)));
+      && (value.items === undefined || (Array.isArray(value.items) && value.items.length <= 20 && value.items.every(validId)))
+      && (value.seconds === undefined || (Number.isInteger(value.seconds) && value.seconds >= 0 && value.seconds <= 86400));
   }
 
   function validate(parsed) {
