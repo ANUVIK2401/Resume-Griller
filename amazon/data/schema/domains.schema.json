@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "domains.schema.json",
+  "title": "Technical domains: one cheat sheet, optional figures, and a question bank per domain. Every question carries a plain answer for a non-technical listener and a technical answer.",
+  "type": "object",
+  "required": [
+    "status_options",
+    "domains"
+  ],
+  "properties": {
+    "status_options": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "role",
+          "min_questions",
+          "summary",
+          "verified_on",
+          "sources",
+          "cheatsheet",
+          "figures",
+          "questions"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "role": {
+            "enum": [
+              "depth",
+              "breadth",
+              "backup"
+            ]
+          },
+          "min_questions": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "summary": {
+            "$ref": "common.schema.json#/$defs/text"
+          },
+          "verified_on": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "url"
+              ],
+              "properties": {
+                "label": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https://"
+                }
+              }
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "href"
+              ],
+              "properties": {
+                "label": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "href": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "cheatsheet": {
+            "type": "array",
+            "minItems": 8,
+            "maxItems": 15,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "term",
+                "def",
+                "probe"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "term": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "def": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "probe": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              }
+            }
+          },
+          "figures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "type",
+                "title"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "stack",
+                    "pyramid",
+                    "flow",
+                    "sequence",
+                    "tree"
+                  ]
+                },
+                "title": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "label"
+                    ],
+                    "properties": {
+                      "label": {
+                        "$ref": "common.schema.json#/$defs/text"
+                      },
+                      "sub": {
+                        "$ref": "common.schema.json#/$defs/text"
+                      }
+                    }
+                  }
+                },
+                "actors": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "common.schema.json#/$defs/text"
+                  }
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "from",
+                      "to",
+                      "label"
+                    ],
+                    "properties": {
+                      "from": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "to": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "label": {
+                        "$ref": "common.schema.json#/$defs/text"
+                      }
+                    }
+                  }
+                },
+                "levels": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "common.schema.json#/$defs/text"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "questions": {
+            "type": "array",
+            "minItems": 15,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "topic",
+                "q",
+                "level",
+                "plain",
+                "technical",
+                "probes",
+                "trap"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "topic": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "q": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "level": {
+                  "enum": [
+                    "basic",
+                    "intermediate",
+                    "deep"
+                  ]
+                },
+                "plain": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "technical": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "probes": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "q",
+                      "a"
+                    ],
+                    "properties": {
+                      "q": {
+                        "$ref": "common.schema.json#/$defs/text"
+                      },
+                      "a": {
+                        "$ref": "common.schema.json#/$defs/text"
+                      }
+                    }
+                  }
+                },
+                "aws": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "resume": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "trap": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "drills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "code",
+                "what",
+                "complexity",
+                "bug",
+                "improve",
+                "plain"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "title": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "code": {
+                  "$ref": "common.schema.json#/$defs/code"
+                },
+                "what": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "complexity": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "bug": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "improve": {
+                  "$ref": "common.schema.json#/$defs/text"
+                },
+                "plain": {
+                  "$ref": "common.schema.json#/$defs/text"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

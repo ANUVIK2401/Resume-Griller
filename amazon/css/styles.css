@@ -675,3 +675,56 @@ button, a, summary, select, input { -webkit-tap-highlight-color: transparent; }
 /* Glossary tier badge */
 .tier { font: 600 var(--text-xs)/1.4 var(--font-mono); }
 .tier-1 { border-color: rgb(255 153 0 / 0.7); color: var(--accent-ink); background: rgb(255 153 0 / 0.1); }
+
+/* Confirmed-loop additions: timers with a target window, concept figures, presentation timeline,
+   handout bars, the day schedule, and domain question levels. */
+.timer-status { font-size: var(--text-sm); color: var(--ink-muted); }
+.timer-face[data-window="short"], .timer-status[data-window="short"] { color: var(--accent-ink); }
+.timer-face[data-window="ok"], .timer-status[data-window="ok"] { color: var(--ok); }
+.timer-face[data-window="long"], .timer-status[data-window="long"] { color: var(--danger); }
+
+.fig-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 34rem), 1fr)); }
+.fig { margin: 0; padding: 1rem; border-radius: var(--radius); background: var(--surface-card); box-shadow: var(--shadow-card); display: grid; gap: 0.6rem; }
+.fig-svg { width: 100%; height: auto; display: block; }
+.fig-box { fill: var(--surface-sunk); stroke: var(--line-strong); stroke-width: 1; }
+.fig-actor, .fig-leaf { fill: rgb(255 153 0 / 0.12); stroke: rgb(255 153 0 / 0.55); }
+.fig-tier-0 { fill: rgb(255 153 0 / 0.28); } .fig-tier-1 { fill: rgb(255 153 0 / 0.22); } .fig-tier-2 { fill: rgb(255 153 0 / 0.17); }
+.fig-tier-3 { fill: rgb(255 153 0 / 0.12); } .fig-tier-4 { fill: rgb(255 153 0 / 0.08); }
+.fig-text { fill: var(--ink); font: 500 15px var(--font-sans); }
+.fig-strong { font-weight: 700; }
+.fig-muted { fill: var(--ink-muted); font-weight: 400; }
+.fig-small { font-size: 14px; }
+.fig-line { stroke: var(--ink-muted); stroke-width: 1.5; fill: none; }
+.fig-life { stroke: var(--line-strong); stroke-dasharray: 4 4; }
+.fig-head { fill: var(--ink-muted); }
+
+.level-basic { border-color: color-mix(in srgb, var(--ok) 55%, transparent); color: var(--ok); }
+.level-intermediate { border-color: rgb(255 153 0 / 0.55); color: var(--accent-ink); }
+.level-deep { border-color: color-mix(in srgb, var(--danger) 55%, transparent); color: var(--danger); }
+.explain-plain { padding: 0.75rem 1rem; border-left: 4px solid var(--gold); background: rgb(255 153 0 / 0.07); border-radius: var(--radius-sm); }
+.resume-tie { padding: 0.75rem 1rem; border-left: 4px solid var(--ok); background: color-mix(in srgb, var(--ok) 8%, transparent); border-radius: var(--radius-sm); }
+.topic-group > .h3 { margin-top: 0.5rem; }
+.sticky-filter { position: sticky; top: calc(var(--header-h) + 0.25rem); z-index: 5; background: var(--surface); padding-block: 0.4rem; }
+.domain-card { border-top: 4px solid var(--line-strong); text-decoration: none; color: inherit; }
+.domain-card.role-depth { border-top-color: var(--gold); }
+.domain-card.role-breadth { border-top-color: var(--ok); }
+.domain-card:hover, .domain-card:focus-visible { box-shadow: var(--shadow-lift); }
+.self-check { display: grid; gap: 0.35rem; }
+
+.talk-line { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; gap: 4px; flex-wrap: wrap; }
+.talk-seg { flex: var(--w) 1 7rem; display: grid; gap: 0.1rem; padding: 0.5rem 0.6rem; border-radius: var(--radius-sm); background: var(--surface-sunk); border-top: 3px solid var(--line-strong); font-size: var(--text-xs); }
+.talk-seg[data-now] { border-top-color: var(--gold); background: rgb(255 153 0 / 0.14); }
+.talk-now { color: var(--on-navy); }
+
+.bars { display: grid; gap: 0.9rem; }
+.bar-row { display: grid; gap: 0.3rem; }
+.bar-label, .bar-note { margin: 0; }
+.bar-note { font-size: var(--text-xs); color: var(--ink-muted); }
+.bar-track { height: 1.4rem; border-radius: 999px; background: var(--surface-sunk); overflow: hidden; }
+.bar-fill { display: block; height: 100%; width: calc(var(--w) * 100%); background: var(--ink-muted); border-radius: inherit; }
+.bar-int4 { background: var(--gold); }
+
+.day-line { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
+.day-slot { display: grid; gap: 0.1rem; padding: 0.55rem 0.7rem; border-radius: var(--radius-sm); border: 1px solid var(--line-navy-strong); }
+.day-slot .label { color: var(--gold-pale); }
+.slot-round { background: rgb(255 153 0 / 0.12); }
